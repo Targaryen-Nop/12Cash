@@ -34,6 +34,7 @@ class GobalStyles {
   );
 
   static const Color primaryColor = Color(0xFF00569D);
+  static const Color secondaryColor = Color.fromARGB(255, 159, 210, 252);
   static const Color accentColor = Colors.orange;
   static double screenHeight = 0;
   static double screenWidth = 0;

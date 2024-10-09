@@ -5,13 +5,13 @@ class LineChartSample extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Line Chart Example')),
+      appBar: AppBar(title: const Text('Line Chart Example')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: LineChart(
           LineChartData(
-            gridData: FlGridData(show: true), // Show grid lines
-            titlesData: FlTitlesData(
+            gridData: const FlGridData(show: true), // Show grid lines
+            titlesData: const FlTitlesData(
               leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: true)),
               bottomTitles:
                   AxisTitles(sideTitles: SideTitles(showTitles: true)),

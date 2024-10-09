@@ -26,27 +26,29 @@ class Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    GobalStyles.screenHeight = MediaQuery.of(context).size.height;
+    GobalStyles.screenWidth = MediaQuery.of(context).size.width;
     return Container(
       color: GobalStyles.primaryColor,
-      child:
-          Column(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-        const SizedBox(
-          height: 25,
-        ),
-        Container(
-          height: GobalStyles.screenHeight / 8,
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: leading2,
-          // color: Colors.amber,
-        ),
-        Container(
-          decoration: const BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.vertical(top: Radius.circular(60))),
-          child: leading!,
-        ),
-      ]),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          const SizedBox(
+            height: 1,
+          ),
+          Container(
+            height: GobalStyles.screenWidth / 15,
+            padding: const EdgeInsets.symmetric(horizontal: 50),
+            color: Colors.amber,
+            child: leading2,
+          ),
+          Container(
+            decoration: const BoxDecoration(
+                color: Colors.yellow,
+                borderRadius: BorderRadius.vertical(top: Radius.circular(100))),
+            child: leading!,
+          ),
+        ],
+      ),
     );
   }
 }
