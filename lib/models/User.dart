@@ -8,8 +8,8 @@ class Users {
   static String position = "";
   static String profilePiclink = "";
   static String phone = "";
-  static double lat = 13.6566;
-  static double long = 100.4682;
+  static double lat = 00.00;
+  static double long = 00.00;
   static int location_index = 1;
   static String office = '';
   static String customer = '';

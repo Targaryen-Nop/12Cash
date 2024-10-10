@@ -45,19 +45,19 @@ class _TestScreenState extends State<TestScreen> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.route_rounded),
-            label: 'Search',
+            label: 'Route',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.storefront),
-            label: 'Favorites',
+            label: 'Shop',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.description),
-            label: 'Profile',
+            label: 'Menu',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.inventory),
-            label: 'Settings',
+            label: 'Manage',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.more_horiz),

@@ -1,327 +1,70 @@
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:dio/dio.dart';
 
-class TrendingMusicChart extends StatefulWidget {
-  @override
-  _TrendingMusicChartState createState() => _TrendingMusicChartState();
-}
+class TableRowData {
+  final String day;
+  final String path;
+  final String status;
+  final Color statusColor;
 
-class _TrendingMusicChartState extends State<TrendingMusicChart> {
-  String _selectedGenre = 'All'; // Default filter
+  TableRowData({
+    required this.day,
+    required this.path,
+    required this.status,
+    required this.statusColor,
+  });
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Top Trending Music 2024'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            Text(
-              'TOP TRENDING MUSIC 2024',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(height: 20),
-            DropdownButton<String>(
-              value: _selectedGenre,
-              items: ['All', 'Jazz Music', 'Pop Music', 'Rock Music']
-                  .map((String genre) {
-                return DropdownMenuItem<String>(
-                  value: genre,
-                  child: Text(genre),
-                );
-              }).toList(),
-              onChanged: (String? newValue) {
-                setState(() {
-                  _selectedGenre = newValue!;
-                });
-              },
-            ),
-            SizedBox(height: 20),
-            Expanded(
-              child: Stack(
-                children: [
-                  BarChart(
-                    BarChartData(
-                      maxY: 30, // Adjust based on your data
-                      barGroups: _buildBarGroups(),
-                      gridData: FlGridData(
-                        show: true,
-                        drawHorizontalLine: true,
-                        horizontalInterval: 5,
-                        getDrawingHorizontalLine: (value) {
-                          return FlLine(
-                            color: Colors.grey.withOpacity(0.3),
-                            strokeWidth: 1,
-                          );
-                        },
-                        drawVerticalLine: false,
-                      ),
-                      borderData: FlBorderData(
-                        show: false,
-                      ),
-                      titlesData: FlTitlesData(
-                        show: true,
-                        bottomTitles: AxisTitles(
-                          sideTitles: SideTitles(
-                            showTitles: true,
-                            getTitlesWidget: (double value, TitleMeta meta) {
-                              const style = TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 12,
-                              );
-                              switch (value.toInt()) {
-                                case 0:
-                                  return Text('Jan', style: style);
-                                case 1:
-                                  return Text('Feb', style: style);
-                                case 2:
-                                  return Text('Mar', style: style);
-                                case 3:
-                                  return Text('Apr', style: style);
-                                case 4:
-                                  return Text('May', style: style);
-                                case 5:
-                                  return Text('Jun', style: style);
-                                case 6:
-                                  return Text('Jul', style: style);
-                                case 7:
-                                  return Text('Aug', style: style);
-                                case 8:
-                                  return Text('Sep', style: style);
-                                case 9:
-                                  return Text('Oct', style: style);
-                                case 10:
-                                  return Text('Nov', style: style);
-                                case 11:
-                                  return Text('Dec', style: style);
-                                default:
-                                  return Text('', style: style);
-                              }
-                            },
-                            reservedSize: 28,
-                          ),
-                        ),
-                        leftTitles: AxisTitles(
-                          sideTitles: SideTitles(
-                            showTitles: true,
-                            reservedSize: 40,
-                            interval: 5,
-                            getTitlesWidget: (value, meta) {
-                              return Text(
-                                '${value.toInt()}',
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 12,
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-                      ),
-                      barTouchData: BarTouchData(enabled: true),
-                    ),
-                  ),
-                  LineChart(
-                    LineChartData(
-                      lineBarsData: [_buildTrendLine()],
-                      gridData: FlGridData(show: false),
-                      titlesData: FlTitlesData(show: false),
-                      borderData: FlBorderData(show: false),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                _buildLegend('Jazz Music', Colors.orange),
-                SizedBox(width: 10),
-                _buildLegend('Pop Music', Colors.teal),
-                SizedBox(width: 10),
-                _buildLegend('Rock Music', Colors.blue),
-              ],
-            ),
-          ],
-        ),
-      ),
+  // Factory constructor for creating a new instance from a map
+  factory TableRowData.fromMap(Map<String, dynamic> map) {
+    return TableRowData(
+      day: map['day'] as String,
+      path: map['path'] as String,
+      status: map['status'] as String,
+      statusColor: _getColorFromStatus(map['statusColor']),
     );
   }
 
-  Widget _buildLegend(String title, Color color) {
-    return Row(
-      children: [
-        Container(
-          width: 12,
-          height: 12,
-          color: color,
-        ),
-        SizedBox(width: 4),
-        Text(
-          title,
-          style: TextStyle(
-            fontSize: 12,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ],
-    );
-  }
-
-  List<BarChartGroupData> _buildBarGroups() {
-    return List.generate(12, (index) {
-      return BarChartGroupData(
-        x: index,
-        barRods: _buildBarRods(index),
-        barsSpace: 4, // Space between bars in the group
-      );
-    });
-  }
-
-  List<BarChartRodData> _buildBarRods(int month) {
-    // Display bars based on the selected genre filter
-    switch (_selectedGenre) {
-      case 'Jazz Music':
-        return [
-          BarChartRodData(
-            toY: _getJazzValue(month),
-            color: Colors.orange,
-            width: 12,
-          ),
-        ];
-      case 'Pop Music':
-        return [
-          BarChartRodData(
-            toY: _getPopValue(month),
-            color: Colors.teal,
-            width: 12,
-          ),
-        ];
-      case 'Rock Music':
-        return [
-          BarChartRodData(
-            toY: _getRockValue(month),
-            color: Colors.blue,
-            width: 12,
-          ),
-        ];
-      default: // 'All'
-        return [
-          BarChartRodData(
-            toY: _getJazzValue(month),
-            color: Colors.orange,
-            width: 12,
-          ),
-          BarChartRodData(
-            toY: _getPopValue(month),
-            color: Colors.teal,
-            width: 12,
-          ),
-          BarChartRodData(
-            toY: _getRockValue(month),
-            color: Colors.blue,
-            width: 12,
-          ),
-        ];
+  // Helper method to convert color from string or other format
+  static Color _getColorFromStatus(dynamic colorValue) {
+    // Assuming colorValue is a string like "green", "red", etc.
+    switch (colorValue) {
+      case 'green':
+        return Colors.green;
+      case 'red':
+        return Colors.red;
+      case 'blue':
+        return Colors.blue;
+      default:
+        return Colors.grey; // Fallback color
     }
   }
 
-  LineChartBarData _buildTrendLine() {
-    // Calculate trend line data points
-    List<FlSpot> spots = List.generate(12, (index) {
-      double trendValue;
-      switch (_selectedGenre) {
-        case 'Jazz Music':
-          trendValue = _getJazzValue(index);
-          break;
-        case 'Pop Music':
-          trendValue = _getPopValue(index);
-          break;
-        case 'Rock Music':
-          trendValue = _getRockValue(index);
-          break;
-        default:
-          // Calculate average for all genres
-          trendValue = (_getJazzValue(index) +
-                  _getPopValue(index) +
-                  _getRockValue(index)) /
-              3;
-          break;
+  // Method to convert the instance to a map
+  Map<String, dynamic> toMap() {
+    return {
+      'day': day,
+      'path': path,
+      'status': status,
+      'statusColor': statusColor,
+    };
+  }
+}
+
+class ApiService {
+  final Dio _dio = Dio();
+
+  Future<List<TableRowData>> fetchData() async {
+    try {
+      final response = await _dio
+          .get('https://example.com/api/data'); // Replace with your API URL
+      if (response.statusCode == 200) {
+        List<dynamic> data = response.data;
+        return data.map((item) => TableRowData.fromMap(item)).toList();
+      } else {
+        throw Exception('Failed to load data');
       }
-      return FlSpot(index.toDouble(), trendValue);
-    });
-
-    return LineChartBarData(
-      spots: spots,
-      isCurved: true,
-      color: Colors.red,
-      barWidth: 2,
-      isStrokeCapRound: true,
-      dotData: FlDotData(show: false),
-      belowBarData: BarAreaData(show: false),
-    );
-  }
-
-  double _getJazzValue(int month) {
-    const values = [
-      5.0,
-      10.0,
-      15.0,
-      8.0,
-      20.0,
-      18.0,
-      10.0,
-      15.0,
-      12.0,
-      17.0,
-      22.0,
-      20.0
-    ];
-    return values[month];
-  }
-
-  double _getPopValue(int month) {
-    const values = [
-      7.0,
-      12.0,
-      8.0,
-      12.0,
-      22.0,
-      25.0,
-      15.0,
-      18.0,
-      20.0,
-      24.0,
-      25.0,
-      23.0
-    ];
-    return values[month];
-  }
-
-  double _getRockValue(int month) {
-    const values = [
-      4.0,
-      8.0,
-      6.0,
-      10.0,
-      12.0,
-      11.0,
-      8.0,
-      7.0,
-      9.0,
-      10.0,
-      13.0,
-      11.0
-    ];
-    return values[month];
+    } catch (e) {
+      throw Exception('Failed to load data: $e');
+    }
   }
 }
