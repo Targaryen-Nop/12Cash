@@ -47,6 +47,7 @@ dependencies:
   timezone: ^0.9.4
   geolocator: ^12.0.0
   location: ^6.0.2
+  flutter_dotenv: ^5.0.2
 
 dev_dependencies:
   flutter_test:
@@ -73,6 +74,7 @@ flutter:
   assets:
     - assets/images/
     - assets/images/logo12.png
+    - .env
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

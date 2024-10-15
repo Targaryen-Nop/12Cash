@@ -1,11 +1,19 @@
+import 'dart:convert';
 import 'package:_12sale_app/components/Button.dart';
 import 'package:_12sale_app/components/Dropdown.dart';
-import 'package:_12sale_app/components/DropdownSearch.dart';
+import 'package:_12sale_app/components/CustomerDropdownSearch.dart';
+import 'package:_12sale_app/components/ShippingDropdownSearch.dart';
 import 'package:_12sale_app/components/Table.dart';
 import 'package:_12sale_app/components/chart/BarChart.dart';
 import 'package:_12sale_app/components/chart/LineChart.dart';
 import 'package:_12sale_app/components/chart/TrendingMusicChart.dart';
+import 'package:_12sale_app/models/Customer.dart';
+import 'package:_12sale_app/models/Shipping.dart';
+import 'package:_12sale_app/models/example.dart';
+import 'package:_12sale_app/service/getCustomer.dart';
 import 'package:_12sale_app/styles/gobalStyle.dart';
+import 'package:dio/dio.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -13,6 +21,7 @@ import 'package:_12sale_app/service/location_service.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:_12sale_app/models/User.dart';
 import 'dart:async';
+import 'package:_12sale_app/service/getCustomer.dart';
 
 class Dashboardscreen extends StatefulWidget {
   const Dashboardscreen({super.key});
@@ -27,6 +36,7 @@ class _DashboardscreenState extends State<Dashboardscreen> {
   void initState() {
     super.initState();
     LocationService().initialize();
+
     // startLocationUpdates();
   }
 
@@ -51,6 +61,11 @@ class _DashboardscreenState extends State<Dashboardscreen> {
     });
   }
 
+  List<CustomerModel> customerList = [];
+  List<ShippingModel> shuppingList = [];
+  CustomerModel? _selectedCustomer;
+  ShippingModel? _selectedShipping;
+
   Widget build(BuildContext context) {
     GobalStyles.screenWidth = MediaQuery.of(context).size.width;
     // someFunction();
@@ -58,8 +73,12 @@ class _DashboardscreenState extends State<Dashboardscreen> {
         padding: const EdgeInsets.all(10.0),
         height: GobalStyles.screenWidth / 2.5,
         width: GobalStyles.screenWidth / 1.5,
-        child: Column(
-          children: [DropdownMenuAll()],
+        child: const Column(
+          children: [
+            ShippingDropdownSearch(),
+            SizedBox(height: 20),
+            CustomerDropdownSearch()
+          ],
         )
         // CustomTable(
         //   data: _buildRows(),
