@@ -60,6 +60,16 @@ class _ShippingDropdownSearchState extends State<ShippingDropdownSearch> {
   Widget build(BuildContext context) {
     return DropdownSearch<ShippingModel>(
       items: shuppingList,
+      dropdownButtonProps: const DropdownButtonProps(
+        icon: Padding(
+          padding: EdgeInsets.only(right: 8.0),
+          child: Icon(
+            Icons.search,
+            size: 30,
+            color: Colors.black54,
+          ),
+        ),
+      ),
       dropdownDecoratorProps: const DropDownDecoratorProps(
         dropdownSearchDecoration: InputDecoration(
           labelText: "Shipping",

@@ -5,8 +5,12 @@ import 'package:_12sale_app/page/LoginScreen.dart';
 import 'package:_12sale_app/page/TestScreen.dart';
 import 'package:_12sale_app/page/DashboardScreen.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:intl/date_symbol_data_local.dart'; // For date localization
 
-void main() {
+void main() async {
+  // Initialize the locale data for Thai language
+  await initializeDateFormatting('th', null);
   runApp(const MyApp());
 }
 

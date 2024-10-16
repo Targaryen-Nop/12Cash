@@ -1,4 +1,6 @@
 import 'package:_12sale_app/page/DashboardScreen.dart';
+// import 'package:_12sale_app/page/RouteScreen.dart';
+import 'package:_12sale_app/page/TestTabel.dart';
 import 'package:_12sale_app/styles/gobalStyle.dart';
 import 'package:_12sale_app/components/Header.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +17,16 @@ class _TestScreenState extends State<TestScreen> {
 
   static const List<Widget> _widgetOptions = <Widget>[
     Dashboardscreen(),
-    Text('Search'),
+    Routescreen(),
+    Text('Favorites'),
+    Text('Profile'),
+    Text('Settings'),
+    Text('More'),
+  ];
+
+  static const List<Widget> _widgetOptionsHeader = <Widget>[
+    DashboardHeader(),
+    RouteHeader(),
     Text('Favorites'),
     Text('Profile'),
     Text('Settings'),
@@ -35,40 +46,43 @@ class _TestScreenState extends State<TestScreen> {
         leading: Center(
           child: _widgetOptions.elementAt(_selectedIndex),
         ),
-        leading2: DashboardHeader(),
+        leading2: _widgetOptionsHeader.elementAt(_selectedIndex),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.route_rounded),
-            label: 'Route',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.storefront),
-            label: 'Shop',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.description),
-            label: 'Menu',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.inventory),
-            label: 'Manage',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.more_horiz),
-            label: 'More',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.blue,
-        // unselectedItemColor: Colors.grey,
-        onTap: _onItemTapped,
-        type: BottomNavigationBarType.fixed,
+      bottomNavigationBar: Container(
+        child: BottomNavigationBar(
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.route_rounded),
+              label: 'Route',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.storefront),
+              label: 'Shop',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.description),
+              label: 'Menu',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.inventory),
+              label: 'Manage',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.more_horiz),
+              label: 'More',
+            ),
+          ],
+          currentIndex: _selectedIndex,
+          selectedItemColor: Colors.white,
+          backgroundColor: GobalStyles.primaryColor,
+          unselectedItemColor: Colors.grey,
+          onTap: _onItemTapped,
+          type: BottomNavigationBarType.fixed,
+        ),
       ),
     );
   }

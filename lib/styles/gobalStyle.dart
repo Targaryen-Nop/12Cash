@@ -27,6 +27,45 @@ class GobalStyles {
     fontWeight: FontWeight.bold,
     color: Colors.white,
   ));
+  static TextStyle headlineblack1 = GoogleFonts.kanit(
+      textStyle: const TextStyle(
+    fontSize: 72.0,
+    fontWeight: FontWeight.bold,
+    color: Colors.black,
+  ));
+
+  static TextStyle headerTable = GoogleFonts.kanit(
+      textStyle: const TextStyle(
+    fontSize: 24,
+    fontWeight: FontWeight.bold,
+    color: Colors.black,
+  ));
+
+  static TextStyle articalTable = GoogleFonts.kanit(
+      textStyle: const TextStyle(
+    fontSize: 18,
+    // fontWeight: FontWeight.normal,
+    color: Colors.black,
+  ));
+
+  static TextStyle headlineblack2 = GoogleFonts.kanit(
+      textStyle: const TextStyle(
+    fontSize: 36.0,
+    fontWeight: FontWeight.bold,
+    color: Colors.black,
+  ));
+  static TextStyle headlineblack3 = GoogleFonts.kanit(
+      textStyle: const TextStyle(
+    fontSize: 24.0,
+    fontWeight: FontWeight.bold,
+    color: Colors.black,
+  ));
+  static TextStyle headlineblack4 = GoogleFonts.kanit(
+      textStyle: const TextStyle(
+    fontSize: 18.0,
+    fontWeight: FontWeight.bold,
+    color: Colors.black,
+  ));
 
   static const TextStyle bodyText1 = TextStyle(
     fontSize: 14.0,
@@ -34,7 +73,7 @@ class GobalStyles {
   );
 
   static const Color primaryColor = Color(0xFF00569D);
-  static const Color secondaryColor = Color.fromARGB(255, 159, 210, 252);
+  static const Color secondaryColor = Color(0xFFD1F0F6);
   static const Color accentColor = Colors.orange;
   static double screenHeight = 0;
   static double screenWidth = 0;

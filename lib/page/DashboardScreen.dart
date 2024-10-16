@@ -77,7 +77,11 @@ class _DashboardscreenState extends State<Dashboardscreen> {
           children: [
             ShippingDropdownSearch(),
             SizedBox(height: 20),
-            CustomerDropdownSearch()
+            // CustomTable(data: _buildRows(), columns: [
+            //   DataColumn(label: Text('วันที่')), // "Date" in Thai
+            //   DataColumn(label: Text('เส้นทาง')), // "Path" in Thai
+            //   DataColumn(label: Text('สถานะ')), // "Status" in Thai
+            // ]),
           ],
         )
         // CustomTable(
@@ -89,11 +93,7 @@ class _DashboardscreenState extends State<Dashboardscreen> {
         //   children: [DropdownSearchWidget()],
         // ),
         );
-    // CustomTable(data: _buildRows(), columns: [
-    //     DataColumn(label: Text('วันที่')), // "Date" in Thai
-    //     DataColumn(label: Text('เส้นทาง')), // "Path" in Thai
-    //     DataColumn(label: Text('สถานะ')), // "Status" in Thai
-    //   ]),
+
     //   // SizedBox(width: 10),
     //   CustomTable(data: _buildRows2(), columns: [
     //     DataColumn(label: Text('วันที่')), // "Date" in Thai
@@ -241,141 +241,135 @@ class _DashboardHeaderState extends State<DashboardHeader> {
   @override
   Widget build(BuildContext context) {
     GobalStyles.screenWidth = MediaQuery.of(context).size.width;
-    return GobalStyles.screenWidth > 600
-        ? Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
+    GobalStyles.screenHeight = MediaQuery.of(context).size.height;
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Flexible(
+          fit: FlexFit.loose,
+          child: Row(
             children: [
               Flexible(
+                flex: 1,
+                fit: FlexFit.tight,
+                child: Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 4),
+                  height: 150,
+                  // color: Colors.red,
+                  child: Container(
+                    decoration: const BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage('assets/images/12TradingLogo.png'),
+                        // fit: BoxFit.fitWidth,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Flexible(
+                flex: 5,
                 fit: FlexFit.loose,
-                child: Row(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Flexible(
-                      fit: FlexFit.loose,
+                    Expanded(
                       child: Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 4),
-                        color: Colors.red,
-                        child: Container(
-                          decoration: const BoxDecoration(
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(16),
-                              topRight: Radius.circular(16),
+                        margin: EdgeInsets.symmetric(horizontal: 4),
+                        // color: Colors.blue,
+                        child: Row(
+                          children: [
+                            Text(
+                              'นายนพรัตน์ มั่นสุวรรณ',
+                              style: GobalStyles.headline3,
+                              textAlign: TextAlign.start,
                             ),
-                            image: DecorationImage(
-                              image:
-                                  AssetImage('assets/images/12TradingLogo.png'),
-                              fit: BoxFit.fitHeight,
-                            ),
-                          ),
+                          ],
                         ),
                       ),
                     ),
                     Flexible(
-                      flex: 6,
-                      fit: FlexFit.loose,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          Expanded(
-                            child: Container(
-                              margin: EdgeInsets.symmetric(horizontal: 4),
-                              color: Colors.blue,
-                              child: Row(
+                        fit: FlexFit.loose,
+                        child: Row(children: [
+                          Container(
+                            // color: Colors.green,
+                            margin: EdgeInsets.symmetric(horizontal: 4),
+                            child: RichText(
+                              text: TextSpan(
+                                text: DateTime.now().day.toString(),
+                                style: GobalStyles.headline3,
                                 children: [
-                                  Text(
-                                    'นายนพรัตน์ มั่นสุวรรณ',
+                                  TextSpan(
+                                    text: DateFormat(' MMMM yyyy')
+                                        .format(DateTime.now()),
                                     style: GobalStyles.headline3,
-                                    textAlign: TextAlign.start,
-                                  ),
+                                  )
                                 ],
                               ),
                             ),
                           ),
+                          const SizedBox(
+                            width: 10,
+                          ),
                           Flexible(
                               fit: FlexFit.loose,
-                              child: Row(children: [
-                                Container(
-                                  color: Colors.green,
-                                  margin: EdgeInsets.symmetric(horizontal: 4),
-                                  child: RichText(
-                                    text: TextSpan(
-                                      text: DateTime.now().day.toString(),
-                                      style: GobalStyles.headline3,
-                                      children: [
-                                        TextSpan(
-                                          text: DateFormat(' MMMM yyyy')
-                                              .format(DateTime.now()),
-                                          style: GobalStyles.headline3,
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(
-                                  width: 10,
-                                ),
-                                Flexible(
-                                    fit: FlexFit.loose,
-                                    child: StreamBuilder(
-                                        stream: Stream.periodic(
-                                            const Duration(seconds: 1)),
-                                        builder: (context, snapshot) {
-                                          return Container(
-                                            color: Colors.green,
-                                            alignment: Alignment.centerLeft,
-                                            child: Text(
-                                              DateFormat('hh:mm:ss a')
-                                                  .format(DateTime.now()),
-                                              style: GobalStyles.headline3,
-                                            ),
-                                          );
-                                        }))
-                              ])),
-                          Flexible(
-                              fit: FlexFit.loose,
-                              child: Row(
-                                children: [
-                                  Container(
-                                    width: GobalStyles.screenWidth / 9,
-                                    // margin: EdgeInsets.all(4),
-                                    decoration: const BoxDecoration(
-                                        color: const Color.fromARGB(
-                                            255, 52, 6, 255),
-                                        borderRadius: BorderRadius.horizontal(
-                                            right: Radius.circular(50),
-                                            left: Radius.circular(50))),
-                                    child: Center(
-                                        child: Text(
-                                      'SALE',
-                                      style: GobalStyles.headline4,
-                                    )),
-                                  ),
-                                  Container(
-                                    width: GobalStyles.screenWidth / 10,
-                                    margin: EdgeInsets.symmetric(horizontal: 4),
-                                    decoration: const BoxDecoration(
-                                        color: const Color.fromARGB(
-                                            255, 52, 6, 255),
-                                        borderRadius: BorderRadius.horizontal(
-                                            right: Radius.circular(50),
-                                            left: Radius.circular(50))),
-                                    child: Center(
-                                        child: Text(
-                                      'BE121',
-                                      style: GobalStyles.headline4,
-                                    )),
-                                  ),
-                                ],
+                              child: StreamBuilder(
+                                  stream: Stream.periodic(
+                                      const Duration(seconds: 1)),
+                                  builder: (context, snapshot) {
+                                    return Container(
+                                      // color: Colors.green,
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(
+                                        DateFormat('hh:mm:ss a')
+                                            .format(DateTime.now()),
+                                        style: GobalStyles.headline3,
+                                      ),
+                                    );
+                                  }))
+                        ])),
+                    Flexible(
+                        fit: FlexFit.loose,
+                        child: Row(
+                          children: [
+                            Container(
+                              width: GobalStyles.screenWidth / 9,
+                              // margin: EdgeInsets.all(4),
+                              decoration: const BoxDecoration(
+                                  color: const Color.fromARGB(255, 52, 6, 255),
+                                  borderRadius: BorderRadius.horizontal(
+                                      right: Radius.circular(50),
+                                      left: Radius.circular(50))),
+                              child: Center(
+                                  child: Text(
+                                'SALE',
+                                style: GobalStyles.headline4,
                               )),
-                        ],
-                      ),
-                    ),
+                            ),
+                            Container(
+                              width: GobalStyles.screenWidth / 10,
+                              margin: EdgeInsets.symmetric(horizontal: 4),
+                              decoration: const BoxDecoration(
+                                  color: const Color.fromARGB(255, 52, 6, 255),
+                                  borderRadius: BorderRadius.horizontal(
+                                      right: Radius.circular(50),
+                                      left: Radius.circular(50))),
+                              child: Center(
+                                  child: Text(
+                                'BE121',
+                                style: GobalStyles.headline4,
+                              )),
+                            ),
+                          ],
+                        )),
                   ],
                 ),
               ),
             ],
-          )
-        : SizedBox();
+          ),
+        ),
+      ],
+    );
   }
 }

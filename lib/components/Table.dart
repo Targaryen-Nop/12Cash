@@ -1,139 +1,79 @@
+import 'package:_12sale_app/styles/gobalStyle.dart';
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(MyApp());
+class CustomTable extends StatefulWidget {
+  const CustomTable({super.key});
+
+  @override
+  State<CustomTable> createState() => _CustomTableState();
 }
 
-class MyApp extends StatelessWidget {
+class _CustomTableState extends State<CustomTable> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(title: Text('Dropdown Search')),
-        body: Center(
-          child: SearchBar(),
-        ),
-      ),
-    );
-  }
-}
-
-class SearchBar extends StatefulWidget {
-  @override
-  _SearchBarState createState() => _SearchBarState();
-}
-
-class _SearchBarState extends State<SearchBar> {
-  final TextEditingController _controller = TextEditingController();
-  bool _showDropdown = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Container(
-          width: 300,
-          padding: EdgeInsets.symmetric(horizontal: 10),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: Colors.grey),
-          ),
-          child: Row(
-            children: [
-              Icon(Icons.search, color: Colors.grey),
-              SizedBox(width: 8),
-              Expanded(
-                child: TextField(
-                  controller: _controller,
-                  decoration: InputDecoration(
-                    hintText: 'ค้นหา',
-                    border: InputBorder.none,
-                  ),
-                  onChanged: (value) {
-                    setState(() {
-                      _showDropdown = value.isNotEmpty;
-                    });
-                  },
-                ),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  // Add search functionality here
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                ),
-                child: Text(
-                  'ค้นหา',
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
-            ],
+    return DataTable(
+      columns: <DataColumn>[
+        DataColumn(
+          label: Text(
+            'วันที่',
+            style: GobalStyles.headlineblack3,
           ),
         ),
-        if (_showDropdown) _buildDropdown()
+        DataColumn(
+          label: Text(
+            'เส้นทาง',
+            style: GobalStyles.headlineblack3,
+          ),
+        ),
+        DataColumn(
+          label: Text(
+            'สถานะ',
+            style: GobalStyles.headlineblack3,
+          ),
+        ),
+      ],
+      rows: <DataRow>[
+        _buildDataRow('Day 01', '1', '5/5', Colors.green[100], Colors.green),
+        _buildDataRow('Day 02', '2', '6/6', Colors.green[100], Colors.green),
+        _buildDataRow('Day 03', '4', '0/9', Colors.red[100], Colors.red),
+        _buildDataRow('Day 04', '5', '11/16', Colors.blue[100], Colors.blue),
+        _buildDataRow('Day 05', '6', '2/9', Colors.blue[100], Colors.blue),
+        _buildDataRow('Day 06', '7', '9/9', Colors.green[100], Colors.green),
+        _buildDataRow('Day 06', '7', '9/9', Colors.green[100], Colors.green),
+        _buildDataRow('Day 06', '7', '9/9', Colors.green[100], Colors.green),
+        _buildDataRow('Day 06', '7', '9/9', Colors.green[100], Colors.green),
+        _buildDataRow('Day 06', '7', '9/9', Colors.green[100], Colors.green),
+        _buildDataRow('Day 7', '7', '9/9', Colors.green[100], Colors.green),
       ],
     );
   }
 
-  Widget _buildDropdown() {
-    // Example data, replace with actual search results
-    final searchResults = [
-      {
-        'name': 'ร้าน เจริญพรค้าขาย',
-        'code': '10334587',
-        'route': '19',
-        'address': '999/99 มหาราช ต.สุริยะ อ.พระจันทร์ จ.ป่าดงพงไพร 99999',
-      },
-    ];
-
-    return Container(
-      width: 300,
-      margin: EdgeInsets.only(top: 8),
-      padding: EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: Colors.grey),
-        boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 4)],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: searchResults.map((result) {
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                result['name']!,
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              SizedBox(height: 4),
-              Text(
-                'รหัสร้าน: ${result['code']}',
-                style: TextStyle(fontSize: 14),
-              ),
-              Text(
-                'เส้นทาง: ${result['route']}',
-                style: TextStyle(fontSize: 14),
-              ),
-              Text(
-                'ที่อยู่: ${result['address']}',
-                style: TextStyle(fontSize: 14),
-              ),
-              SizedBox(height: 8),
-            ],
-          );
-        }).toList(),
-      ),
+  DataRow _buildDataRow(String day, String route, String status, Color? bgColor,
+      Color? textColor) {
+    return DataRow(
+      cells: <DataCell>[
+        DataCell(Text(
+          day,
+          style: TextStyle(color: Colors.black, fontSize: 18),
+        )), // Text(day,)),
+        DataCell(Text(
+          route,
+          style: TextStyle(color: Colors.black, fontSize: 18),
+        )),
+        DataCell(
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+            decoration: BoxDecoration(
+              color: bgColor,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Text(
+              status,
+              style: TextStyle(color: textColor, fontSize: 18),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:_12sale_app/models/Customer.dart';
+import 'package:_12sale_app/styles/gobalStyle.dart';
 import 'package:dio/dio.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
@@ -26,14 +27,25 @@ class _CustomerDropdownSearchState extends State<CustomerDropdownSearch> {
   Widget build(BuildContext context) {
     return DropdownSearch<CustomerModel>(
       items: customerList,
+
+      dropdownButtonProps: const DropdownButtonProps(
+        icon: Padding(
+          padding: EdgeInsets.only(right: 8.0),
+          child: Icon(
+            Icons.search,
+            size: 30,
+            color: Colors.black54,
+          ),
+        ),
+      ),
       dropdownDecoratorProps: const DropDownDecoratorProps(
         dropdownSearchDecoration: InputDecoration(
-          labelText: "Customer",
+          // labelText: "Customer",
+          hintText: "Select Customer",
           labelStyle: const TextStyle(
-            fontSize: 18, // Adjust the label font size
-            color:
-                Color.fromARGB(255, 50, 50, 50), // Set the color of the label
-            fontWeight: FontWeight.w400, // Optional: Change font weight
+            fontSize: 20, // Adjust the label font size
+            color: Colors.black, // Set the color of the label
+            fontWeight: FontWeight.bold, // Optional: Change font weight
           ),
           floatingLabelBehavior: FloatingLabelBehavior
               .always, // Always show the label above the dropdown
@@ -141,25 +153,57 @@ class _CustomerDropdownSearchState extends State<CustomerDropdownSearch> {
               TextSpan(
                 children: [
                   TextSpan(
-                    text: 'Name: ${item.customerName}\n',
+                    text: 'ร้าน ${item.customerName}\n',
                     style: const TextStyle(
-                      fontSize: 16,
+                      fontSize: 24,
                       fontWeight: FontWeight.bold,
-                      color: Color(0xff4962AD),
+                      color: GobalStyles.primaryColor,
+                    ),
+                  ),
+                  const TextSpan(
+                    text: 'รหัสร้าน : ',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
                     ),
                   ),
                   TextSpan(
-                    text: 'Code: ${item.customerNo}\n',
-                    style: const TextStyle(
-                      fontSize: 14,
+                    text: '${item.customerNo} \n',
+                    style: TextStyle(
+                      fontSize: 18,
                       fontWeight: FontWeight.normal,
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                  const TextSpan(
+                    text: 'เลขที่ : ',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                  ),
+                  TextSpan(
+                    text: '${item.customerNo} \n',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.normal,
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                  const TextSpan(
+                    text: 'ที่อยู่ : ',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
                       color: Colors.black,
                     ),
                   ),
                   TextSpan(
                     text: '${item.customerAddress1} ${item.customerPoscode}',
                     style: TextStyle(
-                      fontSize: 12,
+                      fontSize: 18,
                       fontWeight: FontWeight.normal,
                       color: Colors.grey[600],
                     ),
