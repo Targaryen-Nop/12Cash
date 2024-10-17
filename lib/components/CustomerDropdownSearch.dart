@@ -30,10 +30,10 @@ class _CustomerDropdownSearchState extends State<CustomerDropdownSearch> {
 
       dropdownButtonProps: const DropdownButtonProps(
         icon: Padding(
-          padding: EdgeInsets.only(right: 8.0),
+          padding: EdgeInsets.only(right: 2.0),
           child: Icon(
             Icons.search,
-            size: 30,
+            size: 20,
             color: Colors.black54,
           ),
         ),

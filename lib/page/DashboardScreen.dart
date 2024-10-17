@@ -17,7 +17,7 @@ import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:_12sale_app/service/location_service.dart';
+import 'package:_12sale_app/service/locationService.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:_12sale_app/models/User.dart';
 import 'dart:async';
@@ -270,100 +270,154 @@ class _DashboardHeaderState extends State<DashboardHeader> {
               Flexible(
                 flex: 5,
                 fit: FlexFit.loose,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Expanded(
-                      child: Container(
-                        margin: EdgeInsets.symmetric(horizontal: 4),
-                        // color: Colors.blue,
-                        child: Row(
-                          children: [
-                            Text(
-                              'นายนพรัตน์ มั่นสุวรรณ',
-                              style: GobalStyles.headline3,
-                              textAlign: TextAlign.start,
-                            ),
-                          ],
+                child: Center(
+                  // margin: EdgeInsets.only(top: 10),
+
+                  child: Column(
+                    // mainAxisSize: MainAxisSize.max,
+                    // crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        child: Container(
+                          margin: EdgeInsets.symmetric(horizontal: 4),
+                          // color: Colors.blue,
+                          child: Row(
+                            children: [
+                              Text(
+                                'นายนพรัตน์ มั่นสุวรรณ ',
+                                style: GobalStyles.headline3,
+                                textAlign: TextAlign.start,
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                    Flexible(
+                      // Flexible(
+                      //   fit: FlexFit.loose,
+                      //   child: Row(
+                      //     children: [
+                      //       Container(
+                      //         // color: Colors.green,
+                      //         margin: EdgeInsets.symmetric(horizontal: 4),
+                      //         child: RichText(
+                      //           text: TextSpan(
+                      //             text: DateTime.now().day.toString(),
+                      //             style: GobalStyles.headline3,
+                      //             children: [
+                      //               TextSpan(
+                      //                 text: DateFormat(' MMMM yyyy')
+                      //                     .format(DateTime.now()),
+                      //                 style: GobalStyles.headline3,
+                      //               )
+                      //             ],
+                      //           ),
+                      //         ),
+                      //       ),
+                      //       const SizedBox(
+                      //         width: 10,
+                      //       ),
+                      //       Flexible(
+                      //         fit: FlexFit.loose,
+                      //         child: StreamBuilder(
+                      //           stream:
+                      //               Stream.periodic(const Duration(seconds: 1)),
+                      //           builder: (context, snapshot) {
+                      //             return Container(
+                      //               // color: Colors.green,
+                      //               alignment: Alignment.centerLeft,
+                      //               child: Text(
+                      //                 DateFormat('hh:mm:ss a')
+                      //                     .format(DateTime.now()),
+                      //                 style: GobalStyles.headline3,
+                      //               ),
+                      //             );
+                      //           },
+                      //         ),
+                      //       )
+                      //     ],
+                      //   ),
+                      // ),
+                      SizedBox(height: 5),
+                      Flexible(
                         fit: FlexFit.loose,
-                        child: Row(children: [
-                          Container(
-                            // color: Colors.green,
-                            margin: EdgeInsets.symmetric(horizontal: 4),
-                            child: RichText(
-                              text: TextSpan(
-                                text: DateTime.now().day.toString(),
-                                style: GobalStyles.headline3,
-                                children: [
-                                  TextSpan(
-                                    text: DateFormat(' MMMM yyyy')
-                                        .format(DateTime.now()),
-                                    style: GobalStyles.headline3,
-                                  )
-                                ],
+                        child: Container(
+                          // color: Colors.amber,
+                          child: Row(
+                            // crossAxisAlignment: CrossAxisAlignment.,
+                            textBaseline: TextBaseline.alphabetic,
+                            // mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                width: GobalStyles.screenWidth / 10,
+                                // margin: EdgeInsets.all(4),
+                                decoration: const BoxDecoration(
+                                    color: GobalStyles.secondaryColor,
+                                    borderRadius: BorderRadius.horizontal(
+                                        right: Radius.circular(50),
+                                        left: Radius.circular(50))),
+
+                                child: Center(
+                                    child: Text(
+                                  'SALE',
+                                  style: GobalStyles.headlineblack4,
+                                )),
                               ),
-                            ),
+                              Container(
+                                width: GobalStyles.screenWidth / 10,
+                                margin: EdgeInsets.symmetric(horizontal: 4),
+                                decoration: const BoxDecoration(
+                                    color: GobalStyles.secondaryColor,
+                                    borderRadius: BorderRadius.horizontal(
+                                        right: Radius.circular(50),
+                                        left: Radius.circular(50))),
+                                child: Center(
+                                    child: Text(
+                                  'BE121',
+                                  style: GobalStyles.headlineblack4,
+                                )),
+                              ),
+                              Expanded(
+                                child: Container(
+                                  // color:
+                                  //     Colors.orangeAccent, // Background color
+                                  height: 40, // Fixed height
+                                  padding: EdgeInsets.symmetric(horizontal: 8),
+                                  child: Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Row(
+                                      children: [
+                                        Text(
+                                            DateFormat('d MMMM yyyy').format(
+                                                DateTime
+                                                    .now()), // Current date and time
+                                            style: GobalStyles.articalwhite),
+                                        StreamBuilder(
+                                          stream: Stream.periodic(
+                                              const Duration(seconds: 1)),
+                                          builder: (context, snapshot) {
+                                            return Container(
+                                              // color: Colors.green,
+                                              alignment: Alignment.centerLeft,
+                                              child: Text(
+                                                  DateFormat(' hh:mm:ss a')
+                                                      .format(DateTime.now()),
+                                                  style:
+                                                      GobalStyles.articalwhite),
+                                            );
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
-                          const SizedBox(
-                            width: 10,
-                          ),
-                          Flexible(
-                              fit: FlexFit.loose,
-                              child: StreamBuilder(
-                                  stream: Stream.periodic(
-                                      const Duration(seconds: 1)),
-                                  builder: (context, snapshot) {
-                                    return Container(
-                                      // color: Colors.green,
-                                      alignment: Alignment.centerLeft,
-                                      child: Text(
-                                        DateFormat('hh:mm:ss a')
-                                            .format(DateTime.now()),
-                                        style: GobalStyles.headline3,
-                                      ),
-                                    );
-                                  }))
-                        ])),
-                    Flexible(
-                        fit: FlexFit.loose,
-                        child: Row(
-                          children: [
-                            Container(
-                              width: GobalStyles.screenWidth / 9,
-                              // margin: EdgeInsets.all(4),
-                              decoration: const BoxDecoration(
-                                  color: const Color.fromARGB(255, 52, 6, 255),
-                                  borderRadius: BorderRadius.horizontal(
-                                      right: Radius.circular(50),
-                                      left: Radius.circular(50))),
-                              child: Center(
-                                  child: Text(
-                                'SALE',
-                                style: GobalStyles.headline4,
-                              )),
-                            ),
-                            Container(
-                              width: GobalStyles.screenWidth / 10,
-                              margin: EdgeInsets.symmetric(horizontal: 4),
-                              decoration: const BoxDecoration(
-                                  color: const Color.fromARGB(255, 52, 6, 255),
-                                  borderRadius: BorderRadius.horizontal(
-                                      right: Radius.circular(50),
-                                      left: Radius.circular(50))),
-                              child: Center(
-                                  child: Text(
-                                'BE121',
-                                style: GobalStyles.headline4,
-                              )),
-                            ),
-                          ],
-                        )),
-                  ],
+                        ),
+                      ),
+                      SizedBox(height: 5),
+                    ],
+                  ),
                 ),
               ),
             ],

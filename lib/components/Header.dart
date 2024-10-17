@@ -36,22 +36,32 @@ class Header extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          SizedBox(height: 30),
           Flexible(
             flex: isPortrait ? 1 : 2,
             child: Container(
               margin: EdgeInsets.only(top: 20),
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.symmetric(horizontal: 25),
               // color: Colors.amber,
               child: leading2,
             ),
           ),
+          SizedBox(height: 30),
           Flexible(
-            flex: 6,
+            flex: 11,
             fit: FlexFit.loose,
             child: Container(
-              // height: GobalStyles.screenWidth * 1.5,
               decoration: const BoxDecoration(
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black26, // Soft black color for shadow
+                    offset: Offset(0, 5), // Slight downward shadow
+                    blurRadius: 100, // Soften the shadow
+                    spreadRadius: 10, // How far the shadow extends
+                  ),
+                ],
                 color: Colors.white,
+                borderRadius: BorderRadius.vertical(top: Radius.circular(100)),
               ),
               child: leading!,
             ),
