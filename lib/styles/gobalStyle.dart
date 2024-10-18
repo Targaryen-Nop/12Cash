@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 class GobalStyles {
   static TextStyle tableHeader = GoogleFonts.kanit(
       textStyle: const TextStyle(
-    fontSize: 32.0,
+    fontSize: 32,
     fontWeight: FontWeight.normal,
     color: Color(0xFF6B7280),
   ));
@@ -12,6 +12,13 @@ class GobalStyles {
   static TextStyle tableText = GoogleFonts.kanit(
       textStyle: const TextStyle(
     fontSize: 32.0,
+    fontWeight: FontWeight.normal,
+    color: Color(0xFF111827),
+  ));
+
+  static TextStyle kanit24 = GoogleFonts.kanit(
+      textStyle: const TextStyle(
+    fontSize: 24.0,
     fontWeight: FontWeight.normal,
     color: Color(0xFF111827),
   ));
@@ -29,10 +36,23 @@ class GobalStyles {
     fontWeight: FontWeight.bold,
     color: Colors.white,
   ));
+
+  static TextStyle text2 = GoogleFonts.kanit(
+      textStyle: const TextStyle(
+    fontSize: 36.0,
+    fontWeight: FontWeight.normal,
+    color: Colors.white,
+  ));
   static TextStyle headline3 = GoogleFonts.kanit(
       textStyle: const TextStyle(
     fontSize: 24.0,
     fontWeight: FontWeight.bold,
+    color: Colors.white,
+  ));
+  static TextStyle text3 = GoogleFonts.kanit(
+      textStyle: const TextStyle(
+    fontSize: 24.0,
+    fontWeight: FontWeight.normal,
     color: Colors.white,
   ));
   static TextStyle headline4 = GoogleFonts.kanit(
@@ -59,6 +79,13 @@ class GobalStyles {
       textStyle: const TextStyle(
     fontSize: 36.0,
     fontWeight: FontWeight.bold,
+    color: Colors.black,
+  ));
+
+  static TextStyle textbBlack2 = GoogleFonts.kanit(
+      textStyle: const TextStyle(
+    fontSize: 36.0,
+    fontWeight: FontWeight.normal,
     color: Colors.black,
   ));
   static TextStyle headlineblack3 = GoogleFonts.kanit(
@@ -95,9 +122,23 @@ class GobalStyles {
     color: Colors.black,
   ));
 
+  static TextStyle textBuntton = GoogleFonts.kanit(
+      textStyle: const TextStyle(
+    fontSize: 20,
+    fontWeight: FontWeight.bold,
+    color: Colors.white,
+  ));
+
   static TextStyle articalwhite = GoogleFonts.kanit(
       textStyle: const TextStyle(
     fontSize: 18.0,
+    fontWeight: FontWeight.normal,
+    color: Colors.white,
+  ));
+
+  static TextStyle badget = GoogleFonts.kanit(
+      textStyle: const TextStyle(
+    fontSize: 20.0,
     fontWeight: FontWeight.normal,
     color: Colors.white,
   ));

@@ -1,17 +1,22 @@
 import 'package:_12sale_app/components/Appbar.dart';
+import 'package:_12sale_app/components/table/ShopRouteTable.dart';
+import 'package:_12sale_app/components/table/TableFullData.dart';
 import 'package:_12sale_app/page/OrderScreen.dart';
 import 'package:_12sale_app/styles/gobalStyle.dart';
 import 'package:flutter/material.dart';
+import 'package:camera/camera.dart';
 
 class DetailScreen extends StatefulWidget {
+  final String customerNo;
   final String day;
-  final String route;
+  final String customerName;
   final String status;
 
   const DetailScreen(
       {super.key,
+      required this.customerNo,
       required this.day,
-      required this.route,
+      required this.customerName,
       required this.status});
 
   @override
@@ -20,14 +25,13 @@ class DetailScreen extends StatefulWidget {
 
 class _DetailScreenState extends State<DetailScreen> {
   @override
-  @override
   Widget build(BuildContext context) {
-    // GobalStyles.screenWidth = MediaQuery.of(context).size.width;
+    double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(70),
         child: AppbarCustom(
-            title: " การเข้าเยี่ยม" + " " + widget.day, icon: Icons.event),
+            title: " การเข้าเยี่ยม" " " + widget.day, icon: Icons.event),
       ),
       bottomNavigationBar: Container(
         padding: EdgeInsets.all(16.0),
@@ -53,16 +57,16 @@ class _DetailScreenState extends State<DetailScreen> {
             children: [
               _buildCustomButton(
                 context,
-                icon: Icons.location_on_outlined,
+                icon: Icons.location_on_rounded,
                 label: 'ไม่ขายสินค้า',
                 color: Colors.red,
                 onPressed: () {
-                  _showCustomDialog(context);
+                  _showBottomSheet(context);
                 },
               ),
               _buildCustomButton(
                 context,
-                icon: Icons.add,
+                icon: Icons.add_shopping_cart_rounded,
                 label: 'ขายสินค้า',
                 color: Colors.teal,
                 onPressed: () {
@@ -71,7 +75,7 @@ class _DetailScreenState extends State<DetailScreen> {
                     MaterialPageRoute(
                       builder: (context) => Orderscreen(
                           day: widget.day,
-                          route: widget.route,
+                          customerName: widget.customerName,
                           status: widget.status),
                     ),
                   );
@@ -79,7 +83,7 @@ class _DetailScreenState extends State<DetailScreen> {
               ),
               _buildCustomButton(
                 context,
-                icon: Icons.camera_alt,
+                icon: Icons.add_a_photo,
                 label: 'ถ่ายรูป',
                 color: Colors.blue,
                 onPressed: () {
@@ -90,16 +94,33 @@ class _DetailScreenState extends State<DetailScreen> {
           ),
         ),
       ),
-      body: Padding(
+      body: Container(
         padding: const EdgeInsets.all(16.0),
+        margin: const EdgeInsets.all(8.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Day: ${widget.day}', style: TextStyle(fontSize: 20)),
-            Text('Route: ${widget.route}', style: TextStyle(fontSize: 20)),
-            Text('Status: ${widget.status}', style: TextStyle(fontSize: 20)),
-
-            Spacer(), // Pushes the button to the bottom of the screen
+            Text("รหัสร้าน ${widget.customerNo}", style: GobalStyles.kanit32),
+            Text("ร้าน ${widget.customerName}", style: GobalStyles.kanit32),
+            // Text(
+            //   "ร้าน เจริญพรค้าขาย",
+            //   style: GobalStyles.kanit32,
+            // ),
+            const SizedBox(height: 10),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Container(
+                height: screenWidth,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: Colors.grey, width: 1),
+                ),
+                child: ShopRouteTable(
+                  day: widget.day,
+                ),
+              ),
+            ),
           ],
         ),
       ),
@@ -115,20 +136,19 @@ class _DetailScreenState extends State<DetailScreen> {
   }) {
     return InkWell(
       onTap: onPressed,
-      borderRadius:
-          BorderRadius.circular(16), // Adds ripple effect and rounded corners
       child: Container(
-        width: 100, // Fixed width for the button
-        height: 100, // Fixed height for the button
+        width: 120, // Fixed width for the button
+        height: 120, // Fixed height for the button
+        margin: EdgeInsets.all(10),
         decoration: BoxDecoration(
           color: color,
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: Colors.black26, // Shadow color
-              blurRadius: 10, // Soft blur effect
-              spreadRadius: 2, // Spread of the shadow
-              offset: Offset(0, -3), // Shadow positioned upwards
+              color: Colors.black.withOpacity(0.2), // Shadow color
+              spreadRadius: 5, // How much the shadow spreads
+              blurRadius: 8, // The amount of blur for the shadow
+              offset: Offset(0, 0), // Spread evenly in all directions
             ),
           ],
         ),
@@ -138,16 +158,13 @@ class _DetailScreenState extends State<DetailScreen> {
             Icon(
               icon,
               color: Colors.white,
-              size: 50,
+              size: 65,
               weight: 25,
             ),
             SizedBox(height: 8),
             Text(
               label,
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 17,
-              ),
+              style: GobalStyles.textBuntton,
               textAlign: TextAlign.center,
             ),
           ],
@@ -421,15 +438,18 @@ class _DetailScreenState extends State<DetailScreen> {
                 ),
                 SizedBox(height: 8),
                 // Store Information
-                Container(
-                  // width: 250,
-                  height: 438,
-                  color: Colors.grey[300],
-                  alignment: Alignment.center,
-                  // transformAlignment: Alignment.center,
-                  child: Icon(
-                    Icons.camera_alt_outlined,
-                    size: 50,
+                GestureDetector(
+                  onTap: () {},
+                  child: Container(
+                    // width: 250,
+                    height: 438,
+                    color: Colors.grey[300],
+                    alignment: Alignment.center,
+                    // transformAlignment: Alignment.center,
+                    child: Icon(
+                      Icons.camera_alt_outlined,
+                      size: 50,
+                    ),
                   ),
                 ),
                 SizedBox(height: 8),

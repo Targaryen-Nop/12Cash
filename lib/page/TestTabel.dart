@@ -1,6 +1,6 @@
 import 'package:_12sale_app/components/CustomerDropdownSearch.dart';
 import 'package:_12sale_app/components/Table.dart';
-import 'package:_12sale_app/components/TableFullData.dart';
+import 'package:_12sale_app/components/table/TableFullData.dart';
 import 'package:_12sale_app/styles/gobalStyle.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';

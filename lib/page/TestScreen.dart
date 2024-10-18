@@ -1,3 +1,4 @@
+import 'package:_12sale_app/components/TestBadge.dart';
 import 'package:_12sale_app/page/DashboardScreen.dart';
 import 'package:_12sale_app/page/RouteScreen.dart';
 // import 'package:_12sale_app/page/TestTabel.dart';
@@ -15,10 +16,10 @@ class TestScreen extends StatefulWidget {
 class _TestScreenState extends State<TestScreen> {
   int _selectedIndex = 0;
 
-  static const List<Widget> _widgetOptions = <Widget>[
+  static List<Widget> _widgetOptions = <Widget>[
     Dashboardscreen(),
     Routescreen(),
-    Text('Favorites'),
+    BadgeExample(),
     Text('Profile'),
     Text('Settings'),
     Text('More'),

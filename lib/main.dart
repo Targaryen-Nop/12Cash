@@ -7,11 +7,26 @@ import 'package:_12sale_app/page/DashboardScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart'; // For date localization
+import 'package:flutter/services.dart';
+import 'package:camera/camera.dart';
+
+late List<CameraDescription> _cameras;
 
 void main() async {
   // Initialize the locale data for Thai language
   await initializeDateFormatting('th', null);
-  runApp(const MyApp());
+  // Ensure the app is always in portrait mode
+  WidgetsFlutterBinding.ensureInitialized();
+  _cameras = await availableCameras();
+  final cameras = await availableCameras();
+
+  // Get the first camera from the list
+  final firstCamera = cameras.first;
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp, // Portrait orientation
+  ]).then((_) {
+    runApp(MyApp());
+  });
 }
 
 class MyApp extends StatelessWidget {
@@ -34,6 +49,7 @@ class MyApp extends StatelessWidget {
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
   final String title;
+
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }

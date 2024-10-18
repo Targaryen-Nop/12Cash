@@ -17,7 +17,7 @@ class _DropdownMenuAllState extends State<DropdownMenuAll> {
       decoration: BoxDecoration(
         color: Colors.white, // Set the background color to white
         borderRadius: BorderRadius.all(Radius.circular(30)),
-        border: Border.all(color: Colors.grey), // Set the border radius
+        // Set the border radius
       ),
       child: DropdownMenu<String>(
         initialSelection: list.first,
