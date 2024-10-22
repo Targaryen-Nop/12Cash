@@ -37,7 +37,7 @@ class RouteHeader extends StatefulWidget {
 class _RouteHeaderState extends State<RouteHeader> {
   @override
   Widget build(BuildContext context) {
-    GobalStyles.screenWidth = MediaQuery.of(context).size.width;
+    double screenWidth = MediaQuery.of(context).size.width;
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -51,7 +51,7 @@ class _RouteHeaderState extends State<RouteHeader> {
               //   fit: FlexFit.tight,
               //   child: Container(
               //     margin: const EdgeInsets.symmetric(horizontal: 4),
-              //     height: 150,
+              //
               //     // color: Colors.red,
               //     child: Container(
               //       decoration: const BoxDecoration(

@@ -1,4 +1,4 @@
-import 'package:_12sale_app/page/OrderDetailScreen.dart';
+import 'package:_12sale_app/page/route/OrderDetailScreen.dart';
 import 'package:_12sale_app/styles/gobalStyle.dart';
 import 'package:flutter/material.dart';
 
@@ -16,7 +16,8 @@ class _CartTableState extends State<CartTable> {
     return Center(
       child: Container(
         height: screenWidth / 1.2,
-        margin: const EdgeInsets.all(16), // Adds space around the entire table
+        margin: EdgeInsets.all(
+            screenWidth / 50), // Adds space around the entire table
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(
               16), // Rounded corners for the outer container
@@ -34,9 +35,9 @@ class _CartTableState extends State<CartTable> {
               ),
               child: Row(
                 children: [
-                  _buildHeaderCell('รหัสสินค้า'),
-                  _buildHeaderCell('ชื่อสินค้า'),
-                  _buildHeaderCell('ราคา'),
+                  _buildHeaderCellName('ชื่อสินค้า', 400),
+                  _buildHeaderCell('จำนวน'),
+                  _buildHeaderCell('ราคารวม'),
                   _buildHeaderCellIcon('', 50),
                 ],
               ),
@@ -121,10 +122,8 @@ class _CartTableState extends State<CartTable> {
         ),
         child: Row(
           children: [
-            Expanded(
-                child: _buildTableCell(
-                    itemCode)), // Use Expanded to distribute space equally
-            Expanded(child: _buildTableCell(itemName)),
+            _buildTableCellName(itemName, 400),
+            Expanded(child: _buildTableCell(price)),
             Expanded(child: _buildTableCell(price)),
             _buildStatusCell(price, bgColor, textColor,
                 50), // Custom function for "สถานะ" column
@@ -144,32 +143,53 @@ class _CartTableState extends State<CartTable> {
         // padding: EdgeInsets.all(10),
         margin: EdgeInsets.all(5),
         decoration: const BoxDecoration(
-          color: Colors.green,
+          color: Colors.red,
           // borderRadius: BorderRadius.circular(
           //     100), // Rounded corners for the inner container
         ),
         alignment: Alignment.center,
-        child: Icon(Icons.add, color: Colors.white, size: 40),
+        child: Icon(Icons.close, color: Colors.white, size: 40),
       ),
+    );
+  }
+
+  Widget _buildTableCellName(String text, double width) {
+    return Container(
+      alignment: Alignment.centerLeft,
+      width: width,
+      padding: EdgeInsets.all(8),
+      child: Text(text, style: GobalStyles.kanit24),
     );
   }
 
   Widget _buildTableCell(String text) {
     return Container(
-      alignment: Alignment.center,
+      alignment: Alignment.centerRight,
       padding: EdgeInsets.all(8),
       child: Text(text, style: GobalStyles.kanit24),
+    );
+  }
+
+  Widget _buildHeaderCellName(String text, double width) {
+    return Container(
+      width: width,
+      alignment: Alignment.center,
+      padding: EdgeInsets.all(8),
+      child: Text(
+        text,
+        style: GobalStyles.tableHeaderOrder,
+      ),
     );
   }
 
   Widget _buildHeaderCell(String text) {
     return Expanded(
       child: Container(
-        alignment: Alignment.center,
+        alignment: Alignment.centerRight,
         padding: EdgeInsets.all(8),
         child: Text(
           text,
-          style: GobalStyles.tableHeader,
+          style: GobalStyles.tableHeaderOrder,
         ),
       ),
     );

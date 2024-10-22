@@ -1,9 +1,9 @@
 import 'package:_12sale_app/components/Gird.dart';
-import 'package:_12sale_app/page/DashboardScreen.dart';
+import 'package:_12sale_app/page/dashboard/DashboardScreen.dart';
 import 'package:_12sale_app/page/HomeScreen.dart';
 import 'package:_12sale_app/page/LoginScreen.dart';
-import 'package:_12sale_app/page/TestScreen.dart';
-import 'package:_12sale_app/page/DashboardScreen.dart';
+import 'package:_12sale_app/page/HomeScreen.dart';
+import 'package:_12sale_app/page/dashboard/DashboardScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart'; // For date localization
@@ -57,6 +57,8 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    return TestScreen();
+    return HomeScreen(
+      index: 0,
+    );
   }
 }

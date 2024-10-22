@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 class BadgeExample extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       body: Container(),
       floatingActionButton: Container(
@@ -13,7 +14,7 @@ class BadgeExample extends StatelessWidget {
             children: [
               SizedBox(
                 width: 100, // Set the width of the button
-                height: 100, // Set the height of the button
+                height: screenWidth / 8, // Set the height of the button
                 child: FloatingActionButton(
                   // Your actual Fab
                   onPressed: () {},
@@ -22,13 +23,13 @@ class BadgeExample extends StatelessWidget {
                   child: const Icon(
                     Icons.shopping_cart,
                     color: Colors.white,
-                    size: 60,
+                    size: 55,
                   ),
                 ),
               ),
               Container(
-                width: 50, // Set the width of the button
-                height: 50,
+                width: screenWidth / 17, // Set the width of the button
+                height: screenWidth / 17,
                 padding: EdgeInsets.all(8),
                 constraints: BoxConstraints(minHeight: 32, minWidth: 32),
                 decoration: BoxDecoration(
@@ -45,7 +46,7 @@ class BadgeExample extends StatelessWidget {
                 // This is your Badge
                 child: const Center(
                   // Here you can put whatever content you want inside your Badge
-                  child: Text('4',
+                  child: Text('10',
                       style: TextStyle(color: Colors.white, fontSize: 22)),
                 ),
               ),

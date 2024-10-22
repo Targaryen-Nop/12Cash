@@ -2,7 +2,10 @@ import 'package:_12sale_app/styles/gobalStyle.dart';
 import 'package:flutter/material.dart';
 
 class Cartbutton extends StatefulWidget {
-  const Cartbutton({super.key});
+  final String count;
+  final Widget screen;
+
+  const Cartbutton({super.key, required this.count, required this.screen});
 
   @override
   State<Cartbutton> createState() => _CartbuttonState();
@@ -11,6 +14,7 @@ class Cartbutton extends StatefulWidget {
 class _CartbuttonState extends State<Cartbutton> {
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
     return Container(
       child: FittedBox(
         child: Stack(
@@ -18,10 +22,17 @@ class _CartbuttonState extends State<Cartbutton> {
           children: [
             SizedBox(
               width: 100, // Set the width of the button
-              height: 100, // Set the height of the button
+              height: screenWidth / 8, // Set the height of the button
               child: FloatingActionButton(
                 // Your actual Fab
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => widget.screen,
+                    ),
+                  );
+                },
                 backgroundColor: GobalStyles.primaryColor,
                 shape: CircleBorder(),
                 child: const Icon(
@@ -32,8 +43,8 @@ class _CartbuttonState extends State<Cartbutton> {
               ),
             ),
             Container(
-              width: 50, // Set the width of the button
-              height: 50,
+              width: screenWidth / 17, // Set the width of the button
+              height: screenWidth / 17,
               padding: EdgeInsets.all(8),
               constraints: BoxConstraints(minHeight: 32, minWidth: 32),
               decoration: BoxDecoration(
@@ -48,9 +59,9 @@ class _CartbuttonState extends State<Cartbutton> {
                 color: Colors.red, // This would be color of the Badge
               ),
               // This is your Badge
-              child: const Center(
+              child: Center(
                 // Here you can put whatever content you want inside your Badge
-                child: Text('4',
+                child: Text(widget.count,
                     style: TextStyle(color: Colors.white, fontSize: 22)),
               ),
             ),

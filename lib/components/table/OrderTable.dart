@@ -1,23 +1,21 @@
-import 'package:_12sale_app/page/route/DetailScreen.dart';
-import 'package:_12sale_app/page/route/ShopRouteScreen.dart';
+import 'package:_12sale_app/page/route/OrderDetailScreen.dart';
 import 'package:_12sale_app/styles/gobalStyle.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
-class TableFullData extends StatefulWidget {
-  const TableFullData({super.key});
+class CartTable extends StatefulWidget {
+  const CartTable({super.key});
 
   @override
-  State<TableFullData> createState() => _TableFullDataState();
+  State<CartTable> createState() => _CartTableState();
 }
 
-class _TableFullDataState extends State<TableFullData> {
+class _CartTableState extends State<CartTable> {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     return Center(
       child: Container(
-        height: screenWidth / 2,
+        height: screenWidth / 1.2,
         margin: EdgeInsets.all(
             screenWidth / 50), // Adds space around the entire table
         decoration: BoxDecoration(
@@ -37,10 +35,10 @@ class _TableFullDataState extends State<TableFullData> {
               ),
               child: Row(
                 children: [
-                  _buildHeaderCell('วันที่'),
-                  _buildHeaderCell('เส้นทาง'),
-                  _buildHeaderCell('สถานะ'),
-                  // _buildHeaderCell('สถานะ'),
+                  _buildHeaderCell('รหัสสินค้า'),
+                  _buildHeaderCell('ชื่อสินค้า'),
+                  _buildHeaderCell('ราคา'),
+                  _buildHeaderCellIcon('', 50),
                 ],
               ),
             ),
@@ -51,34 +49,44 @@ class _TableFullDataState extends State<TableFullData> {
                 child: Column(
                   children: [
                     _buildDataRow(
-                        'Day 01',
-                        '1',
-                        '5/5',
+                        '1011447875',
+                        'ผงปรุงรสไก่ ฟ้าไทย 75g x10x8',
+                        '58.00',
                         GobalStyles.successBackgroundColor,
                         GobalStyles.successTextColor,
                         0),
                     _buildDataRow(
-                        'Day 02',
-                        '2',
-                        '6/6',
+                        '1011447875',
+                        'ผงปรุงรสไก่ ฟ้าไทย 75g x10x8',
+                        '58.00',
                         GobalStyles.successBackgroundColor,
                         GobalStyles.successTextColor,
                         1),
                     _buildDataRow(
-                        'Day 03',
-                        '4',
-                        '0/9',
+                        '1011447875',
+                        'ผงปรุงรสเห็ดหอม ฟ้าไทย 75g x10x8',
+                        '5800.00',
                         GobalStyles.failBackgroundColor,
                         GobalStyles.failTextColor,
                         2),
-                    _buildDataRow('Day 04', '5', '11/16',
-                        GobalStyles.paddingBackgroundColor, Colors.blue, 3),
-                    _buildDataRow('Day 05', '6', '2/9',
-                        GobalStyles.paddingBackgroundColor, Colors.blue, 4),
                     _buildDataRow(
-                        'Day 06',
-                        '7',
-                        '9/9',
+                        '1011447875',
+                        'ผงปรุงรสไก่ ฟ้าไทย 75g x10x8',
+                        '58.00',
+                        GobalStyles.paddingBackgroundColor,
+                        Colors.blue,
+                        3),
+                    _buildDataRow(
+                        '1011447875',
+                        'ผงปรุงรสไก่ ฟ้าไทย 75g x10x8',
+                        '58.00',
+                        GobalStyles.paddingBackgroundColor,
+                        Colors.blue,
+                        4),
+                    _buildDataRow(
+                        '1011447875',
+                        'ผงปรุงรสไก่ ฟ้าไทย 75g x10x8',
+                        '58.00',
                         GobalStyles.successBackgroundColor,
                         GobalStyles.successTextColor,
                         5),
@@ -92,8 +100,8 @@ class _TableFullDataState extends State<TableFullData> {
     );
   }
 
-  Widget _buildDataRow(String day, String route, String status, Color? bgColor,
-      Color? textColor, int index) {
+  Widget _buildDataRow(String itemCode, String itemName, String price,
+      Color? bgColor, Color? textColor, int index) {
     // Alternate row background color
     Color rowBgColor =
         (index % 2 == 0) ? Colors.white : GobalStyles.backgroundTableColor;
@@ -103,8 +111,8 @@ class _TableFullDataState extends State<TableFullData> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) =>
-                Shoproutescreen(day: day, route: route, status: status),
+            builder: (context) => OrderDetail(
+                itemCode: itemCode, itemName: itemName, price: price),
           ),
         );
       },
@@ -116,34 +124,32 @@ class _TableFullDataState extends State<TableFullData> {
           children: [
             Expanded(
                 child: _buildTableCell(
-                    day)), // Use Expanded to distribute space equally
-            Expanded(child: _buildTableCell(route)),
-            // Expanded(child: _buildTableCell(route)),
-            Expanded(
-                child: _buildStatusCell(status, bgColor,
-                    textColor)), // Custom function for "สถานะ" column
+                    itemCode)), // Use Expanded to distribute space equally
+            Expanded(child: _buildTableCell(itemName)),
+            Expanded(child: _buildTableCell(price)),
+            _buildStatusCell(price, bgColor, textColor, 50),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildStatusCell(String status, Color? bgColor, Color? textColor) {
+  Widget _buildStatusCell(
+      String price, Color? bgColor, Color? textColor, double? width) {
     return Container(
+      width: width,
       alignment: Alignment.center,
       child: Container(
-        width: 100, // Optional inner width for the status cell
-        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-        decoration: BoxDecoration(
-          color: bgColor,
-          borderRadius: BorderRadius.circular(
-              100), // Rounded corners for the inner container
+        width: 50, // Optional inner width for the status cell
+        // padding: EdgeInsets.all(10),
+        margin: EdgeInsets.all(5),
+        decoration: const BoxDecoration(
+          color: Colors.green,
+          // borderRadius: BorderRadius.circular(
+          //     100), // Rounded corners for the inner container
         ),
         alignment: Alignment.center,
-        child: Text(
-          status,
-          style: GoogleFonts.kanit(color: textColor, fontSize: 20),
-        ),
+        child: Icon(Icons.add, color: Colors.white, size: 40),
       ),
     );
   }
@@ -152,7 +158,7 @@ class _TableFullDataState extends State<TableFullData> {
     return Container(
       alignment: Alignment.center,
       padding: EdgeInsets.all(8),
-      child: Text(text, style: GobalStyles.tableText),
+      child: Text(text, style: GobalStyles.kanit24),
     );
   }
 
@@ -165,6 +171,18 @@ class _TableFullDataState extends State<TableFullData> {
           text,
           style: GobalStyles.tableHeader,
         ),
+      ),
+    );
+  }
+
+  Widget _buildHeaderCellIcon(String text, double width) {
+    return Container(
+      width: width,
+      alignment: Alignment.center,
+      padding: EdgeInsets.all(8),
+      child: Text(
+        text,
+        style: GobalStyles.tableHeader,
       ),
     );
   }

@@ -1,3 +1,4 @@
+import 'package:_12sale_app/page/route/RouteScreen.dart';
 import 'package:_12sale_app/styles/gobalStyle.dart';
 import 'package:flutter/material.dart';
 
@@ -77,6 +78,53 @@ class _CustomButtonState extends State<CustomButton> {
             fontWeight: FontWeight.bold,
           ),
         ),
+      ),
+    );
+  }
+}
+
+class ButtonFullWidth extends StatefulWidget {
+  final String text;
+  final TextStyle textStyle;
+  final Color blackGroundColor;
+  final Function? onPressed;
+  final Widget? screen;
+  const ButtonFullWidth(
+      {super.key,
+      required this.text,
+      required this.textStyle,
+      required this.blackGroundColor,
+      this.screen,
+      this.onPressed});
+
+  @override
+  State<ButtonFullWidth> createState() => _ButtonFullWidthState();
+}
+
+class _ButtonFullWidthState extends State<ButtonFullWidth> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      child: ElevatedButton(
+        onPressed: () {
+          if (widget.screen != null) {
+            Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => widget.screen!),
+            );
+          }
+          if (widget.onPressed != null) {
+            widget.onPressed!();
+          }
+        },
+        style: ElevatedButton.styleFrom(
+          padding: const EdgeInsets.symmetric(vertical: 6),
+          backgroundColor: widget.blackGroundColor,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+        ),
+        child: Text(widget.text, style: widget.textStyle),
       ),
     );
   }

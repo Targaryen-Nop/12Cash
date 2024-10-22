@@ -26,7 +26,7 @@ class Header extends StatelessWidget {
 //  final isPortrait = MediaQueryData.orientation == Orientation.portrait;
   @override
   Widget build(BuildContext context) {
-    GobalStyles.screenWidth = MediaQuery.of(context).size.width;
+    double screenWidth = MediaQuery.of(context).size.width;
     // final isPortrait =
     //     MediaQuery.of(context).orientation == Orientation.portrait;
     // print(isPortrait);
@@ -36,7 +36,7 @@ class Header extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          SizedBox(height: 20),
+          // SizedBox(height: screenWidth / 50),
           Flexible(
             flex: 1,
             child: Container(
@@ -46,9 +46,9 @@ class Header extends StatelessWidget {
               child: leading2,
             ),
           ),
-          SizedBox(height: 30),
+          SizedBox(height: screenWidth / 25),
           Flexible(
-            flex: 9,
+            flex: 7,
             fit: FlexFit.loose,
             child: Container(
               decoration: const BoxDecoration(
@@ -61,7 +61,7 @@ class Header extends StatelessWidget {
                   ),
                 ],
                 color: Colors.white,
-                borderRadius: BorderRadius.vertical(top: Radius.circular(100)),
+                borderRadius: BorderRadius.vertical(top: Radius.circular(46)),
               ),
               child: leading!,
             ),

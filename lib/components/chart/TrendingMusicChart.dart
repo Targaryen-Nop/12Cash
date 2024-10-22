@@ -11,6 +11,7 @@ class _TrendingMusicChartState extends State<TrendingMusicChart> {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
         title: Text('Top Trending Music 2024'),
@@ -46,7 +47,7 @@ class _TrendingMusicChartState extends State<TrendingMusicChart> {
                 ),
               ],
             ),
-            SizedBox(height: 20),
+            SizedBox(height: screenWidth / 25),
             Expanded(
               child: BarChart(
                 BarChartData(
@@ -132,7 +133,7 @@ class _TrendingMusicChartState extends State<TrendingMusicChart> {
                 ),
               ),
             ),
-            SizedBox(height: 20),
+            SizedBox(height: screenWidth / 25),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [

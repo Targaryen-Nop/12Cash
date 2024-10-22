@@ -12,6 +12,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       body: Center(
         child: Card(
@@ -37,7 +38,6 @@ class _LoginScreenState extends State<LoginScreen> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Container(
-                  height: 150,
                   width: 200,
                   decoration: const BoxDecoration(
                     borderRadius: BorderRadius.only(
@@ -64,7 +64,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       //   ),
                       //   textAlign: TextAlign.center,
                       // ),
-                      const SizedBox(height: 20),
+                      SizedBox(height: screenWidth / 25),
                       const TextField(
                         decoration: InputDecoration(
                           labelText: 'ชื่อผู้ใช้งา่น',
@@ -72,7 +72,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           prefixIcon: Icon(Icons.person),
                         ),
                       ),
-                      const SizedBox(height: 20),
+                      SizedBox(height: screenWidth / 25),
                       const TextField(
                         obscureText: true,
                         decoration: InputDecoration(
@@ -81,7 +81,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           prefixIcon: Icon(Icons.lock),
                         ),
                       ),
-                      const SizedBox(height: 20),
+                      SizedBox(height: screenWidth / 25),
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(vertical: 15),
@@ -91,7 +91,9 @@ class _LoginScreenState extends State<LoginScreen> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => const HomeScreen()));
+                                  builder: (context) => const HomeScreen(
+                                        index: 0,
+                                      )));
                         },
                         child: const Text(
                           'เข้าสู่ระบบ',

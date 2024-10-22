@@ -88,7 +88,7 @@ class _CustomerDropdownSearchState extends State<CustomerDropdownSearch> {
       selectedItem: _selectedCustomer,
       asyncItems: (filter) => getCustomers(),
       // compareFn: (i, s) => i.isEqual(s),
-      popupProps: PopupPropsMultiSelection.modalBottomSheet(
+      popupProps: PopupPropsMultiSelection.menu(
         showSearchBox: true,
         itemBuilder: _customCustomer,
       ),

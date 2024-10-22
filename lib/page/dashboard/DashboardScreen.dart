@@ -67,16 +67,16 @@ class _DashboardscreenState extends State<Dashboardscreen> {
   ShippingModel? _selectedShipping;
 
   Widget build(BuildContext context) {
-    GobalStyles.screenWidth = MediaQuery.of(context).size.width;
+    double screenWidth = MediaQuery.of(context).size.width;
     // someFunction();
     return Container(
         padding: const EdgeInsets.all(10.0),
-        height: GobalStyles.screenWidth / 2.5,
-        width: GobalStyles.screenWidth / 1.5,
-        child: const Column(
+        height: screenWidth / 2.5,
+        width: screenWidth / 1.5,
+        child: Column(
           children: [
             ShippingDropdownSearch(),
-            SizedBox(height: 20),
+            SizedBox(height: screenWidth / 25),
             // CustomTable(data: _buildRows(), columns: [
             //   DataColumn(label: Text('วันที่')), // "Date" in Thai
             //   DataColumn(label: Text('เส้นทาง')), // "Path" in Thai
@@ -240,8 +240,7 @@ class DashboardHeader extends StatefulWidget {
 class _DashboardHeaderState extends State<DashboardHeader> {
   @override
   Widget build(BuildContext context) {
-    GobalStyles.screenWidth = MediaQuery.of(context).size.width;
-    GobalStyles.screenHeight = MediaQuery.of(context).size.height;
+    double screenWidth = MediaQuery.of(context).size.width;
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -249,13 +248,14 @@ class _DashboardHeaderState extends State<DashboardHeader> {
         Flexible(
           fit: FlexFit.loose,
           child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Flexible(
                 flex: 1,
-                fit: FlexFit.tight,
+                // fit: FlexFit.tight,
                 child: Container(
                   margin: const EdgeInsets.symmetric(horizontal: 4),
-                  height: 150,
+                  // height: screenWidth / 3,
                   // color: Colors.red,
                   child: Container(
                     decoration: const BoxDecoration(
@@ -269,7 +269,7 @@ class _DashboardHeaderState extends State<DashboardHeader> {
               ),
               Flexible(
                 flex: 5,
-                fit: FlexFit.loose,
+                // fit: FlexFit.tight,
                 child: Center(
                   // margin: EdgeInsets.only(top: 10),
 
@@ -277,19 +277,19 @@ class _DashboardHeaderState extends State<DashboardHeader> {
                     // mainAxisSize: MainAxisSize.max,
                     // crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Expanded(
-                        child: Container(
-                          margin: EdgeInsets.symmetric(horizontal: 4),
-                          // color: Colors.blue,
-                          child: Row(
-                            children: [
-                              Text(
-                                'นายนพรัตน์ มั่นสุวรรณ ',
-                                style: GobalStyles.headline3,
-                                textAlign: TextAlign.start,
-                              ),
-                            ],
-                          ),
+                      SizedBox(height: screenWidth / 40),
+                      Container(
+                        height: screenWidth / 20,
+                        margin: EdgeInsets.symmetric(horizontal: 4),
+                        // color: Colors.blue,
+                        child: Row(
+                          children: [
+                            Text(
+                              'นายนพรัตน์ มั่นสุวรรณ ',
+                              style: GobalStyles.headline3,
+                              textAlign: TextAlign.start,
+                            ),
+                          ],
                         ),
                       ),
                       // Flexible(
@@ -342,13 +342,14 @@ class _DashboardHeaderState extends State<DashboardHeader> {
                         fit: FlexFit.loose,
                         child: Container(
                           // color: Colors.amber,
+                          height: screenWidth / 20,
                           child: Row(
                             // crossAxisAlignment: CrossAxisAlignment.,
                             textBaseline: TextBaseline.alphabetic,
                             // mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Container(
-                                width: GobalStyles.screenWidth / 10,
+                                width: screenWidth / 10,
                                 // margin: EdgeInsets.all(4),
                                 decoration: const BoxDecoration(
                                     color: GobalStyles.secondaryColor,
@@ -363,7 +364,7 @@ class _DashboardHeaderState extends State<DashboardHeader> {
                                 )),
                               ),
                               Container(
-                                width: GobalStyles.screenWidth / 10,
+                                width: screenWidth / 10,
                                 margin: EdgeInsets.symmetric(horizontal: 4),
                                 decoration: const BoxDecoration(
                                     color: GobalStyles.secondaryColor,
@@ -380,7 +381,7 @@ class _DashboardHeaderState extends State<DashboardHeader> {
                                 child: Container(
                                   // color:
                                   //     Colors.orangeAccent, // Background color
-                                  height: 40, // Fixed height
+                                  // height: 50, // Fixed height
                                   padding: EdgeInsets.symmetric(horizontal: 8),
                                   child: Align(
                                     alignment: Alignment.centerLeft,
@@ -415,7 +416,6 @@ class _DashboardHeaderState extends State<DashboardHeader> {
                           ),
                         ),
                       ),
-                      SizedBox(height: 5),
                     ],
                   ),
                 ),

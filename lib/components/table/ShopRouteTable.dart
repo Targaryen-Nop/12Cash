@@ -1,4 +1,4 @@
-import 'package:_12sale_app/page/DetailScreen.dart';
+import 'package:_12sale_app/page/route/DetailScreen.dart';
 import 'package:_12sale_app/styles/gobalStyle.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -17,10 +17,12 @@ class ShopRouteTable extends StatefulWidget {
 class _ShopRouteTableState extends State<ShopRouteTable> {
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
     return Center(
       child: Container(
         // height: 250,
-        margin: const EdgeInsets.all(16), // Adds space around the entire table
+        margin: EdgeInsets.all(
+            screenWidth / 50), // Adds space around the entire table
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(
               16), // Rounded corners for the outer container

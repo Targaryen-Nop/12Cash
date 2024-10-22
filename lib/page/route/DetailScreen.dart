@@ -1,7 +1,7 @@
 import 'package:_12sale_app/components/Appbar.dart';
 import 'package:_12sale_app/components/table/ShopRouteTable.dart';
 import 'package:_12sale_app/components/table/TableFullData.dart';
-import 'package:_12sale_app/page/OrderScreen.dart';
+import 'package:_12sale_app/page/route/OrderScreen.dart';
 import 'package:_12sale_app/styles/gobalStyle.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
@@ -74,7 +74,7 @@ class _DetailScreenState extends State<DetailScreen> {
                     context,
                     MaterialPageRoute(
                       builder: (context) => Orderscreen(
-                          day: widget.day,
+                          customerNo: widget.customerNo,
                           customerName: widget.customerName,
                           status: widget.status),
                     ),
@@ -384,11 +384,12 @@ class _DetailScreenState extends State<DetailScreen> {
                     },
                     child: Text('บันทึก', style: GobalStyles.headline2),
                     style: ElevatedButton.styleFrom(
-                        backgroundColor: GobalStyles.successButtonColor,
-                        padding: EdgeInsets.symmetric(vertical: 12),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        )),
+                      backgroundColor: GobalStyles.successButtonColor,
+                      padding: EdgeInsets.symmetric(vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
                   ),
                 ),
               ],

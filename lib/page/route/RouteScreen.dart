@@ -16,12 +16,22 @@ class Routescreen extends StatefulWidget {
 class _RoutescreenState extends State<Routescreen> {
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
     return Container(
       // margin: EdgeInsets.only(top: 30),
       // padding: EdgeInsets.all(25),
       child: Column(
         children: [
-          TableFullData(),
+          // SizedBox(
+          //   height: screenWidth / 30,
+          // ),
+          Container(
+              margin: EdgeInsets.all(screenWidth / 50),
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey),
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: TableFullData()),
         ],
       ),
       // child: Column(
@@ -59,8 +69,8 @@ class RouteHeader extends StatefulWidget {
 class _RouteHeaderState extends State<RouteHeader> {
   @override
   Widget build(BuildContext context) {
-    GobalStyles.screenWidth = MediaQuery.of(context).size.width;
-    GobalStyles.screenHeight = MediaQuery.of(context).size.height;
+    double screenWidth = MediaQuery.of(context).size.width;
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -74,7 +84,7 @@ class _RouteHeaderState extends State<RouteHeader> {
                 fit: FlexFit.tight,
                 child: Container(
                   margin: const EdgeInsets.symmetric(horizontal: 4),
-                  height: 150,
+
                   // color: Colors.red,
                   child: Container(
                     decoration: const BoxDecoration(

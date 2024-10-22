@@ -120,7 +120,7 @@ class _ShippingDropdownSearchState extends State<ShippingDropdownSearch> {
       selectedItem: _selectedShipping,
       asyncItems: (filter) => getShipping(),
       // compareFn: (i, s) => i.isEqual(s),
-      popupProps: PopupPropsMultiSelection.modalBottomSheet(
+      popupProps: PopupPropsMultiSelection.menu(
         showSearchBox: true,
         itemBuilder: popupItemBuild,
       ),
@@ -147,7 +147,7 @@ class _ShippingDropdownSearchState extends State<ShippingDropdownSearch> {
               TextSpan(
                 children: [
                   TextSpan(
-                    text: '${item.customerNo}\n',
+                    text: '${item.addressID}\n',
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,

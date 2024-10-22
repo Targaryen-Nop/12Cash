@@ -9,16 +9,16 @@ class GobalStyles {
     color: Color(0xFF6B7280),
   ));
 
+  static TextStyle tableHeaderOrder = GoogleFonts.kanit(
+      textStyle: const TextStyle(
+    fontSize: 24,
+    fontWeight: FontWeight.normal,
+    color: Color(0xFF6B7280),
+  ));
+
   static TextStyle tableText = GoogleFonts.kanit(
       textStyle: const TextStyle(
     fontSize: 32.0,
-    fontWeight: FontWeight.normal,
-    color: Color(0xFF111827),
-  ));
-
-  static TextStyle kanit24 = GoogleFonts.kanit(
-      textStyle: const TextStyle(
-    fontSize: 24.0,
     fontWeight: FontWeight.normal,
     color: Color(0xFF111827),
   ));
@@ -88,6 +88,13 @@ class GobalStyles {
     fontWeight: FontWeight.normal,
     color: Colors.black,
   ));
+
+  static TextStyle textbBlack3 = GoogleFonts.kanit(
+      textStyle: const TextStyle(
+    fontSize: 24.0,
+    fontWeight: FontWeight.normal,
+    color: Colors.black,
+  ));
   static TextStyle headlineblack3 = GoogleFonts.kanit(
       textStyle: const TextStyle(
     fontSize: 24.0,
@@ -104,20 +111,6 @@ class GobalStyles {
   static TextStyle titleHead = GoogleFonts.kanit(
       textStyle: const TextStyle(
     fontSize: 48,
-    fontWeight: FontWeight.normal,
-    color: Colors.black,
-  ));
-
-  static TextStyle kanit32w100 = GoogleFonts.kanit(
-      textStyle: const TextStyle(
-    fontSize: 32,
-    fontWeight: FontWeight.w100,
-    color: Colors.black,
-  ));
-
-  static TextStyle kanit32 = GoogleFonts.kanit(
-      textStyle: const TextStyle(
-    fontSize: 32,
     fontWeight: FontWeight.normal,
     color: Colors.black,
   ));
@@ -143,6 +136,25 @@ class GobalStyles {
     color: Colors.white,
   ));
 
+  static TextStyle kanit24 = GoogleFonts.kanit(
+      textStyle: const TextStyle(
+    fontSize: 24.0,
+    fontWeight: FontWeight.normal,
+    color: Color(0xFF111827),
+  ));
+  static TextStyle kanit32w100 = GoogleFonts.kanit(
+      textStyle: const TextStyle(
+    fontSize: 32,
+    fontWeight: FontWeight.w100,
+    color: Colors.black,
+  ));
+  static TextStyle kanit32 = GoogleFonts.kanit(
+      textStyle: const TextStyle(
+    fontSize: 32,
+    fontWeight: FontWeight.normal,
+    color: Colors.black,
+  ));
+
   static const TextStyle bodyText1 = TextStyle(
     fontSize: 14.0,
     fontFamily: 'Hind',
@@ -161,6 +173,4 @@ class GobalStyles {
   static const Color paddingTextColor = Color(0xFF1E429F);
 
   static const Color accentColor = Colors.orange;
-  static double screenHeight = 0;
-  static double screenWidth = 0;
 }
