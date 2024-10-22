@@ -1,6 +1,6 @@
-import 'package:_12sale_app/components/TestBadge.dart';
 import 'package:_12sale_app/page/dashboard/DashboardScreen.dart';
 import 'package:_12sale_app/page/route/RouteScreen.dart';
+import 'package:_12sale_app/page/shop/ShopScreen.dart';
 // import 'package:_12sale_app/page/TestTabel.dart';
 import 'package:_12sale_app/styles/gobalStyle.dart';
 import 'package:_12sale_app/components/Header.dart';
@@ -24,7 +24,7 @@ class _HomeScreenState extends State<HomeScreen> {
   static List<Widget> _widgetOptions = <Widget>[
     Dashboardscreen(),
     Routescreen(),
-    BadgeExample(),
+    ShopScreen(),
     Text('Profile'),
     Text('Settings'),
     Text('More'),
@@ -33,7 +33,7 @@ class _HomeScreenState extends State<HomeScreen> {
   static const List<Widget> _widgetOptionsHeader = <Widget>[
     DashboardHeader(),
     RouteHeader(),
-    Text('Favorites'),
+    ShopHeader(),
     Text('Profile'),
     Text('Settings'),
     Text('More'),
@@ -54,6 +54,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       body: Header(
         leading: Center(
@@ -86,30 +87,44 @@ class _HomeScreenState extends State<HomeScreen> {
           child: BottomNavigationBar(
             items: const <BottomNavigationBarItem>[
               BottomNavigationBarItem(
-                icon: Icon(Icons.home),
+                icon: Icon(
+                  Icons.home,
+                ),
                 label: 'Home',
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.route_rounded),
+                icon: Icon(
+                  Icons.route_rounded,
+                ),
                 label: 'Route',
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.storefront),
+                icon: Icon(
+                  Icons.storefront,
+                ),
                 label: 'Shop',
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.description),
+                icon: Icon(
+                  Icons.description,
+                ),
                 label: 'Menu',
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.inventory),
+                icon: Icon(
+                  Icons.inventory,
+                ),
                 label: 'Manage',
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.more_horiz),
+                icon: Icon(
+                  Icons.more_horiz,
+                ),
                 label: 'More',
               ),
             ],
+            selectedLabelStyle: GobalStyles.text3,
+            iconSize: screenWidth / 20,
             currentIndex: _selectedIndex,
             selectedItemColor: Colors.white,
             backgroundColor: GobalStyles.primaryColor,

@@ -39,7 +39,7 @@ class _ShippingDropdownSearchState extends State<ShippingDropdownSearch> {
 
       print("Response: $response");
       // print("API" + erpAPI.getCustomer.toString());
-      print(response.runtimeType);
+      // print(response.runtimeType);
       // print(jsonDecode(response.data));
       // Decoding the response data
       // The response is likely a Map with data inside a key (e.g., 'data', 'customers')

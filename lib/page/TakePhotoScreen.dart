@@ -1,117 +1,123 @@
+import 'package:camera/camera.dart';
+import 'package:flutter/material.dart';
+import 'dart:async';
 import 'dart:io';
 
-import 'package:flutter/material.dart';
-import 'package:camera/camera.dart';
-
-class TakePictureScreen extends StatefulWidget {
-  final CameraDescription camera;
-
-  const TakePictureScreen({
-    super.key,
-    required this.camera,
-  });
-
+class CameraExample extends StatefulWidget {
   @override
-  TakePictureScreenState createState() => TakePictureScreenState();
+  _CameraExampleState createState() => _CameraExampleState();
 }
 
-class TakePictureScreenState extends State<TakePictureScreen> {
-  late CameraController _controller;
-  late Future<void> _initializeControllerFuture;
+class _CameraExampleState extends State<CameraExample> {
+  late CameraController _cameraController;
+  Future<void>? _initializeControllerFuture; // Make it nullable
 
   @override
   void initState() {
     super.initState();
-    _controller = CameraController(
-      widget.camera,
-      ResolutionPreset.high,
-    );
+    _initializeCamera();
+  }
 
-    // Initialize the controller
-    _initializeControllerFuture = _controller.initialize();
+  // Initialize the camera
+  Future<void> _initializeCamera() async {
+    try {
+      // Get the list of available cameras
+      final cameras = await availableCameras();
+      final firstCamera = cameras.first;
+
+      // Initialize the camera controller
+      _cameraController = CameraController(
+        firstCamera,
+        ResolutionPreset.high,
+      );
+
+      // Initialize the controller
+      _initializeControllerFuture = _cameraController.initialize();
+
+      // Trigger rebuild to allow the FutureBuilder to properly handle the future
+      setState(() {});
+    } catch (e) {
+      print('Error initializing camera: $e');
+    }
   }
 
   @override
   void dispose() {
-    // Dispose of the controller when the widget is disposed
-    _controller.dispose();
+    _cameraController.dispose(); // Dispose the controller to free resources
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Take a picture')),
-      body: FutureBuilder<void>(
-        future: _initializeControllerFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            // If the Future is complete, display the camera preview
-            return GestureDetector(
-              onTap: () async {
-                try {
-                  // Ensure that the camera is initialized
-                  await _initializeControllerFuture;
-
-                  // Take the picture and save it
-                  final image = await _controller.takePicture();
-
-                  // If the picture is taken, display it in a new screen or process the image
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          DisplayPictureScreen(imagePath: image.path),
-                    ),
-                  );
-                } catch (e) {
-                  print(e);
+      appBar: AppBar(
+        title: Text('Camera Example'),
+      ),
+      body: _initializeControllerFuture == null
+          ? Center(
+              child:
+                  CircularProgressIndicator()) // Show loader until camera is initialized
+          : FutureBuilder<void>(
+              future: _initializeControllerFuture, // Use the nullable Future
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  // If the camera is initialized, display the camera preview
+                  return CameraPreview(_cameraController);
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                } else {
+                  // Otherwise, display a loading indicator while waiting for the camera to initialize
+                  return Center(child: CircularProgressIndicator());
                 }
               },
-              child: Container(
-                height: 438,
-                color: Colors.grey[300],
-                alignment: Alignment.center,
-                child: CameraPreview(_controller),
+            ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          try {
+            // Ensure the camera is initialized
+            await _initializeControllerFuture;
+
+            // Take the picture
+            final image = await _cameraController.takePicture();
+
+            // If the picture was taken, display it on a new screen
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) =>
+                    DisplayPictureScreen(imagePath: image.path),
               ),
             );
-          } else {
-            // Otherwise, display a loading indicator
-            return Center(child: CircularProgressIndicator());
+          } catch (e) {
+            print(e);
           }
         },
+        child: Icon(Icons.camera_alt),
       ),
     );
   }
 }
 
-// A widget that displays the captured picture
+// A new screen to display the captured image
 class DisplayPictureScreen extends StatelessWidget {
   final String imagePath;
 
-  const DisplayPictureScreen({super.key, required this.imagePath});
+  const DisplayPictureScreen({Key? key, required this.imagePath})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Display the picture')),
+      appBar: AppBar(title: Text('Captured Image')),
       body: Image.file(File(imagePath)),
     );
   }
 }
 
 Future<void> main() async {
-  // Ensure that plugin services are initialized so we can fetch the available cameras
+  // Ensure that plugin services are initialized
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Obtain a list of available cameras
-  final cameras = await availableCameras();
-
-  // Get the first camera from the list
-  final firstCamera = cameras.first;
-
   runApp(MaterialApp(
-    theme: ThemeData.dark(),
-    home: TakePictureScreen(camera: firstCamera),
+    home: CameraExample(),
   ));
 }

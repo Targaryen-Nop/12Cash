@@ -97,34 +97,11 @@ class _VerifyorderscreenState extends State<Verifyorderscreen> {
                 text: "ยอดชำระสุทธิ",
                 price: 8430.00,
                 style: GobalStyles.textbBlack3),
-            // ButtonFullWidth(
-            //   text: "บันทึกรายการ",
-            //   textStyle: GobalStyles.text3,
-            //   blackGroundColor: GobalStyles.successButtonColor,
-            //   screen: Routescreen(),
-            // )
-            Container(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () {
-                  // Perform save action
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => HomeScreen(
-                        index: 1,
-                      ),
-                    ),
-                  );
-                },
-                child: Text('บันทึกรายการ', style: GobalStyles.text3),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: GobalStyles.successButtonColor,
-                  padding: EdgeInsets.symmetric(vertical: 6),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
-              ),
+            ButtonFullWidth(
+              text: "บันทึกรายการ",
+              textStyle: GobalStyles.text3,
+              blackGroundColor: GobalStyles.successButtonColor,
+              screen: HomeScreen(index: 2),
             ),
           ],
         ),

@@ -17,7 +17,7 @@ void main() async {
   await initializeDateFormatting('th', null);
   // Ensure the app is always in portrait mode
   WidgetsFlutterBinding.ensureInitialized();
-  _cameras = await availableCameras();
+  // _cameras = await availableCameras();
   final cameras = await availableCameras();
 
   // Get the first camera from the list
