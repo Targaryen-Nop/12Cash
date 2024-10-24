@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:_12sale_app/components/Appbar.dart';
+import 'package:_12sale_app/components/button/CameraButton.dart';
 import 'package:_12sale_app/components/table/ShopRouteTable.dart';
 import 'package:_12sale_app/components/table/TableFullData.dart';
 import 'package:_12sale_app/page/route/OrderScreen.dart';
@@ -24,6 +27,7 @@ class DetailScreen extends StatefulWidget {
 }
 
 class _DetailScreenState extends State<DetailScreen> {
+  String? imagePath; // Path to store the captured image
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -94,34 +98,36 @@ class _DetailScreenState extends State<DetailScreen> {
           ),
         ),
       ),
-      body: Container(
-        padding: const EdgeInsets.all(16.0),
-        margin: const EdgeInsets.all(8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text("รหัสร้าน ${widget.customerNo}", style: GobalStyles.kanit32),
-            Text("ร้าน ${widget.customerName}", style: GobalStyles.kanit32),
-            // Text(
-            //   "ร้าน เจริญพรค้าขาย",
-            //   style: GobalStyles.kanit32,
-            // ),
-            const SizedBox(height: 10),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Container(
-                height: screenWidth,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: Colors.grey, width: 1),
-                ),
-                child: ShopRouteTable(
-                  day: widget.day,
+      body: SingleChildScrollView(
+        child: Container(
+          padding: const EdgeInsets.all(16.0),
+          margin: const EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text("รหัสร้าน ${widget.customerNo}", style: GobalStyles.kanit32),
+              Text("ร้าน ${widget.customerName}", style: GobalStyles.kanit32),
+              // Text(
+              //   "ร้าน เจริญพรค้าขาย",
+              //   style: GobalStyles.kanit32,
+              // ),
+              const SizedBox(height: 10),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Container(
+                  height: screenWidth,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(color: Colors.grey, width: 1),
+                  ),
+                  child: ShopRouteTable(
+                    day: widget.day,
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -134,12 +140,13 @@ class _DetailScreenState extends State<DetailScreen> {
     required Color color,
     required VoidCallback onPressed,
   }) {
+    double screenWidth = MediaQuery.of(context).size.width;
     return InkWell(
       onTap: onPressed,
       child: Container(
-        width: 120, // Fixed width for the button
-        height: 120, // Fixed height for the button
-        margin: EdgeInsets.all(10),
+        width: screenWidth / 5, // Fixed width for the button
+        height: screenWidth / 5, // Fixed height for the button
+        // margin: EdgeInsets.all(2),
         decoration: BoxDecoration(
           color: color,
           borderRadius: BorderRadius.circular(16),
@@ -148,7 +155,7 @@ class _DetailScreenState extends State<DetailScreen> {
               color: Colors.black.withOpacity(0.2), // Shadow color
               spreadRadius: 5, // How much the shadow spreads
               blurRadius: 8, // The amount of blur for the shadow
-              offset: Offset(0, 0), // Spread evenly in all directions
+              offset: const Offset(0, 0), // Spread evenly in all directions
             ),
           ],
         ),
@@ -158,8 +165,8 @@ class _DetailScreenState extends State<DetailScreen> {
             Icon(
               icon,
               color: Colors.white,
-              size: 65,
-              weight: 25,
+              size: 50,
+              // weight: 25,
             ),
             SizedBox(height: 8),
             Text(
@@ -279,7 +286,7 @@ class _DetailScreenState extends State<DetailScreen> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true, // Makes the bottom sheet full screen height
-      shape: RoundedRectangleBorder(
+      shape: const RoundedRectangleBorder(
         side: BorderSide(color: Colors.grey, width: 0.5),
         borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
       ),
@@ -287,7 +294,7 @@ class _DetailScreenState extends State<DetailScreen> {
         double screenWidth = MediaQuery.of(context).size.width;
         return Container(
           width: screenWidth, // Fixed width
-          height: 600,
+          height: screenWidth * 0.8,
           padding: EdgeInsets.only(
             left: 16.0,
             right: 16.0,
@@ -385,7 +392,7 @@ class _DetailScreenState extends State<DetailScreen> {
                     child: Text('บันทึก', style: GobalStyles.headline2),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: GobalStyles.successButtonColor,
-                      padding: EdgeInsets.symmetric(vertical: 12),
+                      // padding: EdgeInsets.symmetric(vertical: 12),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
@@ -412,7 +419,7 @@ class _DetailScreenState extends State<DetailScreen> {
         double screenWidth = MediaQuery.of(context).size.width;
         return Container(
           width: screenWidth, // Fixed width
-          height: 700,
+          height: screenWidth / 1.2,
           padding: EdgeInsets.only(
             left: 16.0,
             right: 16.0,
@@ -439,52 +446,8 @@ class _DetailScreenState extends State<DetailScreen> {
                 ),
                 SizedBox(height: 8),
                 // Store Information
-                GestureDetector(
-                  onTap: () {},
-                  child: Container(
-                    // width: 250,
-                    height: 438,
-                    color: Colors.grey[300],
-                    alignment: Alignment.center,
-                    // transformAlignment: Alignment.center,
-                    child: Icon(
-                      Icons.camera_alt_outlined,
-                      size: 50,
-                    ),
-                  ),
-                ),
-                SizedBox(height: 8),
-                SizedBox(
-                  width: double.infinity, // Full width button
-                  child: ElevatedButton(
-                    onPressed: () {
-                      // Perform save action
-                      Navigator.of(context).pop(); // Close the bottom sheet
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          child: Icon(
-                            Icons.camera,
-                            color: Colors.white,
-                            size: 25,
-                          ),
-                        ),
-                        Text('กล้อง', style: GobalStyles.articalTable),
-                      ],
-                    ),
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.grey[300],
-                        padding: EdgeInsets.symmetric(vertical: 12),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        )),
-                  ),
-                ),
-
+                CameraButtonWidget(),
                 SizedBox(height: 16),
-
                 // Save button
                 SizedBox(
                   width: double.infinity, // Full width button
@@ -493,7 +456,7 @@ class _DetailScreenState extends State<DetailScreen> {
                       // Perform save action
                       Navigator.of(context).pop(); // Close the bottom sheet
                     },
-                    child: Text('บันทึกรูปภาพ', style: GobalStyles.headline2),
+                    child: Text('บันทึกรูปภาพ', style: GobalStyles.headline3),
                     style: ElevatedButton.styleFrom(
                         backgroundColor: GobalStyles.successButtonColor,
                         padding: EdgeInsets.symmetric(vertical: 12),

@@ -25,7 +25,6 @@ class Verifyorderscreen extends StatefulWidget {
 class _VerifyorderscreenState extends State<Verifyorderscreen> {
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: const PreferredSize(
         preferredSize: Size.fromHeight(70),

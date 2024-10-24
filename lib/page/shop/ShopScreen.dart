@@ -1,4 +1,6 @@
 import 'package:_12sale_app/components/CustomerDropdownSearch.dart';
+import 'package:_12sale_app/components/table/ShopTableAll.dart';
+import 'package:_12sale_app/components/table/ShopTableNew.dart';
 import 'package:_12sale_app/page/shop/AddShopScreen.dart';
 import 'package:_12sale_app/styles/gobalStyle.dart';
 import 'package:flutter/material.dart';
@@ -85,6 +87,7 @@ class _ShopScreenState extends State<ShopScreen> {
               ],
             ),
           ),
+          _isSelected ? ShopTableNew() : ShopTableAll(),
           Spacer(),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
@@ -190,7 +193,7 @@ class _ShopHeaderState extends State<ShopHeader> {
                                   fit: FlexFit.loose,
                                   child: Container(
                                       width: screenWidth / 3,
-                                      child: CustomerDropdownSearch())),
+                                      child: const CustomerDropdownSearch())),
                             ],
                           ),
                         ),

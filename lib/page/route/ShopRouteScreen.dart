@@ -64,47 +64,49 @@ class _ShoproutescreenState extends State<Shoproutescreen> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             margin: EdgeInsets.all(10),
-            child: Column(children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "ร้านค้าเป้าหมาย",
-                    style: GobalStyles.kanit32,
-                  ),
-                  Text(
-                    "17",
-                    style: GobalStyles.kanit32,
-                  )
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "ร้านค้าที่เข้าเยี่ยม",
-                    style: GobalStyles.kanit32,
-                  ),
-                  Text(
-                    "0",
-                    style: GobalStyles.kanit32,
-                  )
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "ร้านค้าที่สั่งซื้อ",
-                    style: GobalStyles.kanit32,
-                  ),
-                  Text(
-                    "4",
-                    style: GobalStyles.kanit32,
-                  )
-                ],
-              )
-            ]),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "ร้านค้าเป้าหมาย",
+                      style: GobalStyles.kanit32,
+                    ),
+                    Text(
+                      "17",
+                      style: GobalStyles.kanit32,
+                    )
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "ร้านค้าที่เข้าเยี่ยม",
+                      style: GobalStyles.kanit32,
+                    ),
+                    Text(
+                      "0",
+                      style: GobalStyles.kanit32,
+                    )
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "ร้านค้าที่สั่งซื้อ",
+                      style: GobalStyles.kanit32,
+                    ),
+                    Text(
+                      "4",
+                      style: GobalStyles.kanit32,
+                    )
+                  ],
+                ),
+              ],
+            ),
           )
         ],
       ),

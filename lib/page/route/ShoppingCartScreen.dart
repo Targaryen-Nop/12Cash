@@ -59,7 +59,7 @@ class _ShoppingCartScreenState extends State<ShoppingCartScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
-                  width: screenWidth / 2.3,
+                  width: screenWidth / 2.2,
                   child: ElevatedButton(
                     onPressed: () {
                       Navigator.of(context).push(
@@ -76,8 +76,8 @@ class _ShoppingCartScreenState extends State<ShoppingCartScreen> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: GobalStyles.primaryColor,
                       padding: EdgeInsets.symmetric(
-                          vertical: screenWidth / 80,
-                          horizontal: screenWidth / 11),
+                          vertical: screenWidth / 85,
+                          horizontal: screenWidth / 17),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),

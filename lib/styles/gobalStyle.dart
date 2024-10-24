@@ -11,7 +11,7 @@ class GobalStyles {
 
   static TextStyle tableHeaderOrder = GoogleFonts.kanit(
       textStyle: const TextStyle(
-    fontSize: 24,
+    fontSize: 18,
     fontWeight: FontWeight.normal,
     color: Color(0xFF6B7280),
   ));
@@ -134,6 +134,13 @@ class GobalStyles {
     fontSize: 20.0,
     fontWeight: FontWeight.normal,
     color: Colors.white,
+  ));
+
+  static TextStyle kanit18 = GoogleFonts.kanit(
+      textStyle: const TextStyle(
+    fontSize: 18.0,
+    fontWeight: FontWeight.normal,
+    color: Color(0xFF111827),
   ));
 
   static TextStyle kanit24 = GoogleFonts.kanit(

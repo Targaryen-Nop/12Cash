@@ -2,20 +2,20 @@ import 'package:_12sale_app/page/route/OrderDetailScreen.dart';
 import 'package:_12sale_app/styles/gobalStyle.dart';
 import 'package:flutter/material.dart';
 
-class CartTable extends StatefulWidget {
-  const CartTable({super.key});
+class OrderTable extends StatefulWidget {
+  const OrderTable({super.key});
 
   @override
-  State<CartTable> createState() => _CartTableState();
+  State<OrderTable> createState() => _OrderTableState();
 }
 
-class _CartTableState extends State<CartTable> {
+class _OrderTableState extends State<OrderTable> {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     return Center(
       child: Container(
-        height: screenWidth / 1.2,
+        height: screenWidth / 1.3,
         margin: EdgeInsets.all(
             screenWidth / 50), // Adds space around the entire table
         decoration: BoxDecoration(

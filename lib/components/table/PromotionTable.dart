@@ -35,7 +35,7 @@ class _PromotiontableState extends State<Promotiontable> {
               ),
               child: Row(
                 children: [
-                  _buildHeaderCellName('ชื่อสินค้า', 400),
+                  _buildHeaderCellName('ชื่อสินค้า', screenWidth / 2),
                   _buildHeaderCell('จำนวน'),
                   _buildHeaderCell('ราคารวม'),
                   _buildHeaderCellIcon('', 50),
@@ -54,42 +54,48 @@ class _PromotiontableState extends State<Promotiontable> {
                         '58.00',
                         GobalStyles.successBackgroundColor,
                         GobalStyles.successTextColor,
-                        0),
+                        0,
+                        context),
                     _buildDataRow(
                         '1011447875',
                         'ผงปรุงรสไก่ ฟ้าไทย 75g x10x8',
                         '58.00',
                         GobalStyles.successBackgroundColor,
                         GobalStyles.successTextColor,
-                        1),
+                        1,
+                        context),
                     _buildDataRow(
                         '1011447875',
                         'ผงปรุงรสเห็ดหอม ฟ้าไทย 75g x10x8',
                         '5800.00',
                         GobalStyles.failBackgroundColor,
                         GobalStyles.failTextColor,
-                        2),
+                        2,
+                        context),
                     _buildDataRow(
                         '1011447875',
                         'ผงปรุงรสไก่ ฟ้าไทย 75g x10x8',
                         '58.00',
                         GobalStyles.paddingBackgroundColor,
                         Colors.blue,
-                        3),
+                        3,
+                        context),
                     _buildDataRow(
                         '1011447875',
                         'ผงปรุงรสไก่ ฟ้าไทย 75g x10x8',
                         '58.00',
                         GobalStyles.paddingBackgroundColor,
                         Colors.blue,
-                        4),
+                        4,
+                        context),
                     _buildDataRow(
                         '1011447875',
                         'ผงปรุงรสไก่ ฟ้าไทย 75g x10x8',
                         '58.00',
                         GobalStyles.successBackgroundColor,
                         GobalStyles.successTextColor,
-                        5),
+                        5,
+                        context),
                   ],
                 ),
               ),
@@ -101,11 +107,11 @@ class _PromotiontableState extends State<Promotiontable> {
   }
 
   Widget _buildDataRow(String itemCode, String itemName, String count,
-      Color? bgColor, Color? textColor, int index) {
+      Color? bgColor, Color? textColor, int index, BuildContext context) {
     // Alternate row background color
     Color rowBgColor =
         (index % 2 == 0) ? Colors.white : GobalStyles.backgroundTableColor;
-
+    double screenWidth = MediaQuery.of(context).size.width;
     return InkWell(
       onTap: () {
         _showSheetChangePromotion(context, itemCode, itemName, count);
@@ -116,7 +122,7 @@ class _PromotiontableState extends State<Promotiontable> {
         ),
         child: Row(
           children: [
-            _buildTableCellName(itemName, 400),
+            _buildTableCellName(itemName, screenWidth / 2),
             Expanded(child: _buildTableCell(count)),
             Expanded(child: _buildTableCell(count)),
             _buildStatusCell(count, bgColor, textColor,
@@ -214,7 +220,7 @@ class _PromotiontableState extends State<Promotiontable> {
         double screenWidth = MediaQuery.of(context).size.width;
         return Container(
           width: screenWidth, // Fixed width
-          height: 600,
+          height: screenWidth / 1.3,
           padding: EdgeInsets.only(
             left: 16.0,
             right: 16.0,
@@ -251,7 +257,7 @@ class _PromotiontableState extends State<Promotiontable> {
                     children: [
                       Text(
                         '${itemName}',
-                        style: GobalStyles.kanit32,
+                        style: GobalStyles.textbBlack3,
                       ),
                       SizedBox(height: 8),
 
@@ -260,13 +266,14 @@ class _PromotiontableState extends State<Promotiontable> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Flexible(
-                              child: Text('กลุ่ม', style: GobalStyles.kanit32)),
+                              child: Text('กลุ่ม',
+                                  style: GobalStyles.textbBlack3)),
                           Flexible(
                             // fit: FlexFit.tight,
                             flex: 4,
                             child: Container(
                               // width: 100,
-                              height: 50,
+                              height: screenWidth / 11,
                               child: DropdownButtonFormField<String>(
                                 decoration: InputDecoration(
                                   filled: true,
@@ -309,14 +316,14 @@ class _PromotiontableState extends State<Promotiontable> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Flexible(
-                              child:
-                                  Text('น้ำหนัก', style: GobalStyles.kanit32)),
+                              child: Text('น้ำหนัก',
+                                  style: GobalStyles.textbBlack3)),
                           Flexible(
                             // fit: FlexFit.tight,
                             flex: 4,
                             child: Container(
                               // width: 100,
-                              height: 50,
+                              height: screenWidth / 11,
                               child: DropdownButtonFormField<String>(
                                 decoration: InputDecoration(
                                   filled: true,
@@ -361,14 +368,14 @@ class _PromotiontableState extends State<Promotiontable> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Flexible(
-                              child:
-                                  Text('ของแถม', style: GobalStyles.kanit32)),
+                              child: Text('ของแถม',
+                                  style: GobalStyles.textbBlack3)),
                           Flexible(
                             // fit: FlexFit.tight,
                             flex: 4,
                             child: Container(
                               // width: 100,
-                              height: 50,
+                              height: screenWidth / 11,
                               child: DropdownButtonFormField<String>(
                                 decoration: InputDecoration(
                                   filled: true,
@@ -411,13 +418,14 @@ class _PromotiontableState extends State<Promotiontable> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Flexible(
-                              child: Text('จำนวน', style: GobalStyles.kanit32)),
+                              child: Text('จำนวน',
+                                  style: GobalStyles.textbBlack3)),
                           Flexible(
                             // fit: FlexFit.tight,
                             flex: 4,
                             child: Container(
                               // width: 100,
-                              height: 50,
+                              height: screenWidth / 11,
                               child: DropdownButtonFormField<String>(
                                 decoration: InputDecoration(
                                   filled: true,

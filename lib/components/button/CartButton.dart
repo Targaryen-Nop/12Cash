@@ -21,8 +21,8 @@ class _CartbuttonState extends State<Cartbutton> {
           alignment: Alignment(1.5, -1.5),
           children: [
             SizedBox(
-              width: 100, // Set the width of the button
-              height: screenWidth / 8, // Set the height of the button
+              width: screenWidth / 7, // Set the width of the button
+              height: screenWidth / 7, // Set the height of the button
               child: FloatingActionButton(
                 // Your actual Fab
                 onPressed: () {
@@ -43,8 +43,8 @@ class _CartbuttonState extends State<Cartbutton> {
               ),
             ),
             Container(
-              width: screenWidth / 17, // Set the width of the button
-              height: screenWidth / 17,
+              width: screenWidth / 15, // Set the width of the button
+              height: screenWidth / 15,
               padding: EdgeInsets.all(8),
               constraints: BoxConstraints(minHeight: 32, minWidth: 32),
               decoration: BoxDecoration(

@@ -15,7 +15,7 @@ class _VerifyTable extends State<VerifyTable> {
     double screenWidth = MediaQuery.of(context).size.width;
     return Center(
       child: Container(
-        height: screenWidth / 2,
+        height: screenWidth / 2.5,
         margin: EdgeInsets.all(
             screenWidth / 50), // Adds space around the entire table
         decoration: BoxDecoration(
@@ -35,11 +35,11 @@ class _VerifyTable extends State<VerifyTable> {
               ),
               child: Row(
                 children: [
-                  _buildHeaderCellName('ชื่อสินค้า', 300),
+                  _buildHeaderCellName('ชื่อสินค้า', screenWidth / 2.6),
                   _buildHeaderCell('จำนวน'),
-                  _buildHeaderCell('ราคาสินค้า'),
+                  _buildHeaderCell('ราคา'),
                   _buildHeaderCell('ส่วนลด'),
-                  _buildHeaderCell('รวมราคา'),
+                  _buildHeaderCell('รวม'),
                 ],
               ),
             ),
@@ -128,13 +128,7 @@ class _VerifyTable extends State<VerifyTable> {
 
     return InkWell(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => OrderDetail(
-                itemCode: itemCode, itemName: itemName, price: price),
-          ),
-        );
+        _showSheetChangePromotion(context);
       },
       child: Container(
         decoration: BoxDecoration(
@@ -143,10 +137,48 @@ class _VerifyTable extends State<VerifyTable> {
         child: Row(
           children: [
             Expanded(
-                flex: 4,
+                flex: 3,
                 child: _buildTableCell(itemName, Alignment.centerLeft)),
             Expanded(
                 flex: 1, child: _buildTableCell(count, Alignment.centerRight)),
+            Expanded(
+                flex: 1, child: _buildTableCell(price, Alignment.centerRight)),
+            Expanded(
+                flex: 1,
+                child: _buildTableCell(discount, Alignment.centerRight)),
+            Expanded(
+                flex: 1, child: _buildTableCell(price, Alignment.centerRight)),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDataRowSheet(
+      String itemCode,
+      String itemName,
+      String price,
+      String discount,
+      String count,
+      Color? bgColor,
+      Color? textColor,
+      int index) {
+    // Alternate row background color
+    Color rowBgColor =
+        (index % 2 == 0) ? Colors.white : GobalStyles.backgroundTableColor;
+
+    return InkWell(
+      onTap: () {},
+      child: Container(
+        decoration: BoxDecoration(
+          color: rowBgColor,
+        ),
+        child: Row(
+          children: [
+            Expanded(
+                flex: 3,
+                child: _buildTableCell(itemName, Alignment.centerLeft)),
+            Expanded(flex: 1, child: _buildTableCell(count, Alignment.center)),
             Expanded(
                 flex: 1, child: _buildTableCell(price, Alignment.centerRight)),
             Expanded(
@@ -184,7 +216,7 @@ class _VerifyTable extends State<VerifyTable> {
     return Container(
       alignment: alignment,
       padding: EdgeInsets.all(8),
-      child: Text(text, style: GobalStyles.kanit24),
+      child: Text(text, style: GobalStyles.kanit18),
     );
   }
 
@@ -203,7 +235,7 @@ class _VerifyTable extends State<VerifyTable> {
   Widget _buildHeaderCell(String text) {
     return Expanded(
       child: Container(
-        alignment: Alignment.centerRight,
+        alignment: Alignment.center,
         padding: EdgeInsets.all(8),
         child: Text(
           text,
@@ -222,6 +254,157 @@ class _VerifyTable extends State<VerifyTable> {
         text,
         style: GobalStyles.tableHeader,
       ),
+    );
+  }
+
+  void _showSheetChangePromotion(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true, // Makes the bottom sheet full screen height
+      shape: const RoundedRectangleBorder(
+        side: BorderSide(color: Colors.grey, width: 0.5),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      builder: (BuildContext context) {
+        double screenWidth = MediaQuery.of(context).size.width;
+        return Container(
+          width: screenWidth, // Fixed width
+          height: screenWidth + 100,
+          padding: EdgeInsets.only(
+            left: 16.0,
+            right: 16.0,
+            top: 16.0,
+            bottom: 16.0,
+          ),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Header with close button
+                Row(
+                  // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    IconButton(
+                      icon: Icon(
+                        Icons.close,
+                        size: 40,
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).pop(); // Close bottom sheet
+                      },
+                    ),
+                    Text('ตารางสินค้า', style: GobalStyles.headlineblack2),
+                  ],
+                ),
+                SizedBox(height: 8),
+                // Store Information
+                Center(
+                  child: Container(
+                    height: screenWidth,
+                    margin: EdgeInsets.all(
+                        screenWidth / 50), // Adds space around the entire table
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(
+                          16), // Rounded corners for the outer container
+                      border: Border.all(
+                          color: Colors.grey, width: 1), // Outer border
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Fixed header
+                        Container(
+                          decoration: const BoxDecoration(
+                            color: GobalStyles.backgroundTableColor,
+                            borderRadius: BorderRadius.vertical(
+                                top: Radius.circular(
+                                    16)), // Rounded corners at the top
+                          ),
+                          child: Row(
+                            children: [
+                              _buildHeaderCellName(
+                                  'ชื่อสินค้า', screenWidth / 2.7),
+                              _buildHeaderCell('จำนวน'),
+                              _buildHeaderCell('ราคา'),
+                              _buildHeaderCell('ส่วนลด'),
+                              _buildHeaderCell('รวม'),
+                            ],
+                          ),
+                        ),
+                        // Scrollable content
+                        Expanded(
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.vertical,
+                            child: Column(
+                              children: [
+                                _buildDataRowSheet(
+                                    '1011447875',
+                                    'ผงปรุงรสไก่ ฟ้าไทย 75g x10x8',
+                                    '58.00',
+                                    '00.00',
+                                    '1 หีบ',
+                                    GobalStyles.successBackgroundColor,
+                                    GobalStyles.successTextColor,
+                                    0),
+                                _buildDataRowSheet(
+                                    '1011447875',
+                                    'ผงปรุงรสไก่ ฟ้าไทย 75g x10x8',
+                                    '58.00',
+                                    '00.00',
+                                    '1 หีบ',
+                                    GobalStyles.successBackgroundColor,
+                                    GobalStyles.successTextColor,
+                                    1),
+                                _buildDataRowSheet(
+                                    '1011447875',
+                                    'ผงปรุงรสเห็ดหอม ฟ้าไทย 75g x10x8',
+                                    '5800.00',
+                                    '00.00',
+                                    '1 หีบ',
+                                    GobalStyles.failBackgroundColor,
+                                    GobalStyles.failTextColor,
+                                    2),
+                                _buildDataRowSheet(
+                                    '1011447875',
+                                    'ผงปรุงรสไก่ ฟ้าไทย 75g x10x8',
+                                    '58.00',
+                                    '00.00',
+                                    '10 ซอง',
+                                    GobalStyles.paddingBackgroundColor,
+                                    Colors.blue,
+                                    3),
+                                _buildDataRowSheet(
+                                    '1011447875',
+                                    'ผงปรุงรสไก่ ฟ้าไทย 75g x10x8',
+                                    '58.00',
+                                    '00.00',
+                                    '10 หีบ',
+                                    GobalStyles.paddingBackgroundColor,
+                                    Colors.blue,
+                                    4),
+                                _buildDataRowSheet(
+                                    '1011447875',
+                                    'ผงปรุงรสไก่ ฟ้าไทย 75g x10x8',
+                                    '58.00',
+                                    '00.00',
+                                    '100 ถุง',
+                                    GobalStyles.successBackgroundColor,
+                                    GobalStyles.successTextColor,
+                                    5),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

@@ -4,7 +4,7 @@ import 'package:_12sale_app/components/Dropdown.dart';
 import 'package:_12sale_app/components/CustomerDropdownSearch.dart';
 import 'package:_12sale_app/components/ShippingDropdownSearch.dart';
 import 'package:_12sale_app/components/Table.dart';
-import 'package:_12sale_app/components/camera_button_widget.dart';
+import 'package:_12sale_app/components/button/CameraButton.dart';
 import 'package:_12sale_app/components/chart/BarChart.dart';
 import 'package:_12sale_app/components/chart/LineChart.dart';
 import 'package:_12sale_app/components/chart/TrendingMusicChart.dart';
@@ -72,18 +72,19 @@ class _DashboardscreenState extends State<Dashboardscreen> {
     // someFunction();
     return Container(
         padding: const EdgeInsets.all(10.0),
-        height: screenWidth / 2.5,
-        width: screenWidth / 1.5,
+        // height: screenWidth / 2.5,
+        // width: screenWidth / 1.5,
         child: Column(
           children: [
-            ShippingDropdownSearch(),
-            SizedBox(height: screenWidth / 25),
+            CameraButtonWidget()
+            // ShippingDropdownSearch(),
+            // SizedBox(height: screenWidth / 25),
 
-            CameraButtonWidget(
-              buttonText: 'Open Camera',
-              buttonColor: Colors.blue,
-              textStyle: TextStyle(color: Colors.white, fontSize: 18),
-            )
+            // CameraButtonWidget(
+            //   buttonText: 'Open Camera',
+            //   buttonColor: Colors.blue,
+            //   textStyle: TextStyle(color: Colors.white, fontSize: 18),
+            // )
             // CustomTable(data: _buildRows(), columns: [
             //   DataColumn(label: Text('วันที่')), // "Date" in Thai
             //   DataColumn(label: Text('เส้นทาง')), // "Path" in Thai

@@ -18,12 +18,15 @@ void main() async {
   // Ensure the app is always in portrait mode
   WidgetsFlutterBinding.ensureInitialized();
   // _cameras = await availableCameras();
-  final cameras = await availableCameras();
+  // final cameras = await availableCameras();
 
   // Get the first camera from the list
-  final firstCamera = cameras.first;
+  // final firstCamera = cameras.first;
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp, // Portrait orientation
+    DeviceOrientation.portraitDown,
+    DeviceOrientation.landscapeLeft,
+    DeviceOrientation.landscapeRight,
   ]).then((_) {
     runApp(MyApp());
   });
@@ -57,7 +60,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    return HomeScreen(
+    return const HomeScreen(
       index: 0,
     );
   }

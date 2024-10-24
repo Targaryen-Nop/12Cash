@@ -1,6 +1,8 @@
 import 'package:_12sale_app/components/Appbar.dart';
 import 'package:_12sale_app/components/button/Button.dart';
 import 'package:_12sale_app/components/input/CustomTextInput.dart';
+import 'package:_12sale_app/components/sheet/PolicyAddNewShop.dart';
+import 'package:_12sale_app/components/sheet/ReasonForNotBuyingSheet%20.dart';
 import 'package:_12sale_app/styles/gobalStyle.dart';
 import 'package:flutter/material.dart';
 
@@ -191,19 +193,38 @@ class _AddShopScreenState extends State<AddShopScreen> {
                 border: Border.all(color: Colors.grey),
                 borderRadius: BorderRadius.circular(10),
               ),
-              height: screenWidth / 5,
+              height: screenWidth / 6,
               child: Center(
                 child: Text("รูปภาพ"),
               ),
             ),
             Spacer(),
             ButtonFullWidth(
+                onPressed: () {
+                  showReasonForNotBuyingSheet(
+                      context, '10334587', 'ร้าน เจริญพรค้าขาย');
+                },
                 text: "ถัดไป",
                 textStyle: GobalStyles.text3,
                 blackGroundColor: GobalStyles.successButtonColor)
           ],
         ),
       ),
+    );
+  }
+
+  void showReasonForNotBuyingSheet(
+      BuildContext context, String storeCode, String storeName) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true, // Makes the bottom sheet full screen height
+      shape: const RoundedRectangleBorder(
+        side: BorderSide(color: Colors.grey, width: 0.5),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      builder: (BuildContext context) {
+        return Policyaddnewshop();
+      },
     );
   }
 

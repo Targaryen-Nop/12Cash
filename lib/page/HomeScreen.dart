@@ -8,10 +8,12 @@ import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
   final int index;
+  final String? imagePath;
 
   const HomeScreen({
     super.key,
     required this.index,
+    this.imagePath,
   });
 
   @override
