@@ -94,7 +94,7 @@ class _PolicyaddnewshopState extends State<Policyaddnewshop> {
     double screenWidth = MediaQuery.of(context).size.width;
     return Container(
       width: screenWidth, // Fixed width
-      height: screenWidth,
+      height: screenWidth + 100,
       padding: EdgeInsets.only(
         left: 16.0,
         right: 16.0,
@@ -176,7 +176,7 @@ class _PolicyaddnewshopState extends State<Policyaddnewshop> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Container(
-                  width: screenWidth / 4,
+                  width: screenWidth / 3,
                   child: ElevatedButton(
                     onPressed: () {
                       // Navigator.of(context).push(
@@ -201,7 +201,7 @@ class _PolicyaddnewshopState extends State<Policyaddnewshop> {
                   ),
                 ),
                 Container(
-                  width: screenWidth / 4,
+                  width: screenWidth / 3,
                   child: ElevatedButton(
                     onPressed: () {},
                     child: Text('ถัดไป', style: GobalStyles.text3),

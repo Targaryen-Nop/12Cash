@@ -2,6 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class GobalStyles {
+  static TextStyle kanitblack18 = GoogleFonts.kanit(
+      textStyle: const TextStyle(
+    fontSize: 32,
+    fontWeight: FontWeight.normal,
+    color: Color(0xFF6B7280),
+  ));
+
   static TextStyle tableHeader = GoogleFonts.kanit(
       textStyle: const TextStyle(
     fontSize: 32,

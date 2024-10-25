@@ -93,8 +93,7 @@ class _ShopTableNew extends State<ShopTableNew> {
             Expanded(child: _buildTableCell(customerNo, Alignment.centerLeft)),
             _buildTableCellName(customerName, screenWidth / 3.5),
             Expanded(child: _buildTableCell(route, Alignment.center)),
-            _buildStatusCell(backgroundColor, screenWidth / 8,
-                status), // Custom function for "สถานะ" column
+            _buildStatusCell(backgroundColor, screenWidth / 8, status),
           ],
         ),
       ),

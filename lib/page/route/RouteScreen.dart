@@ -26,12 +26,7 @@ class _RoutescreenState extends State<Routescreen> {
           //   height: screenWidth / 30,
           // ),
           Container(
-              margin: EdgeInsets.all(screenWidth / 50),
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey),
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: TableFullData()),
+              margin: EdgeInsets.all(screenWidth / 50), child: TableFullData()),
         ],
       ),
       // child: Column(
@@ -96,7 +91,7 @@ class _RouteHeaderState extends State<RouteHeader> {
                 ),
               ),
               Flexible(
-                flex: 5,
+                flex: 3,
                 fit: FlexFit.loose,
                 child: Center(
                   // margin: EdgeInsets.only(top: 10),

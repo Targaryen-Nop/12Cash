@@ -1,19 +1,19 @@
 import 'package:_12sale_app/components/CustomerDropdownSearch.dart';
+import 'package:_12sale_app/components/table/ReportSaleTable.dart';
 import 'package:_12sale_app/components/table/ShopTableAll.dart';
 import 'package:_12sale_app/components/table/ShopTableNew.dart';
 import 'package:_12sale_app/page/shop/AddShopScreen.dart';
 import 'package:_12sale_app/styles/gobalStyle.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
-class ShopScreen extends StatefulWidget {
-  const ShopScreen({super.key});
+class ReportScreen extends StatefulWidget {
+  const ReportScreen({super.key});
 
   @override
-  State<ShopScreen> createState() => _ShopScreenState();
+  State<ReportScreen> createState() => _ReportScreenState();
 }
 
-class _ShopScreenState extends State<ShopScreen> {
+class _ReportScreenState extends State<ReportScreen> {
   bool _isSelected = false;
   @override
   Widget build(BuildContext context) {
@@ -36,7 +36,7 @@ class _ShopScreenState extends State<ShopScreen> {
                         });
                       },
                       child: Text(
-                        'ร้านค้าทั้งหมด',
+                        'รายการขาย',
                         style: GobalStyles.textbBlack2,
                       ),
                       style: ElevatedButton.styleFrom(
@@ -66,7 +66,7 @@ class _ShopScreenState extends State<ShopScreen> {
                         });
                       },
                       child: Text(
-                        'ร้านค้าใหม่',
+                        'รายการคืน',
                         style: GobalStyles.textbBlack2,
                       ),
                       style: ElevatedButton.styleFrom(
@@ -87,49 +87,22 @@ class _ShopScreenState extends State<ShopScreen> {
               ],
             ),
           ),
-          _isSelected ? ShopTableNew() : ShopTableAll(),
+          _isSelected ? ShopTableNew() : Reportsaletable(),
           Spacer(),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              SizedBox(
-                width: 100, // Set the width of the button
-                height: screenWidth / 8, // Set the height of the button
-                child: FloatingActionButton(
-                  // Your actual Fab
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => AddShopScreen(),
-                      ),
-                    );
-                  },
-                  backgroundColor: GobalStyles.primaryColor,
-                  shape: CircleBorder(),
-                  child: const Icon(
-                    Icons.add,
-                    color: Colors.white,
-                    size: 60,
-                  ),
-                ),
-              )
-            ],
-          )
         ],
       ),
     );
   }
 }
 
-class ShopHeader extends StatefulWidget {
-  const ShopHeader({super.key});
+class ReportHeader extends StatefulWidget {
+  const ReportHeader({super.key});
 
   @override
-  State<ShopHeader> createState() => _ShopHeaderState();
+  State<ReportHeader> createState() => _ReportHeaderState();
 }
 
-class _ShopHeaderState extends State<ShopHeader> {
+class _ReportHeaderState extends State<ReportHeader> {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -170,20 +143,18 @@ class _ShopHeaderState extends State<ShopHeader> {
                     children: [
                       Expanded(
                         child: Container(
-                          margin: EdgeInsets.symmetric(horizontal: 4),
+                          margin: const EdgeInsets.symmetric(horizontal: 4),
                           // color: Colors.blue,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Row(
                                 children: [
-                                  Container(
-                                    child: Icon(Icons.store,
-                                        size: screenWidth / 15,
-                                        color: Colors.white),
-                                  ),
+                                  Icon(Icons.receipt_long_rounded,
+                                      size: screenWidth / 15,
+                                      color: Colors.white),
                                   Text(
-                                    ' ร้านค้า',
+                                    ' รายงานขาย',
                                     style: GobalStyles.headline3,
                                     textAlign: TextAlign.start,
                                   ),

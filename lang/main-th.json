@@ -1,0 +1,14 @@
+{
+    "menu": {
+        "home": "หน้าหลัก",
+        "shop": "ร้านค้า",
+        "report": "รายงานขาย",
+        "manage": "จัดการ",
+        "route": "เข้าเยี่ยม",
+        "more": "อื่นๆ"
+    },
+    "asset": {
+        "logo": "assets/images/12TradingLogo.png"
+    }
+    
+}

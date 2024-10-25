@@ -1,10 +1,16 @@
+import 'dart:convert';
+
 import 'package:_12sale_app/page/dashboard/DashboardScreen.dart';
+import 'package:_12sale_app/page/manage/ManageScreen.dart';
+import 'package:_12sale_app/page/report/ReportScreen.dart';
 import 'package:_12sale_app/page/route/RouteScreen.dart';
+import 'package:_12sale_app/page/setting/SettingScreen.dart';
 import 'package:_12sale_app/page/shop/ShopScreen.dart';
 // import 'package:_12sale_app/page/TestTabel.dart';
 import 'package:_12sale_app/styles/gobalStyle.dart';
 import 'package:_12sale_app/components/Header.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show rootBundle;
 
 class HomeScreen extends StatefulWidget {
   final int index;
@@ -22,23 +28,24 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
+  Map<String, dynamic>? _jsonString;
 
-  static List<Widget> _widgetOptions = <Widget>[
+  static const List<Widget> _widgetOptions = <Widget>[
     Dashboardscreen(),
     Routescreen(),
     ShopScreen(),
-    Text('Profile'),
-    Text('Settings'),
-    Text('More'),
+    ReportScreen(),
+    ManageScreen(),
+    SettingScreen(),
   ];
 
   static const List<Widget> _widgetOptionsHeader = <Widget>[
     DashboardHeader(),
     RouteHeader(),
     ShopHeader(),
-    Text('Profile'),
-    Text('Settings'),
-    Text('More'),
+    ReportHeader(),
+    ManageHeader(),
+    SettingHeader(),
   ];
 
   void _onItemTapped(int index) {
@@ -47,11 +54,19 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  Future<void> _loadJson() async {
+    String jsonString = await rootBundle.loadString('lang/main-th.json');
+    setState(() {
+      _jsonString = jsonDecode(jsonString)["menu"];
+    });
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     _selectedIndex = widget.index; //_selectedIndex
     super.initState();
+    _loadJson();
   }
 
   @override
@@ -87,42 +102,42 @@ class _HomeScreenState extends State<HomeScreen> {
             topRight: Radius.circular(16),
           ),
           child: BottomNavigationBar(
-            items: const <BottomNavigationBarItem>[
+            items: <BottomNavigationBarItem>[
               BottomNavigationBarItem(
                 icon: Icon(
                   Icons.home,
                 ),
-                label: 'Home',
+                label: _jsonString?['home'] ?? 'Home',
               ),
               BottomNavigationBarItem(
                 icon: Icon(
                   Icons.route_rounded,
                 ),
-                label: 'Route',
+                label: _jsonString?['route'] ?? 'Route',
               ),
               BottomNavigationBarItem(
                 icon: Icon(
                   Icons.storefront,
                 ),
-                label: 'Shop',
+                label: _jsonString?['shop'] ?? 'Shop',
               ),
               BottomNavigationBarItem(
                 icon: Icon(
-                  Icons.description,
+                  Icons.inventory_rounded,
                 ),
-                label: 'Menu',
+                label: _jsonString?['report'] ?? 'Report',
               ),
               BottomNavigationBarItem(
                 icon: Icon(
                   Icons.inventory,
                 ),
-                label: 'Manage',
+                label: _jsonString?['manage'] ?? 'Manage',
               ),
               BottomNavigationBarItem(
                 icon: Icon(
                   Icons.more_horiz,
                 ),
-                label: 'More',
+                label: _jsonString?['more'] ?? 'More',
               ),
             ],
             selectedLabelStyle: GobalStyles.text3,

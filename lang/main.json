@@ -1,0 +1,11 @@
+{
+    "menu": {
+        "home": "Home",
+        "dashboard": "Dashboard",
+        "shop": "Shop",
+        "menu": "Menu",
+        "manange": "Manage",
+        "route": "Route",
+        "promotion": "Promotion"
+    }
+}

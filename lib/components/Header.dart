@@ -48,10 +48,10 @@ class Header extends StatelessWidget {
           ),
           SizedBox(height: screenWidth / 25),
           Flexible(
-            flex: 7,
+            flex: 4,
             fit: FlexFit.loose,
             child: Container(
-              decoration: const BoxDecoration(
+              decoration: BoxDecoration(
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black26, // Soft black color for shadow
@@ -60,7 +60,7 @@ class Header extends StatelessWidget {
                     spreadRadius: 10, // How far the shadow extends
                   ),
                 ],
-                color: Colors.white,
+                color: Colors.grey[100],
                 borderRadius: BorderRadius.vertical(top: Radius.circular(46)),
               ),
               child: leading!,

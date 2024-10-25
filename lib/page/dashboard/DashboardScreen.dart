@@ -23,6 +23,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:_12sale_app/models/User.dart';
 import 'dart:async';
 import 'package:_12sale_app/service/getCustomer.dart';
+import 'package:_12sale_app/utils/json_loader.dart';
 
 class Dashboardscreen extends StatefulWidget {
   const Dashboardscreen({super.key});
@@ -246,6 +247,24 @@ class DashboardHeader extends StatefulWidget {
 }
 
 class _DashboardHeaderState extends State<DashboardHeader> {
+  Map<String, dynamic> _jsonString = {}; // Store the JSON data here
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _loadJsonData();
+  }
+
+  // Function to load JSON using the reusable global function
+  Future<void> _loadJsonData() async {
+    Map<String, dynamic> jsonData =
+        await JsonLoader.loadJson('lang/main-th.json');
+    setState(() {
+      _jsonString =
+          jsonData['asset'] ?? {}; // Access the 'menu' object in the JSON
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -256,19 +275,18 @@ class _DashboardHeaderState extends State<DashboardHeader> {
         Flexible(
           fit: FlexFit.loose,
           child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Flexible(
                 flex: 1,
-                // fit: FlexFit.tight,
+                fit: FlexFit.tight,
                 child: Container(
                   margin: const EdgeInsets.symmetric(horizontal: 4),
-                  // height: screenWidth / 3,
+
                   // color: Colors.red,
                   child: Container(
-                    decoration: const BoxDecoration(
+                    decoration: BoxDecoration(
                       image: DecorationImage(
-                        image: AssetImage('assets/images/12TradingLogo.png'),
+                        image: AssetImage('${_jsonString['logo']}'),
                         // fit: BoxFit.fitWidth,
                       ),
                     ),
@@ -276,148 +294,90 @@ class _DashboardHeaderState extends State<DashboardHeader> {
                 ),
               ),
               Flexible(
-                flex: 5,
-                // fit: FlexFit.tight,
+                flex: 2,
+                fit: FlexFit.loose,
                 child: Center(
                   // margin: EdgeInsets.only(top: 10),
-
                   child: Column(
                     // mainAxisSize: MainAxisSize.max,
-                    // crossAxisAlignment: CrossAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SizedBox(height: screenWidth / 40),
-                      Container(
-                        height: screenWidth / 20,
-                        margin: EdgeInsets.symmetric(horizontal: 4),
-                        // color: Colors.blue,
-                        child: Row(
-                          children: [
-                            Text(
-                              'นายนพรัตน์ มั่นสุวรรณ ',
-                              style: GobalStyles.headline3,
-                              textAlign: TextAlign.start,
-                            ),
-                          ],
-                        ),
-                      ),
-                      // Flexible(
-                      //   fit: FlexFit.loose,
-                      //   child: Row(
-                      //     children: [
-                      //       Container(
-                      //         // color: Colors.green,
-                      //         margin: EdgeInsets.symmetric(horizontal: 4),
-                      //         child: RichText(
-                      //           text: TextSpan(
-                      //             text: DateTime.now().day.toString(),
-                      //             style: GobalStyles.headline3,
-                      //             children: [
-                      //               TextSpan(
-                      //                 text: DateFormat(' MMMM yyyy')
-                      //                     .format(DateTime.now()),
-                      //                 style: GobalStyles.headline3,
-                      //               )
-                      //             ],
-                      //           ),
-                      //         ),
-                      //       ),
-                      //       const SizedBox(
-                      //         width: 10,
-                      //       ),
-                      //       Flexible(
-                      //         fit: FlexFit.loose,
-                      //         child: StreamBuilder(
-                      //           stream:
-                      //               Stream.periodic(const Duration(seconds: 1)),
-                      //           builder: (context, snapshot) {
-                      //             return Container(
-                      //               // color: Colors.green,
-                      //               alignment: Alignment.centerLeft,
-                      //               child: Text(
-                      //                 DateFormat('hh:mm:ss a')
-                      //                     .format(DateTime.now()),
-                      //                 style: GobalStyles.headline3,
-                      //               ),
-                      //             );
-                      //           },
-                      //         ),
-                      //       )
-                      //     ],
-                      //   ),
-                      // ),
-                      SizedBox(height: 5),
-                      Flexible(
-                        fit: FlexFit.loose,
+                      Expanded(
                         child: Container(
-                          // color: Colors.amber,
-                          height: screenWidth / 20,
-                          child: Row(
-                            // crossAxisAlignment: CrossAxisAlignment.,
-                            textBaseline: TextBaseline.alphabetic,
-                            // mainAxisAlignment: MainAxisAlignment.center,
+                          margin: const EdgeInsets.symmetric(horizontal: 4),
+                          // color: Colors.blue,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
-                              Container(
-                                width: screenWidth / 10,
-                                // margin: EdgeInsets.all(4),
-                                decoration: const BoxDecoration(
-                                    color: GobalStyles.secondaryColor,
-                                    borderRadius: BorderRadius.horizontal(
-                                        right: Radius.circular(50),
-                                        left: Radius.circular(50))),
-
-                                child: Center(
-                                    child: Text(
-                                  'SALE',
-                                  style: GobalStyles.headlineblack4,
-                                )),
-                              ),
-                              Container(
-                                width: screenWidth / 10,
-                                margin: EdgeInsets.symmetric(horizontal: 4),
-                                decoration: const BoxDecoration(
-                                    color: GobalStyles.secondaryColor,
-                                    borderRadius: BorderRadius.horizontal(
-                                        right: Radius.circular(50),
-                                        left: Radius.circular(50))),
-                                child: Center(
-                                    child: Text(
-                                  'BE121',
-                                  style: GobalStyles.headlineblack4,
-                                )),
-                              ),
-                              Expanded(
-                                child: Container(
-                                  // color:
-                                  //     Colors.orangeAccent, // Background color
-                                  // height: 50, // Fixed height
-                                  padding: EdgeInsets.symmetric(horizontal: 8),
-                                  child: Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Row(
-                                      children: [
-                                        Text(
-                                            DateFormat('d MMMM yyyy').format(
-                                                DateTime
-                                                    .now()), // Current date and time
-                                            style: GobalStyles.articalwhite),
-                                        StreamBuilder(
-                                          stream: Stream.periodic(
-                                              const Duration(seconds: 1)),
-                                          builder: (context, snapshot) {
-                                            return Container(
-                                              // color: Colors.green,
-                                              alignment: Alignment.centerLeft,
-                                              child: Text(
-                                                  DateFormat(' hh:mm:ss a')
-                                                      .format(DateTime.now()),
-                                                  style:
-                                                      GobalStyles.articalwhite),
-                                            );
-                                          },
-                                        ),
-                                      ],
-                                    ),
+                              Row(
+                                children: [
+                                  Text(
+                                    'จรัญมนู ศรีอมรเพทนคร',
+                                    style: GobalStyles.text2,
+                                    textAlign: TextAlign.start,
                                   ),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  Text(
+                                      DateFormat(' d MMMM yyyy').format(DateTime
+                                          .now()), // Current date and time
+                                      style: GobalStyles.text3),
+                                  StreamBuilder(
+                                    stream: Stream.periodic(
+                                        const Duration(seconds: 1)),
+                                    builder: (context, snapshot) {
+                                      return Container(
+                                        child: Text(
+                                            DateFormat(' hh:mm:ss a')
+                                                .format(DateTime.now()),
+                                            style: GobalStyles.text3),
+                                      );
+                                    },
+                                  ),
+                                ],
+                              ),
+                              Container(
+                                // color: Colors.amber,
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  // mainAxisAlignment:
+                                  //     MainAxisAlignment.spaceAround,
+                                  children: [
+                                    Container(
+                                      width: screenWidth / 10,
+                                      // margin: EdgeInsets.all(4),
+                                      decoration: const BoxDecoration(
+                                          color: GobalStyles.secondaryColor,
+                                          borderRadius: BorderRadius.horizontal(
+                                              right: Radius.circular(50),
+                                              left: Radius.circular(50))),
+
+                                      child: Center(
+                                        child: Text(
+                                          'SALE',
+                                          style: GobalStyles.headlineblack4,
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
+                                      width: screenWidth / 10,
+                                      margin:
+                                          EdgeInsets.symmetric(horizontal: 4),
+                                      decoration: const BoxDecoration(
+                                          color: GobalStyles.secondaryColor,
+                                          borderRadius: BorderRadius.horizontal(
+                                              right: Radius.circular(50),
+                                              left: Radius.circular(50))),
+                                      child: Center(
+                                        child: Text(
+                                          'BE121',
+                                          style: GobalStyles.headlineblack4,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ],
