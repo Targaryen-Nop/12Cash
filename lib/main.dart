@@ -1,20 +1,22 @@
-import 'package:_12sale_app/components/Gird.dart';
-import 'package:_12sale_app/page/dashboard/DashboardScreen.dart';
-import 'package:_12sale_app/page/HomeScreen.dart';
-import 'package:_12sale_app/page/LoginScreen.dart';
-import 'package:_12sale_app/page/HomeScreen.dart';
-import 'package:_12sale_app/page/dashboard/DashboardScreen.dart';
+import 'package:_12sale_app/core/components/Gird.dart';
+import 'package:_12sale_app/core/page/dashboard/DashboardScreen.dart';
+import 'package:_12sale_app/core/page/HomeScreen.dart';
+import 'package:_12sale_app/core/page/LoginScreen.dart';
+import 'package:_12sale_app/core/page/HomeScreen.dart';
+import 'package:_12sale_app/core/page/dashboard/DashboardScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart'; // For date localization
 import 'package:flutter/services.dart';
 import 'package:camera/camera.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 late List<CameraDescription> _cameras;
 
 void main() async {
   // Initialize the locale data for Thai language
   await initializeDateFormatting('th', null);
+  await dotenv.load(fileName: ".env");
   // Ensure the app is always in portrait mode
   WidgetsFlutterBinding.ensureInitialized();
   // _cameras = await availableCameras();
