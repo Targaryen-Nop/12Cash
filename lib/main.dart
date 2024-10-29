@@ -1,4 +1,7 @@
 import 'package:_12sale_app/core/components/Gird.dart';
+import 'package:_12sale_app/core/page/BluetoothPrinterScreen.dart';
+import 'package:_12sale_app/core/page/TestPrint.dart';
+import 'package:_12sale_app/core/page/TestPrinterScreen.dart';
 import 'package:_12sale_app/core/page/dashboard/DashboardScreen.dart';
 import 'package:_12sale_app/core/page/HomeScreen.dart';
 import 'package:_12sale_app/core/page/LoginScreen.dart';
@@ -62,8 +65,6 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    return const HomeScreen(
-      index: 0,
-    );
+    return BluetoothPrinterScreen3();
   }
 }

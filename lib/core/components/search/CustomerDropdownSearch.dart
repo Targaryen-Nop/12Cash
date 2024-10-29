@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:_12sale_app/data/models/Customer.dart';
 import 'package:_12sale_app/core/styles/gobalStyle.dart';
+import 'package:_12sale_app/data/repositories/apiService.dart';
 import 'package:dio/dio.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
@@ -98,36 +99,22 @@ class _CustomerDropdownSearchState extends State<CustomerDropdownSearch> {
 
   Future<List<CustomerModel>> getCustomers() async {
     try {
-      var dio = Dio();
-      await dotenv.load(fileName: ".env");
-      // Correcting the request URL by adding the protocol (http://)
-      var response = await dio.post(
-        // "http://192.168.44.64:8003/erp/customer/",
-        "${dotenv.env['API_URL']}/erp/customer/top100",
-        // queryParameters: {
-        //   "filter": filter
-        // }, // Passing filter as a query parameter
-        data: jsonEncode({
-          // The body of the request as raw JSON
-          "customerNo": "VB20700031",
-        }),
-        options: Options(
-          headers: {
-            'Content-Type':
-                'application/json', // Setting the content type as JSON
-          },
-        ),
+      ApiService apiService = ApiService();
+      await apiService.init(); // Load .env before making any API calls
+
+      var response = await apiService.request(
+        endpoint:
+            'erp/customer/top100', // You only need to pass the endpoint, the base URL is handled
+        method: 'POST',
+        // body: {
+        //   "customerNo": "VB20700031",
+        // },
       );
+      print("ApiService: $response}");
 
-      print("Response: $response");
-      print(response);
-
-      // print(jsonDecode(response.data));
-      // Decoding the response data
-      final data = response.data;
       // // Checking if data is not null and returning the list of CustomerModel
-      if (data != null) {
-        return CustomerModel.fromJsonList(data);
+      if (response != null) {
+        return CustomerModel.fromJsonList(response);
       }
       return [];
     } catch (e) {

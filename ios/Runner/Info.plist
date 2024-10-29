@@ -6,6 +6,16 @@
 		<array>
 			<string>UIInterfaceOrientationPortrait</string>
 		</array>
+		<key>NSBluetoothAlwaysUsageDescription</key>
+		<string>Need BLE permission</string>
+		<key>NSBluetoothPeripheralUsageDescription</key>
+		<string>Need BLE permission</string>
+		<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+		<string>Need Location permission</string>
+		<key>NSLocationAlwaysUsageDescription</key>
+		<string>Need Location permission</string>
+		<key>NSLocationWhenInUseUsageDescription</key>
+		<string>Need Location permission</string>
 		<key>NSCameraUsageDescription</key>
 		<string>your usage description here</string>
 		<key>NSMicrophoneUsageDescription</key>
