@@ -5,7 +5,7 @@ import 'package:_12sale_app/core/components/button/CameraButton.dart';
 // import 'package:_12sale_app/core/components/table/ShopRouteTable.dart';
 import 'package:_12sale_app/core/components/table/ShopRouteTableMapAPI.dart';
 
-import 'package:_12sale_app/core/components/table/TableFullData.dart';
+import 'package:_12sale_app/core/components/table/RouteTable.dart';
 import 'package:_12sale_app/core/page/route/OrderScreen.dart';
 import 'package:_12sale_app/core/styles/gobalStyle.dart';
 import 'package:flutter/material.dart';

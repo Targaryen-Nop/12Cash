@@ -1,18 +1,35 @@
+import 'dart:convert';
+
 import 'package:_12sale_app/core/page/route/DetailScreen.dart';
 import 'package:_12sale_app/core/page/route/ShopRouteScreen.dart';
 import 'package:_12sale_app/core/styles/gobalStyle.dart';
+import 'package:_12sale_app/core/styles/style.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class TableFullData extends StatefulWidget {
-  const TableFullData({super.key});
+class RouteTable extends StatefulWidget {
+  const RouteTable({super.key});
 
   @override
-  State<TableFullData> createState() => _TableFullDataState();
+  State<RouteTable> createState() => _RouteTableState();
 }
 
-class _TableFullDataState extends State<TableFullData> {
+class _RouteTableState extends State<RouteTable> {
+  Map<String, dynamic>? _jsonString;
   @override
+  void initState() {
+    super.initState();
+    _loadJson();
+  }
+
+  Future<void> _loadJson() async {
+    String jsonString = await rootBundle.loadString('lang/main-th.json');
+    setState(() {
+      _jsonString = jsonDecode(jsonString)["route_table"];
+    });
+  }
+
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     return Center(
@@ -37,9 +54,9 @@ class _TableFullDataState extends State<TableFullData> {
               ),
               child: Row(
                 children: [
-                  _buildHeaderCell('วันที่'),
-                  _buildHeaderCell('เส้นทาง'),
-                  _buildHeaderCell('สถานะ'),
+                  _buildHeaderCell(_jsonString?['date'] ?? 'Date'),
+                  _buildHeaderCell(_jsonString?['route'] ?? 'Route'),
+                  _buildHeaderCell(_jsonString?['status'] ?? 'Status'),
                   // _buildHeaderCell('สถานะ'),
                 ],
               ),
@@ -54,33 +71,28 @@ class _TableFullDataState extends State<TableFullData> {
                         'Day 01',
                         '1',
                         '5/5',
-                        GobalStyles.successBackgroundColor,
-                        GobalStyles.successTextColor,
+                        Styles.successBackgroundColor,
+                        Styles.successTextColor,
                         0),
                     _buildDataRow(
                         'Day 02',
                         '2',
                         '6/6',
-                        GobalStyles.successBackgroundColor,
-                        GobalStyles.successTextColor,
+                        Styles.successBackgroundColor,
+                        Styles.successTextColor,
                         1),
-                    _buildDataRow(
-                        'Day 03',
-                        '4',
-                        '0/9',
-                        GobalStyles.failBackgroundColor,
-                        GobalStyles.failTextColor,
-                        2),
+                    _buildDataRow('Day 03', '4', '0/9',
+                        Styles.failBackgroundColor, Styles.failTextColor, 2),
                     _buildDataRow('Day 04', '5', '11/16',
-                        GobalStyles.paddingBackgroundColor, Colors.blue, 3),
+                        Styles.paddingBackgroundColor, Colors.blue, 3),
                     _buildDataRow('Day 05', '6', '2/9',
-                        GobalStyles.paddingBackgroundColor, Colors.blue, 4),
+                        Styles.paddingBackgroundColor, Colors.blue, 4),
                     _buildDataRow(
                         'Day 06',
                         '7',
                         '9/9',
-                        GobalStyles.successBackgroundColor,
-                        GobalStyles.successTextColor,
+                        Styles.successBackgroundColor,
+                        Styles.successTextColor,
                         5),
                   ],
                 ),
@@ -152,7 +164,7 @@ class _TableFullDataState extends State<TableFullData> {
     return Container(
       alignment: Alignment.center,
       padding: EdgeInsets.all(8),
-      child: Text(text, style: GobalStyles.tableText),
+      child: Text(text, style: Styles.black18),
     );
   }
 
@@ -163,7 +175,7 @@ class _TableFullDataState extends State<TableFullData> {
         padding: EdgeInsets.all(8),
         child: Text(
           text,
-          style: GobalStyles.tableHeader,
+          style: Styles.headergrey18,
         ),
       ),
     );

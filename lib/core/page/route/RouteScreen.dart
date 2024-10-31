@@ -1,6 +1,6 @@
 import 'package:_12sale_app/core/components/search/CustomerDropdownSearch.dart';
 import 'package:_12sale_app/core/components/Table.dart';
-import 'package:_12sale_app/core/components/table/TableFullData.dart';
+import 'package:_12sale_app/core/components/table/RouteTable.dart';
 import 'package:_12sale_app/core/styles/gobalStyle.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -26,7 +26,7 @@ class _RoutescreenState extends State<Routescreen> {
           //   height: screenWidth / 30,
           // ),
           Container(
-              margin: EdgeInsets.all(screenWidth / 50), child: TableFullData()),
+              margin: EdgeInsets.all(screenWidth / 50), child: RouteTable()),
         ],
       ),
       // child: Column(

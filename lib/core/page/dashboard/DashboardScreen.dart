@@ -1,28 +1,12 @@
-import 'dart:convert';
-import 'package:_12sale_app/core/components/button/Button.dart';
-import 'package:_12sale_app/core/components/Dropdown.dart';
-import 'package:_12sale_app/core/components/search/CustomerDropdownSearch.dart';
-import 'package:_12sale_app/core/components/search/ShippingDropdownSearch.dart';
-import 'package:_12sale_app/core/components/Table.dart';
 import 'package:_12sale_app/core/components/button/CameraButton.dart';
-import 'package:_12sale_app/core/components/chart/BarChart.dart';
-import 'package:_12sale_app/core/components/chart/LineChart.dart';
-import 'package:_12sale_app/core/components/chart/TrendingMusicChart.dart';
 import 'package:_12sale_app/data/models/Customer.dart';
 import 'package:_12sale_app/data/models/Shipping.dart';
-import 'package:_12sale_app/data/models/example.dart';
-import 'package:_12sale_app/data/service/getCustomer.dart';
 import 'package:_12sale_app/core/styles/gobalStyle.dart';
-import 'package:dio/dio.dart';
-import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:_12sale_app/data/service/locationService.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:_12sale_app/data/models/User.dart';
 import 'dart:async';
-import 'package:_12sale_app/data/service/getCustomer.dart';
 import 'package:_12sale_app/core/utils/json_loader.dart';
 
 class Dashboardscreen extends StatefulWidget {
@@ -77,7 +61,7 @@ class _DashboardscreenState extends State<Dashboardscreen> {
         // width: screenWidth / 1.5,
         child: Column(
           children: [
-            CameraButtonWidget()
+            // CameraButtonWidget()
             // ShippingDropdownSearch(),
             // SizedBox(height: screenWidth / 25),
 

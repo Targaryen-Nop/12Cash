@@ -9,6 +9,7 @@ import 'package:_12sale_app/core/page/shop/ShopScreen.dart';
 // import 'package:_12sale_app/page/TestTabel.dart';
 import 'package:_12sale_app/core/styles/gobalStyle.dart';
 import 'package:_12sale_app/core/components/Header.dart';
+import 'package:_12sale_app/core/styles/style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
@@ -143,9 +144,9 @@ class _HomeScreenState extends State<HomeScreen> {
             selectedLabelStyle: GobalStyles.text3,
             iconSize: screenWidth / 20,
             currentIndex: _selectedIndex,
-            selectedItemColor: Colors.white,
-            backgroundColor: GobalStyles.primaryColor,
-            unselectedItemColor: Colors.grey,
+            selectedItemColor: Styles.white,
+            backgroundColor: Styles.primaryColor,
+            unselectedItemColor: Styles.grey,
             onTap: _onItemTapped,
             type: BottomNavigationBarType.fixed,
           ),

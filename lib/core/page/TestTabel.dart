@@ -1,6 +1,6 @@
 import 'package:_12sale_app/core/components/search/CustomerDropdownSearch.dart';
 import 'package:_12sale_app/core/components/Table.dart';
-import 'package:_12sale_app/core/components/table/TableFullData.dart';
+import 'package:_12sale_app/core/components/table/RouteTable.dart';
 import 'package:_12sale_app/core/styles/gobalStyle.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -23,7 +23,7 @@ class _RoutescreenState extends State<Routescreen> {
               color: Colors.grey, width: 1), // Border around the entire table
           borderRadius: BorderRadius.circular(8), // Optional: Rounded corners
         ),
-        child: TableFullData());
+        child: RouteTable());
   }
 }
 

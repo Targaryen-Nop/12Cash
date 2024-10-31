@@ -9,6 +9,10 @@
     },
     "asset": {
         "logo": "assets/images/12TradingLogo.png"
+    },
+    "route_table": {
+        "date": "วันที่",
+        "route": "เส้นทาง",
+        "status": "สถานะ"
     }
-    
 }

@@ -104,11 +104,11 @@ class _CustomerDropdownSearchState extends State<CustomerDropdownSearch> {
 
       var response = await apiService.request(
         endpoint:
-            'erp/customer/top100', // You only need to pass the endpoint, the base URL is handled
+            'erp/customer/', // You only need to pass the endpoint, the base URL is handled
         method: 'POST',
-        // body: {
-        //   "customerNo": "VB20700031",
-        // },
+        body: {
+          "customerNo": "VB20700031",
+        },
       );
       print("ApiService: $response}");
 

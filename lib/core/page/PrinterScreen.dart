@@ -1,5 +1,5 @@
 import 'dart:typed_data';
-
+import 'package:sprintf/sprintf.dart';
 import 'package:_12sale_app/core/page/StingHelper.dart';
 import 'package:charset_converter/charset_converter.dart';
 import 'package:flutter/material.dart';
@@ -34,23 +34,23 @@ class _BluetoothPrinterScreen4State extends State<BluetoothPrinterScreen4> {
     "OAORDT": "06/07/2024",
     "items": [
       {
-        "itemname": "เมจิรุ้งหมูแดง แฮดชิ้น 5kg x4",
+        "itemname": "ผงปรุงรสหมู ฟ้าไทย 10g x12x20",
         "qtytext": "21",
-        "unit": "ซอง",
+        "unit": "หีบ",
         "OBSAPR": "1455.00",
         "disamount": "0.00",
         "itemamount": "2910.00"
       },
       {
-        "itemname": "เมจิรุ้งหมูแดง 165g x6",
+        "itemname": "ผงปรุงรสหมู ฟ้าไทย 10g x24x10 ชนิดแผง",
         "qtytext": "1",
-        "unit": "หีบ",
+        "unit": "ซอง",
         "OBSAPR": "762.00",
         "disamount": "0.00",
         "itemamount": "762.00"
       },
       {
-        "itemname": "เมจิรุ้งหมูแดง แฮดชิ้น 5kg x1",
+        "itemname": "ผงปรุงรสหมู ฟ้าไทย 80g x10x8 แถมช้อนจีน",
         "qtytext": "1",
         "unit": "ถุง",
         "OBSAPR": "0.00",
@@ -58,17 +58,41 @@ class _BluetoothPrinterScreen4State extends State<BluetoothPrinterScreen4> {
         "itemamount": "0.00"
       },
       {
-        "itemname": "เมจิรุ้งหมูแดง 75g x10 x8",
+        "itemname": "ผงปรุงรสหมู ฟ้าไทย 450g x12 แถมชามพลาสติก",
         "qtytext": "6",
-        "unit": "ถุง",
+        "unit": "แผง",
         "OBSAPR": "0.00",
         "disamount": "102.00",
         "itemamount": "0.00"
       },
       {
-        "itemname": "เมจิรุ้งหมูแดง 165g x6",
+        "itemname": "ผงปรุงรสหมู ฟ้าไทย 80g x10x8 แถมเห็ด 10g",
         "qtytext": "13",
-        "unit": "ซอง",
+        "unit": "กระสอบ",
+        "OBSAPR": "0.00",
+        "disamount": "0.00",
+        "itemamount": "0.00"
+      },
+      {
+        "itemname": "ผงปรุงรสไก่ ฟ้าไทย 80g x10x8",
+        "qtytext": "2",
+        "unit": "แพ็ค",
+        "OBSAPR": "0.00",
+        "disamount": "0.00",
+        "itemamount": "0.00"
+      },
+      {
+        "itemname": "ผงปรุงรสไก่ ฟ้าไทย 900g x6",
+        "qtytext": "1",
+        "unit": "กล่อง",
+        "OBSAPR": "0.00",
+        "disamount": "0.00",
+        "itemamount": "0.00"
+      },
+      {
+        "itemname": "ผงปรุงรสไก่ ฟ้าไทย 850g x6 แถมรสไก่ 80g",
+        "qtytext": "7",
+        "unit": "กระปุก",
         "OBSAPR": "0.00",
         "disamount": "0.00",
         "itemamount": "0.00"
@@ -144,6 +168,59 @@ class _BluetoothPrinterScreen4State extends State<BluetoothPrinterScreen4> {
     return counter;
   }
 
+  String printTable(String itemName, String qty, String unit, String price,
+      String discount, String total) {
+    const int nameWidth = 25; // Width for item name
+
+    // Wrap text if it exceeds the width
+    List<String> wrapText(String text, int width) {
+      List<String> lines = [];
+      for (int i = 0; i < text.length; i += width) {
+        lines.add(text.substring(
+            i, i + width > text.length ? text.length : i + width));
+      }
+      return lines;
+    }
+
+    // Wrap `itemName` if it exceeds the width
+    List<String> itemNameLines = wrapText(itemName, nameWidth);
+
+    // Format each line with wrapped itemName using sprintf
+    StringBuffer rowBuffer = StringBuffer();
+    for (int i = 0; i < itemNameLines.length; i++) {
+      // Use sprintf to format the first line
+      if (i == 0) {
+        rowBuffer.write(
+          sprintf(
+            '%*s| %*s| %*s| %-*s| %-*s| %-*s',
+            [
+              nameWidth, itemNameLines[i], // Item name
+              3, qty, // Quantity
+              7, unit, // Unit
+              8, price, // Price
+              8, discount, // Discount
+              8, total // Total
+            ],
+          ),
+        );
+        // rowBuffer.write(sprintf('%*s| %*s| %*s| %-*s| %-*s| %-*s', [
+        //   nameWidth, itemNameLines[i], // Item name
+        //   3, qty.padLeft(3), // Quantity
+        //   7, unit.padLeft(7), // Unit
+        //   8, price.padLeft(8), // Price
+        //   8, discount.padLeft(8), // Discount
+        //   8, total.padLeft(8) // Total
+        // ]));
+      } else {
+        // Subsequent lines only contain the item name
+        rowBuffer.write(sprintf('%*s', [nameWidth, itemNameLines[i]]));
+      }
+      rowBuffer.write('\n'); // New line after each row
+    }
+
+    return rowBuffer.toString();
+  }
+
   Future<void> printBetween(String frontText, String backText,
       {int fontSize = 1, bool isBold = false}) async {
     int frontSpaces = paperWidth ~/ 2 + _getNoOfUpperLowerChars(frontText);
@@ -152,6 +229,54 @@ class _BluetoothPrinterScreen4State extends State<BluetoothPrinterScreen4> {
     String formattedText =
         frontText.padRight(frontSpaces) + backText.padLeft(backSpaces);
     await _printText(formattedText, fontSize: fontSize, isBold: isBold);
+  }
+
+  String formatFixedWidthRow2(String itemName, String qty, String unit,
+      String price, String discount, String total) {
+    const int nameWidth = 31;
+    const int qtyWidth = 3;
+    const int unitWidth = 7;
+    const int priceWidth = 8;
+    const int discountWidth = 7;
+    const int totalWidth = 8;
+    List<String> wrapText(String text, int width) {
+      List<String> lines = [];
+      for (int i = 0; i < text.length; i += width) {
+        lines.add(text.substring(
+            i, i + width > text.length ? text.length : i + width));
+      }
+      return lines;
+    }
+
+    List<String> itemNameLines = wrapText(itemName, nameWidth);
+    for (var i = 0; i < itemNameLines.length; i++) {
+      for (var j = itemNameLines[i].length; j < nameWidth; j++) {
+        itemNameLines[i] += ' ';
+      }
+    }
+
+    String formattedQty = qty.padLeft(qtyWidth);
+    String formattedUnit =
+        unit.padLeft(unitWidth + _getNoOfUpperLowerChars(unit));
+    String formattedPrice = price.padLeft(priceWidth);
+    String formattedDiscount = discount.padLeft(discountWidth);
+    String formattedTotal = total.padLeft(totalWidth);
+    // Format each line with wrapped itemName
+    StringBuffer rowBuffer = StringBuffer();
+    for (int i = 0; i < itemNameLines.length; i++) {
+      // First line includes all columns, subsequent lines only contain `itemName`
+      rowBuffer.write(
+          itemNameLines[i].padRight(18 + _getNoOfUpperLowerChars(itemName)));
+      if (i == 0) {
+        // First line includes other columns
+        rowBuffer.write(
+            '${'   $formattedQty'}${'$formattedUnit '}${'  $formattedPrice'}${' $formattedDiscount'}${' $formattedTotal'}\n');
+      } else {
+        // Subsequent lines only contain the item name to create a wrapped effect
+        rowBuffer.write('\n');
+      }
+    }
+    return rowBuffer.toString();
   }
 
   int _getNoOfUpperLowerChars(String text) {
@@ -237,17 +362,18 @@ ${centerText('เอกสารออกเป็นชุด', paperWidthHeade
   }
 
   Future<void> printBodyBill(Map<String, dynamic> data) async {
-    const int nameWidth = 20; // Width for item name
-    const int qtyWidth = 10; // Width for quantity
-    const int discountWidth = 10; // Width for discount
+    // const int nameWidth = 30; // Width for item name
+    // const int qtyWidth = 10; // Width for quantity
+    // const int discountWidth = 4; // Width for discount
 
     await printBetween('รหัสลูกค้า ${data['customer']['customercode']}',
         'เลขที่ ${data['CUOR']}');
     await printBetween('ชื่อลูกค้า ${data['customer']['customername']}',
         'วันที่ ${data['OAORDT']}');
-
+    // String body = formatFixedWidthRow2(
+    //     'รายการสินค้า', 'จํานวน', '', 'ราคา', 'ส่วนลด', 'รวม');
     String body = '''
-รายการสินค้า${' ' * (nameWidth - 4)}จำนวน${' ' * (qtyWidth - 4)}ราคา${' ' * (discountWidth - 2)}ส่วนลด${' ' * (discountWidth - 2)}รวม
+รายการสินค้า${' ' * (26)}จำนวน${' ' * (7)}ราคา${' ' * (3)}ส่วนลด${' ' * (6)}รวม
 ''';
     Uint8List encodedBody = await CharsetConverter.encode('TIS-620', body);
     await PrintBluetoothThermal.writeBytes(List<int>.from(encodedBody));
@@ -258,7 +384,7 @@ ${centerText('เอกสารออกเป็นชุด', paperWidthHeade
 
       // Safely get a substring only if the length is greater than 36
       String itemName = item['itemname'];
-      return formatFixedWidthRow(
+      return formatFixedWidthRow2(
         '${(index + 1).toString()} $itemName',
         item['qtytext'],
         item['unit'],
@@ -298,62 +424,62 @@ ${centerText('เอกสารออกเป็นชุด', paperWidthHeade
 // ''';
   }
 
-  String formatItemRow(String index, String itemName, String qty, String price,
-      String discount, String total) {
-    const int indexWidth = 3;
-    const int itemNameWidth = 30;
-    const int qtyWidth = 8;
-    const int priceWidth = 10;
-    const int discountWidth = 10;
-    const int totalWidth = 10;
+  // String formatItemRow(String index, String itemName, String qty, String price,
+  //     String discount, String total) {
+  //   const int indexWidth = 3;
+  //   const int itemNameWidth = 30;
+  //   const int qtyWidth = 8;
+  //   const int priceWidth = 10;
+  //   const int discountWidth = 10;
+  //   const int totalWidth = 10;
 
-    String formattedIndex = index.padRight(indexWidth);
-    String formattedQty = qty.padLeft(qtyWidth);
-    String formattedPrice = price.padLeft(priceWidth);
-    String formattedDiscount = discount.padLeft(discountWidth);
-    String formattedTotal = total.padLeft(totalWidth);
+  //   String formattedIndex = index.padRight(indexWidth);
+  //   String formattedQty = qty.padLeft(qtyWidth);
+  //   String formattedPrice = price.padLeft(priceWidth);
+  //   String formattedDiscount = discount.padLeft(discountWidth);
+  //   String formattedTotal = total.padLeft(totalWidth);
 
-    // Split item name if it exceeds the width
-    List<String> wrappedItemName = _wrapText(itemName, itemNameWidth);
+  //   // Split item name if it exceeds the width
+  //   List<String> wrappedItemName = _wrapText(itemName, itemNameWidth);
 
-    // Build the first row with index, item name, qty, price, discount, and total
-    String formattedRow =
-        '$formattedIndex${wrappedItemName[0].padRight(itemNameWidth)}'
-        '$formattedQty$formattedPrice$formattedDiscount$formattedTotal';
+  //   // Build the first row with index, item name, qty, price, discount, and total
+  //   String formattedRow =
+  //       '$formattedIndex${wrappedItemName[0].padRight(itemNameWidth)}'
+  //       '$formattedQty$formattedPrice$formattedDiscount$formattedTotal';
 
-    // Append any additional lines for wrapped item names, aligning them to the item column
-    for (int i = 1; i < wrappedItemName.length; i++) {
-      formattedRow += '\n' +
-          ' '.padRight(indexWidth) +
-          wrappedItemName[i].padRight(itemNameWidth) +
-          ' ' *
-              (qtyWidth +
-                  priceWidth +
-                  discountWidth +
-                  totalWidth); // Fill remaining columns with spaces
-    }
+  //   // Append any additional lines for wrapped item names, aligning them to the item column
+  //   for (int i = 1; i < wrappedItemName.length; i++) {
+  //     formattedRow += '\n' +
+  //         ' '.padRight(indexWidth) +
+  //         wrappedItemName[i].padRight(itemNameWidth) +
+  //         ' ' *
+  //             (qtyWidth +
+  //                 priceWidth +
+  //                 discountWidth +
+  //                 totalWidth); // Fill remaining columns with spaces
+  //   }
 
-    return formattedRow;
-  }
+  //   return formattedRow;
+  // }
 
-  static List<String> _wrapText(String text, int maxWidth) {
-    List<String> lines = [];
-    while (text.length > maxWidth) {
-      lines.add(text.substring(0, maxWidth));
-      text = text.substring(maxWidth);
-    }
-    lines.add(text); // Add remaining text
-    return lines;
-  }
+  // static List<String> _wrapText(String text, int maxWidth) {
+  //   List<String> lines = [];
+  //   while (text.length > maxWidth) {
+  //     lines.add(text.substring(0, maxWidth));
+  //     text = text.substring(maxWidth);
+  //   }
+  //   lines.add(text); // Add remaining text
+  //   return lines;
+  // }
 
   String formatFixedWidthRow(String itemName, String qty, String unit,
       String price, String discount, String total) {
-    const int nameWidth = 20;
-    const int qtyWidth = 7;
-    const int qtyunit = 3;
-    const int priceWidth = 10;
-    const int discountWidth = 10;
-    const int totalWidth = 10;
+    const int nameWidth = 25;
+    const int qtyWidth = 3;
+    const int unitWidth = 5;
+    const int priceWidth = 8;
+    const int discountWidth = 8;
+    const int totalWidth = 8;
 
     // // Define fixed widths for each column
     // const int nameWidth = 20; // Width for item name
@@ -373,14 +499,36 @@ ${centerText('เอกสารออกเป็นชุด', paperWidthHeade
 
     // Wrap `itemName` if it exceeds the width
     List<String> itemNameLines = wrapText(itemName, nameWidth);
+    for (var i = 0; i < itemNameLines.length; i++) {
+      for (var j = itemNameLines[i].length; j < nameWidth; j++) {
+        itemNameLines[i] += ' ';
+      }
+    }
 
     // For other columns, align text to the right by padding on the left
     String formattedQty = qty.padLeft(qtyWidth);
-    String formattedUnit = unit.padLeft(qtyunit);
-    String formattedPrice = StringHelper.padLeftWithSpaces(price, priceWidth);
-    String formattedDiscount =
-        StringHelper.padLeftWithSpaces(discount, discountWidth);
-    String formattedTotal = StringHelper.padLeftWithSpaces(total, totalWidth);
+    String formattedUnit = unit.padLeft(unitWidth);
+    String formattedPrice = price.padLeft(priceWidth);
+    String formattedDiscount = discount.padLeft(discountWidth);
+    String formattedTotal = total.padLeft(totalWidth);
+
+    for (var i = formattedUnit.length; i < unitWidth; i++) {
+      formattedUnit += ' ';
+    }
+    for (var i = formattedQty.length; i < qtyWidth; i++) {
+      formattedQty += ' ';
+    }
+    for (var i = formattedPrice.length; i < priceWidth; i++) {
+      formattedPrice += ' ';
+    }
+
+    for (var i = formattedDiscount.length; i < discountWidth; i++) {
+      formattedDiscount += ' ';
+    }
+
+    for (var i = formattedTotal.length; i < totalWidth; i++) {
+      formattedTotal += ' ';
+    }
 
     // Format each line with wrapped itemName
     StringBuffer rowBuffer = StringBuffer();
@@ -391,7 +539,7 @@ ${centerText('เอกสารออกเป็นชุด', paperWidthHeade
       if (i == 0) {
         // First line includes other columns
         rowBuffer.write(
-            '${'    $formattedQty '}${'$formattedUnit'}${formattedPrice + '  '}${formattedDiscount + '  '}${formattedTotal + '  '}\n');
+            '${'$formattedQty'}${'$formattedUnit'}${formattedPrice}${formattedDiscount}${formattedTotal}\n');
       } else {
         // Subsequent lines only contain the item name to create a wrapped effect
         rowBuffer.write('\n');

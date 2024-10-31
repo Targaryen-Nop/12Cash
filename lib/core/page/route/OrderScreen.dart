@@ -1,7 +1,7 @@
 import 'package:_12sale_app/core/components/Appbar.dart';
 import 'package:_12sale_app/core/components/button/CartButton.dart';
 import 'package:_12sale_app/core/components/table/OrderTable.dart';
-import 'package:_12sale_app/core/components/table/TableFullData.dart';
+import 'package:_12sale_app/core/components/table/RouteTable.dart';
 import 'package:_12sale_app/core/page/route/ShoppingCartScreen.dart';
 import 'package:_12sale_app/core/styles/gobalStyle.dart';
 import 'package:flutter/material.dart';

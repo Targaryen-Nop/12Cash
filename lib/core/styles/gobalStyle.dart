@@ -11,8 +11,8 @@ class GobalStyles {
 
   static TextStyle tableHeader = GoogleFonts.kanit(
       textStyle: const TextStyle(
-    fontSize: 32,
-    fontWeight: FontWeight.normal,
+    fontSize: 18,
+    fontWeight: FontWeight.w100,
     color: Color(0xFF6B7280),
   ));
 
@@ -25,7 +25,7 @@ class GobalStyles {
 
   static TextStyle tableText = GoogleFonts.kanit(
       textStyle: const TextStyle(
-    fontSize: 32.0,
+    fontSize: 18,
     fontWeight: FontWeight.normal,
     color: Color(0xFF111827),
   ));

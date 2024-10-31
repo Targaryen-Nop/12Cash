@@ -56,6 +56,7 @@ dependencies:
   pdf: ^3.11.1
   printing: ^5.12.0
   charset_converter: ^2.2.1
+  sprintf: ^7.0.0
 
 
 
