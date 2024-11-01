@@ -89,7 +89,7 @@ class GobalStyles {
     color: Colors.black,
   ));
 
-  static TextStyle textbBlack2 = GoogleFonts.kanit(
+  static TextStyle black32 = GoogleFonts.kanit(
       textStyle: const TextStyle(
     fontSize: 36.0,
     fontWeight: FontWeight.normal,

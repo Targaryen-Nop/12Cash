@@ -147,7 +147,7 @@ class _ShopTableAll extends State<ShopTableAll> {
       padding: EdgeInsets.all(8),
       child: Text(
         text,
-        style: Styles.grey24,
+        style: Styles.grey18,
       ),
     );
   }
@@ -159,7 +159,7 @@ class _ShopTableAll extends State<ShopTableAll> {
         padding: EdgeInsets.all(8),
         child: Text(
           text,
-          style: Styles.grey24,
+          style: Styles.grey18,
         ),
       ),
     );

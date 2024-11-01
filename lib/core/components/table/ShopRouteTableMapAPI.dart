@@ -111,11 +111,11 @@ class _ShopRouteTableState extends State<ShopRouteTable> {
                         Expanded(
                             flex: 2,
                             child: _buildHeaderCell(
-                                _jsonString?['customerNo'] ?? 'Customer No')),
+                                _jsonString?['customer_no'] ?? 'Customer No')),
                         Expanded(
                             flex: 3,
                             child: _buildHeaderCell(
-                                _jsonString?['customerName'] ??
+                                _jsonString?['customer_name'] ??
                                     'Customer Name')),
                         Expanded(
                             flex: 1,
@@ -209,7 +209,7 @@ class _ShopRouteTableState extends State<ShopRouteTable> {
     return Container(
       alignment: Alignment.centerLeft,
       padding: const EdgeInsets.all(8),
-      child: Text(text, style: Styles.black24),
+      child: Text(text, style: Styles.black18),
     );
   }
 
@@ -219,7 +219,7 @@ class _ShopRouteTableState extends State<ShopRouteTable> {
       padding: const EdgeInsets.all(8),
       child: Text(
         text,
-        style: Styles.grey24,
+        style: Styles.grey18,
       ),
     );
   }
@@ -230,7 +230,7 @@ class _ShopRouteTableState extends State<ShopRouteTable> {
       padding: const EdgeInsets.all(8),
       child: Text(
         text,
-        style: Styles.grey24,
+        style: Styles.grey18,
       ),
     );
   }

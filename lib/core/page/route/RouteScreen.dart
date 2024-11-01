@@ -1,10 +1,10 @@
+import 'dart:convert';
 import 'package:_12sale_app/core/components/search/CustomerDropdownSearch.dart';
-import 'package:_12sale_app/core/components/Table.dart';
 import 'package:_12sale_app/core/components/table/RouteTable.dart';
 import 'package:_12sale_app/core/styles/gobalStyle.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
-import 'package:intl/date_symbol_data_local.dart'; // For date localization
 
 class Routescreen extends StatefulWidget {
   const Routescreen({super.key});
@@ -26,7 +26,8 @@ class _RoutescreenState extends State<Routescreen> {
           //   height: screenWidth / 30,
           // ),
           Container(
-              margin: EdgeInsets.all(screenWidth / 50), child: RouteTable()),
+              margin: EdgeInsets.all(screenWidth / 50),
+              child: const RouteTable()),
         ],
       ),
       // child: Column(
@@ -62,9 +63,22 @@ class RouteHeader extends StatefulWidget {
 }
 
 class _RouteHeaderState extends State<RouteHeader> {
+  Map<String, dynamic>? _jsonString;
+  @override
+  void initState() {
+    super.initState();
+    _loadJson();
+  }
+
+  Future<void> _loadJson() async {
+    String jsonString = await rootBundle.loadString('lang/main-th.json');
+    setState(() {
+      _jsonString = jsonDecode(jsonString)["route"]["route_screen"];
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -95,10 +109,9 @@ class _RouteHeaderState extends State<RouteHeader> {
                 fit: FlexFit.loose,
                 child: Center(
                   // margin: EdgeInsets.only(top: 10),
-
                   child: Column(
                     // mainAxisSize: MainAxisSize.max,
-                    // crossAxisAlignment: CrossAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Expanded(
                         child: Container(
@@ -109,26 +122,34 @@ class _RouteHeaderState extends State<RouteHeader> {
                             children: [
                               Row(
                                 children: [
-                                  Container(
-                                    child: Icon(Icons.event,
-                                        size: 25, color: Colors.white),
-                                  ),
+                                  const Icon(Icons.event,
+                                      size: 25, color: Colors.white),
                                   Text(
-                                    ' เส้นทางเข้าเยี่ยม',
+                                    ' ${_jsonString?['title'] ?? 'Route'}',
                                     style: GobalStyles.headline3,
                                     textAlign: TextAlign.start,
                                   ),
                                 ],
                               ),
-                              Text(
-                                ' เดือน ${DateFormat('MMMM', 'th').format(DateTime.now())} ${DateTime.now().year + 543}',
-                                style: GobalStyles.headline3,
-                              ),
+                              // Row(
+                              //   children: [
+                              //     Text(
+                              //       ' เดือน ${DateFormat('MMMM', 'th').format(DateTime.now())} ${DateTime.now().year + 543}',
+                              //       style: GobalStyles.headline3,
+                              //     ),
+                              //   ],
+                              // )
                             ],
                           ),
                         ),
                       ),
                       Flexible(
+                        child: Text(
+                          ' เดือน ${DateFormat('MMMM', 'th').format(DateTime.now())} ${DateTime.now().year + 543}',
+                          style: GobalStyles.headline3,
+                        ),
+                      ),
+                      const Flexible(
                           fit: FlexFit.loose, child: CustomerDropdownSearch()),
                     ],
                   ),

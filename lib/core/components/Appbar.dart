@@ -1,4 +1,5 @@
 import 'package:_12sale_app/core/styles/gobalStyle.dart';
+import 'package:_12sale_app/core/styles/style.dart';
 import 'package:flutter/material.dart';
 
 class AppbarCustom extends StatefulWidget {
@@ -62,7 +63,7 @@ class _AppbarCustomState extends State<AppbarCustom> {
           ]),
           centerTitle: true,
           foregroundColor: Colors.white,
-          titleTextStyle: GobalStyles.headline2,
+          titleTextStyle: Styles.headerWhite32,
           backgroundColor: GobalStyles.primaryColor,
         ),
       ),

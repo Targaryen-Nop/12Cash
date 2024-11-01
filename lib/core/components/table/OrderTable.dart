@@ -143,7 +143,7 @@ class _OrderTableState extends State<OrderTable> {
             Expanded(
                 child: _buildTableCell(
                     itemCode)), // Use Expanded to distribute space equally
-            Expanded(child: _buildTableCell(itemName)),
+            Expanded(flex: 2, child: _buildTableCell(itemName)),
             Expanded(child: _buildTableCell(price)),
             _buildStatusCell(price, bgColor, textColor, 50),
           ],
@@ -176,7 +176,7 @@ class _OrderTableState extends State<OrderTable> {
     return Container(
       alignment: Alignment.center,
       padding: const EdgeInsets.all(8),
-      child: Text(text, style: Styles.black24),
+      child: Text(text, style: Styles.black18),
     );
   }
 
@@ -187,7 +187,7 @@ class _OrderTableState extends State<OrderTable> {
         padding: const EdgeInsets.all(8),
         child: Text(
           text,
-          style: Styles.grey24,
+          style: Styles.grey18,
         ),
       ),
     );
@@ -197,10 +197,10 @@ class _OrderTableState extends State<OrderTable> {
     return Container(
       width: width,
       alignment: Alignment.center,
-      padding: EdgeInsets.all(8),
+      padding: const EdgeInsets.all(8),
       child: Text(
         text,
-        style: Styles.grey24,
+        style: Styles.grey18,
       ),
     );
   }

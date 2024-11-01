@@ -3,6 +3,7 @@ import 'package:_12sale_app/core/components/table/ShopTableAll.dart';
 import 'package:_12sale_app/core/components/table/ShopTableNew.dart';
 import 'package:_12sale_app/core/page/shop/AddShopScreen.dart';
 import 'package:_12sale_app/core/styles/gobalStyle.dart';
+import 'package:_12sale_app/core/styles/style.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -37,7 +38,7 @@ class _ShopScreenState extends State<ShopScreen> {
                       },
                       child: Text(
                         'ร้านค้าทั้งหมด',
-                        style: GobalStyles.textbBlack2,
+                        style: Styles.black18,
                       ),
                       style: ElevatedButton.styleFrom(
                         elevation: 16, // Add elevation for shadow
@@ -67,7 +68,7 @@ class _ShopScreenState extends State<ShopScreen> {
                       },
                       child: Text(
                         'ร้านค้าใหม่',
-                        style: GobalStyles.textbBlack2,
+                        style: Styles.black18,
                       ),
                       style: ElevatedButton.styleFrom(
                         elevation: 16, // Add elevation for shadow

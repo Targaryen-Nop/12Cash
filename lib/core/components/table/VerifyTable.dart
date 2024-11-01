@@ -226,7 +226,7 @@ class _VerifyTable extends State<VerifyTable> {
       padding: const EdgeInsets.all(8),
       child: Text(
         text,
-        style: Styles.grey24,
+        style: Styles.grey18,
       ),
     );
   }
@@ -238,7 +238,7 @@ class _VerifyTable extends State<VerifyTable> {
         padding: const EdgeInsets.all(8),
         child: Text(
           text,
-          style: Styles.grey24,
+          style: Styles.grey18,
         ),
       ),
     );
@@ -255,7 +255,7 @@ class _VerifyTable extends State<VerifyTable> {
       builder: (BuildContext context) {
         double screenWidth = MediaQuery.of(context).size.width;
         return Container(
-          width: screenWidth, // Fixed width
+          // width: screenWidth, // Fixed width
           height: screenWidth + 100,
           padding: const EdgeInsets.only(
             left: 16.0,
@@ -281,7 +281,7 @@ class _VerifyTable extends State<VerifyTable> {
                         Navigator.of(context).pop(); // Close bottom sheet
                       },
                     ),
-                    Text('ตารางสินค้า', style: GobalStyles.headlineblack2),
+                    Text('ตารางสินค้า', style: Styles.headerBlack18),
                   ],
                 ),
                 const SizedBox(height: 8),

@@ -27,7 +27,7 @@
     },
     "reportsale_table": {
         "order_date": "วันที่สั่งซื้อ",
-        "order_no": "เลขการสั่งซื้อ",
+        "order_no": "เลขสั่งซื้อ",
         "customer_name": "ร้านค้า",
         "amount": "ราคารวม",
         "status": "สถานะ"
@@ -61,16 +61,69 @@
         "discount": "ส่วนลด",
         "sum": "รวม"
     },
-    "shoproutescreen": {
-        "title": "เข้าเยี่ยม",
-        "shop_target": "ร้านค้าเป้าหมาย",
-        "shop_visit": "ร้านค้าที่เข้าเยี่ยม",
-        "shop_order": "ร้านค้าที่สั่งซื้อ"
+    "customer_dropdown_search": {
+        "label": "ค้นหาร้านค้า",
+        "placeholder": "ค้นหาร้านค้า"
     },
-    "detailroutescreen": {
-        "title": "เข้าเยี่ยม",
-        "cancel_order_button": "ไม่ขายสินค้า",
-        "order_button": "ขายสินค้า",
-        "camera_button": "ถ่ายรูป"
+    "shipping_dropdown_search": {
+        "label": "ค้นหาร้านค้า",
+        "placeholder": "ค้นหาร้านค้า"
+    },
+    "route": {
+        "detail_screen": {
+            "title": "เข้าเยี่ยม",
+            "cancel_order_button": "ยกเลิก",
+            "order_button": "ขายสินค้า",
+            "camera_button": "ถ่ายรูป"
+        },
+        "order_detail_screen": {
+            "title": "รายละเอียดสินค้า"
+        },
+        "order_screen": {
+            "title": "การสั่งซื้อสินค้า",
+            "item_selected": "รายการสินค้า ที่เลือก",
+            "amount": "รวมราคา"
+        },
+        "promotion_screen": {
+            "title": "โปรโมชั่น และส่วนลด",
+            "giveaway": "ของแถม",
+            "discount": "ส่วนลด",
+            "next_button": "ถัดไป"
+        },
+        "route_screen": {
+            "title": "เส้นทางเข้าเยี่ยม",
+            "month": "เดือน"
+        },
+        "shop_cart_screen": {
+            "title": "ตะกร้าสินค้า",
+            "item_selected": "รายการสินค้า ที่เลือก",
+            "select_item": "เลือกสินค้าเพิ้่มเติม",
+            "create_order": "สร้างรายการ",
+            "qty": "จำนวน",
+            "amount": "ราคาสุทธิ",
+            "item": "รายการ",
+            "bath": "บาท"
+        },
+        "shop_screen": {
+            "title": "เข้าเยี่ยม",
+            "shop_target": "ร้านค้าเป้าหมาย",
+            "shop_visit": "ร้านค้าที่เข้าเยี่ยม",
+            "shop_order": "ร้านค้าที่สั่งซื้อ"
+        },
+        "verify_screen": {
+            "title": "ยืนยันการสั่งซื้อ",
+            "sale_name": "พนักงานขาย",
+            "customer_no": "รหัสร้านค้า",
+            "customer_name": "ชื่อร้านค้า",
+            "address": "ที่อยู่",
+            "customer_phone": "เบอร์ร้าน",
+            "tax_no": "เลขที่ผู้เสียภาษี",
+            "total": "ยอดรวม",
+            "discount": "ส่วนลดท้ายบิล",
+            "net_price": "ราคาไม่รวมภาษี",
+            "vat": "ภาษี 7% (VAT)",
+            "amount": "ยอดชำระสุทธิ",
+            "save": "บันทึกรายการ"
+        }
     }
 }

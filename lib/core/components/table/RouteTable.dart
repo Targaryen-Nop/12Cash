@@ -164,7 +164,7 @@ class _RouteTableState extends State<RouteTable> {
     return Container(
       alignment: Alignment.center,
       padding: const EdgeInsets.all(8),
-      child: Text(text, style: Styles.black24),
+      child: Text(text, style: Styles.black18),
     );
   }
 
@@ -175,7 +175,7 @@ class _RouteTableState extends State<RouteTable> {
         padding: const EdgeInsets.all(8),
         child: Text(
           text,
-          style: Styles.grey24,
+          style: Styles.grey18,
         ),
       ),
     );

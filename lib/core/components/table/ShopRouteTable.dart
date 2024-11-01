@@ -58,9 +58,10 @@ class _ShopRouteTableState extends State<ShopRouteTable> {
               ),
               child: Row(
                 children: [
-                  _buildHeaderCell(_jsonString?['customerNo'] ?? 'Customer No'),
                   _buildHeaderCell(
-                      _jsonString?['customerName'] ?? 'Customer Name'),
+                      _jsonString?['customer_no'] ?? 'Customer No'),
+                  _buildHeaderCell(
+                      _jsonString?['customer_name'] ?? 'Customer Name'),
                   _buildHeaderCell(_jsonString?['status'] ?? 'Status'),
                 ],
               ),
@@ -168,7 +169,7 @@ class _ShopRouteTableState extends State<ShopRouteTable> {
         alignment: Alignment.center,
         child: Text(
           status,
-          style: GoogleFonts.kanit(color: textColor, fontSize: 24),
+          style: GoogleFonts.kanit(color: textColor, fontSize: 18),
         ),
       ),
     );
@@ -178,7 +179,7 @@ class _ShopRouteTableState extends State<ShopRouteTable> {
     return Container(
       alignment: Alignment.center,
       padding: const EdgeInsets.all(8),
-      child: Text(text, style: Styles.black24),
+      child: Text(text, style: Styles.black18),
     );
   }
 
@@ -189,7 +190,7 @@ class _ShopRouteTableState extends State<ShopRouteTable> {
         padding: const EdgeInsets.all(8),
         child: Text(
           text,
-          style: Styles.grey24,
+          style: Styles.grey18,
         ),
       ),
     );

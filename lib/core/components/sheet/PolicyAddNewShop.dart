@@ -1,3 +1,4 @@
+import 'package:_12sale_app/core/styles/style.dart';
 import 'package:flutter/material.dart';
 import 'package:_12sale_app/core/styles/gobalStyle.dart';
 
@@ -109,7 +110,7 @@ class _PolicyaddnewshopState extends State<Policyaddnewshop> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('ขอความยินยอม', style: GobalStyles.headlineblack2),
+              Text('ขอความยินยอม', style: Styles.headerBlack18),
               IconButton(
                 icon: Icon(Icons.close),
                 onPressed: () {

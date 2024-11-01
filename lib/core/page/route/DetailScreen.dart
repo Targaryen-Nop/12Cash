@@ -1,16 +1,12 @@
 import 'dart:convert';
-import 'dart:io';
-
 import 'package:_12sale_app/core/components/Appbar.dart';
 import 'package:_12sale_app/core/components/button/CameraButton.dart';
 // import 'package:_12sale_app/core/components/table/ShopRouteTable.dart';
 import 'package:_12sale_app/core/components/table/ShopRouteTableMapAPI.dart';
-
-import 'package:_12sale_app/core/components/table/RouteTable.dart';
 import 'package:_12sale_app/core/page/route/OrderScreen.dart';
 import 'package:_12sale_app/core/styles/gobalStyle.dart';
+import 'package:_12sale_app/core/styles/style.dart';
 import 'package:flutter/material.dart';
-import 'package:camera/camera.dart';
 import 'package:flutter/services.dart';
 
 class DetailScreen extends StatefulWidget {
@@ -43,7 +39,7 @@ class _DetailScreenState extends State<DetailScreen> {
   Future<void> _loadJson() async {
     String jsonString = await rootBundle.loadString('lang/main-th.json');
     setState(() {
-      _jsonString = jsonDecode(jsonString)["detailroutescreen"];
+      _jsonString = jsonDecode(jsonString)['route']["detail_screen"];
     });
   }
 
@@ -54,8 +50,7 @@ class _DetailScreenState extends State<DetailScreen> {
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(70),
         child: AppbarCustom(
-            title: ' ${_jsonString?['title']} ' + widget.day ??
-                'Visiting' " " + widget.day,
+            title: ' ${_jsonString?['title'] ?? 'Visiting'} ${widget.day}',
             icon: Icons.event),
       ),
       bottomNavigationBar: Container(
@@ -82,7 +77,7 @@ class _DetailScreenState extends State<DetailScreen> {
             children: [
               _buildCustomButton(
                 context,
-                icon: Icons.location_on_rounded,
+                icon: Icons.cancel_rounded,
                 label: _jsonString?['cancel_order_button'] ?? 'Cancel Order',
                 color: Colors.red,
                 onPressed: () {
@@ -126,12 +121,8 @@ class _DetailScreenState extends State<DetailScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("รหัสร้าน ${widget.customerNo}", style: GobalStyles.kanit32),
-              Text("ร้าน ${widget.customerName}", style: GobalStyles.kanit32),
-              // Text(
-              //   "ร้าน เจริญพรค้าขาย",
-              //   style: GobalStyles.kanit32,
-              // ),
+              Text("รหัสร้าน ${widget.customerNo}", style: Styles.black18),
+              Text("ร้าน ${widget.customerName}", style: Styles.black18),
               const SizedBox(height: 10),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -165,8 +156,8 @@ class _DetailScreenState extends State<DetailScreen> {
     return InkWell(
       onTap: onPressed,
       child: Container(
-        width: screenWidth / 5, // Fixed width for the button
-        height: screenWidth / 5, // Fixed height for the button
+        width: screenWidth / 7, // Fixed width for the button
+        height: screenWidth / 7, // Fixed height for the button
         // margin: EdgeInsets.all(2),
         decoration: BoxDecoration(
           color: color,
@@ -192,7 +183,7 @@ class _DetailScreenState extends State<DetailScreen> {
             SizedBox(height: 8),
             Text(
               label,
-              style: GobalStyles.textBuntton,
+              style: Styles.white18,
               textAlign: TextAlign.center,
             ),
           ],
@@ -230,7 +221,7 @@ class _DetailScreenState extends State<DetailScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text('ระบุสาเหตุที่ร้านค้าไม่ซื้อ',
-                        style: GobalStyles.headlineblack2),
+                        style: Styles.headerBlack18),
                     IconButton(
                       icon: Icon(Icons.close),
                       onPressed: () {
@@ -263,7 +254,7 @@ class _DetailScreenState extends State<DetailScreen> {
                             BorderSide.none, // Remove border if not needed
                       ),
                       contentPadding: EdgeInsets.only(left: 250)),
-                  style: GobalStyles.headline2,
+                  style: Styles.headerWhite32,
 
                   value: 'อื่นๆ', // Default value
                   alignment: Alignment.center, // Center the selected value text
@@ -308,7 +299,7 @@ class _DetailScreenState extends State<DetailScreen> {
                       // Perform save action
                       Navigator.of(context).pop(); // Close the bottom sheet
                     },
-                    child: Text('บันทึก', style: GobalStyles.headline2),
+                    child: Text('บันทึก', style: Styles.headerWhite32),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: GobalStyles.successButtonColor,
                       // padding: EdgeInsets.symmetric(vertical: 12),
@@ -360,7 +351,7 @@ class _DetailScreenState extends State<DetailScreen> {
                         Navigator.of(context).pop(); // Close bottom sheet
                       },
                     ),
-                    Text('จัดเก็บรูปภาพ', style: GobalStyles.headlineblack2),
+                    Text('จัดเก็บรูปภาพ', style: Styles.headerBlack18),
                   ],
                 ),
                 SizedBox(height: 8),

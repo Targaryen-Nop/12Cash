@@ -1,9 +1,12 @@
+import 'dart:convert';
+
 import 'package:_12sale_app/core/components/Appbar.dart';
-import 'package:_12sale_app/core/components/table/CartSTable.dart';
 import 'package:_12sale_app/core/components/table/PromotionTable.dart';
 import 'package:_12sale_app/core/page/route/VerifyOrderScreen.dart';
 import 'package:_12sale_app/core/styles/gobalStyle.dart';
+import 'package:_12sale_app/core/styles/style.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class Promotionscreen extends StatefulWidget {
   final String customerNo;
@@ -21,13 +24,30 @@ class Promotionscreen extends StatefulWidget {
 }
 
 class _PromotionscreenState extends State<Promotionscreen> {
+  Map<String, dynamic>? _jsonString;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _loadJson();
+  }
+
+  Future<void> _loadJson() async {
+    String jsonString = await rootBundle.loadString('lang/main-th.json');
+    setState(() {
+      _jsonString = jsonDecode(jsonString)['route']["promotion_screen"];
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(70),
+        preferredSize: Size.fromHeight(70),
         child: AppbarCustom(
-            title: " โปรโมชั่น และส่วนลด", icon: Icons.cancel_outlined),
+            title: " ${_jsonString?['title'] ?? 'Promotion&Discount'}",
+            icon: Icons.cancel_outlined),
       ),
       body: Container(
         padding: const EdgeInsets.all(16.0),
@@ -35,7 +55,8 @@ class _PromotionscreenState extends State<Promotionscreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("ของแถม", style: GobalStyles.kanit32),
+            Text("${_jsonString?['giveaway'] ?? 'Giveaway'}",
+                style: Styles.black18),
             Container(
               decoration: BoxDecoration(
                 border: Border.all(color: Colors.grey),
@@ -43,7 +64,8 @@ class _PromotionscreenState extends State<Promotionscreen> {
               ),
               child: const Promotiontable(),
             ),
-            Text("ส่วนลด", style: GobalStyles.kanit32),
+            Text("${_jsonString?['discount'] ?? 'Discount'}",
+                style: Styles.black18),
             Container(
               decoration: BoxDecoration(
                 border: Border.all(color: Colors.grey),
@@ -51,8 +73,8 @@ class _PromotionscreenState extends State<Promotionscreen> {
               ),
               child: const Promotiontable(),
             ),
-            Spacer(),
-            Container(
+            const Spacer(),
+            SizedBox(
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {
@@ -67,14 +89,15 @@ class _PromotionscreenState extends State<Promotionscreen> {
                     ),
                   );
                 },
-                child: Text('ถัดไป', style: GobalStyles.text3),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: GobalStyles.successButtonColor,
-                  padding: EdgeInsets.symmetric(vertical: 6),
+                  padding: const EdgeInsets.symmetric(vertical: 6),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),
+                child: Text('${_jsonString?['next_button'] ?? 'Next'}',
+                    style: GobalStyles.text3),
               ),
             ),
           ],

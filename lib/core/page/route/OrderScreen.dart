@@ -1,17 +1,19 @@
+import 'dart:convert';
+
 import 'package:_12sale_app/core/components/Appbar.dart';
 import 'package:_12sale_app/core/components/button/CartButton.dart';
 import 'package:_12sale_app/core/components/table/OrderTable.dart';
-import 'package:_12sale_app/core/components/table/RouteTable.dart';
 import 'package:_12sale_app/core/page/route/ShoppingCartScreen.dart';
-import 'package:_12sale_app/core/styles/gobalStyle.dart';
+import 'package:_12sale_app/core/styles/style.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class Orderscreen extends StatefulWidget {
   final String customerNo;
   final String customerName;
   final String status;
 
-  Orderscreen(
+  const Orderscreen(
       {super.key,
       required this.customerNo,
       required this.customerName,
@@ -22,35 +24,52 @@ class Orderscreen extends StatefulWidget {
 }
 
 class _OrderscreenState extends State<Orderscreen> {
-  @override
+  Map<String, dynamic>? _jsonString;
   String dropdownValue = 'แบรนด์'; // Default value
   int cartItemCount = 1;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _loadJson();
+  }
+
+  Future<void> _loadJson() async {
+    String jsonString = await rootBundle.loadString('lang/main-th.json');
+    setState(() {
+      _jsonString = jsonDecode(jsonString)['route']["order_screen"];
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(70),
-        child: AppbarCustom(title: " การสั่งซื้อสินค้า", icon: Icons.event),
+        child: AppbarCustom(
+            title: " ${_jsonString?['title'] ?? 'Ordering'}",
+            icon: Icons.event),
       ),
       body: Container(
-        padding: EdgeInsets.all(16.0),
-        margin: EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(16.0),
+        margin: const EdgeInsets.all(8.0),
         // color: Colors.red,
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("รหัสร้าน 10334587", style: GobalStyles.kanit32),
+              Text("รหัสร้าน 10334587", style: Styles.black18),
               Text(
                 "ร้าน เจริญพรค้าขาย",
-                style: GobalStyles.kanit32,
+                style: Styles.black18,
               ),
               SizedBox(height: screenWidth / 80),
               Row(
                 children: [
                   Flexible(
                     child: Container(
-                      padding: EdgeInsets.only(right: 10),
+                      padding: const EdgeInsets.only(right: 10),
                       child: DropdownButtonFormField<String>(
                         decoration: InputDecoration(
                           filled: true,
@@ -60,16 +79,16 @@ class _OrderscreenState extends State<Orderscreen> {
                                 BorderRadius.circular(5), // Rounded corners
                             borderSide: BorderSide.none, // Remove border
                           ),
-                          contentPadding: EdgeInsets.symmetric(
+                          contentPadding: const EdgeInsets.symmetric(
                               horizontal: 16,
                               vertical: 8), // Padding for the dropdown
                         ),
                         value: dropdownValue,
-                        icon: Icon(
+                        icon: const Icon(
                           Icons.chevron_left,
                           size: 25,
                         ), // Icon on the right (chevron)
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Colors.black,
                           fontSize: 16,
                         ),
@@ -102,16 +121,16 @@ class _OrderscreenState extends State<Orderscreen> {
                               BorderRadius.circular(5), // Rounded corners
                           borderSide: BorderSide.none, // Remove border
                         ),
-                        contentPadding: EdgeInsets.symmetric(
+                        contentPadding: const EdgeInsets.symmetric(
                             horizontal: 16,
                             vertical: 8), // Padding for the dropdown
                       ),
                       value: dropdownValue,
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.chevron_left,
                         size: 25,
                       ), // Icon on the right (chevron)
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.black,
                         fontSize: 16,
                       ),
@@ -140,7 +159,7 @@ class _OrderscreenState extends State<Orderscreen> {
                 children: [
                   Flexible(
                     child: Container(
-                      padding: EdgeInsets.only(right: 10),
+                      padding: const EdgeInsets.only(right: 10),
                       child: DropdownButtonFormField<String>(
                         decoration: InputDecoration(
                           filled: true,
@@ -150,16 +169,16 @@ class _OrderscreenState extends State<Orderscreen> {
                                 BorderRadius.circular(5), // Rounded corners
                             borderSide: BorderSide.none, // Remove border
                           ),
-                          contentPadding: EdgeInsets.symmetric(
+                          contentPadding: const EdgeInsets.symmetric(
                               horizontal: 16,
                               vertical: 8), // Padding for the dropdown
                         ),
                         value: dropdownValue,
-                        icon: Icon(
+                        icon: const Icon(
                           Icons.chevron_left,
                           size: 25,
                         ), // Icon on the right (chevron)
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Colors.black,
                           fontSize: 16,
                         ),
@@ -192,16 +211,16 @@ class _OrderscreenState extends State<Orderscreen> {
                               BorderRadius.circular(5), // Rounded corners
                           borderSide: BorderSide.none, // Remove border
                         ),
-                        contentPadding: EdgeInsets.symmetric(
+                        contentPadding: const EdgeInsets.symmetric(
                             horizontal: 16,
                             vertical: 8), // Padding for the dropdown
                       ),
                       value: dropdownValue,
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.chevron_left,
                         size: 25,
                       ), // Icon on the right (chevron)
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.black,
                         fontSize: 16,
                       ),
@@ -229,8 +248,8 @@ class _OrderscreenState extends State<Orderscreen> {
               Align(
                 alignment: Alignment.center,
                 child: Text(
-                  "รายการสินค้า ที่เลือก",
-                  style: GobalStyles.kanit32,
+                  "${_jsonString?['item_selected'] ?? 'Item Selected'}",
+                  style: Styles.black18,
                 ),
               ),
               SizedBox(height: screenWidth / 80),
@@ -239,14 +258,14 @@ class _OrderscreenState extends State<Orderscreen> {
                   border: Border.all(color: Colors.grey),
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: OrderTable(),
+                child: const OrderTable(),
               ),
               SizedBox(height: screenWidth / 80),
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  "รวมราคา 38000.00",
-                  style: GobalStyles.kanit32,
+                  "${_jsonString?['amount'] ?? 'Amount'} 38000.00",
+                  style: Styles.black18,
                 ),
               ),
             ],

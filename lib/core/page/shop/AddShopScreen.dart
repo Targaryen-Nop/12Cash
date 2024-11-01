@@ -41,7 +41,7 @@ class _AddShopScreenState extends State<AddShopScreen> {
                     width: 8), // Adds some spacing between the icon and text
                 Text(
                   "ข้อมูลร้านค้า",
-                  style: Styles.black24,
+                  style: Styles.black18,
                 ),
               ],
             ),
@@ -109,7 +109,7 @@ class _AddShopScreenState extends State<AddShopScreen> {
                     width: 8), // Adds some spacing between the icon and text
                 Text(
                   "ที่อยู่",
-                  style: Styles.black24,
+                  style: Styles.black18,
                 ),
               ],
             ),
@@ -184,7 +184,7 @@ class _AddShopScreenState extends State<AddShopScreen> {
                     width: 8), // Adds some spacing between the icon and text
                 Text(
                   "ภาพถ่าย",
-                  style: Styles.black24,
+                  style: Styles.black18,
                 ),
               ],
             ),

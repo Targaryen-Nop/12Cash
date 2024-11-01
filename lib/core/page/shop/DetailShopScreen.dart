@@ -41,7 +41,7 @@ class _DetailShopScreenState extends State<DetailShopScreen> {
                     width: 8), // Adds some spacing between the icon and text
                 Text(
                   "ข้อมูลร้านค้า",
-                  style: Styles.black24,
+                  style: Styles.black18,
                 ),
               ],
             ),

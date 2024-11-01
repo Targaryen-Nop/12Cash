@@ -2,6 +2,7 @@ import 'package:_12sale_app/core/components/search/CustomerDropdownSearch.dart';
 import 'package:_12sale_app/core/components/table/ReportSaleTable.dart';
 import 'package:_12sale_app/core/components/table/ShopTableNew.dart';
 import 'package:_12sale_app/core/styles/gobalStyle.dart';
+import 'package:_12sale_app/core/styles/style.dart';
 import 'package:flutter/material.dart';
 
 class ManageScreen extends StatefulWidget {
@@ -33,10 +34,6 @@ class _ManageScreenState extends State<ManageScreen> {
                           _isSelected = !_isSelected;
                         });
                       },
-                      child: Text(
-                        'รายการขาย',
-                        style: GobalStyles.textbBlack2,
-                      ),
                       style: ElevatedButton.styleFrom(
                         elevation: 16, // Add elevation for shadow
                         shadowColor: Colors.black
@@ -50,6 +47,10 @@ class _ManageScreenState extends State<ManageScreen> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
+                      ),
+                      child: Text(
+                        'รายการขาย',
+                        style: Styles.black18,
                       ),
                     ),
                   ),
@@ -65,7 +66,7 @@ class _ManageScreenState extends State<ManageScreen> {
                       },
                       child: Text(
                         'รายการคืน',
-                        style: GobalStyles.textbBlack2,
+                        style: Styles.black18,
                       ),
                       style: ElevatedButton.styleFrom(
                         elevation: 16, // Add elevation for shadow

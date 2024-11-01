@@ -177,7 +177,7 @@ class _PromotiontableState extends State<Promotiontable> {
       alignment: Alignment.centerLeft,
       width: width,
       padding: const EdgeInsets.all(8),
-      child: Text(text, style: Styles.black24),
+      child: Text(text, style: Styles.black18),
     );
   }
 
@@ -185,7 +185,7 @@ class _PromotiontableState extends State<Promotiontable> {
     return Container(
       alignment: Alignment.centerRight,
       padding: const EdgeInsets.all(8),
-      child: Text(text, style: Styles.black24),
+      child: Text(text, style: Styles.black18),
     );
   }
 
@@ -196,7 +196,7 @@ class _PromotiontableState extends State<Promotiontable> {
       padding: const EdgeInsets.all(8),
       child: Text(
         text,
-        style: Styles.grey24,
+        style: Styles.grey18,
       ),
     );
   }
@@ -208,7 +208,7 @@ class _PromotiontableState extends State<Promotiontable> {
         padding: const EdgeInsets.all(8),
         child: Text(
           text,
-          style: Styles.grey24,
+          style: Styles.grey18,
         ),
       ),
     );
@@ -221,7 +221,7 @@ class _PromotiontableState extends State<Promotiontable> {
       padding: const EdgeInsets.all(8),
       child: Text(
         text,
-        style: Styles.grey24,
+        style: Styles.grey18,
       ),
     );
   }
@@ -264,7 +264,7 @@ class _PromotiontableState extends State<Promotiontable> {
                         Navigator.of(context).pop(); // Close bottom sheet
                       },
                     ),
-                    Text('เปลี่ยนของแถม', style: GobalStyles.headlineblack2),
+                    Text('เปลี่ยนของแถม', style: Styles.headerBlack18),
                   ],
                 ),
                 const SizedBox(height: 8),

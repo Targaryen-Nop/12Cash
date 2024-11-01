@@ -1,6 +1,10 @@
+import 'dart:convert';
+
 import 'package:_12sale_app/core/components/Appbar.dart';
 import 'package:_12sale_app/core/styles/gobalStyle.dart';
+import 'package:_12sale_app/core/styles/style.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class OrderDetail extends StatefulWidget {
   final String itemCode;
@@ -17,6 +21,7 @@ class OrderDetail extends StatefulWidget {
 }
 
 class _OrderDetailState extends State<OrderDetail> {
+  Map<String, dynamic>? _jsonString;
   String selectedLabel = "";
   int count = 1; // Initialized with 1
   int unit = 1;
@@ -28,6 +33,14 @@ class _OrderDetailState extends State<OrderDetail> {
     super.initState();
     price = double.parse(widget.price);
     totalPrice = price; // Initialize the totalPrice
+    _loadJson();
+  }
+
+  Future<void> _loadJson() async {
+    String jsonString = await rootBundle.loadString('lang/main-th.json');
+    setState(() {
+      _jsonString = jsonDecode(jsonString)['route']["order_detail_screen"];
+    });
   }
 
   @override
@@ -35,10 +48,11 @@ class _OrderDetailState extends State<OrderDetail> {
     double screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      appBar: const PreferredSize(
+      appBar: PreferredSize(
         preferredSize: Size.fromHeight(70),
         child: AppbarCustom(
-            title: "รายละเอียดสินค้า", icon: Icons.inventory_2_outlined),
+            title: "${_jsonString?["title"] ?? 'Order Detail'}",
+            icon: Icons.inventory_2_outlined),
       ),
       body: Container(
         padding: const EdgeInsets.all(16.0),
@@ -54,7 +68,8 @@ class _OrderDetailState extends State<OrderDetail> {
                   Flexible(
                     flex: 1,
                     child: Container(
-                      height: screenWidth / 4.5,
+                      height: screenWidth / 3,
+                      width: screenWidth / 3,
                       decoration: const BoxDecoration(
                         image: DecorationImage(
                           image: AssetImage('assets/images/12TradingLogo.png'),
@@ -64,15 +79,14 @@ class _OrderDetailState extends State<OrderDetail> {
                   ),
                   Container(
                     padding: const EdgeInsets.all(16.0),
-                    margin: EdgeInsets.all(8.0),
+                    margin: const EdgeInsets.all(8.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("รหัสสินค้า " + widget.itemCode,
-                            style: GobalStyles.kanit32),
-                        Text(widget.itemName, style: GobalStyles.kanit32),
-                        Text("ราคา " + price.toString(),
-                            style: GobalStyles.kanit32),
+                        Text("รหัสสินค้า ${widget.itemCode}",
+                            style: Styles.black18),
+                        Text(widget.itemName, style: Styles.black18),
+                        Text("ราคา $price", style: Styles.black18),
                       ],
                     ),
                   ),
@@ -90,11 +104,11 @@ class _OrderDetailState extends State<OrderDetail> {
             ),
 
             // Spacer for alignment
-            Spacer(),
+            const Spacer(),
 
             // Total Price and Quantity Control
             Container(
-              margin: EdgeInsets.all(8.0),
+              margin: const EdgeInsets.all(8.0),
               padding: const EdgeInsets.all(16.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -155,7 +169,7 @@ class _OrderDetailState extends State<OrderDetail> {
                 color: Colors.grey[800],
                 borderRadius: BorderRadius.circular(16), // Rounded corners
               ),
-              margin: EdgeInsets.all(8.0),
+              margin: const EdgeInsets.all(8.0),
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
               child: TextButton(
                 onPressed: () {
@@ -197,8 +211,7 @@ class _OrderDetailState extends State<OrderDetail> {
           },
           child: Text(
             label,
-            style:
-                isSelected ? GobalStyles.headline2 : GobalStyles.headlineblack2,
+            style: isSelected ? Styles.headerWhite32 : Styles.headerBlack18,
           ),
         ),
       ),

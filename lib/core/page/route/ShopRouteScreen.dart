@@ -1,8 +1,7 @@
 import 'dart:convert';
-
 import 'package:_12sale_app/core/components/Appbar.dart';
 import 'package:_12sale_app/core/components/table/ShopRouteTable.dart';
-import 'package:_12sale_app/core/styles/gobalStyle.dart';
+import 'package:_12sale_app/core/styles/style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -33,7 +32,7 @@ class _ShoproutescreenState extends State<Shoproutescreen> {
   Future<void> _loadJson() async {
     String jsonString = await rootBundle.loadString('lang/main-th.json');
     setState(() {
-      _jsonString = jsonDecode(jsonString)["shoproutescreen"];
+      _jsonString = jsonDecode(jsonString)["route"]["shop_screen"];
     });
   }
 
@@ -44,8 +43,7 @@ class _ShoproutescreenState extends State<Shoproutescreen> {
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(70),
         child: AppbarCustom(
-            title: ' ${_jsonString?['title']}' + ' ' + widget.day ??
-                'Visiting' + widget.day,
+            title: ' ${_jsonString?['title'] ?? 'Visiting'} ${widget.day}',
             icon: Icons.event),
       ),
       body: Column(
@@ -57,11 +55,11 @@ class _ShoproutescreenState extends State<Shoproutescreen> {
               children: [
                 Text(
                   widget.status,
-                  style: GobalStyles.textbBlack2,
+                  style: Styles.black18,
                 ),
                 Text(
                   widget.route,
-                  style: GobalStyles.textbBlack2,
+                  style: Styles.black18,
                 )
               ],
             ),
@@ -80,10 +78,10 @@ class _ShoproutescreenState extends State<Shoproutescreen> {
               ),
             ),
           ),
-          Spacer(),
+          const Spacer(),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            margin: EdgeInsets.all(10),
+            margin: const EdgeInsets.all(10),
             child: Column(
               children: [
                 Row(
@@ -91,11 +89,11 @@ class _ShoproutescreenState extends State<Shoproutescreen> {
                   children: [
                     Text(
                       _jsonString?['shop_target'] ?? 'Shop Target',
-                      style: GobalStyles.kanit32,
+                      style: Styles.black18,
                     ),
                     Text(
                       "17",
-                      style: GobalStyles.kanit32,
+                      style: Styles.black18,
                     )
                   ],
                 ),
@@ -104,11 +102,11 @@ class _ShoproutescreenState extends State<Shoproutescreen> {
                   children: [
                     Text(
                       _jsonString?['shop_visit'] ?? 'Shop Visit',
-                      style: GobalStyles.kanit32,
+                      style: Styles.black18,
                     ),
                     Text(
                       "0",
-                      style: GobalStyles.kanit32,
+                      style: Styles.black18,
                     )
                   ],
                 ),
@@ -117,11 +115,11 @@ class _ShoproutescreenState extends State<Shoproutescreen> {
                   children: [
                     Text(
                       _jsonString?['shop_order'] ?? 'Shop Order',
-                      style: GobalStyles.kanit32,
+                      style: Styles.black18,
                     ),
                     Text(
                       "4",
-                      style: GobalStyles.kanit32,
+                      style: Styles.black18,
                     )
                   ],
                 ),

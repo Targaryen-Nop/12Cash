@@ -1,9 +1,13 @@
+import 'dart:convert';
+
 import 'package:_12sale_app/core/components/Appbar.dart';
 import 'package:_12sale_app/core/components/table/CartSTable.dart';
 import 'package:_12sale_app/core/page/route/OrderScreen.dart';
 import 'package:_12sale_app/core/page/route/PromotionScreen.dart';
 import 'package:_12sale_app/core/styles/gobalStyle.dart';
+import 'package:_12sale_app/core/styles/style.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class ShoppingCartScreen extends StatefulWidget {
   final String customerNo;
@@ -20,8 +24,21 @@ class ShoppingCartScreen extends StatefulWidget {
 }
 
 class _ShoppingCartScreenState extends State<ShoppingCartScreen> {
+  Map<String, dynamic>? _jsonString;
   int count = 4;
   double price = 2000.0;
+  @override
+  void initState() {
+    super.initState();
+    _loadJson();
+  }
+
+  Future<void> _loadJson() async {
+    String jsonString = await rootBundle.loadString('lang/main-th.json');
+    setState(() {
+      _jsonString = jsonDecode(jsonString)["route"]["shop_cart_screen"];
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +47,8 @@ class _ShoppingCartScreenState extends State<ShoppingCartScreen> {
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(70),
         child: AppbarCustom(
-            title: " ตะกร้าสินค้า", icon: Icons.shopping_cart_outlined),
+            title: " ${_jsonString?["title"] ?? 'Order Cart'}",
+            icon: Icons.shopping_cart_outlined),
       ),
       body: Container(
         padding: const EdgeInsets.all(16.0),
@@ -38,13 +56,13 @@ class _ShoppingCartScreenState extends State<ShoppingCartScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("รหัสร้าน ${widget.customerNo}", style: GobalStyles.kanit32),
-            Text("ร้าน ${widget.customerName}", style: GobalStyles.kanit32),
+            Text("รหัสร้าน ${widget.customerNo}", style: Styles.black18),
+            Text("ร้าน ${widget.customerName}", style: Styles.black18),
             Align(
               alignment: Alignment.center,
               child: Text(
-                "รายการสินค้า ที่เลือก",
-                style: GobalStyles.kanit32,
+                "${_jsonString?["item_selected"] ?? 'Item Selected'}",
+                style: Styles.black18,
               ),
             ),
             Container(
@@ -54,11 +72,11 @@ class _ShoppingCartScreenState extends State<ShoppingCartScreen> {
               ),
               child: const CartTable(),
             ),
-            Spacer(),
+            const Spacer(),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Container(
+                SizedBox(
                   width: screenWidth / 2.2,
                   child: ElevatedButton(
                     onPressed: () {
@@ -71,8 +89,6 @@ class _ShoppingCartScreenState extends State<ShoppingCartScreen> {
                         ),
                       );
                     },
-                    child:
-                        Text('เลือกสินค้าเพิ้่มเติม', style: GobalStyles.text3),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: GobalStyles.primaryColor,
                       padding: EdgeInsets.symmetric(
@@ -82,9 +98,12 @@ class _ShoppingCartScreenState extends State<ShoppingCartScreen> {
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
+                    child: Text(
+                        '${_jsonString?["select_item"] ?? 'Select Item'}',
+                        style: GobalStyles.text3),
                   ),
                 ),
-                Container(
+                SizedBox(
                   width: screenWidth / 2.3,
                   child: ElevatedButton(
                     onPressed: () {
@@ -98,7 +117,6 @@ class _ShoppingCartScreenState extends State<ShoppingCartScreen> {
                         ),
                       );
                     },
-                    child: Text('สร้างรายการ', style: GobalStyles.text3),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: GobalStyles.successButtonColor,
                       padding: EdgeInsets.symmetric(
@@ -108,21 +126,26 @@ class _ShoppingCartScreenState extends State<ShoppingCartScreen> {
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
+                    child: Text(
+                        '${_jsonString?["create_order"] ?? 'Create Order'}',
+                        style: GobalStyles.text3),
                   ),
                 ),
               ],
             ),
-            Divider(
+            const Divider(
               color: Colors.grey,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text("จำนวน", style: GobalStyles.kanit32),
+                Text("${_jsonString?["qty"] ?? 'Quantity'}",
+                    style: Styles.black18),
                 Row(
                   children: [
-                    Text("${count}    ", style: GobalStyles.kanit32),
-                    Text("รายการ", style: GobalStyles.kanit32),
+                    Text("$count    ", style: Styles.black18),
+                    Text("${_jsonString?["item"] ?? '    Items'}",
+                        style: Styles.black18),
                   ],
                 ),
               ],
@@ -130,11 +153,13 @@ class _ShoppingCartScreenState extends State<ShoppingCartScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text("ราคาสุทธิ", style: GobalStyles.kanit32),
+                Text("${_jsonString?["amount"] ?? 'Amount'}",
+                    style: Styles.black18),
                 Row(
                   children: [
-                    Text("${price}          ", style: GobalStyles.kanit32),
-                    Text("บาท", style: GobalStyles.kanit32),
+                    Text("$price          ", style: Styles.black18),
+                    Text("${_jsonString?["bath"] ?? 'Bath'}",
+                        style: Styles.black18),
                   ],
                 ),
               ],
