@@ -125,5 +125,22 @@
             "amount": "ยอดชำระสุทธิ",
             "save": "บันทึกรายการ"
         }
+    },
+    "shop" :{
+        "add_shop_screen": {
+            "title": "เพิ่มร้านค้า",
+            "shop_detail": "ข้อมูลร้านค้า",
+            "shop_code": "รหัสร้านค้า",
+            "shop_name": "ชื่อร้านค้า",
+            "shop_name_hint":"ไม่เกิน 36 ตัวอักษร",
+            "shop_address": "ที่อยู่",
+            "shop_phone": "เบอร์ร้านค้า",
+            "shop_tax": "เลขประจำตัวผู้เสียภาษี",
+            "shop_tax_hint":"ไม่เกิน 13 ตัวอักษร",
+            "shop_route": "เส้นทาง"
+        },
+        "detail_screen": {},
+        "detail_screen": {}
     }
+
 }

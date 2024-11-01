@@ -55,11 +55,11 @@ class _ShoproutescreenState extends State<Shoproutescreen> {
               children: [
                 Text(
                   widget.status,
-                  style: Styles.black18,
+                  style: Styles.headerBlack24,
                 ),
                 Text(
                   widget.route,
-                  style: Styles.black18,
+                  style: Styles.headerBlack24,
                 )
               ],
             ),
@@ -89,11 +89,11 @@ class _ShoproutescreenState extends State<Shoproutescreen> {
                   children: [
                     Text(
                       _jsonString?['shop_target'] ?? 'Shop Target',
-                      style: Styles.black18,
+                      style: Styles.headerBlack24,
                     ),
                     Text(
                       "17",
-                      style: Styles.black18,
+                      style: Styles.headerBlack24,
                     )
                   ],
                 ),
@@ -102,11 +102,11 @@ class _ShoproutescreenState extends State<Shoproutescreen> {
                   children: [
                     Text(
                       _jsonString?['shop_visit'] ?? 'Shop Visit',
-                      style: Styles.black18,
+                      style: Styles.headerBlack24,
                     ),
                     Text(
                       "0",
-                      style: Styles.black18,
+                      style: Styles.headerBlack24,
                     )
                   ],
                 ),
@@ -115,11 +115,11 @@ class _ShoproutescreenState extends State<Shoproutescreen> {
                   children: [
                     Text(
                       _jsonString?['shop_order'] ?? 'Shop Order',
-                      style: Styles.black18,
+                      style: Styles.headerBlack24,
                     ),
                     Text(
                       "4",
-                      style: Styles.black18,
+                      style: Styles.headerBlack24,
                     )
                   ],
                 ),

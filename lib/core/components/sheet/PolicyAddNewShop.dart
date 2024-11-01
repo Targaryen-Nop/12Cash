@@ -189,7 +189,7 @@ class _PolicyaddnewshopState extends State<Policyaddnewshop> {
                       //   ),
                       // );
                     },
-                    child: Text('กลับ', style: GobalStyles.text3),
+                    child: Text('กลับ', style: Styles.white18),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: GobalStyles.primaryColor,
                       padding: EdgeInsets.symmetric(
@@ -205,7 +205,7 @@ class _PolicyaddnewshopState extends State<Policyaddnewshop> {
                   width: screenWidth / 3,
                   child: ElevatedButton(
                     onPressed: () {},
-                    child: Text('ถัดไป', style: GobalStyles.text3),
+                    child: Text('ถัดไป', style: Styles.white18),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: GobalStyles.successButtonColor,
                       padding: EdgeInsets.symmetric(

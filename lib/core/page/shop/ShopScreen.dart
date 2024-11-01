@@ -36,10 +36,6 @@ class _ShopScreenState extends State<ShopScreen> {
                           _isSelected = !_isSelected;
                         });
                       },
-                      child: Text(
-                        'ร้านค้าทั้งหมด',
-                        style: Styles.black18,
-                      ),
                       style: ElevatedButton.styleFrom(
                         elevation: 16, // Add elevation for shadow
                         shadowColor: Colors.black
@@ -54,6 +50,10 @@ class _ShopScreenState extends State<ShopScreen> {
                           borderRadius: BorderRadius.circular(8),
                         ),
                       ),
+                      child: Text(
+                        'ร้านค้าทั้งหมด',
+                        style: Styles.headerBlack24,
+                      ),
                     ),
                   ),
                 ),
@@ -66,10 +66,6 @@ class _ShopScreenState extends State<ShopScreen> {
                           _isSelected = !_isSelected;
                         });
                       },
-                      child: Text(
-                        'ร้านค้าใหม่',
-                        style: Styles.black18,
-                      ),
                       style: ElevatedButton.styleFrom(
                         elevation: 16, // Add elevation for shadow
                         shadowColor: Colors.black
@@ -82,14 +78,18 @@ class _ShopScreenState extends State<ShopScreen> {
                           borderRadius: BorderRadius.circular(8),
                         ),
                       ),
+                      child: Text(
+                        'ร้านค้าใหม่',
+                        style: Styles.headerBlack24,
+                      ),
                     ),
                   ),
                 )
               ],
             ),
           ),
-          _isSelected ? ShopTableNew() : ShopTableAll(),
-          Spacer(),
+          _isSelected ? const ShopTableNew() : const ShopTableAll(),
+          const Spacer(),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
@@ -171,7 +171,7 @@ class _ShopHeaderState extends State<ShopHeader> {
                     children: [
                       Expanded(
                         child: Container(
-                          margin: EdgeInsets.symmetric(horizontal: 4),
+                          margin: const EdgeInsets.symmetric(horizontal: 4),
                           // color: Colors.blue,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -185,7 +185,7 @@ class _ShopHeaderState extends State<ShopHeader> {
                                   ),
                                   Text(
                                     ' ร้านค้า',
-                                    style: GobalStyles.headline3,
+                                    style: Styles.headerWhite24,
                                     textAlign: TextAlign.start,
                                   ),
                                 ],

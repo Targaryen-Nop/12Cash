@@ -177,7 +177,7 @@ class _OrderDetailState extends State<OrderDetail> {
                 },
                 child: Text(
                   "เพิ่ม",
-                  style: GobalStyles.text3,
+                  style: Styles.white18,
                 ),
               ),
             ),

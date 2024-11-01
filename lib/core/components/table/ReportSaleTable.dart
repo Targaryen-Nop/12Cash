@@ -165,12 +165,11 @@ class _ReportsaletableState extends State<Reportsaletable> {
         ),
         child: Row(
           children: [
-            Expanded(child: _buildTableCell(date, Alignment.center)),
-            Expanded(child: _buildTableCell(orderNo, Alignment.center)),
-            Expanded(
-                child: _buildTableCell(customerName, Alignment.centerLeft)),
-            Expanded(child: _buildTableCell(price, Alignment.centerRight)),
-            _buildStatusCell(backgroundColor, screenWidth / 10, status),
+            Expanded(child: _buildTableCell(date, Alignment.centerLeft)),
+            _buildTableCellName(orderNo, screenWidth / 4.8),
+            _buildTableCellName(customerName, screenWidth / 6),
+            _buildTableCellName(price, screenWidth / 10),
+            _buildStatusCell(backgroundColor, screenWidth / 20, status),
           ],
         ),
       ),
@@ -183,7 +182,7 @@ class _ReportsaletableState extends State<Reportsaletable> {
         width: width,
         alignment: Alignment.center,
         child: Container(
-          margin: const EdgeInsets.all(5),
+          margin: const EdgeInsets.all(10),
           decoration: BoxDecoration(
             color: bgColor,
             borderRadius: BorderRadius.circular(
@@ -196,10 +195,19 @@ class _ReportsaletableState extends State<Reportsaletable> {
     );
   }
 
+  Widget _buildTableCellName(String text, double width) {
+    return Container(
+      alignment: Alignment.centerLeft,
+      width: width,
+      padding: const EdgeInsets.all(2),
+      child: Text(text, style: Styles.black18),
+    );
+  }
+
   Widget _buildTableCell(String text, Alignment alignment) {
     return Container(
       alignment: alignment,
-      padding: const EdgeInsets.all(8),
+      padding: const EdgeInsets.all(2),
       child: Text(text, style: Styles.black18),
     );
   }
@@ -208,7 +216,7 @@ class _ReportsaletableState extends State<Reportsaletable> {
     return Expanded(
       child: Container(
         alignment: Alignment.center,
-        padding: const EdgeInsets.all(8),
+        padding: const EdgeInsets.all(2),
         child: Text(
           text,
           style: Styles.grey18,

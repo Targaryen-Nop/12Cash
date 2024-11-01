@@ -305,7 +305,7 @@ class _PromotiontableState extends State<Promotiontable> {
                                   ),
                                   // contentPadding: EdgeInsets.only(left: 250),
                                 ),
-                                style: GobalStyles.text3,
+                                style: Styles.white18,
 
                                 value: 'อื่นๆ', // Default value
                                 alignment: Alignment
@@ -318,7 +318,7 @@ class _PromotiontableState extends State<Promotiontable> {
                                       // Center-align the text inside the dropdown items
                                       child: Text(
                                         value,
-                                        style: GobalStyles.articalTable,
+                                        style: Styles.black18,
                                       ),
                                     ),
                                   );
@@ -355,7 +355,7 @@ class _PromotiontableState extends State<Promotiontable> {
                                   ),
                                   // contentPadding: EdgeInsets.only(left: 250),
                                 ),
-                                style: GobalStyles.text3,
+                                style: Styles.white18,
 
                                 value: 'อื่นๆ', // Default value
                                 alignment: Alignment
@@ -368,7 +368,7 @@ class _PromotiontableState extends State<Promotiontable> {
                                       // Center-align the text inside the dropdown items
                                       child: Text(
                                         value,
-                                        style: GobalStyles.articalTable,
+                                        style: Styles.black18,
                                       ),
                                     ),
                                   );
@@ -407,7 +407,7 @@ class _PromotiontableState extends State<Promotiontable> {
                                   ),
                                   // contentPadding: EdgeInsets.only(left: 250),
                                 ),
-                                style: GobalStyles.text3,
+                                style: Styles.white18,
 
                                 value: 'อื่นๆ', // Default value
                                 alignment: Alignment
@@ -420,7 +420,7 @@ class _PromotiontableState extends State<Promotiontable> {
                                       // Center-align the text inside the dropdown items
                                       child: Text(
                                         value,
-                                        style: GobalStyles.articalTable,
+                                        style: Styles.black18,
                                       ),
                                     ),
                                   );
@@ -457,7 +457,7 @@ class _PromotiontableState extends State<Promotiontable> {
                                   ),
                                   // contentPadding: EdgeInsets.only(left: 250),
                                 ),
-                                style: GobalStyles.text3,
+                                style: Styles.white18,
 
                                 value: 'อื่นๆ', // Default value
                                 alignment: Alignment
@@ -470,7 +470,7 @@ class _PromotiontableState extends State<Promotiontable> {
                                       // Center-align the text inside the dropdown items
                                       child: Text(
                                         value,
-                                        style: GobalStyles.articalTable,
+                                        style: Styles.black18,
                                       ),
                                     ),
                                   );
@@ -499,7 +499,7 @@ class _PromotiontableState extends State<Promotiontable> {
                               borderRadius: BorderRadius.circular(8),
                             ),
                           ),
-                          child: Text('บันทึก', style: GobalStyles.text3),
+                          child: Text('บันทึก', style: Styles.white18),
                         ),
                       ),
                     ],

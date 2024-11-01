@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:_12sale_app/core/components/search/CustomerDropdownSearch.dart';
 import 'package:_12sale_app/core/components/table/RouteTable.dart';
 import 'package:_12sale_app/core/styles/gobalStyle.dart';
+import 'package:_12sale_app/core/styles/style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -115,7 +116,7 @@ class _RouteHeaderState extends State<RouteHeader> {
                     children: [
                       Expanded(
                         child: Container(
-                          margin: EdgeInsets.symmetric(horizontal: 4),
+                          margin: const EdgeInsets.symmetric(horizontal: 4),
                           // color: Colors.blue,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -126,7 +127,7 @@ class _RouteHeaderState extends State<RouteHeader> {
                                       size: 25, color: Colors.white),
                                   Text(
                                     ' ${_jsonString?['title'] ?? 'Route'}',
-                                    style: GobalStyles.headline3,
+                                    style: Styles.headerWhite24,
                                     textAlign: TextAlign.start,
                                   ),
                                 ],
@@ -135,7 +136,7 @@ class _RouteHeaderState extends State<RouteHeader> {
                               //   children: [
                               //     Text(
                               //       ' เดือน ${DateFormat('MMMM', 'th').format(DateTime.now())} ${DateTime.now().year + 543}',
-                              //       style: GobalStyles.headline3,
+                              //       style: Styles.headerWhite24,
                               //     ),
                               //   ],
                               // )
@@ -146,7 +147,7 @@ class _RouteHeaderState extends State<RouteHeader> {
                       Flexible(
                         child: Text(
                           ' เดือน ${DateFormat('MMMM', 'th').format(DateTime.now())} ${DateTime.now().year + 543}',
-                          style: GobalStyles.headline3,
+                          style: Styles.headerWhite24,
                         ),
                       ),
                       const Flexible(

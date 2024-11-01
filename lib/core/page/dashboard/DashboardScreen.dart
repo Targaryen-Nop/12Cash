@@ -1,4 +1,5 @@
 import 'package:_12sale_app/core/components/button/CameraButton.dart';
+import 'package:_12sale_app/core/styles/style.dart';
 import 'package:_12sale_app/data/models/Customer.dart';
 import 'package:_12sale_app/data/models/Shipping.dart';
 import 'package:_12sale_app/core/styles/gobalStyle.dart';
@@ -307,7 +308,7 @@ class _DashboardHeaderState extends State<DashboardHeader> {
                                   Text(
                                       DateFormat(' d MMMM yyyy').format(DateTime
                                           .now()), // Current date and time
-                                      style: GobalStyles.text3),
+                                      style: Styles.white18),
                                   StreamBuilder(
                                     stream: Stream.periodic(
                                         const Duration(seconds: 1)),
@@ -316,7 +317,7 @@ class _DashboardHeaderState extends State<DashboardHeader> {
                                         child: Text(
                                             DateFormat(' hh:mm:ss a')
                                                 .format(DateTime.now()),
-                                            style: GobalStyles.text3),
+                                            style: Styles.white18),
                                       );
                                     },
                                   ),

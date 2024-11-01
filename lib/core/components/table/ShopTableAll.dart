@@ -53,8 +53,9 @@ class _ShopTableAll extends State<ShopTableAll> {
               ),
               child: Row(
                 children: [
-                  _buildHeaderCell(
-                      _jsonString?["customer_no"] ?? 'Customer No'),
+                  _buildHeaderCellName(
+                      _jsonString?["customer_no"] ?? 'Customer No',
+                      screenWidth / 3.5),
                   _buildHeaderCellName(
                       _jsonString?["customer_name"] ?? 'Customer Name',
                       screenWidth / 3.5),
@@ -113,7 +114,7 @@ class _ShopTableAll extends State<ShopTableAll> {
         ),
         child: Row(
           children: [
-            Expanded(child: _buildTableCell(customerNo, Alignment.centerLeft)),
+            _buildTableCellName(customerNo, screenWidth / 3.5),
             _buildTableCellName(customerName, screenWidth / 3.5),
             Expanded(child: _buildTableCell(route, Alignment.center)),
             Expanded(child: _buildTableCell(address, Alignment.center)),
@@ -144,7 +145,7 @@ class _ShopTableAll extends State<ShopTableAll> {
     return Container(
       width: width,
       alignment: Alignment.center,
-      padding: EdgeInsets.all(8),
+      padding: const EdgeInsets.all(8),
       child: Text(
         text,
         style: Styles.grey18,

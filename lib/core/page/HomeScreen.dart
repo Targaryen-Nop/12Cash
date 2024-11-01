@@ -141,7 +141,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 label: _jsonString?['more'] ?? 'More',
               ),
             ],
-            selectedLabelStyle: GobalStyles.text3,
+            selectedLabelStyle: Styles.white18,
             iconSize: screenWidth / 20,
             currentIndex: _selectedIndex,
             selectedItemColor: Styles.white,

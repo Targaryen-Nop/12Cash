@@ -1,4 +1,5 @@
 import 'package:_12sale_app/core/styles/gobalStyle.dart';
+import 'package:_12sale_app/core/styles/style.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -31,14 +32,14 @@ class _BuildTextRowDetailShopState extends State<BuildTextRowDetailShop> {
             flex: widget.left,
             child: Text(
               widget.text,
-              style: GobalStyles.textbBlack3, // Bold label
+              style: Styles.black18, // Bold label
             ),
           ),
           Expanded(
             flex: widget.right,
             child: Text(
               widget.value,
-              style: GobalStyles.textbBlack3,
+              style: Styles.black18,
             ), // Value text
           ),
         ],

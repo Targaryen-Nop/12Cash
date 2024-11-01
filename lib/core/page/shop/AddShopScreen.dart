@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:_12sale_app/core/components/Appbar.dart';
 import 'package:_12sale_app/core/components/button/Button.dart';
 import 'package:_12sale_app/core/components/input/CustomTextInput.dart';
@@ -6,6 +8,7 @@ import 'package:_12sale_app/core/components/sheet/ReasonForNotBuyingSheet%20.dar
 import 'package:_12sale_app/core/styles/gobalStyle.dart';
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class AddShopScreen extends StatefulWidget {
   const AddShopScreen({super.key});
@@ -15,6 +18,20 @@ class AddShopScreen extends StatefulWidget {
 }
 
 class _AddShopScreenState extends State<AddShopScreen> {
+  Map<String, dynamic>? _jsonString;
+  @override
+  void initState() {
+    super.initState();
+    _loadJson();
+  }
+
+  Future<void> _loadJson() async {
+    String jsonString = await rootBundle.loadString('lang/main-th.json');
+    setState(() {
+      _jsonString = jsonDecode(jsonString)['shop']["add_shop_screen"];
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -22,7 +39,8 @@ class _AddShopScreenState extends State<AddShopScreen> {
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(70),
         child: AppbarCustom(
-            title: " เพิ่มร้านค้า", icon: Icons.store_mall_directory_rounded),
+            title: " ${_jsonString?['title'] ?? "Add New Shop"}",
+            icon: Icons.store_mall_directory_rounded),
       ),
       body: Container(
         padding: const EdgeInsets.all(16.0),
@@ -33,14 +51,14 @@ class _AddShopScreenState extends State<AddShopScreen> {
           children: [
             Row(
               children: [
-                Icon(
+                const Icon(
                   Icons.store, // Use any icon you want, or load custom icons
                   size: 40,
                 ),
-                SizedBox(
+                const SizedBox(
                     width: 8), // Adds some spacing between the icon and text
                 Text(
-                  "ข้อมูลร้านค้า",
+                  " ${_jsonString?['shop_detail'] ?? "Shop Detail"}",
                   style: Styles.black18,
                 ),
               ],
@@ -60,16 +78,18 @@ class _AddShopScreenState extends State<AddShopScreen> {
                     children: [
                       Customtextinput(
                         context,
-                        label: 'ชื่อร้านค้า *',
-                        hint: 'ไม่เกิน 36 ตัวอักษร',
+                        label: '${_jsonString?['shop_name'] ?? "Shop Name"} *',
+                        hint:
+                            '${_jsonString?['shop_name_hint'] ?? "Don't More Than 36 Characters"}',
                       ),
-                      SizedBox(height: 16),
+                      const SizedBox(height: 16),
                       Customtextinput(
                         context,
-                        label: 'เลขประจำตัวผู้เสียภาษี',
-                        hint: 'ไม่เกิน 13 ตัวอักษร',
+                        label: '${_jsonString?['shop_tax'] ?? "Tax ID"} ',
+                        hint:
+                            '${_jsonString?['shop_tax_hint'] ?? "Don't More Than 13 Characters"}',
                       ),
-                      SizedBox(height: 16),
+                      const SizedBox(height: 16),
                       Row(
                         children: [
                           Expanded(
@@ -78,7 +98,7 @@ class _AddShopScreenState extends State<AddShopScreen> {
                               label: 'โทรศัพท์',
                             ),
                           ),
-                          SizedBox(width: 16),
+                          const SizedBox(width: 16),
                           Expanded(
                             child: Customtextinput(
                               context,
@@ -87,7 +107,7 @@ class _AddShopScreenState extends State<AddShopScreen> {
                           ),
                         ],
                       ),
-                      SizedBox(height: 16),
+                      const SizedBox(height: 16),
                       Customtextinput(
                         context,
                         label: 'ประเภทร้านค้า *',
@@ -100,12 +120,12 @@ class _AddShopScreenState extends State<AddShopScreen> {
             SizedBox(height: screenWidth / 80),
             Row(
               children: [
-                Icon(
+                const Icon(
                   Icons
                       .location_on_rounded, // Use any icon you want, or load custom icons
                   size: 40,
                 ),
-                SizedBox(
+                const SizedBox(
                     width: 8), // Adds some spacing between the icon and text
                 Text(
                   "ที่อยู่",
@@ -131,7 +151,7 @@ class _AddShopScreenState extends State<AddShopScreen> {
                         label: 'ชื่อร้านค้า *',
                         hint: 'ไม่เกิน 36 ตัวอักษร',
                       ),
-                      SizedBox(height: 16),
+                      const SizedBox(height: 16),
                       Row(
                         children: [
                           Expanded(
@@ -140,7 +160,7 @@ class _AddShopScreenState extends State<AddShopScreen> {
                               label: 'โทรศัพท์',
                             ),
                           ),
-                          SizedBox(width: 16),
+                          const SizedBox(width: 16),
                           Expanded(
                             child: Customtextinput(
                               context,
@@ -149,7 +169,7 @@ class _AddShopScreenState extends State<AddShopScreen> {
                           ),
                         ],
                       ),
-                      SizedBox(height: 16),
+                      const SizedBox(height: 16),
                       Row(
                         children: [
                           Expanded(
@@ -158,7 +178,7 @@ class _AddShopScreenState extends State<AddShopScreen> {
                               label: 'โทรศัพท์',
                             ),
                           ),
-                          SizedBox(width: 16),
+                          const SizedBox(width: 16),
                           Expanded(
                             child: Customtextinput(
                               context,
@@ -180,7 +200,7 @@ class _AddShopScreenState extends State<AddShopScreen> {
                       .camera_alt, // Use any icon you want, or load custom icons
                   size: 40,
                 ),
-                SizedBox(
+                const SizedBox(
                     width: 8), // Adds some spacing between the icon and text
                 Text(
                   "ภาพถ่าย",
@@ -196,7 +216,7 @@ class _AddShopScreenState extends State<AddShopScreen> {
               ),
               height: screenWidth / 6,
               child: Center(
-                child: Text("รูปภาพ"),
+                child: const Text("รูปภาพ"),
               ),
             ),
             Spacer(),
@@ -206,7 +226,7 @@ class _AddShopScreenState extends State<AddShopScreen> {
                       context, '10334587', 'ร้าน เจริญพรค้าขาย');
                 },
                 text: "ถัดไป",
-                textStyle: GobalStyles.text3,
+                textStyle: Styles.white18,
                 blackGroundColor: GobalStyles.successButtonColor)
           ],
         ),

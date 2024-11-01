@@ -1,4 +1,5 @@
 import 'package:_12sale_app/core/styles/gobalStyle.dart';
+import 'package:_12sale_app/core/styles/style.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
@@ -10,13 +11,14 @@ class CameraButtonWidget extends StatefulWidget {
   // final TextStyle textStyle;
 
   const CameraButtonWidget({
-    Key? key,
+    super.key,
     // required this.buttonText,
     // required this.buttonColor,
     // required this.textStyle,
-  }) : super(key: key);
+  });
 
   @override
+  // ignore: library_private_types_in_public_api
   _CameraButtonWidgetState createState() => _CameraButtonWidgetState();
 }
 
@@ -94,13 +96,13 @@ class _CameraButtonWidgetState extends State<CameraButtonWidget> {
                     fit: BoxFit.contain,
                   ),
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           ElevatedButton(
             onPressed: () =>
                 _openCamera(context), // Open camera when button is pressed
             style: ElevatedButton.styleFrom(
                 backgroundColor: GobalStyles.successButtonColor,
-                padding: EdgeInsets.symmetric(vertical: 12),
+                padding: const EdgeInsets.symmetric(vertical: 12),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 )),
@@ -114,7 +116,7 @@ class _CameraButtonWidgetState extends State<CameraButtonWidget> {
                     size: 25,
                   ),
                 ),
-                Text(' กล้อง', style: GobalStyles.text3),
+                Text(' กล้อง', style: Styles.white18),
               ],
             ),
           ),

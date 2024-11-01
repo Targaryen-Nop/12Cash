@@ -199,7 +199,7 @@ class _ShopRouteTableState extends State<ShopRouteTable> {
         alignment: Alignment.center,
         child: Text(
           status,
-          style: GoogleFonts.kanit(color: textColor, fontSize: 24),
+          style: GoogleFonts.kanit(color: textColor, fontSize: 18),
         ),
       ),
     );

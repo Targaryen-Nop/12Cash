@@ -2,6 +2,7 @@ import 'package:_12sale_app/core/components/search/CustomerDropdownSearch.dart';
 import 'package:_12sale_app/core/components/Table.dart';
 import 'package:_12sale_app/core/components/table/RouteTable.dart';
 import 'package:_12sale_app/core/styles/gobalStyle.dart';
+import 'package:_12sale_app/core/styles/style.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart'; // For date localization
@@ -83,7 +84,7 @@ class _RouteHeaderState extends State<RouteHeader> {
                           SizedBox(width: 10),
                           Text(
                             'เส้นทางเข้าเยี่ยม',
-                            style: GobalStyles.headline3,
+                            style: Styles.headerWhite24,
                             textAlign: TextAlign.start,
                           ),
                         ],
@@ -97,7 +98,7 @@ class _RouteHeaderState extends State<RouteHeader> {
                             padding: EdgeInsets.all(10),
                             child: Text(
                               'เดือน ${DateFormat('MMMM', 'th').format(DateTime.now())} ${DateTime.now().year + 543}',
-                              style: GobalStyles.headline3,
+                              style: Styles.headerWhite24,
                             ),
                           ),
                           Flexible(
@@ -112,7 +113,7 @@ class _RouteHeaderState extends State<RouteHeader> {
                                       child: Text(
                                         DateFormat('hh:mm:ss a')
                                             .format(DateTime.now()),
-                                        style: GobalStyles.headline3,
+                                        style: Styles.headerWhite24,
                                       ),
                                     );
                                   }))

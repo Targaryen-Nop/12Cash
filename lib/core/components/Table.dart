@@ -1,4 +1,5 @@
 import 'package:_12sale_app/core/styles/gobalStyle.dart';
+import 'package:_12sale_app/core/styles/style.dart';
 import 'package:flutter/material.dart';
 
 class CustomTable extends StatefulWidget {
@@ -16,19 +17,19 @@ class _CustomTableState extends State<CustomTable> {
         DataColumn(
           label: Text(
             'วันที่',
-            style: GobalStyles.headlineblack3,
+            style: Styles.black18,
           ),
         ),
         DataColumn(
           label: Text(
             'เส้นทาง',
-            style: GobalStyles.headlineblack3,
+            style: Styles.black18,
           ),
         ),
         DataColumn(
           label: Text(
             'สถานะ',
-            style: GobalStyles.headlineblack3,
+            style: Styles.black18,
           ),
         ),
       ],

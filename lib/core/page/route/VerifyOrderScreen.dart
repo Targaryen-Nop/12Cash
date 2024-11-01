@@ -6,6 +6,7 @@ import 'package:_12sale_app/core/components/button/Button.dart';
 import 'package:_12sale_app/core/components/table/VerifyTable.dart';
 import 'package:_12sale_app/core/page/HomeScreen.dart';
 import 'package:_12sale_app/core/styles/gobalStyle.dart';
+import 'package:_12sale_app/core/styles/style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -99,26 +100,26 @@ class _VerifyorderscreenState extends State<Verifyorderscreen> {
             BuildTextRowBetween(
                 text: "${_jsonString?['total'] ?? 'Total'}",
                 price: 800.00,
-                style: GobalStyles.textbBlack3),
+                style: Styles.headerBlack24),
             BuildTextRowBetween(
                 text: "${_jsonString?['discount'] ?? 'Discount'}",
                 price: 8430.00,
-                style: GobalStyles.textbBlack3),
+                style: Styles.headerBlack24),
             BuildTextRowBetween(
                 text: "${_jsonString?['net_price'] ?? 'Net Price'}",
                 price: 00.00,
-                style: GobalStyles.textbBlack3),
+                style: Styles.headerBlack24),
             BuildTextRowBetween(
                 text: "${_jsonString?['vat'] ?? 'VAT (7%)'}",
                 price: 7878.50,
-                style: GobalStyles.textbBlack3),
+                style: Styles.headerBlack24),
             BuildTextRowBetween(
                 text: "${_jsonString?['amount'] ?? 'Amount'}",
                 price: 8430.00,
-                style: GobalStyles.textbBlack3),
+                style: Styles.headerBlack24),
             ButtonFullWidth(
               text: "${_jsonString?['save'] ?? 'Save'}",
-              textStyle: GobalStyles.text3,
+              textStyle: Styles.white18,
               blackGroundColor: GobalStyles.successButtonColor,
               screen: const HomeScreen(index: 2),
             ),

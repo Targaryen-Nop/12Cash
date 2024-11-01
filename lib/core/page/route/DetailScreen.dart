@@ -54,7 +54,7 @@ class _DetailScreenState extends State<DetailScreen> {
             icon: Icons.event),
       ),
       bottomNavigationBar: Container(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         decoration: const BoxDecoration(
           color:
               GobalStyles.primaryColor, // Primary color of the navigation bar
@@ -121,8 +121,9 @@ class _DetailScreenState extends State<DetailScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("รหัสร้าน ${widget.customerNo}", style: Styles.black18),
-              Text("ร้าน ${widget.customerName}", style: Styles.black18),
+              Text("รหัสร้าน ${widget.customerNo}",
+                  style: Styles.headerBlack24),
+              Text("ร้าน ${widget.customerName}", style: Styles.headerBlack24),
               const SizedBox(height: 10),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -221,7 +222,7 @@ class _DetailScreenState extends State<DetailScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text('ระบุสาเหตุที่ร้านค้าไม่ซื้อ',
-                        style: Styles.headerBlack18),
+                        style: Styles.headerBlack24),
                     IconButton(
                       icon: Icon(Icons.close),
                       onPressed: () {
@@ -234,13 +235,13 @@ class _DetailScreenState extends State<DetailScreen> {
                 // Store Information
                 Text(
                   'รหัสร้าน 10334587',
-                  style: GobalStyles.headlineblack3,
+                  style: Styles.headerBlack24,
                 ),
                 Text(
                   'ร้าน เจริญพรค้าขาย',
-                  style: GobalStyles.headlineblack3,
+                  style: Styles.headerBlack24,
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
 
                 // Dropdown field
                 DropdownButtonFormField<String>(
@@ -253,7 +254,7 @@ class _DetailScreenState extends State<DetailScreen> {
                         borderSide:
                             BorderSide.none, // Remove border if not needed
                       ),
-                      contentPadding: EdgeInsets.only(left: 250)),
+                      contentPadding: const EdgeInsets.only(left: 250)),
                   style: Styles.headerWhite32,
 
                   value: 'อื่นๆ', // Default value
@@ -266,21 +267,21 @@ class _DetailScreenState extends State<DetailScreen> {
                         // Center-align the text inside the dropdown items
                         child: Text(
                           value,
-                          style: GobalStyles.articalTable,
+                          style: Styles.black18,
                         ),
                       ),
                     );
                   }).toList(),
                   onChanged: (String? newValue) {},
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
 
                 // Text input field
                 TextField(
                   maxLines: 5,
                   decoration: InputDecoration(
                     hintText: 'ใส่ข้อมูล',
-                    hintStyle: GobalStyles.articalTable,
+                    hintStyle: Styles.black18,
                     filled: true,
                     fillColor: Colors.white,
                     border: OutlineInputBorder(
@@ -351,13 +352,13 @@ class _DetailScreenState extends State<DetailScreen> {
                         Navigator.of(context).pop(); // Close bottom sheet
                       },
                     ),
-                    Text('จัดเก็บรูปภาพ', style: Styles.headerBlack18),
+                    Text('จัดเก็บรูปภาพ', style: Styles.headerBlack24),
                   ],
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 // Store Information
-                CameraButtonWidget(),
-                SizedBox(height: 16),
+                const CameraButtonWidget(),
+                const SizedBox(height: 16),
                 // Save button
                 SizedBox(
                   width: double.infinity, // Full width button
@@ -366,13 +367,13 @@ class _DetailScreenState extends State<DetailScreen> {
                       // Perform save action
                       Navigator.of(context).pop(); // Close the bottom sheet
                     },
-                    child: Text('บันทึกรูปภาพ', style: GobalStyles.headline3),
                     style: ElevatedButton.styleFrom(
                         backgroundColor: GobalStyles.successButtonColor,
-                        padding: EdgeInsets.symmetric(vertical: 12),
+                        padding: const EdgeInsets.symmetric(vertical: 12),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
                         )),
+                    child: Text('บันทึกรูปภาพ', style: Styles.headerWhite24),
                   ),
                 ),
               ],

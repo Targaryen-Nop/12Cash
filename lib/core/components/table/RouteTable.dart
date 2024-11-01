@@ -68,27 +68,27 @@ class _RouteTableState extends State<RouteTable> {
                 child: Column(
                   children: [
                     _buildDataRow(
-                        'Day 01',
+                        'วันที่ 01',
                         '1',
                         '5/5',
                         Styles.successBackgroundColor,
                         Styles.successTextColor,
                         0),
                     _buildDataRow(
-                        'Day 02',
+                        'วันที่ 02',
                         '2',
                         '6/6',
                         Styles.successBackgroundColor,
                         Styles.successTextColor,
                         1),
-                    _buildDataRow('Day 03', '4', '0/9',
+                    _buildDataRow('วันที่ 03', '4', '0/9',
                         Styles.failBackgroundColor, Styles.failTextColor, 2),
-                    _buildDataRow('Day 04', '5', '11/16',
+                    _buildDataRow('วันที่ 04', '5', '11/16',
                         Styles.paddingBackgroundColor, Colors.blue, 3),
-                    _buildDataRow('Day 05', '6', '2/9',
+                    _buildDataRow('วันที่ 05', '6', '2/9',
                         Styles.paddingBackgroundColor, Colors.blue, 4),
                     _buildDataRow(
-                        'Day 06',
+                        'วันที่ 06',
                         '7',
                         '9/9',
                         Styles.successBackgroundColor,
@@ -154,7 +154,7 @@ class _RouteTableState extends State<RouteTable> {
         alignment: Alignment.center,
         child: Text(
           status,
-          style: GoogleFonts.kanit(color: textColor, fontSize: 24),
+          style: GoogleFonts.kanit(color: textColor, fontSize: 18),
         ),
       ),
     );

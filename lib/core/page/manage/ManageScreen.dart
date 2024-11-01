@@ -154,7 +154,7 @@ class _ManageHeaderState extends State<ManageHeader> {
                                       color: Colors.white),
                                   Text(
                                     ' จัดการ',
-                                    style: GobalStyles.headline3,
+                                    style: Styles.headerWhite24,
                                     textAlign: TextAlign.start,
                                   ),
                                 ],

@@ -1,5 +1,6 @@
 import 'package:_12sale_app/core/components/search/CustomerDropdownSearch.dart';
 import 'package:_12sale_app/core/styles/gobalStyle.dart';
+import 'package:_12sale_app/core/styles/style.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -243,7 +244,7 @@ class _SettingHeaderState extends State<SettingHeader> {
                                   Text(
                                       DateFormat(' d MMMM yyyy').format(DateTime
                                           .now()), // Current date and time
-                                      style: GobalStyles.text3),
+                                      style: Styles.white18),
                                   StreamBuilder(
                                     stream: Stream.periodic(
                                         const Duration(seconds: 1)),
@@ -252,7 +253,7 @@ class _SettingHeaderState extends State<SettingHeader> {
                                         child: Text(
                                             DateFormat(' hh:mm:ss a')
                                                 .format(DateTime.now()),
-                                            style: GobalStyles.text3),
+                                            style: Styles.white18),
                                       );
                                     },
                                   ),

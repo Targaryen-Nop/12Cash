@@ -36,10 +36,6 @@ class _ReportScreenState extends State<ReportScreen> {
                           _isSelected = !_isSelected;
                         });
                       },
-                      child: Text(
-                        'รายการขาย',
-                        style: Styles.black18,
-                      ),
                       style: ElevatedButton.styleFrom(
                         elevation: 16, // Add elevation for shadow
                         shadowColor: Colors.black
@@ -54,6 +50,10 @@ class _ReportScreenState extends State<ReportScreen> {
                           borderRadius: BorderRadius.circular(8),
                         ),
                       ),
+                      child: Text(
+                        'รายการขาย',
+                        style: Styles.headerBlack24,
+                      ),
                     ),
                   ),
                 ),
@@ -66,10 +66,6 @@ class _ReportScreenState extends State<ReportScreen> {
                           _isSelected = !_isSelected;
                         });
                       },
-                      child: Text(
-                        'รายการคืน',
-                        style: Styles.black18,
-                      ),
                       style: ElevatedButton.styleFrom(
                         elevation: 16, // Add elevation for shadow
                         shadowColor: Colors.black
@@ -82,14 +78,18 @@ class _ReportScreenState extends State<ReportScreen> {
                           borderRadius: BorderRadius.circular(8),
                         ),
                       ),
+                      child: Text(
+                        'รายการคืน',
+                        style: Styles.headerBlack24,
+                      ),
                     ),
                   ),
                 )
               ],
             ),
           ),
-          _isSelected ? ShopTableNew() : Reportsaletable(),
-          Spacer(),
+          _isSelected ? const ShopTableNew() : const Reportsaletable(),
+          const Spacer(),
         ],
       ),
     );
@@ -156,7 +156,7 @@ class _ReportHeaderState extends State<ReportHeader> {
                                       color: Colors.white),
                                   Text(
                                     ' รายงานขาย',
-                                    style: GobalStyles.headline3,
+                                    style: Styles.headerWhite24,
                                     textAlign: TextAlign.start,
                                   ),
                                 ],
