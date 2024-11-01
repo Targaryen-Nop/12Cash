@@ -10,9 +10,67 @@
     "asset": {
         "logo": "assets/images/12TradingLogo.png"
     },
+    "cart_table": {
+        "item_name": "ชื่อสินค้า",
+        "qty": "จำนวน",
+        "amount": "ราคารวม"
+    },
+    "order_table": {
+        "item_code": "รหัสสินค้า",
+        "item_name": "ชื่อสินค้า",
+        "price": "ราคา"
+    },
+    "promotion_table": {
+        "item_name": "ชื่อสินค้า",
+        "qty": "จำนวน",
+        "amount": "ราคารวม"
+    },
+    "reportsale_table": {
+        "order_date": "วันที่สั่งซื้อ",
+        "order_no": "เลขการสั่งซื้อ",
+        "customer_name": "ร้านค้า",
+        "amount": "ราคารวม",
+        "status": "สถานะ"
+    },
     "route_table": {
         "date": "วันที่",
         "route": "เส้นทาง",
         "status": "สถานะ"
+    },
+    "shop_route_table": {
+        "customer_no": "รหัสร้าน",
+        "customer_name": "ชื่อร้านค้า",
+        "status": "สถานะ"
+    },
+    "shop_all_table": {
+        "customer_no": "รหัสร้านค้า",
+        "customer_name": "ชื่อร้านค้า",
+        "route": "เส้นทาง",
+        "address": "ที่อยู่"
+    },
+    "shop_new_table": {
+        "customer_no": "รหัสร้านค้า",
+        "customer_name": "ชื่อร้านค้า",
+        "route": "เส้นทาง",
+        "address": "ที่อยู่"
+    },
+    "verify_table": {
+        "item_name": "ชื่อสินค้า",
+        "qty": "จำนวน",
+        "customer_name": "ร้านค้า",
+        "discount": "ส่วนลด",
+        "sum": "รวม"
+    },
+    "shoproutescreen": {
+        "title": "เข้าเยี่ยม",
+        "shop_target": "ร้านค้าเป้าหมาย",
+        "shop_visit": "ร้านค้าที่เข้าเยี่ยม",
+        "shop_order": "ร้านค้าที่สั่งซื้อ"
+    },
+    "detailroutescreen": {
+        "title": "เข้าเยี่ยม",
+        "cancel_order_button": "ไม่ขายสินค้า",
+        "order_button": "ขายสินค้า",
+        "camera_button": "ถ่ายรูป"
     }
 }
