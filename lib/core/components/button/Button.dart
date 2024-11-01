@@ -104,7 +104,7 @@ class ButtonFullWidth extends StatefulWidget {
 class _ButtonFullWidthState extends State<ButtonFullWidth> {
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
         onPressed: () {

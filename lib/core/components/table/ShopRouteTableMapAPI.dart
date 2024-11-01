@@ -1,8 +1,12 @@
+import 'dart:convert';
+
+import 'package:_12sale_app/core/styles/style.dart';
 import 'package:_12sale_app/data/models/Customer.dart';
 import 'package:_12sale_app/data/repositories/apiService.dart';
 import 'package:flutter/material.dart';
 import 'package:_12sale_app/core/page/route/DetailScreen.dart';
 import 'package:_12sale_app/core/styles/gobalStyle.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ShopRouteTable extends StatefulWidget {
@@ -19,16 +23,24 @@ class ShopRouteTable extends StatefulWidget {
 class _ShopRouteTableState extends State<ShopRouteTable> {
   List<CustomerModel> customers = []; // Holds the list of CustomerModel objects
   bool isLoading = true; // Loader state
+  Map<String, dynamic>? _jsonString;
 
   @override
   void initState() {
     super.initState();
     fetchCustomers(); // Fetch customers on widget load
+    _loadJson();
+  }
+
+  Future<void> _loadJson() async {
+    String jsonString = await rootBundle.loadString('lang/main-th.json');
+    setState(() {
+      _jsonString = jsonDecode(jsonString)["shop_route_table"];
+    });
   }
 
   // Fetch data from the API
   void fetchCustomers() async {
-    ApiService apiService = ApiService();
     var data = await getCustomers();
     setState(() {
       customers = data;
@@ -76,7 +88,7 @@ class _ShopRouteTableState extends State<ShopRouteTable> {
 
     return Center(
       child: isLoading
-          ? CircularProgressIndicator() // Show loader while fetching data
+          ? const CircularProgressIndicator() // Show loader while fetching data
           : Container(
               margin: EdgeInsets.all(
                   screenWidth / 50), // Adds space around the table
@@ -96,11 +108,19 @@ class _ShopRouteTableState extends State<ShopRouteTable> {
                     ),
                     child: Row(
                       children: [
-                        Expanded(flex: 2, child: _buildHeaderCell('รหัสร้าน')),
                         Expanded(
-                            flex: 3, child: _buildHeaderCell('ชื่อร้านค้า')),
+                            flex: 2,
+                            child: _buildHeaderCell(
+                                _jsonString?['customerNo'] ?? 'Customer No')),
                         Expanded(
-                            flex: 1, child: _buildHeaderCellStatus('สถานะ')),
+                            flex: 3,
+                            child: _buildHeaderCell(
+                                _jsonString?['customerName'] ??
+                                    'Customer Name')),
+                        Expanded(
+                            flex: 1,
+                            child: _buildHeaderCellStatus(
+                                _jsonString?['status'] ?? 'Status')),
                       ],
                     ),
                   ),
@@ -171,7 +191,7 @@ class _ShopRouteTableState extends State<ShopRouteTable> {
       alignment: Alignment.center,
       child: Container(
         width: 100, // Optional inner width for the status cell
-        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
         decoration: BoxDecoration(
           color: bgColor,
           borderRadius: BorderRadius.circular(100),
@@ -179,7 +199,7 @@ class _ShopRouteTableState extends State<ShopRouteTable> {
         alignment: Alignment.center,
         child: Text(
           status,
-          style: GoogleFonts.kanit(color: textColor, fontSize: 20),
+          style: GoogleFonts.kanit(color: textColor, fontSize: 24),
         ),
       ),
     );
@@ -188,33 +208,29 @@ class _ShopRouteTableState extends State<ShopRouteTable> {
   Widget _buildTableCell(String text) {
     return Container(
       alignment: Alignment.centerLeft,
-      padding: EdgeInsets.all(8),
-      child: Text(text, style: GobalStyles.kanit24),
+      padding: const EdgeInsets.all(8),
+      child: Text(text, style: Styles.black24),
     );
   }
 
   Widget _buildHeaderCell(String text) {
-    return Expanded(
-      child: Container(
-        alignment: Alignment.centerLeft,
-        padding: EdgeInsets.all(8),
-        child: Text(
-          text,
-          style: GobalStyles.tableHeader,
-        ),
+    return Container(
+      alignment: Alignment.centerLeft,
+      padding: const EdgeInsets.all(8),
+      child: Text(
+        text,
+        style: Styles.grey24,
       ),
     );
   }
 
   Widget _buildHeaderCellStatus(String text) {
-    return Expanded(
-      child: Container(
-        alignment: Alignment.centerRight,
-        padding: EdgeInsets.all(8),
-        child: Text(
-          text,
-          style: GobalStyles.tableHeader,
-        ),
+    return Container(
+      alignment: Alignment.centerRight,
+      padding: const EdgeInsets.all(8),
+      child: Text(
+        text,
+        style: Styles.grey24,
       ),
     );
   }

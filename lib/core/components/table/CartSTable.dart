@@ -1,6 +1,10 @@
+import 'dart:convert';
+
 import 'package:_12sale_app/core/page/route/OrderDetailScreen.dart';
 import 'package:_12sale_app/core/styles/gobalStyle.dart';
+import 'package:_12sale_app/core/styles/style.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class CartTable extends StatefulWidget {
   const CartTable({super.key});
@@ -10,6 +14,21 @@ class CartTable extends StatefulWidget {
 }
 
 class _CartTableState extends State<CartTable> {
+  Map<String, dynamic>? _jsonString;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _loadJson();
+  }
+
+  Future<void> _loadJson() async {
+    String jsonString = await rootBundle.loadString('lang/main-th.json');
+    setState(() {
+      _jsonString = jsonDecode(jsonString)["cart_table"];
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -35,9 +54,10 @@ class _CartTableState extends State<CartTable> {
               ),
               child: Row(
                 children: [
-                  _buildHeaderCellName('ชื่อสินค้า', screenWidth / 2.5),
-                  _buildHeaderCell('จำนวน'),
-                  _buildHeaderCell('ราคารวม'),
+                  _buildHeaderCellName(_jsonString?['item_name'] ?? 'Item Name',
+                      screenWidth / 2.5),
+                  _buildHeaderCell(_jsonString?['qty'] ?? 'QTY'),
+                  _buildHeaderCell(_jsonString?['amount'] ?? 'Amount'),
                   _buildHeaderCellIcon('', 50),
                 ],
               ),
@@ -164,7 +184,7 @@ class _CartTableState extends State<CartTable> {
       alignment: Alignment.centerLeft,
       width: width,
       padding: EdgeInsets.all(8),
-      child: Text(text, style: GobalStyles.kanit24),
+      child: Text(text, style: Styles.black24),
     );
   }
 
@@ -172,7 +192,7 @@ class _CartTableState extends State<CartTable> {
     return Container(
       alignment: Alignment.centerRight,
       padding: EdgeInsets.all(8),
-      child: Text(text, style: GobalStyles.kanit24),
+      child: Text(text, style: Styles.black24),
     );
   }
 
@@ -183,7 +203,7 @@ class _CartTableState extends State<CartTable> {
       padding: EdgeInsets.all(8),
       child: Text(
         text,
-        style: GobalStyles.tableHeaderOrder,
+        style: Styles.grey24,
       ),
     );
   }
@@ -195,7 +215,7 @@ class _CartTableState extends State<CartTable> {
         padding: EdgeInsets.all(8),
         child: Text(
           text,
-          style: GobalStyles.tableHeaderOrder,
+          style: Styles.grey24,
         ),
       ),
     );
@@ -208,7 +228,7 @@ class _CartTableState extends State<CartTable> {
       padding: EdgeInsets.all(8),
       child: Text(
         text,
-        style: GobalStyles.tableHeader,
+        style: Styles.grey24,
       ),
     );
   }

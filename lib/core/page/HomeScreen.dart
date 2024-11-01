@@ -105,37 +105,37 @@ class _HomeScreenState extends State<HomeScreen> {
           child: BottomNavigationBar(
             items: <BottomNavigationBarItem>[
               BottomNavigationBarItem(
-                icon: Icon(
+                icon: const Icon(
                   Icons.home,
                 ),
                 label: _jsonString?['home'] ?? 'Home',
               ),
               BottomNavigationBarItem(
-                icon: Icon(
+                icon: const Icon(
                   Icons.route_rounded,
                 ),
                 label: _jsonString?['route'] ?? 'Route',
               ),
               BottomNavigationBarItem(
-                icon: Icon(
+                icon: const Icon(
                   Icons.storefront,
                 ),
                 label: _jsonString?['shop'] ?? 'Shop',
               ),
               BottomNavigationBarItem(
-                icon: Icon(
+                icon: const Icon(
                   Icons.inventory_rounded,
                 ),
                 label: _jsonString?['report'] ?? 'Report',
               ),
               BottomNavigationBarItem(
-                icon: Icon(
+                icon: const Icon(
                   Icons.inventory,
                 ),
                 label: _jsonString?['manage'] ?? 'Manage',
               ),
               BottomNavigationBarItem(
-                icon: Icon(
+                icon: const Icon(
                   Icons.more_horiz,
                 ),
                 label: _jsonString?['more'] ?? 'More',

@@ -1,6 +1,10 @@
+import 'dart:convert';
+
 import 'package:_12sale_app/core/page/report/DetailReportScreen.dart';
 import 'package:_12sale_app/core/styles/gobalStyle.dart';
+import 'package:_12sale_app/core/styles/style.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class Reportsaletable extends StatefulWidget {
   const Reportsaletable({super.key});
@@ -10,6 +14,21 @@ class Reportsaletable extends StatefulWidget {
 }
 
 class _ReportsaletableState extends State<Reportsaletable> {
+  Map<String, dynamic>? _jsonString;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _loadJson();
+  }
+
+  Future<void> _loadJson() async {
+    String jsonString = await rootBundle.loadString('lang/main-th.json');
+    setState(() {
+      _jsonString = jsonDecode(jsonString)["reportsale_table"];
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -35,11 +54,12 @@ class _ReportsaletableState extends State<Reportsaletable> {
               ),
               child: Row(
                 children: [
-                  _buildHeaderCell('วันที่สั่งซื้อ'),
-                  _buildHeaderCell('เลขการสั่งซื้อ'),
-                  _buildHeaderCell('ร้านค้า'),
-                  _buildHeaderCell('ราคารวม'),
-                  _buildHeaderCell('สถานะ'),
+                  _buildHeaderCell(_jsonString?['order_date'] ?? 'Order Date'),
+                  _buildHeaderCell(_jsonString?['order_no'] ?? 'Order No'),
+                  _buildHeaderCell(
+                      _jsonString?['customer_name'] ?? 'Customer Name'),
+                  _buildHeaderCell(_jsonString?['amount'] ?? 'Amount'),
+                  _buildHeaderCell(_jsonString?['status'] ?? 'Status'),
                 ],
               ),
             ),
@@ -163,45 +183,24 @@ class _ReportsaletableState extends State<Reportsaletable> {
         width: width,
         alignment: Alignment.center,
         child: Container(
-          margin: EdgeInsets.all(5),
+          margin: const EdgeInsets.all(5),
           decoration: BoxDecoration(
             color: bgColor,
             borderRadius: BorderRadius.circular(
                 100), // Rounded corners for the inner container
           ),
           alignment: Alignment.center,
-          child: Text(text ?? '', style: GobalStyles.kanit18),
+          child: Text(text, style: Styles.white18),
         ),
       ),
-    );
-  }
-
-  Widget _buildTableCellName(String text, double width) {
-    return Container(
-      alignment: Alignment.centerLeft,
-      width: width,
-      padding: EdgeInsets.all(8),
-      child: Text(text, style: GobalStyles.kanit18),
     );
   }
 
   Widget _buildTableCell(String text, Alignment alignment) {
     return Container(
       alignment: alignment,
-      padding: EdgeInsets.all(8),
-      child: Text(text, style: GobalStyles.kanit18),
-    );
-  }
-
-  Widget _buildHeaderCellName(String text, double width) {
-    return Container(
-      width: width,
-      alignment: Alignment.center,
-      padding: EdgeInsets.all(8),
-      child: Text(
-        text,
-        style: GobalStyles.tableHeaderOrder,
-      ),
+      padding: const EdgeInsets.all(8),
+      child: Text(text, style: Styles.black18),
     );
   }
 
@@ -209,10 +208,10 @@ class _ReportsaletableState extends State<Reportsaletable> {
     return Expanded(
       child: Container(
         alignment: Alignment.center,
-        padding: EdgeInsets.all(8),
+        padding: const EdgeInsets.all(8),
         child: Text(
           text,
-          style: GobalStyles.tableHeaderOrder,
+          style: Styles.grey18,
         ),
       ),
     );

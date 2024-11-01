@@ -1,6 +1,9 @@
-import 'package:_12sale_app/core/page/route/OrderDetailScreen.dart';
+import 'dart:convert';
+
 import 'package:_12sale_app/core/styles/gobalStyle.dart';
+import 'package:_12sale_app/core/styles/style.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class Promotiontable extends StatefulWidget {
   const Promotiontable({super.key});
@@ -10,6 +13,21 @@ class Promotiontable extends StatefulWidget {
 }
 
 class _PromotiontableState extends State<Promotiontable> {
+  Map<String, dynamic>? _jsonString;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _loadJson();
+  }
+
+  Future<void> _loadJson() async {
+    String jsonString = await rootBundle.loadString('lang/main-th.json');
+    setState(() {
+      _jsonString = jsonDecode(jsonString)["promotion_table"];
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -35,9 +53,10 @@ class _PromotiontableState extends State<Promotiontable> {
               ),
               child: Row(
                 children: [
-                  _buildHeaderCellName('ชื่อสินค้า', screenWidth / 2),
-                  _buildHeaderCell('จำนวน'),
-                  _buildHeaderCell('ราคารวม'),
+                  _buildHeaderCellName(_jsonString?['item_name'] ?? 'Item Name',
+                      screenWidth / 2),
+                  _buildHeaderCell(_jsonString?['qty'] ?? 'QTY'),
+                  _buildHeaderCell(_jsonString?['amount'] ?? 'Amount'),
                   _buildHeaderCellIcon('', 50),
                 ],
               ),
@@ -141,14 +160,14 @@ class _PromotiontableState extends State<Promotiontable> {
       child: Container(
         width: 50, // Optional inner width for the status cell
         // padding: EdgeInsets.all(10),
-        margin: EdgeInsets.all(5),
+        margin: const EdgeInsets.all(5),
         decoration: const BoxDecoration(
           color: Colors.red,
           // borderRadius: BorderRadius.circular(
           //     100), // Rounded corners for the inner container
         ),
         alignment: Alignment.center,
-        child: Icon(Icons.close, color: Colors.white, size: 40),
+        child: const Icon(Icons.close, color: Colors.white, size: 40),
       ),
     );
   }
@@ -157,16 +176,16 @@ class _PromotiontableState extends State<Promotiontable> {
     return Container(
       alignment: Alignment.centerLeft,
       width: width,
-      padding: EdgeInsets.all(8),
-      child: Text(text, style: GobalStyles.kanit24),
+      padding: const EdgeInsets.all(8),
+      child: Text(text, style: Styles.black24),
     );
   }
 
   Widget _buildTableCell(String text) {
     return Container(
       alignment: Alignment.centerRight,
-      padding: EdgeInsets.all(8),
-      child: Text(text, style: GobalStyles.kanit24),
+      padding: const EdgeInsets.all(8),
+      child: Text(text, style: Styles.black24),
     );
   }
 
@@ -174,10 +193,10 @@ class _PromotiontableState extends State<Promotiontable> {
     return Container(
       width: width,
       alignment: Alignment.center,
-      padding: EdgeInsets.all(8),
+      padding: const EdgeInsets.all(8),
       child: Text(
         text,
-        style: GobalStyles.tableHeaderOrder,
+        style: Styles.grey24,
       ),
     );
   }
@@ -186,10 +205,10 @@ class _PromotiontableState extends State<Promotiontable> {
     return Expanded(
       child: Container(
         alignment: Alignment.centerRight,
-        padding: EdgeInsets.all(8),
+        padding: const EdgeInsets.all(8),
         child: Text(
           text,
-          style: GobalStyles.tableHeaderOrder,
+          style: Styles.grey24,
         ),
       ),
     );
@@ -199,10 +218,10 @@ class _PromotiontableState extends State<Promotiontable> {
     return Container(
       width: width,
       alignment: Alignment.center,
-      padding: EdgeInsets.all(8),
+      padding: const EdgeInsets.all(8),
       child: Text(
         text,
-        style: GobalStyles.tableHeader,
+        style: Styles.grey24,
       ),
     );
   }
@@ -237,7 +256,7 @@ class _PromotiontableState extends State<Promotiontable> {
                   // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     IconButton(
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.close,
                         size: 40,
                       ),
@@ -248,7 +267,7 @@ class _PromotiontableState extends State<Promotiontable> {
                     Text('เปลี่ยนของแถม', style: GobalStyles.headlineblack2),
                   ],
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 // Store Information
                 Padding(
                   padding: const EdgeInsets.all(16.0),
@@ -259,7 +278,7 @@ class _PromotiontableState extends State<Promotiontable> {
                         '${itemName}',
                         style: GobalStyles.textbBlack3,
                       ),
-                      SizedBox(height: 8),
+                      const SizedBox(height: 8),
 
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -310,7 +329,7 @@ class _PromotiontableState extends State<Promotiontable> {
                           ),
                         ],
                       ),
-                      SizedBox(height: 16),
+                      const SizedBox(height: 16),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -362,7 +381,7 @@ class _PromotiontableState extends State<Promotiontable> {
                       ),
                       // Dropdown field
 
-                      SizedBox(height: 16),
+                      const SizedBox(height: 16),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -373,7 +392,7 @@ class _PromotiontableState extends State<Promotiontable> {
                           Flexible(
                             // fit: FlexFit.tight,
                             flex: 4,
-                            child: Container(
+                            child: SizedBox(
                               // width: 100,
                               height: screenWidth / 11,
                               child: DropdownButtonFormField<String>(
@@ -412,7 +431,7 @@ class _PromotiontableState extends State<Promotiontable> {
                           ),
                         ],
                       ),
-                      SizedBox(height: 16),
+                      const SizedBox(height: 16),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -423,7 +442,7 @@ class _PromotiontableState extends State<Promotiontable> {
                           Flexible(
                             // fit: FlexFit.tight,
                             flex: 4,
-                            child: Container(
+                            child: SizedBox(
                               // width: 100,
                               height: screenWidth / 11,
                               child: DropdownButtonFormField<String>(
@@ -462,7 +481,7 @@ class _PromotiontableState extends State<Promotiontable> {
                           ),
                         ],
                       ),
-                      SizedBox(height: 35),
+                      const SizedBox(height: 35),
                       // Spacer(),
                       // Save button
                       SizedBox(
@@ -473,14 +492,14 @@ class _PromotiontableState extends State<Promotiontable> {
                             Navigator.of(context)
                                 .pop(); // Close the bottom sheet
                           },
-                          child: Text('บันทึก', style: GobalStyles.text3),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: GobalStyles.successButtonColor,
-                            padding: EdgeInsets.symmetric(vertical: 6),
+                            padding: const EdgeInsets.symmetric(vertical: 6),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8),
                             ),
                           ),
+                          child: Text('บันทึก', style: GobalStyles.text3),
                         ),
                       ),
                     ],

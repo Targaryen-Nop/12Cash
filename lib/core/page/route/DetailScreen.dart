@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:_12sale_app/core/components/Appbar.dart';
@@ -10,6 +11,7 @@ import 'package:_12sale_app/core/page/route/OrderScreen.dart';
 import 'package:_12sale_app/core/styles/gobalStyle.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
+import 'package:flutter/services.dart';
 
 class DetailScreen extends StatefulWidget {
   final String customerNo;
@@ -29,7 +31,22 @@ class DetailScreen extends StatefulWidget {
 }
 
 class _DetailScreenState extends State<DetailScreen> {
+  Map<String, dynamic>? _jsonString;
   String? imagePath; // Path to store the captured image
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _loadJson();
+  }
+
+  Future<void> _loadJson() async {
+    String jsonString = await rootBundle.loadString('lang/main-th.json');
+    setState(() {
+      _jsonString = jsonDecode(jsonString)["detailroutescreen"];
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -37,7 +54,9 @@ class _DetailScreenState extends State<DetailScreen> {
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(70),
         child: AppbarCustom(
-            title: " การเข้าเยี่ยม" " " + widget.day, icon: Icons.event),
+            title: ' ${_jsonString?['title']} ' + widget.day ??
+                'Visiting' " " + widget.day,
+            icon: Icons.event),
       ),
       bottomNavigationBar: Container(
         padding: EdgeInsets.all(16.0),
@@ -64,7 +83,7 @@ class _DetailScreenState extends State<DetailScreen> {
               _buildCustomButton(
                 context,
                 icon: Icons.location_on_rounded,
-                label: 'ไม่ขายสินค้า',
+                label: _jsonString?['cancel_order_button'] ?? 'Cancel Order',
                 color: Colors.red,
                 onPressed: () {
                   _showBottomSheet(context);
@@ -73,7 +92,7 @@ class _DetailScreenState extends State<DetailScreen> {
               _buildCustomButton(
                 context,
                 icon: Icons.add_shopping_cart_rounded,
-                label: 'ขายสินค้า',
+                label: _jsonString?['order_button'] ?? 'Order',
                 color: Colors.teal,
                 onPressed: () {
                   Navigator.push(
@@ -90,7 +109,7 @@ class _DetailScreenState extends State<DetailScreen> {
               _buildCustomButton(
                 context,
                 icon: Icons.add_a_photo,
-                label: 'ถ่ายรูป',
+                label: _jsonString?['camera_button'] ?? 'Camera',
                 color: Colors.blue,
                 onPressed: () {
                   _showBottomCamera(context);
@@ -179,108 +198,6 @@ class _DetailScreenState extends State<DetailScreen> {
           ],
         ),
       ),
-    );
-  }
-
-  void _showCustomDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Header with close button
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'ระบุสาเหตุที่ร้านค้าไม่ซื้อ',
-                      style: GobalStyles.headlineblack2,
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.close),
-                      onPressed: () {
-                        Navigator.of(context).pop(); // Close dialog
-                      },
-                    ),
-                  ],
-                ),
-                SizedBox(height: 8),
-                // Store Information
-                Text(
-                  'รหัสร้าน 10334587',
-                  style: GobalStyles.headlineblack3,
-                ),
-                Text(
-                  'ร้าน เจริญพรค้าขาย',
-                  style: GobalStyles.headlineblack3,
-                ),
-                SizedBox(height: 16),
-
-                // Dropdown field
-                DropdownButtonFormField<String>(
-                  decoration: InputDecoration(
-                    filled: true,
-                    fillColor: Colors.grey[200],
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  value: 'อื่นๆ', // Default value
-                  items: <String>['อื่นๆ', 'เหตุผล 1', 'เหตุผล 2']
-                      .map((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                  style: GobalStyles.articalTable,
-                  onChanged: (String? newValue) {},
-                ),
-
-                const SizedBox(height: 16),
-
-                // Text input field
-                TextField(
-                  maxLines: 5,
-                  decoration: InputDecoration(
-                    hintText: 'ใส่ข้อมูล',
-                    filled: true,
-                    fillColor: Colors.white,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                ),
-
-                SizedBox(height: 16),
-
-                // Save button
-                SizedBox(
-                  width: double.infinity, // Full width button
-                  child: ElevatedButton(
-                    onPressed: () {
-                      // Perform save action
-                      Navigator.of(context).pop(); // Close the dialog
-                    },
-                    child: Text('บันทึก'),
-                    style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.symmetric(vertical: 12),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
     );
   }
 

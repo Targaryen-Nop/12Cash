@@ -1,7 +1,9 @@
-import 'package:_12sale_app/core/page/route/OrderDetailScreen.dart';
+import 'dart:convert';
 import 'package:_12sale_app/core/page/shop/DetailShopScreen.dart';
 import 'package:_12sale_app/core/styles/gobalStyle.dart';
+import 'package:_12sale_app/core/styles/style.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class ShopTableAll extends StatefulWidget {
   const ShopTableAll({super.key});
@@ -11,6 +13,21 @@ class ShopTableAll extends StatefulWidget {
 }
 
 class _ShopTableAll extends State<ShopTableAll> {
+  Map<String, dynamic>? _jsonString;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _loadJson();
+  }
+
+  Future<void> _loadJson() async {
+    String jsonString = await rootBundle.loadString('lang/main-th.json');
+    setState(() {
+      _jsonString = jsonDecode(jsonString)["shop_all_table"];
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -36,10 +53,13 @@ class _ShopTableAll extends State<ShopTableAll> {
               ),
               child: Row(
                 children: [
-                  _buildHeaderCell('รหัสร้านค้า'),
-                  _buildHeaderCellName('ชื่อร้านค้า', screenWidth / 3.5),
-                  _buildHeaderCell('เส้นทาง'),
-                  _buildHeaderCell('ที่อยู่'),
+                  _buildHeaderCell(
+                      _jsonString?["customer_no"] ?? 'Customer No'),
+                  _buildHeaderCellName(
+                      _jsonString?["customer_name"] ?? 'Customer Name',
+                      screenWidth / 3.5),
+                  _buildHeaderCell(_jsonString?["route"] ?? 'Route'),
+                  _buildHeaderCell(_jsonString?["address"] ?? 'Address'),
                 ],
               ),
             ),
@@ -108,7 +128,7 @@ class _ShopTableAll extends State<ShopTableAll> {
       alignment: Alignment.centerLeft,
       width: width,
       padding: EdgeInsets.all(8),
-      child: Text(text, style: GobalStyles.kanit18),
+      child: Text(text, style: Styles.black18),
     );
   }
 
@@ -116,7 +136,7 @@ class _ShopTableAll extends State<ShopTableAll> {
     return Container(
       alignment: alignment,
       padding: EdgeInsets.all(8),
-      child: Text(text, style: GobalStyles.kanit18),
+      child: Text(text, style: Styles.black18),
     );
   }
 
@@ -127,7 +147,7 @@ class _ShopTableAll extends State<ShopTableAll> {
       padding: EdgeInsets.all(8),
       child: Text(
         text,
-        style: GobalStyles.tableHeaderOrder,
+        style: Styles.grey24,
       ),
     );
   }
@@ -139,7 +159,7 @@ class _ShopTableAll extends State<ShopTableAll> {
         padding: EdgeInsets.all(8),
         child: Text(
           text,
-          style: GobalStyles.tableHeaderOrder,
+          style: Styles.grey24,
         ),
       ),
     );

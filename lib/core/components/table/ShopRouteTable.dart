@@ -1,6 +1,10 @@
+import 'dart:convert';
+
 import 'package:_12sale_app/core/page/route/DetailScreen.dart';
 import 'package:_12sale_app/core/styles/gobalStyle.dart';
+import 'package:_12sale_app/core/styles/style.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ShopRouteTable extends StatefulWidget {
@@ -15,12 +19,26 @@ class ShopRouteTable extends StatefulWidget {
 }
 
 class _ShopRouteTableState extends State<ShopRouteTable> {
+  Map<String, dynamic>? _jsonString;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _loadJson();
+  }
+
+  Future<void> _loadJson() async {
+    String jsonString = await rootBundle.loadString('lang/main-th.json');
+    setState(() {
+      _jsonString = jsonDecode(jsonString)["shop_route_table"];
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     return Center(
       child: Container(
-        // height: 250,
         margin: EdgeInsets.all(
             screenWidth / 50), // Adds space around the entire table
         decoration: BoxDecoration(
@@ -40,9 +58,10 @@ class _ShopRouteTableState extends State<ShopRouteTable> {
               ),
               child: Row(
                 children: [
-                  _buildHeaderCell('รหัสร้าน'),
-                  _buildHeaderCell('ชื่อร้านค้า'),
-                  _buildHeaderCell('สถานะ'),
+                  _buildHeaderCell(_jsonString?['customerNo'] ?? 'Customer No'),
+                  _buildHeaderCell(
+                      _jsonString?['customerName'] ?? 'Customer Name'),
+                  _buildHeaderCell(_jsonString?['status'] ?? 'Status'),
                 ],
               ),
             ),
@@ -120,11 +139,13 @@ class _ShopRouteTableState extends State<ShopRouteTable> {
         child: Row(
           children: [
             Expanded(
+                flex: 1,
                 child: _buildTableCell(
                     customerNo)), // Use Expanded to distribute space equally
-            Expanded(child: _buildTableCell(customerName)),
+            Expanded(flex: 1, child: _buildTableCell(customerName)),
 
             Expanded(
+                flex: 1,
                 child: _buildStatusCell(status, bgColor,
                     textColor)), // Custom function for "สถานะ" column
           ],
@@ -138,7 +159,7 @@ class _ShopRouteTableState extends State<ShopRouteTable> {
       alignment: Alignment.center,
       child: Container(
         width: 100, // Optional inner width for the status cell
-        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
         decoration: BoxDecoration(
           color: bgColor,
           borderRadius: BorderRadius.circular(
@@ -147,7 +168,7 @@ class _ShopRouteTableState extends State<ShopRouteTable> {
         alignment: Alignment.center,
         child: Text(
           status,
-          style: GoogleFonts.kanit(color: textColor, fontSize: 20),
+          style: GoogleFonts.kanit(color: textColor, fontSize: 24),
         ),
       ),
     );
@@ -156,8 +177,8 @@ class _ShopRouteTableState extends State<ShopRouteTable> {
   Widget _buildTableCell(String text) {
     return Container(
       alignment: Alignment.center,
-      padding: EdgeInsets.all(8),
-      child: Text(text, style: GobalStyles.kanit24),
+      padding: const EdgeInsets.all(8),
+      child: Text(text, style: Styles.black24),
     );
   }
 
@@ -165,10 +186,10 @@ class _ShopRouteTableState extends State<ShopRouteTable> {
     return Expanded(
       child: Container(
         alignment: Alignment.center,
-        padding: EdgeInsets.all(8),
+        padding: const EdgeInsets.all(8),
         child: Text(
           text,
-          style: GobalStyles.tableHeader,
+          style: Styles.grey24,
         ),
       ),
     );

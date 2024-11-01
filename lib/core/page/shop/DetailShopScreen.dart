@@ -1,6 +1,7 @@
 import 'package:_12sale_app/core/components/Appbar.dart';
 import 'package:_12sale_app/core/page/shop/AddShopScreen.dart';
 import 'package:_12sale_app/core/styles/gobalStyle.dart';
+import 'package:_12sale_app/core/styles/style.dart';
 import 'package:flutter/material.dart';
 
 class DetailShopScreen extends StatefulWidget {
@@ -40,7 +41,7 @@ class _DetailShopScreenState extends State<DetailShopScreen> {
                     width: 8), // Adds some spacing between the icon and text
                 Text(
                   "ข้อมูลร้านค้า",
-                  style: GobalStyles.kanit24,
+                  style: Styles.black24,
                 ),
               ],
             ),
@@ -65,7 +66,7 @@ class _DetailShopScreenState extends State<DetailShopScreen> {
                           child: _buildCustomFormField(
                               'โทรศัพท์', '089-2463592', Icons.phone),
                         ),
-                        SizedBox(width: 16),
+                        const SizedBox(width: 16),
                         Expanded(
                           child: _buildCustomFormField(
                               'เส้นทาง', 'R01', Icons.location_on),

@@ -1,6 +1,10 @@
+import 'dart:convert';
+
 import 'package:_12sale_app/core/page/route/OrderDetailScreen.dart';
 import 'package:_12sale_app/core/styles/gobalStyle.dart';
+import 'package:_12sale_app/core/styles/style.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class OrderTable extends StatefulWidget {
   const OrderTable({super.key});
@@ -10,6 +14,20 @@ class OrderTable extends StatefulWidget {
 }
 
 class _OrderTableState extends State<OrderTable> {
+  Map<String, dynamic>? _jsonString;
+  @override
+  void initState() {
+    super.initState();
+    _loadJson();
+  }
+
+  Future<void> _loadJson() async {
+    String jsonString = await rootBundle.loadString('lang/main-th.json');
+    setState(() {
+      _jsonString = jsonDecode(jsonString)["order_table"];
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -35,9 +53,9 @@ class _OrderTableState extends State<OrderTable> {
               ),
               child: Row(
                 children: [
-                  _buildHeaderCell('รหัสสินค้า'),
-                  _buildHeaderCell('ชื่อสินค้า'),
-                  _buildHeaderCell('ราคา'),
+                  _buildHeaderCell(_jsonString?['item_code'] ?? 'Item Code'),
+                  _buildHeaderCell(_jsonString?['item_name'] ?? 'Item Name'),
+                  _buildHeaderCell(_jsonString?['price'] ?? 'Price'),
                   _buildHeaderCellIcon('', 50),
                 ],
               ),
@@ -142,14 +160,14 @@ class _OrderTableState extends State<OrderTable> {
       child: Container(
         width: 50, // Optional inner width for the status cell
         // padding: EdgeInsets.all(10),
-        margin: EdgeInsets.all(5),
+        margin: const EdgeInsets.all(5),
         decoration: const BoxDecoration(
           color: Colors.green,
           // borderRadius: BorderRadius.circular(
           //     100), // Rounded corners for the inner container
         ),
         alignment: Alignment.center,
-        child: Icon(Icons.add, color: Colors.white, size: 40),
+        child: const Icon(Icons.add, color: Colors.white, size: 40),
       ),
     );
   }
@@ -157,8 +175,8 @@ class _OrderTableState extends State<OrderTable> {
   Widget _buildTableCell(String text) {
     return Container(
       alignment: Alignment.center,
-      padding: EdgeInsets.all(8),
-      child: Text(text, style: GobalStyles.kanit24),
+      padding: const EdgeInsets.all(8),
+      child: Text(text, style: Styles.black24),
     );
   }
 
@@ -166,10 +184,10 @@ class _OrderTableState extends State<OrderTable> {
     return Expanded(
       child: Container(
         alignment: Alignment.center,
-        padding: EdgeInsets.all(8),
+        padding: const EdgeInsets.all(8),
         child: Text(
           text,
-          style: GobalStyles.tableHeader,
+          style: Styles.grey24,
         ),
       ),
     );
@@ -182,7 +200,7 @@ class _OrderTableState extends State<OrderTable> {
       padding: EdgeInsets.all(8),
       child: Text(
         text,
-        style: GobalStyles.tableHeader,
+        style: Styles.grey24,
       ),
     );
   }

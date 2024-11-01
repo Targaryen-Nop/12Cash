@@ -1,6 +1,8 @@
-import 'package:_12sale_app/core/page/route/OrderDetailScreen.dart';
+import 'dart:convert';
 import 'package:_12sale_app/core/styles/gobalStyle.dart';
+import 'package:_12sale_app/core/styles/style.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class VerifyTable extends StatefulWidget {
   const VerifyTable({super.key});
@@ -10,6 +12,21 @@ class VerifyTable extends StatefulWidget {
 }
 
 class _VerifyTable extends State<VerifyTable> {
+  Map<String, dynamic>? _jsonString;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _loadJson();
+  }
+
+  Future<void> _loadJson() async {
+    String jsonString = await rootBundle.loadString('lang/main-th.json');
+    setState(() {
+      _jsonString = jsonDecode(jsonString)["verify_table"];
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -35,11 +52,13 @@ class _VerifyTable extends State<VerifyTable> {
               ),
               child: Row(
                 children: [
-                  _buildHeaderCellName('ชื่อสินค้า', screenWidth / 2.6),
-                  _buildHeaderCell('จำนวน'),
-                  _buildHeaderCell('ราคา'),
-                  _buildHeaderCell('ส่วนลด'),
-                  _buildHeaderCell('รวม'),
+                  _buildHeaderCellName(_jsonString?['item_name'] ?? 'Item Name',
+                      screenWidth / 2.6),
+                  _buildHeaderCell(_jsonString?['qty'] ?? 'QTY'),
+                  _buildHeaderCell(
+                      _jsonString?['customer_name'] ?? 'Customer Name'),
+                  _buildHeaderCell(_jsonString?['discount'] ?? 'Discount'),
+                  _buildHeaderCell(_jsonString?['sum'] ?? 'Sum'),
                 ],
               ),
             ),
@@ -192,30 +211,10 @@ class _VerifyTable extends State<VerifyTable> {
     );
   }
 
-  Widget _buildStatusCell(
-      String price, Color? bgColor, Color? textColor, double? width) {
-    return Container(
-      width: width,
-      alignment: Alignment.center,
-      child: Container(
-        width: 50, // Optional inner width for the status cell
-        // padding: EdgeInsets.all(10),
-        margin: EdgeInsets.all(5),
-        decoration: const BoxDecoration(
-          color: Colors.red,
-          // borderRadius: BorderRadius.circular(
-          //     100), // Rounded corners for the inner container
-        ),
-        alignment: Alignment.center,
-        child: Icon(Icons.close, color: Colors.white, size: 40),
-      ),
-    );
-  }
-
   Widget _buildTableCell(String text, Alignment alignment) {
     return Container(
       alignment: alignment,
-      padding: EdgeInsets.all(8),
+      padding: const EdgeInsets.all(8),
       child: Text(text, style: GobalStyles.kanit18),
     );
   }
@@ -224,10 +223,10 @@ class _VerifyTable extends State<VerifyTable> {
     return Container(
       width: width,
       alignment: Alignment.center,
-      padding: EdgeInsets.all(8),
+      padding: const EdgeInsets.all(8),
       child: Text(
         text,
-        style: GobalStyles.tableHeaderOrder,
+        style: Styles.grey24,
       ),
     );
   }
@@ -236,23 +235,11 @@ class _VerifyTable extends State<VerifyTable> {
     return Expanded(
       child: Container(
         alignment: Alignment.center,
-        padding: EdgeInsets.all(8),
+        padding: const EdgeInsets.all(8),
         child: Text(
           text,
-          style: GobalStyles.tableHeaderOrder,
+          style: Styles.grey24,
         ),
-      ),
-    );
-  }
-
-  Widget _buildHeaderCellIcon(String text, double width) {
-    return Container(
-      width: width,
-      alignment: Alignment.center,
-      padding: EdgeInsets.all(8),
-      child: Text(
-        text,
-        style: GobalStyles.tableHeader,
       ),
     );
   }
@@ -270,7 +257,7 @@ class _VerifyTable extends State<VerifyTable> {
         return Container(
           width: screenWidth, // Fixed width
           height: screenWidth + 100,
-          padding: EdgeInsets.only(
+          padding: const EdgeInsets.only(
             left: 16.0,
             right: 16.0,
             top: 16.0,
@@ -286,7 +273,7 @@ class _VerifyTable extends State<VerifyTable> {
                   // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     IconButton(
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.close,
                         size: 40,
                       ),
@@ -297,7 +284,7 @@ class _VerifyTable extends State<VerifyTable> {
                     Text('ตารางสินค้า', style: GobalStyles.headlineblack2),
                   ],
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 // Store Information
                 Center(
                   child: Container(

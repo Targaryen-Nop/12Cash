@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:_12sale_app/core/components/Appbar.dart';
 import 'package:_12sale_app/core/components/table/ShopRouteTable.dart';
 import 'package:_12sale_app/core/styles/gobalStyle.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class Shoproutescreen extends StatefulWidget {
   final String day;
@@ -19,6 +22,21 @@ class Shoproutescreen extends StatefulWidget {
 }
 
 class _ShoproutescreenState extends State<Shoproutescreen> {
+  Map<String, dynamic>? _jsonString;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _loadJson();
+  }
+
+  Future<void> _loadJson() async {
+    String jsonString = await rootBundle.loadString('lang/main-th.json');
+    setState(() {
+      _jsonString = jsonDecode(jsonString)["shoproutescreen"];
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -26,7 +44,9 @@ class _ShoproutescreenState extends State<Shoproutescreen> {
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(70),
         child: AppbarCustom(
-            title: " การเข้าเยี่ยม" " " + widget.day, icon: Icons.event),
+            title: ' ${_jsonString?['title']}' + ' ' + widget.day ??
+                'Visiting' + widget.day,
+            icon: Icons.event),
       ),
       body: Column(
         children: [
@@ -70,7 +90,7 @@ class _ShoproutescreenState extends State<Shoproutescreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      "ร้านค้าเป้าหมาย",
+                      _jsonString?['shop_target'] ?? 'Shop Target',
                       style: GobalStyles.kanit32,
                     ),
                     Text(
@@ -83,7 +103,7 @@ class _ShoproutescreenState extends State<Shoproutescreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      "ร้านค้าที่เข้าเยี่ยม",
+                      _jsonString?['shop_visit'] ?? 'Shop Visit',
                       style: GobalStyles.kanit32,
                     ),
                     Text(
@@ -96,7 +116,7 @@ class _ShoproutescreenState extends State<Shoproutescreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      "ร้านค้าที่สั่งซื้อ",
+                      _jsonString?['shop_order'] ?? 'Shop Order',
                       style: GobalStyles.kanit32,
                     ),
                     Text(

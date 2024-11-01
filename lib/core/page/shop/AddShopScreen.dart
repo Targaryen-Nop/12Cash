@@ -4,6 +4,7 @@ import 'package:_12sale_app/core/components/input/CustomTextInput.dart';
 import 'package:_12sale_app/core/components/sheet/PolicyAddNewShop.dart';
 import 'package:_12sale_app/core/components/sheet/ReasonForNotBuyingSheet%20.dart';
 import 'package:_12sale_app/core/styles/gobalStyle.dart';
+import 'package:_12sale_app/core/styles/style.dart';
 import 'package:flutter/material.dart';
 
 class AddShopScreen extends StatefulWidget {
@@ -40,7 +41,7 @@ class _AddShopScreenState extends State<AddShopScreen> {
                     width: 8), // Adds some spacing between the icon and text
                 Text(
                   "ข้อมูลร้านค้า",
-                  style: GobalStyles.kanit24,
+                  style: Styles.black24,
                 ),
               ],
             ),
@@ -108,7 +109,7 @@ class _AddShopScreenState extends State<AddShopScreen> {
                     width: 8), // Adds some spacing between the icon and text
                 Text(
                   "ที่อยู่",
-                  style: GobalStyles.kanit24,
+                  style: Styles.black24,
                 ),
               ],
             ),
@@ -183,7 +184,7 @@ class _AddShopScreenState extends State<AddShopScreen> {
                     width: 8), // Adds some spacing between the icon and text
                 Text(
                   "ภาพถ่าย",
-                  style: GobalStyles.kanit24,
+                  style: Styles.black24,
                 ),
               ],
             ),

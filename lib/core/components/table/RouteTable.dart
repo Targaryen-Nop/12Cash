@@ -1,6 +1,5 @@
+// ignore: file_names
 import 'dart:convert';
-
-import 'package:_12sale_app/core/page/route/DetailScreen.dart';
 import 'package:_12sale_app/core/page/route/ShopRouteScreen.dart';
 import 'package:_12sale_app/core/styles/gobalStyle.dart';
 import 'package:_12sale_app/core/styles/style.dart';
@@ -30,11 +29,12 @@ class _RouteTableState extends State<RouteTable> {
     });
   }
 
+  @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     return Center(
       child: Container(
-        height: screenWidth / 2,
+        height: screenWidth / 2.5,
         margin: EdgeInsets.all(
             screenWidth / 50), // Adds space around the entire table
         decoration: BoxDecoration(
@@ -145,7 +145,7 @@ class _RouteTableState extends State<RouteTable> {
       alignment: Alignment.center,
       child: Container(
         width: 100, // Optional inner width for the status cell
-        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
         decoration: BoxDecoration(
           color: bgColor,
           borderRadius: BorderRadius.circular(
@@ -154,7 +154,7 @@ class _RouteTableState extends State<RouteTable> {
         alignment: Alignment.center,
         child: Text(
           status,
-          style: GoogleFonts.kanit(color: textColor, fontSize: 20),
+          style: GoogleFonts.kanit(color: textColor, fontSize: 24),
         ),
       ),
     );
@@ -163,8 +163,8 @@ class _RouteTableState extends State<RouteTable> {
   Widget _buildTableCell(String text) {
     return Container(
       alignment: Alignment.center,
-      padding: EdgeInsets.all(8),
-      child: Text(text, style: Styles.black18),
+      padding: const EdgeInsets.all(8),
+      child: Text(text, style: Styles.black24),
     );
   }
 
@@ -172,10 +172,10 @@ class _RouteTableState extends State<RouteTable> {
     return Expanded(
       child: Container(
         alignment: Alignment.center,
-        padding: EdgeInsets.all(8),
+        padding: const EdgeInsets.all(8),
         child: Text(
           text,
-          style: Styles.headergrey18,
+          style: Styles.grey24,
         ),
       ),
     );
