@@ -1,14 +1,21 @@
+import 'dart:convert';
+
 import 'package:_12sale_app/core/components/button/CameraButton.dart';
+import 'package:_12sale_app/core/components/chart/BarChart.dart';
+import 'package:_12sale_app/core/components/chart/LineChart.dart';
+import 'package:_12sale_app/core/components/chart/TrendingMusicChart.dart';
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:_12sale_app/data/models/Customer.dart';
 import 'package:_12sale_app/data/models/Shipping.dart';
 import 'package:_12sale_app/core/styles/gobalStyle.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:_12sale_app/data/service/locationService.dart';
 import 'package:geolocator/geolocator.dart';
 import 'dart:async';
 import 'package:_12sale_app/core/utils/json_loader.dart';
+import 'package:path/path.dart';
 
 class Dashboardscreen extends StatefulWidget {
   const Dashboardscreen({super.key});
@@ -62,6 +69,8 @@ class _DashboardscreenState extends State<Dashboardscreen> {
         // width: screenWidth / 1.5,
         child: Column(
           children: [
+            Container(height: 500, width: 400, child: LineChartSample()),
+            // Container(height: 500, width: 300, child: LineChartSample())
             // CameraButtonWidget()
             // ShippingDropdownSearch(),
             // SizedBox(height: screenWidth / 25),
@@ -237,18 +246,17 @@ class _DashboardHeaderState extends State<DashboardHeader> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _loadJsonData();
+    _loadJson();
+  }
+
+  Future<void> _loadJson() async {
+    String jsonString = await rootBundle.loadString('lang/main-th.json');
+    setState(() {
+      _jsonString = jsonDecode(jsonString)['asset'];
+    });
   }
 
   // Function to load JSON using the reusable global function
-  Future<void> _loadJsonData() async {
-    Map<String, dynamic> jsonData =
-        await JsonLoader.loadJson('lang/main-th.json');
-    setState(() {
-      _jsonString =
-          jsonData['asset'] ?? {}; // Access the 'menu' object in the JSON
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -269,9 +277,9 @@ class _DashboardHeaderState extends State<DashboardHeader> {
 
                   // color: Colors.red,
                   child: Container(
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       image: DecorationImage(
-                        image: AssetImage('${_jsonString['logo']}'),
+                        image: AssetImage('assets/images/12TradingLogo.png'),
                         // fit: BoxFit.fitWidth,
                       ),
                     ),
@@ -284,7 +292,7 @@ class _DashboardHeaderState extends State<DashboardHeader> {
                 child: Center(
                   // margin: EdgeInsets.only(top: 10),
                   child: Column(
-                    // mainAxisSize: MainAxisSize.max,
+                    // mainAxisSize: MainAxisSize.,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Expanded(
@@ -292,13 +300,13 @@ class _DashboardHeaderState extends State<DashboardHeader> {
                           margin: const EdgeInsets.symmetric(horizontal: 4),
                           // color: Colors.blue,
                           child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Row(
                                 children: [
                                   Text(
                                     'จรัญมนู ศรีอมรเพทนคร',
-                                    style: GobalStyles.text2,
+                                    style: Styles.headerWhite24(context),
                                     textAlign: TextAlign.start,
                                   ),
                                 ],
@@ -308,62 +316,57 @@ class _DashboardHeaderState extends State<DashboardHeader> {
                                   Text(
                                       DateFormat(' d MMMM yyyy').format(DateTime
                                           .now()), // Current date and time
-                                      style: Styles.white18),
+                                      style: Styles.white18(context)),
                                   StreamBuilder(
                                     stream: Stream.periodic(
                                         const Duration(seconds: 1)),
                                     builder: (context, snapshot) {
-                                      return Container(
-                                        child: Text(
-                                            DateFormat(' hh:mm:ss a')
-                                                .format(DateTime.now()),
-                                            style: Styles.white18),
-                                      );
+                                      return Text(
+                                          DateFormat(' hh:mm:ss a')
+                                              .format(DateTime.now()),
+                                          style: Styles.white18(context));
                                     },
                                   ),
                                 ],
                               ),
-                              Container(
-                                // color: Colors.amber,
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  // mainAxisAlignment:
-                                  //     MainAxisAlignment.spaceAround,
-                                  children: [
-                                    Container(
-                                      width: screenWidth / 10,
-                                      // margin: EdgeInsets.all(4),
-                                      decoration: const BoxDecoration(
-                                          color: GobalStyles.secondaryColor,
-                                          borderRadius: BorderRadius.horizontal(
-                                              right: Radius.circular(50),
-                                              left: Radius.circular(50))),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                // mainAxisAlignment:
+                                //     MainAxisAlignment.spaceAround,
+                                children: [
+                                  Container(
+                                    width: screenWidth / 6,
+                                    // margin: EdgeInsets.all(4),
+                                    decoration: const BoxDecoration(
+                                        color: GobalStyles.secondaryColor,
+                                        borderRadius: BorderRadius.horizontal(
+                                            right: Radius.circular(50),
+                                            left: Radius.circular(50))),
 
-                                      child: Center(
-                                        child: Text(
-                                          'SALE',
-                                          style: GobalStyles.headlineblack4,
-                                        ),
+                                    child: Center(
+                                      child: Text(
+                                        'SALE',
+                                        style: Styles.headerBlack18(context),
                                       ),
                                     ),
-                                    Container(
-                                      width: screenWidth / 10,
-                                      margin:
-                                          EdgeInsets.symmetric(horizontal: 4),
-                                      decoration: const BoxDecoration(
-                                          color: GobalStyles.secondaryColor,
-                                          borderRadius: BorderRadius.horizontal(
-                                              right: Radius.circular(50),
-                                              left: Radius.circular(50))),
-                                      child: Center(
-                                        child: Text(
-                                          'BE121',
-                                          style: GobalStyles.headlineblack4,
-                                        ),
+                                  ),
+                                  Container(
+                                    width: screenWidth / 6,
+                                    margin: const EdgeInsets.symmetric(
+                                        horizontal: 4),
+                                    decoration: const BoxDecoration(
+                                        color: GobalStyles.secondaryColor,
+                                        borderRadius: BorderRadius.horizontal(
+                                            right: Radius.circular(50),
+                                            left: Radius.circular(50))),
+                                    child: Center(
+                                      child: Text(
+                                        'BE121',
+                                        style: Styles.headerBlack18(context),
                                       ),
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
                             ],
                           ),

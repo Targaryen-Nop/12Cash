@@ -84,9 +84,9 @@ class _OrderDetailState extends State<OrderDetail> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text("รหัสสินค้า ${widget.itemCode}",
-                            style: Styles.black18),
-                        Text(widget.itemName, style: Styles.black18),
-                        Text("ราคา $price", style: Styles.black18),
+                            style: Styles.black18(context)),
+                        Text(widget.itemName, style: Styles.black18(context)),
+                        Text("ราคา $price", style: Styles.black18(context)),
                       ],
                     ),
                   ),
@@ -177,7 +177,7 @@ class _OrderDetailState extends State<OrderDetail> {
                 },
                 child: Text(
                   "เพิ่ม",
-                  style: Styles.white18,
+                  style: Styles.white18(context),
                 ),
               ),
             ),
@@ -211,7 +211,9 @@ class _OrderDetailState extends State<OrderDetail> {
           },
           child: Text(
             label,
-            style: isSelected ? Styles.headerWhite32 : Styles.headerBlack18,
+            style: isSelected
+                ? Styles.headerWhite32(context)
+                : Styles.headerBlack18(context),
           ),
         ),
       ),

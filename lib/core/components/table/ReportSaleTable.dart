@@ -189,7 +189,7 @@ class _ReportsaletableState extends State<Reportsaletable> {
                 100), // Rounded corners for the inner container
           ),
           alignment: Alignment.center,
-          child: Text(text, style: Styles.white18),
+          child: Text(text, style: Styles.white18(context)),
         ),
       ),
     );
@@ -200,7 +200,7 @@ class _ReportsaletableState extends State<Reportsaletable> {
       alignment: Alignment.centerLeft,
       width: width,
       padding: const EdgeInsets.all(2),
-      child: Text(text, style: Styles.black18),
+      child: Text(text, style: Styles.black18(context)),
     );
   }
 
@@ -208,7 +208,7 @@ class _ReportsaletableState extends State<Reportsaletable> {
     return Container(
       alignment: alignment,
       padding: const EdgeInsets.all(2),
-      child: Text(text, style: Styles.black18),
+      child: Text(text, style: Styles.black18(context)),
     );
   }
 
@@ -219,7 +219,7 @@ class _ReportsaletableState extends State<Reportsaletable> {
         padding: const EdgeInsets.all(2),
         child: Text(
           text,
-          style: Styles.grey18,
+          style: Styles.grey18(context),
         ),
       ),
     );

@@ -55,11 +55,11 @@ class _ShoproutescreenState extends State<Shoproutescreen> {
               children: [
                 Text(
                   widget.status,
-                  style: Styles.headerBlack24,
+                  style: Styles.headerBlack24(context),
                 ),
                 Text(
                   widget.route,
-                  style: Styles.headerBlack24,
+                  style: Styles.headerBlack24(context),
                 )
               ],
             ),
@@ -89,11 +89,11 @@ class _ShoproutescreenState extends State<Shoproutescreen> {
                   children: [
                     Text(
                       _jsonString?['shop_target'] ?? 'Shop Target',
-                      style: Styles.headerBlack24,
+                      style: Styles.headerBlack24(context),
                     ),
                     Text(
                       "17",
-                      style: Styles.headerBlack24,
+                      style: Styles.headerBlack24(context),
                     )
                   ],
                 ),
@@ -102,11 +102,11 @@ class _ShoproutescreenState extends State<Shoproutescreen> {
                   children: [
                     Text(
                       _jsonString?['shop_visit'] ?? 'Shop Visit',
-                      style: Styles.headerBlack24,
+                      style: Styles.headerBlack24(context),
                     ),
                     Text(
                       "0",
-                      style: Styles.headerBlack24,
+                      style: Styles.headerBlack24(context),
                     )
                   ],
                 ),
@@ -115,11 +115,11 @@ class _ShoproutescreenState extends State<Shoproutescreen> {
                   children: [
                     Text(
                       _jsonString?['shop_order'] ?? 'Shop Order',
-                      style: Styles.headerBlack24,
+                      style: Styles.headerBlack24(context),
                     ),
                     Text(
                       "4",
-                      style: Styles.headerBlack24,
+                      style: Styles.headerBlack24(context),
                     )
                   ],
                 ),

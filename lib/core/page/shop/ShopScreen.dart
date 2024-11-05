@@ -52,7 +52,7 @@ class _ShopScreenState extends State<ShopScreen> {
                       ),
                       child: Text(
                         'ร้านค้าทั้งหมด',
-                        style: Styles.headerBlack24,
+                        style: Styles.headerBlack24(context),
                       ),
                     ),
                   ),
@@ -80,7 +80,7 @@ class _ShopScreenState extends State<ShopScreen> {
                       ),
                       child: Text(
                         'ร้านค้าใหม่',
-                        style: Styles.headerBlack24,
+                        style: Styles.headerBlack24(context),
                       ),
                     ),
                   ),
@@ -185,7 +185,7 @@ class _ShopHeaderState extends State<ShopHeader> {
                                   ),
                                   Text(
                                     ' ร้านค้า',
-                                    style: Styles.headerWhite24,
+                                    style: Styles.headerWhite24(context),
                                     textAlign: TextAlign.start,
                                   ),
                                 ],

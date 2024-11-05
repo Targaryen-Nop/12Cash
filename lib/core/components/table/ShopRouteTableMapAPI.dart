@@ -42,10 +42,13 @@ class _ShopRouteTableState extends State<ShopRouteTable> {
   // Fetch data from the API
   void fetchCustomers() async {
     var data = await getCustomers();
-    setState(() {
-      customers = data;
-      isLoading = false; // Set loading state to false when data is fetched
-    });
+    if (mounted) {
+      // Check if the widget is still in the widget tree
+      setState(() {
+        customers = data;
+        isLoading = false; // Set loading state to false when data is fetched
+      });
+    }
   }
 
   Future<List<CustomerModel>> getCustomers() async {
@@ -209,7 +212,7 @@ class _ShopRouteTableState extends State<ShopRouteTable> {
     return Container(
       alignment: Alignment.centerLeft,
       padding: const EdgeInsets.all(8),
-      child: Text(text, style: Styles.black18),
+      child: Text(text, style: Styles.black18(context)),
     );
   }
 
@@ -219,7 +222,7 @@ class _ShopRouteTableState extends State<ShopRouteTable> {
       padding: const EdgeInsets.all(8),
       child: Text(
         text,
-        style: Styles.grey18,
+        style: Styles.grey18(context),
       ),
     );
   }
@@ -230,7 +233,7 @@ class _ShopRouteTableState extends State<ShopRouteTable> {
       padding: const EdgeInsets.all(8),
       child: Text(
         text,
-        style: Styles.grey18,
+        style: Styles.grey18(context),
       ),
     );
   }

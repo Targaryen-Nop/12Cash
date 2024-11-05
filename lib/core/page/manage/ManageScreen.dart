@@ -50,7 +50,7 @@ class _ManageScreenState extends State<ManageScreen> {
                       ),
                       child: Text(
                         'รายการขาย',
-                        style: Styles.black18,
+                        style: Styles.black18(context),
                       ),
                     ),
                   ),
@@ -66,7 +66,7 @@ class _ManageScreenState extends State<ManageScreen> {
                       },
                       child: Text(
                         'รายการคืน',
-                        style: Styles.black18,
+                        style: Styles.black18(context),
                       ),
                       style: ElevatedButton.styleFrom(
                         elevation: 16, // Add elevation for shadow
@@ -154,7 +154,7 @@ class _ManageHeaderState extends State<ManageHeader> {
                                       color: Colors.white),
                                   Text(
                                     ' จัดการ',
-                                    style: Styles.headerWhite24,
+                                    style: Styles.headerWhite24(context),
                                     textAlign: TextAlign.start,
                                   ),
                                 ],

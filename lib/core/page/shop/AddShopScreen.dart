@@ -59,7 +59,7 @@ class _AddShopScreenState extends State<AddShopScreen> {
                     width: 8), // Adds some spacing between the icon and text
                 Text(
                   " ${_jsonString?['shop_detail'] ?? "Shop Detail"}",
-                  style: Styles.black18,
+                  style: Styles.black18(context),
                 ),
               ],
             ),
@@ -129,7 +129,7 @@ class _AddShopScreenState extends State<AddShopScreen> {
                     width: 8), // Adds some spacing between the icon and text
                 Text(
                   "ที่อยู่",
-                  style: Styles.black18,
+                  style: Styles.black18(context),
                 ),
               ],
             ),
@@ -204,7 +204,7 @@ class _AddShopScreenState extends State<AddShopScreen> {
                     width: 8), // Adds some spacing between the icon and text
                 Text(
                   "ภาพถ่าย",
-                  style: Styles.black18,
+                  style: Styles.black18(context),
                 ),
               ],
             ),
@@ -226,7 +226,7 @@ class _AddShopScreenState extends State<AddShopScreen> {
                       context, '10334587', 'ร้าน เจริญพรค้าขาย');
                 },
                 text: "ถัดไป",
-                textStyle: Styles.white18,
+                textStyle: Styles.white18(context),
                 blackGroundColor: GobalStyles.successButtonColor)
           ],
         ),

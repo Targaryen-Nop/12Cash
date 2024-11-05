@@ -100,26 +100,26 @@ class _VerifyorderscreenState extends State<Verifyorderscreen> {
             BuildTextRowBetween(
                 text: "${_jsonString?['total'] ?? 'Total'}",
                 price: 800.00,
-                style: Styles.headerBlack24),
+                style: Styles.headerBlack24(context)),
             BuildTextRowBetween(
                 text: "${_jsonString?['discount'] ?? 'Discount'}",
                 price: 8430.00,
-                style: Styles.headerBlack24),
+                style: Styles.headerBlack24(context)),
             BuildTextRowBetween(
                 text: "${_jsonString?['net_price'] ?? 'Net Price'}",
                 price: 00.00,
-                style: Styles.headerBlack24),
+                style: Styles.headerBlack24(context)),
             BuildTextRowBetween(
                 text: "${_jsonString?['vat'] ?? 'VAT (7%)'}",
                 price: 7878.50,
-                style: Styles.headerBlack24),
+                style: Styles.headerBlack24(context)),
             BuildTextRowBetween(
                 text: "${_jsonString?['amount'] ?? 'Amount'}",
                 price: 8430.00,
-                style: Styles.headerBlack24),
+                style: Styles.headerBlack24(context)),
             ButtonFullWidth(
               text: "${_jsonString?['save'] ?? 'Save'}",
-              textStyle: Styles.white18,
+              textStyle: Styles.white18(context),
               blackGroundColor: GobalStyles.successButtonColor,
               screen: const HomeScreen(index: 2),
             ),

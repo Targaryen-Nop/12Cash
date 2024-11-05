@@ -32,14 +32,14 @@ class _BuildTextRowDetailShopState extends State<BuildTextRowDetailShop> {
             flex: widget.left,
             child: Text(
               widget.text,
-              style: Styles.black18, // Bold label
+              style: Styles.black18(context), // Bold label
             ),
           ),
           Expanded(
             flex: widget.right,
             child: Text(
               widget.value,
-              style: Styles.black18,
+              style: Styles.black18(context),
             ), // Value text
           ),
         ],
@@ -69,8 +69,8 @@ class _BuildTextRowBetweenState extends State<BuildTextRowBetween> {
   void initState() {
     super.initState();
     // Initialize the formatted currency in initState
-    formattedCurrency = NumberFormat.currency(locale: 'en_US', symbol: '\$')
-        .format(widget.price);
+    formattedCurrency =
+        '${NumberFormat.currency(locale: 'th_TH', symbol: '').format(widget.price)} ฿';
   }
 
   @override

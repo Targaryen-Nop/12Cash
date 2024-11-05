@@ -84,7 +84,7 @@ class _RouteHeaderState extends State<RouteHeader> {
                           SizedBox(width: 10),
                           Text(
                             'เส้นทางเข้าเยี่ยม',
-                            style: Styles.headerWhite24,
+                            style: Styles.headerWhite24(context),
                             textAlign: TextAlign.start,
                           ),
                         ],
@@ -98,7 +98,7 @@ class _RouteHeaderState extends State<RouteHeader> {
                             padding: EdgeInsets.all(10),
                             child: Text(
                               'เดือน ${DateFormat('MMMM', 'th').format(DateTime.now())} ${DateTime.now().year + 543}',
-                              style: Styles.headerWhite24,
+                              style: Styles.headerWhite24(context),
                             ),
                           ),
                           Flexible(
@@ -113,7 +113,7 @@ class _RouteHeaderState extends State<RouteHeader> {
                                       child: Text(
                                         DateFormat('hh:mm:ss a')
                                             .format(DateTime.now()),
-                                        style: Styles.headerWhite24,
+                                        style: Styles.headerWhite24(context),
                                       ),
                                     );
                                   }))

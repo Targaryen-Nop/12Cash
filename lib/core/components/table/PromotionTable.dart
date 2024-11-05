@@ -177,7 +177,7 @@ class _PromotiontableState extends State<Promotiontable> {
       alignment: Alignment.centerLeft,
       width: width,
       padding: const EdgeInsets.all(8),
-      child: Text(text, style: Styles.black18),
+      child: Text(text, style: Styles.black18(context)),
     );
   }
 
@@ -185,7 +185,7 @@ class _PromotiontableState extends State<Promotiontable> {
     return Container(
       alignment: Alignment.centerRight,
       padding: const EdgeInsets.all(8),
-      child: Text(text, style: Styles.black18),
+      child: Text(text, style: Styles.black18(context)),
     );
   }
 
@@ -196,7 +196,7 @@ class _PromotiontableState extends State<Promotiontable> {
       padding: const EdgeInsets.all(8),
       child: Text(
         text,
-        style: Styles.grey18,
+        style: Styles.grey18(context),
       ),
     );
   }
@@ -208,7 +208,7 @@ class _PromotiontableState extends State<Promotiontable> {
         padding: const EdgeInsets.all(8),
         child: Text(
           text,
-          style: Styles.grey18,
+          style: Styles.grey18(context),
         ),
       ),
     );
@@ -221,7 +221,7 @@ class _PromotiontableState extends State<Promotiontable> {
       padding: const EdgeInsets.all(8),
       child: Text(
         text,
-        style: Styles.grey18,
+        style: Styles.grey18(context),
       ),
     );
   }
@@ -264,7 +264,7 @@ class _PromotiontableState extends State<Promotiontable> {
                         Navigator.of(context).pop(); // Close bottom sheet
                       },
                     ),
-                    Text('เปลี่ยนของแถม', style: Styles.headerBlack18),
+                    Text('เปลี่ยนของแถม', style: Styles.headerBlack18(context)),
                   ],
                 ),
                 const SizedBox(height: 8),
@@ -305,7 +305,7 @@ class _PromotiontableState extends State<Promotiontable> {
                                   ),
                                   // contentPadding: EdgeInsets.only(left: 250),
                                 ),
-                                style: Styles.white18,
+                                style: Styles.white18(context),
 
                                 value: 'อื่นๆ', // Default value
                                 alignment: Alignment
@@ -318,7 +318,7 @@ class _PromotiontableState extends State<Promotiontable> {
                                       // Center-align the text inside the dropdown items
                                       child: Text(
                                         value,
-                                        style: Styles.black18,
+                                        style: Styles.black18(context),
                                       ),
                                     ),
                                   );
@@ -355,7 +355,7 @@ class _PromotiontableState extends State<Promotiontable> {
                                   ),
                                   // contentPadding: EdgeInsets.only(left: 250),
                                 ),
-                                style: Styles.white18,
+                                style: Styles.white18(context),
 
                                 value: 'อื่นๆ', // Default value
                                 alignment: Alignment
@@ -368,7 +368,7 @@ class _PromotiontableState extends State<Promotiontable> {
                                       // Center-align the text inside the dropdown items
                                       child: Text(
                                         value,
-                                        style: Styles.black18,
+                                        style: Styles.black18(context),
                                       ),
                                     ),
                                   );
@@ -407,7 +407,7 @@ class _PromotiontableState extends State<Promotiontable> {
                                   ),
                                   // contentPadding: EdgeInsets.only(left: 250),
                                 ),
-                                style: Styles.white18,
+                                style: Styles.white18(context),
 
                                 value: 'อื่นๆ', // Default value
                                 alignment: Alignment
@@ -420,7 +420,7 @@ class _PromotiontableState extends State<Promotiontable> {
                                       // Center-align the text inside the dropdown items
                                       child: Text(
                                         value,
-                                        style: Styles.black18,
+                                        style: Styles.black18(context),
                                       ),
                                     ),
                                   );
@@ -457,7 +457,7 @@ class _PromotiontableState extends State<Promotiontable> {
                                   ),
                                   // contentPadding: EdgeInsets.only(left: 250),
                                 ),
-                                style: Styles.white18,
+                                style: Styles.white18(context),
 
                                 value: 'อื่นๆ', // Default value
                                 alignment: Alignment
@@ -470,7 +470,7 @@ class _PromotiontableState extends State<Promotiontable> {
                                       // Center-align the text inside the dropdown items
                                       child: Text(
                                         value,
-                                        style: Styles.black18,
+                                        style: Styles.black18(context),
                                       ),
                                     ),
                                   );
@@ -499,7 +499,7 @@ class _PromotiontableState extends State<Promotiontable> {
                               borderRadius: BorderRadius.circular(8),
                             ),
                           ),
-                          child: Text('บันทึก', style: Styles.white18),
+                          child: Text('บันทึก', style: Styles.white18(context)),
                         ),
                       ),
                     ],

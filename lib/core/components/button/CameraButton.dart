@@ -116,7 +116,7 @@ class _CameraButtonWidgetState extends State<CameraButtonWidget> {
                     size: 25,
                   ),
                 ),
-                Text(' กล้อง', style: Styles.white18),
+                Text(' กล้อง', style: Styles.white18(context)),
               ],
             ),
           ),

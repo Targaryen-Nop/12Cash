@@ -56,7 +56,7 @@ class _PromotionscreenState extends State<Promotionscreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text("${_jsonString?['giveaway'] ?? 'Giveaway'}",
-                style: Styles.headerBlack24),
+                style: Styles.headerBlack24(context)),
             Container(
               decoration: BoxDecoration(
                 border: Border.all(color: Colors.grey),
@@ -65,7 +65,7 @@ class _PromotionscreenState extends State<Promotionscreen> {
               child: const Promotiontable(),
             ),
             Text("${_jsonString?['discount'] ?? 'Discount'}",
-                style: Styles.headerBlack24),
+                style: Styles.headerBlack24(context)),
             Container(
               decoration: BoxDecoration(
                 border: Border.all(color: Colors.grey),
@@ -97,7 +97,7 @@ class _PromotionscreenState extends State<Promotionscreen> {
                   ),
                 ),
                 child: Text('${_jsonString?['next_button'] ?? 'Next'}',
-                    style: Styles.white18),
+                    style: Styles.white18(context)),
               ),
             ),
           ],

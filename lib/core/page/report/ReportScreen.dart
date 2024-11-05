@@ -52,7 +52,7 @@ class _ReportScreenState extends State<ReportScreen> {
                       ),
                       child: Text(
                         'รายการขาย',
-                        style: Styles.headerBlack24,
+                        style: Styles.headerBlack24(context),
                       ),
                     ),
                   ),
@@ -80,7 +80,7 @@ class _ReportScreenState extends State<ReportScreen> {
                       ),
                       child: Text(
                         'รายการคืน',
-                        style: Styles.headerBlack24,
+                        style: Styles.headerBlack24(context),
                       ),
                     ),
                   ),
@@ -156,7 +156,7 @@ class _ReportHeaderState extends State<ReportHeader> {
                                       color: Colors.white),
                                   Text(
                                     ' รายงานขาย',
-                                    style: Styles.headerWhite24,
+                                    style: Styles.headerWhite24(context),
                                     textAlign: TextAlign.start,
                                   ),
                                 ],

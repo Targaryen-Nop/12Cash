@@ -57,6 +57,7 @@ dependencies:
   printing: ^5.12.0
   charset_converter: ^2.2.1
   sprintf: ^7.0.0
+  flutter_screenutil: ^5.9.3
 
 
 

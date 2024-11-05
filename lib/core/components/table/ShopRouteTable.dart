@@ -179,7 +179,7 @@ class _ShopRouteTableState extends State<ShopRouteTable> {
     return Container(
       alignment: Alignment.center,
       padding: const EdgeInsets.all(8),
-      child: Text(text, style: Styles.black18),
+      child: Text(text, style: Styles.black18(context)),
     );
   }
 
@@ -190,7 +190,7 @@ class _ShopRouteTableState extends State<ShopRouteTable> {
         padding: const EdgeInsets.all(8),
         child: Text(
           text,
-          style: Styles.grey18,
+          style: Styles.grey18(context),
         ),
       ),
     );

@@ -115,7 +115,7 @@ class _ShopTableNew extends State<ShopTableNew> {
             _buildTableCellName(customerNo, screenWidth / 3.5),
             _buildTableCellName(customerName, screenWidth / 3.5),
             Expanded(child: _buildTableCell(route, Alignment.center)),
-            _buildStatusCell(backgroundColor, screenWidth / 8, status),
+            _buildStatusCell(context, backgroundColor, screenWidth / 8, status),
           ],
         ),
       ),
@@ -127,7 +127,7 @@ class _ShopTableNew extends State<ShopTableNew> {
       alignment: Alignment.centerLeft,
       width: width,
       padding: const EdgeInsets.all(8),
-      child: Text(text, style: Styles.black18),
+      child: Text(text, style: Styles.black18(context)),
     );
   }
 
@@ -135,7 +135,7 @@ class _ShopTableNew extends State<ShopTableNew> {
     return Container(
       alignment: alignment,
       padding: const EdgeInsets.all(8),
-      child: Text(text, style: Styles.black18),
+      child: Text(text, style: Styles.black18(context)),
     );
   }
 
@@ -146,7 +146,7 @@ class _ShopTableNew extends State<ShopTableNew> {
       padding: const EdgeInsets.all(8),
       child: Text(
         text,
-        style: Styles.grey18,
+        style: Styles.grey18(context),
       ),
     );
   }
@@ -158,14 +158,15 @@ class _ShopTableNew extends State<ShopTableNew> {
         padding: const EdgeInsets.all(8),
         child: Text(
           text,
-          style: Styles.grey18,
+          style: Styles.grey18(context),
         ),
       ),
     );
   }
 }
 
-Widget _buildStatusCell(Color? bgColor, double? width, String text) {
+Widget _buildStatusCell(
+    BuildContext context, Color? bgColor, double? width, String text) {
   return Expanded(
     child: Container(
       width: width,
@@ -180,7 +181,7 @@ Widget _buildStatusCell(Color? bgColor, double? width, String text) {
               100), // Rounded corners for the inner container
         ),
         alignment: Alignment.center,
-        child: Text(text, style: Styles.white18),
+        child: Text(text, style: Styles.white18(context)),
       ),
     ),
   );

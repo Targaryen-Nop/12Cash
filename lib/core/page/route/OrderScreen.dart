@@ -59,10 +59,10 @@ class _OrderscreenState extends State<Orderscreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("รหัสร้าน 10334587", style: Styles.headerBlack24),
+              Text("รหัสร้าน 10334587", style: Styles.headerBlack24(context)),
               Text(
                 "ร้าน เจริญพรค้าขาย",
-                style: Styles.headerBlack24,
+                style: Styles.headerBlack24(context),
               ),
               SizedBox(height: screenWidth / 80),
               Row(
@@ -249,7 +249,7 @@ class _OrderscreenState extends State<Orderscreen> {
                 alignment: Alignment.center,
                 child: Text(
                   "${_jsonString?['item_selected'] ?? 'Item Selected'}",
-                  style: Styles.headerBlack24,
+                  style: Styles.headerBlack24(context),
                 ),
               ),
               SizedBox(height: screenWidth / 80),
@@ -265,7 +265,7 @@ class _OrderscreenState extends State<Orderscreen> {
                 alignment: Alignment.centerLeft,
                 child: Text(
                   "${_jsonString?['amount'] ?? 'Amount'} 38000.00",
-                  style: Styles.headerBlack24,
+                  style: Styles.headerBlack24(context),
                 ),
               ),
             ],

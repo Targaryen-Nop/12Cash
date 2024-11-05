@@ -25,6 +25,18 @@ class Header extends StatelessWidget {
   }) : super(key: key);
 //  final isPortrait = MediaQueryData.orientation == Orientation.portrait;
   @override
+
+  /// Builds the header widget with a flexible layout displaying leading widgets.
+  ///
+  /// This function constructs a `Container` widget with a primary color
+  /// background, containing a `Column` with two `Flexible` children:
+  ///
+  /// 1. The first child contains the `leading2` widget and provides a top margin
+  ///    and horizontal padding.
+  /// 2. The second child contains the `leading` widget, styled with a box shadow,
+  ///    light gray background color, and a rounded top border radius.
+  ///
+  /// The layout adapts to the screen width, adjusting the spacing dynamically.
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     // final isPortrait =
@@ -52,7 +64,7 @@ class Header extends StatelessWidget {
             fit: FlexFit.loose,
             child: Container(
               decoration: BoxDecoration(
-                boxShadow: [
+                boxShadow: const [
                   BoxShadow(
                     color: Colors.black26, // Soft black color for shadow
                     offset: Offset(0, 5), // Slight downward shadow
@@ -61,7 +73,8 @@ class Header extends StatelessWidget {
                   ),
                 ],
                 color: Colors.grey[100],
-                borderRadius: BorderRadius.vertical(top: Radius.circular(46)),
+                borderRadius:
+                    const BorderRadius.vertical(top: Radius.circular(46)),
               ),
               child: leading!,
             ),

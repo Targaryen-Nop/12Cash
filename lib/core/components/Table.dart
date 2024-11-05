@@ -17,19 +17,19 @@ class _CustomTableState extends State<CustomTable> {
         DataColumn(
           label: Text(
             'วันที่',
-            style: Styles.black18,
+            style: Styles.black18(context),
           ),
         ),
         DataColumn(
           label: Text(
             'เส้นทาง',
-            style: Styles.black18,
+            style: Styles.black18(context),
           ),
         ),
         DataColumn(
           label: Text(
             'สถานะ',
-            style: Styles.black18,
+            style: Styles.black18(context),
           ),
         ),
       ],

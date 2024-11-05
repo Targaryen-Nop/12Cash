@@ -234,7 +234,7 @@ class _SettingHeaderState extends State<SettingHeader> {
                                 children: [
                                   Text(
                                     'จรัญมนู ศรีอมรเพทนคร',
-                                    style: GobalStyles.text2,
+                                    style: Styles.headerWhite24(context),
                                     textAlign: TextAlign.start,
                                   ),
                                 ],
@@ -244,7 +244,7 @@ class _SettingHeaderState extends State<SettingHeader> {
                                   Text(
                                       DateFormat(' d MMMM yyyy').format(DateTime
                                           .now()), // Current date and time
-                                      style: Styles.white18),
+                                      style: Styles.white18(context)),
                                   StreamBuilder(
                                     stream: Stream.periodic(
                                         const Duration(seconds: 1)),
@@ -253,7 +253,7 @@ class _SettingHeaderState extends State<SettingHeader> {
                                         child: Text(
                                             DateFormat(' hh:mm:ss a')
                                                 .format(DateTime.now()),
-                                            style: Styles.white18),
+                                            style: Styles.white18(context)),
                                       );
                                     },
                                   ),

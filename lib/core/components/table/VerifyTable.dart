@@ -226,7 +226,7 @@ class _VerifyTable extends State<VerifyTable> {
       padding: const EdgeInsets.all(8),
       child: Text(
         text,
-        style: Styles.grey18,
+        style: Styles.grey18(context),
       ),
     );
   }
@@ -238,7 +238,7 @@ class _VerifyTable extends State<VerifyTable> {
         padding: const EdgeInsets.all(8),
         child: Text(
           text,
-          style: Styles.grey18,
+          style: Styles.grey18(context),
         ),
       ),
     );
@@ -281,7 +281,7 @@ class _VerifyTable extends State<VerifyTable> {
                         Navigator.of(context).pop(); // Close bottom sheet
                       },
                     ),
-                    Text('ตารางสินค้า', style: Styles.headerBlack18),
+                    Text('ตารางสินค้า', style: Styles.headerBlack18(context)),
                   ],
                 ),
                 const SizedBox(height: 8),

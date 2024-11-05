@@ -122,8 +122,9 @@ class _DetailScreenState extends State<DetailScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text("รหัสร้าน ${widget.customerNo}",
-                  style: Styles.headerBlack24),
-              Text("ร้าน ${widget.customerName}", style: Styles.headerBlack24),
+                  style: Styles.headerBlack24(context)),
+              Text("ร้าน ${widget.customerName}",
+                  style: Styles.headerBlack24(context)),
               const SizedBox(height: 10),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -184,7 +185,7 @@ class _DetailScreenState extends State<DetailScreen> {
             SizedBox(height: 8),
             Text(
               label,
-              style: Styles.white18,
+              style: Styles.white18(context),
               textAlign: TextAlign.center,
             ),
           ],
@@ -222,7 +223,7 @@ class _DetailScreenState extends State<DetailScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text('ระบุสาเหตุที่ร้านค้าไม่ซื้อ',
-                        style: Styles.headerBlack24),
+                        style: Styles.headerBlack24(context)),
                     IconButton(
                       icon: Icon(Icons.close),
                       onPressed: () {
@@ -235,11 +236,11 @@ class _DetailScreenState extends State<DetailScreen> {
                 // Store Information
                 Text(
                   'รหัสร้าน 10334587',
-                  style: Styles.headerBlack24,
+                  style: Styles.headerBlack24(context),
                 ),
                 Text(
                   'ร้าน เจริญพรค้าขาย',
-                  style: Styles.headerBlack24,
+                  style: Styles.headerBlack24(context),
                 ),
                 const SizedBox(height: 16),
 
@@ -255,7 +256,7 @@ class _DetailScreenState extends State<DetailScreen> {
                             BorderSide.none, // Remove border if not needed
                       ),
                       contentPadding: const EdgeInsets.only(left: 250)),
-                  style: Styles.headerWhite32,
+                  style: Styles.headerWhite32(context),
 
                   value: 'อื่นๆ', // Default value
                   alignment: Alignment.center, // Center the selected value text
@@ -267,7 +268,7 @@ class _DetailScreenState extends State<DetailScreen> {
                         // Center-align the text inside the dropdown items
                         child: Text(
                           value,
-                          style: Styles.black18,
+                          style: Styles.black18(context),
                         ),
                       ),
                     );
@@ -281,7 +282,7 @@ class _DetailScreenState extends State<DetailScreen> {
                   maxLines: 5,
                   decoration: InputDecoration(
                     hintText: 'ใส่ข้อมูล',
-                    hintStyle: Styles.black18,
+                    hintStyle: Styles.black18(context),
                     filled: true,
                     fillColor: Colors.white,
                     border: OutlineInputBorder(
@@ -300,7 +301,7 @@ class _DetailScreenState extends State<DetailScreen> {
                       // Perform save action
                       Navigator.of(context).pop(); // Close the bottom sheet
                     },
-                    child: Text('บันทึก', style: Styles.headerWhite32),
+                    child: Text('บันทึก', style: Styles.headerWhite32(context)),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: GobalStyles.successButtonColor,
                       // padding: EdgeInsets.symmetric(vertical: 12),
@@ -352,7 +353,7 @@ class _DetailScreenState extends State<DetailScreen> {
                         Navigator.of(context).pop(); // Close bottom sheet
                       },
                     ),
-                    Text('จัดเก็บรูปภาพ', style: Styles.headerBlack24),
+                    Text('จัดเก็บรูปภาพ', style: Styles.headerBlack24(context)),
                   ],
                 ),
                 const SizedBox(height: 8),
@@ -373,7 +374,8 @@ class _DetailScreenState extends State<DetailScreen> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
                         )),
-                    child: Text('บันทึกรูปภาพ', style: Styles.headerWhite24),
+                    child: Text('บันทึกรูปภาพ',
+                        style: Styles.headerWhite24(context)),
                   ),
                 ),
               ],

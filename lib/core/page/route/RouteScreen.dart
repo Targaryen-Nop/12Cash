@@ -18,40 +18,15 @@ class _RoutescreenState extends State<Routescreen> {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
-    return Container(
-      // margin: EdgeInsets.only(top: 30),
-      // padding: EdgeInsets.all(25),
-      child: Column(
-        children: [
-          // SizedBox(
-          //   height: screenWidth / 30,
-          // ),
-          Container(
-              margin: EdgeInsets.all(screenWidth / 50),
-              child: const RouteTable()),
-        ],
-      ),
-      // child: Column(
-      //   crossAxisAlignment: CrossAxisAlignment.start,
-      //   children: [
-      //     Expanded(
-      //       child: SingleChildScrollView(
-      //         // scrollDirection: Axis.,
-      //         child: Container(
-      //           width: 1000,
-      //           decoration: BoxDecoration(
-      //             border: Border.all(
-      //                 color: Colors.grey,
-      //                 width: 1), // Border around the entire table
-      //             borderRadius:
-      //                 BorderRadius.circular(8), // Optional: Rounded corners
-      //           ),
-      //           child: TableFullData(),
-      //         ),
-      //       ),
-      //     ),
-      //   ],
-      // ),
+    return Column(
+      children: [
+        // SizedBox(
+        //   height: screenWidth / 30,
+        // ),
+        Container(
+            margin: EdgeInsets.all(screenWidth / 50),
+            child: const RouteTable()),
+      ],
     );
   }
 }
@@ -127,7 +102,7 @@ class _RouteHeaderState extends State<RouteHeader> {
                                       size: 25, color: Colors.white),
                                   Text(
                                     ' ${_jsonString?['title'] ?? 'Route'}',
-                                    style: Styles.headerWhite24,
+                                    style: Styles.headerWhite24(context),
                                     textAlign: TextAlign.start,
                                   ),
                                 ],
@@ -136,7 +111,7 @@ class _RouteHeaderState extends State<RouteHeader> {
                               //   children: [
                               //     Text(
                               //       ' เดือน ${DateFormat('MMMM', 'th').format(DateTime.now())} ${DateTime.now().year + 543}',
-                              //       style: Styles.headerWhite24,
+                              //       style: Styles.headerWhite24(context),
                               //     ),
                               //   ],
                               // )
@@ -147,7 +122,7 @@ class _RouteHeaderState extends State<RouteHeader> {
                       Flexible(
                         child: Text(
                           ' เดือน ${DateFormat('MMMM', 'th').format(DateTime.now())} ${DateTime.now().year + 543}',
-                          style: Styles.headerWhite24,
+                          style: Styles.headerWhite24(context),
                         ),
                       ),
                       const Flexible(

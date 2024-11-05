@@ -8,11 +8,11 @@ class AppbarCustom extends StatefulWidget {
   // final VoidCallback onPressed;
 
   const AppbarCustom({
-    Key? key,
+    super.key,
     required this.title,
     required this.icon,
     // required this.onPressed,
-  }) : super(key: key);
+  });
 
   @override
   State<AppbarCustom> createState() => _AppbarCustomState();
@@ -53,17 +53,15 @@ class _AppbarCustomState extends State<AppbarCustom> {
             ),
           ),
           title: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-            Container(
-              child: Icon(
-                widget.icon,
-                size: 50,
-              ),
+            Icon(
+              widget.icon,
+              size: 50,
             ),
             Text(widget.title),
           ]),
           centerTitle: true,
           foregroundColor: Colors.white,
-          titleTextStyle: Styles.headerWhite32,
+          titleTextStyle: Styles.headerWhite32(context),
           backgroundColor: GobalStyles.primaryColor,
         ),
       ),

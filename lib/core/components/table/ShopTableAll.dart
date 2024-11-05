@@ -129,7 +129,7 @@ class _ShopTableAll extends State<ShopTableAll> {
       alignment: Alignment.centerLeft,
       width: width,
       padding: EdgeInsets.all(8),
-      child: Text(text, style: Styles.black18),
+      child: Text(text, style: Styles.black18(context)),
     );
   }
 
@@ -137,7 +137,7 @@ class _ShopTableAll extends State<ShopTableAll> {
     return Container(
       alignment: alignment,
       padding: EdgeInsets.all(8),
-      child: Text(text, style: Styles.black18),
+      child: Text(text, style: Styles.black18(context)),
     );
   }
 
@@ -148,7 +148,7 @@ class _ShopTableAll extends State<ShopTableAll> {
       padding: const EdgeInsets.all(8),
       child: Text(
         text,
-        style: Styles.grey18,
+        style: Styles.grey18(context),
       ),
     );
   }
@@ -160,7 +160,7 @@ class _ShopTableAll extends State<ShopTableAll> {
         padding: EdgeInsets.all(8),
         child: Text(
           text,
-          style: Styles.grey18,
+          style: Styles.grey18(context),
         ),
       ),
     );

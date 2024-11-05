@@ -110,7 +110,7 @@ class _PolicyaddnewshopState extends State<Policyaddnewshop> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('ขอความยินยอม', style: Styles.headerBlack18),
+              Text('ขอความยินยอม', style: Styles.headerBlack18(context)),
               IconButton(
                 icon: Icon(Icons.close),
                 onPressed: () {
@@ -189,7 +189,7 @@ class _PolicyaddnewshopState extends State<Policyaddnewshop> {
                       //   ),
                       // );
                     },
-                    child: Text('กลับ', style: Styles.white18),
+                    child: Text('กลับ', style: Styles.white18(context)),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: GobalStyles.primaryColor,
                       padding: EdgeInsets.symmetric(
@@ -205,7 +205,7 @@ class _PolicyaddnewshopState extends State<Policyaddnewshop> {
                   width: screenWidth / 3,
                   child: ElevatedButton(
                     onPressed: () {},
-                    child: Text('ถัดไป', style: Styles.white18),
+                    child: Text('ถัดไป', style: Styles.white18(context)),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: GobalStyles.successButtonColor,
                       padding: EdgeInsets.symmetric(

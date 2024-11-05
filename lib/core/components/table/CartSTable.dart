@@ -184,7 +184,7 @@ class _CartTableState extends State<CartTable> {
       alignment: Alignment.centerLeft,
       width: width,
       padding: EdgeInsets.all(8),
-      child: Text(text, style: Styles.black18),
+      child: Text(text, style: Styles.black18(context)),
     );
   }
 
@@ -192,7 +192,7 @@ class _CartTableState extends State<CartTable> {
     return Container(
       alignment: Alignment.centerRight,
       padding: EdgeInsets.all(8),
-      child: Text(text, style: Styles.black18),
+      child: Text(text, style: Styles.black18(context)),
     );
   }
 
@@ -203,7 +203,7 @@ class _CartTableState extends State<CartTable> {
       padding: EdgeInsets.all(8),
       child: Text(
         text,
-        style: Styles.grey18,
+        style: Styles.grey18(context),
       ),
     );
   }
@@ -215,7 +215,7 @@ class _CartTableState extends State<CartTable> {
         padding: EdgeInsets.all(8),
         child: Text(
           text,
-          style: Styles.grey18,
+          style: Styles.grey18(context),
         ),
       ),
     );
@@ -228,7 +228,7 @@ class _CartTableState extends State<CartTable> {
       padding: EdgeInsets.all(8),
       child: Text(
         text,
-        style: Styles.grey18,
+        style: Styles.grey18(context),
       ),
     );
   }
