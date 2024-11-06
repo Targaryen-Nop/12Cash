@@ -3,8 +3,10 @@ import 'dart:convert';
 import 'package:_12sale_app/core/page/route/OrderDetailScreen.dart';
 import 'package:_12sale_app/core/styles/gobalStyle.dart';
 import 'package:_12sale_app/core/styles/style.dart';
+import 'package:_12sale_app/data/models/Order.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CartTable extends StatefulWidget {
   const CartTable({super.key});
@@ -15,11 +17,13 @@ class CartTable extends StatefulWidget {
 
 class _CartTableState extends State<CartTable> {
   Map<String, dynamic>? _jsonString;
+  List<Order> _orders = [];
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _loadJson();
+    _loadOrdersFromStorage();
   }
 
   Future<void> _loadJson() async {
@@ -29,16 +33,30 @@ class _CartTableState extends State<CartTable> {
     });
   }
 
+  Future<void> _loadOrdersFromStorage() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    // Get the JSON string list from SharedPreferences
+    List<String>? jsonOrders = prefs.getStringList('orders');
+
+    if (jsonOrders != null) {
+      setState(() {
+        // Decode each JSON string and convert it to an Order object
+        _orders = jsonOrders
+            .map((jsonOrder) => Order.fromJson(jsonDecode(jsonOrder)))
+            .toList();
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     return Center(
       child: Container(
         height: screenWidth / 1.4,
-        // Adds space around the entire table
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(
-              16), // Rounded corners for the outer container
+          borderRadius: BorderRadius.circular(16),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -47,8 +65,7 @@ class _CartTableState extends State<CartTable> {
             Container(
               decoration: const BoxDecoration(
                 color: GobalStyles.backgroundTableColor,
-                borderRadius: BorderRadius.vertical(
-                    top: Radius.circular(16)), // Rounded corners at the top
+                borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
               ),
               child: Row(
                 children: [
@@ -65,56 +82,15 @@ class _CartTableState extends State<CartTable> {
               child: SingleChildScrollView(
                 scrollDirection: Axis.vertical,
                 child: Column(
-                  children: [
-                    _buildDataRow(
-                        '1011447875',
-                        'ผงปรุงรสไก่ ฟ้าไทย 75g x10x8',
-                        '58.00',
+                  children: List.generate(_orders.length, (index) {
+                    final order = _orders[index];
+                    return _buildDataRow(
+                        order,
                         GobalStyles.successBackgroundColor,
                         GobalStyles.successTextColor,
-                        0,
-                        context),
-                    _buildDataRow(
-                        '1011447875',
-                        'ผงปรุงรสไก่ ฟ้าไทย 75g x10x8',
-                        '58.00',
-                        GobalStyles.successBackgroundColor,
-                        GobalStyles.successTextColor,
-                        1,
-                        context),
-                    _buildDataRow(
-                        '1011447875',
-                        'ผงปรุงรสเห็ดหอม ฟ้าไทย 75g x10x8',
-                        '5800.00',
-                        GobalStyles.failBackgroundColor,
-                        GobalStyles.failTextColor,
-                        2,
-                        context),
-                    _buildDataRow(
-                        '1011447875',
-                        'ผงปรุงรสไก่ ฟ้าไทย 75g x10x8',
-                        '58.00',
-                        GobalStyles.paddingBackgroundColor,
-                        Colors.blue,
-                        3,
-                        context),
-                    _buildDataRow(
-                        '1011447875',
-                        'ผงปรุงรสไก่ ฟ้าไทย 75g x10x8',
-                        '58.00',
-                        GobalStyles.paddingBackgroundColor,
-                        Colors.blue,
-                        4,
-                        context),
-                    _buildDataRow(
-                        '1011447875',
-                        'ผงปรุงรสไก่ ฟ้าไทย 75g x10x8',
-                        '58.00',
-                        GobalStyles.successBackgroundColor,
-                        GobalStyles.successTextColor,
-                        5,
-                        context),
-                  ],
+                        index,
+                        context);
+                  }),
                 ),
               ),
             ),
@@ -124,19 +100,23 @@ class _CartTableState extends State<CartTable> {
     );
   }
 
-  Widget _buildDataRow(String itemCode, String itemName, String price,
-      Color? bgColor, Color? textColor, int index, BuildContext context) {
+  // Updated to use Order object
+  Widget _buildDataRow(Order order, Color? bgColor, Color? textColor, int index,
+      BuildContext context) {
     // Alternate row background color
     Color rowBgColor =
         (index % 2 == 0) ? Colors.white : GobalStyles.backgroundTableColor;
     double screenWidth = MediaQuery.of(context).size.width;
+
     return InkWell(
       onTap: () {
         Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => OrderDetail(
-                itemCode: itemCode, itemName: itemName, price: price),
+                itemCode: order.itemName,
+                itemName: order.itemName,
+                price: order.totalPrice.toStringAsFixed(2)),
           ),
         );
       },
@@ -146,11 +126,12 @@ class _CartTableState extends State<CartTable> {
         ),
         child: Row(
           children: [
-            _buildTableCellName(itemName, screenWidth / 2),
-            Expanded(child: _buildTableCell(price)),
-            Expanded(child: _buildTableCell(price)),
-            _buildStatusCell(price, bgColor, textColor,
-                50), // Custom function for "สถานะ" column
+            _buildTableCellName(order.itemName, screenWidth / 2),
+            Expanded(child: _buildTableCell(order.count.toStringAsFixed(2))),
+            Expanded(
+                child: _buildTableCell(order.totalPrice.toStringAsFixed(2))),
+            _buildStatusCell(
+                order.totalPrice.toStringAsFixed(2), bgColor, textColor, 50),
           ],
         ),
       ),
@@ -163,13 +144,10 @@ class _CartTableState extends State<CartTable> {
       width: width,
       alignment: Alignment.center,
       child: Container(
-        width: 50, // Optional inner width for the status cell
-        // padding: EdgeInsets.all(10),
+        width: 50,
         margin: EdgeInsets.all(5),
         decoration: const BoxDecoration(
           color: Colors.red,
-          // borderRadius: BorderRadius.circular(
-          //     100), // Rounded corners for the inner container
         ),
         alignment: Alignment.center,
         child: Icon(Icons.close, color: Colors.white, size: 40),

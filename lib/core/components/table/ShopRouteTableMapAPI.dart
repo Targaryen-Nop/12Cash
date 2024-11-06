@@ -24,11 +24,13 @@ class _ShopRouteTableState extends State<ShopRouteTable> {
   List<CustomerModel> customers = []; // Holds the list of CustomerModel objects
   bool isLoading = true; // Loader state
   Map<String, dynamic>? _jsonString;
+  late ScrollController _scrollController; // Define ScrollController
 
   @override
   void initState() {
     super.initState();
     fetchCustomers(); // Fetch customers on widget load
+    _scrollController = ScrollController(); // Initialize ScrollController
     _loadJson();
   }
 
@@ -49,6 +51,12 @@ class _ShopRouteTableState extends State<ShopRouteTable> {
         isLoading = false; // Set loading state to false when data is fetched
       });
     }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose(); // Dispose of the ScrollController
+    super.dispose();
   }
 
   Future<List<CustomerModel>> getCustomers() async {
@@ -94,14 +102,10 @@ class _ShopRouteTableState extends State<ShopRouteTable> {
           ? const CircularProgressIndicator() // Show loader while fetching data
           : Container(
               padding: const EdgeInsets.only(bottom: 10),
-              margin: EdgeInsets.all(
-                  screenWidth / 50), // Adds space around the table
               decoration: BoxDecoration(
                 color: Colors.white, // Set background color if needed
                 borderRadius: BorderRadius.circular(
                     16), // Rounded corners for the outer container
-                border:
-                    Border.all(color: Colors.grey, width: 1), // Outer border
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black
@@ -143,24 +147,31 @@ class _ShopRouteTableState extends State<ShopRouteTable> {
                   ),
                   // Scrollable content
                   Expanded(
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.vertical,
-                      child: Column(
-                        children: customers
-                            .asMap()
-                            .entries
-                            .map(
-                              (entry) => _buildDataRow(
-                                entry.value.customerNo,
-                                entry.value.customerName,
-                                entry.value.OKECAR,
-                                GobalStyles
-                                    .successBackgroundColor, // Set your colors accordingly
-                                GobalStyles.successTextColor,
-                                entry.key, // Row index
-                              ),
-                            )
-                            .toList(),
+                    child: Scrollbar(
+                      controller:
+                          _scrollController, // Set ScrollController here
+                      thumbVisibility: true,
+                      child: SingleChildScrollView(
+                        controller:
+                            _scrollController, // Set ScrollController here
+                        scrollDirection: Axis.vertical,
+                        child: Column(
+                          children: customers
+                              .asMap()
+                              .entries
+                              .map(
+                                (entry) => _buildDataRow(
+                                  entry.value.customerNo,
+                                  entry.value.customerName,
+                                  entry.value.OKECAR,
+                                  GobalStyles
+                                      .successBackgroundColor, // Set your colors accordingly
+                                  GobalStyles.successTextColor,
+                                  entry.key, // Row index
+                                ),
+                              )
+                              .toList(),
+                        ),
                       ),
                     ),
                   ),

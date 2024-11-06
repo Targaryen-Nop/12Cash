@@ -250,10 +250,16 @@ class Styles {
   static const Color backgroundTableColor = Color(0xFFF9FAFB);
   static const Color successBackgroundColor = Color(0xFFDEF7EC);
   static const Color successTextColor = Color(0xFF03543F);
+
   static const Color failBackgroundColor = Color(0xFFFBD5D5);
   static const Color failTextColor = Color(0xFF9B1C1C);
+
   static const Color paddingBackgroundColor = Color(0xFFE1EFFE);
   static const Color paddingTextColor = Color(0xFF1E429F);
+
+  static const Color warningBackgroundColor = Color(0xFFFFF3CD);
+  static const Color warningTextColor = Color(0xFF7A5200);
+
   static const Color accentColor = Colors.orange;
 
   // --------------------- Button Color---------------------

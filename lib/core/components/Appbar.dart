@@ -11,6 +11,7 @@ class AppbarCustom extends StatefulWidget {
     super.key,
     required this.title,
     required this.icon,
+
     // required this.onPressed,
   });
 
@@ -44,8 +45,8 @@ class _AppbarCustomState extends State<AppbarCustom> {
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back,
-              size: screenWidth / 10,
-              weight: screenWidth,
+              size: screenWidth / 12,
+              // weight: screenWidth,
             ), // Set the custom size here
             onPressed: () {
               Navigator.of(context).pop(); // Action to go back
@@ -54,6 +55,7 @@ class _AppbarCustomState extends State<AppbarCustom> {
           title: Container(
             // color: Colors.amber,
             child: Row(children: [
+              SizedBox(width: screenWidth / 6),
               Icon(
                 widget.icon,
                 size: screenWidth / 15,
@@ -63,7 +65,7 @@ class _AppbarCustomState extends State<AppbarCustom> {
           ),
           centerTitle: true,
           foregroundColor: Colors.white,
-          titleTextStyle: Styles.headerWhite24(context),
+          titleTextStyle: Styles.headerWhite32(context),
           backgroundColor: GobalStyles.primaryColor,
         ),
       ),

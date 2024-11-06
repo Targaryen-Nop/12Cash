@@ -8,6 +8,7 @@ import 'package:_12sale_app/core/styles/gobalStyle.dart';
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 
 class DetailScreen extends StatefulWidget {
   final String customerNo;
@@ -114,7 +115,7 @@ class _DetailScreenState extends State<DetailScreen> {
               _buildCustomButton(
                 context,
                 icon: Icons.transfer_within_a_station_sharp,
-                label: 'คืนสินค้า',
+                label: _jsonString?['credit_note_button'] ?? 'CN',
                 color: const Color.fromARGB(255, 234, 175, 0),
                 onPressed: () {
                   Navigator.push(
@@ -139,18 +140,17 @@ class _DetailScreenState extends State<DetailScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("รหัสร้าน ${widget.customerNo}",
-                  style: Styles.headerBlack24(context)),
-              Text("ร้าน ${widget.customerName}",
-                  style: Styles.headerBlack24(context)),
+              Text("xxxxxxxxxx xxxxx", style: Styles.headerBlack24(context)),
+              Text("xxxxxxxxxx xxxxx", style: Styles.headerBlack24(context)),
+              // Text(
+              //     "ออเดอร์ ${widget.day} เดือน ${DateFormat('MMMM', 'th').format(DateTime.now())} ${DateTime.now().year + 543}",
+              //     style: Styles.headerBlack24(context)),
+              // Text("ยอดรวม 2000.00 บาท", style: Styles.headerBlack24(context)),
               const SizedBox(height: 10),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: SizedBox(
-                  height: screenWidth,
-                  child: ShopRouteTable(
-                    day: widget.day,
-                  ),
+              SizedBox(
+                height: screenWidth,
+                child: ShopRouteTable(
+                  day: widget.day,
                 ),
               ),
             ],

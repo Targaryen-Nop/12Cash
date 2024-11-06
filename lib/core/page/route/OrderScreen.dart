@@ -5,8 +5,10 @@ import 'package:_12sale_app/core/components/button/CartButton.dart';
 import 'package:_12sale_app/core/components/table/OrderTable.dart';
 import 'package:_12sale_app/core/page/route/ShoppingCartScreen.dart';
 import 'package:_12sale_app/core/styles/style.dart';
+import 'package:_12sale_app/data/models/Order.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Orderscreen extends StatefulWidget {
   final String customerNo;
@@ -27,11 +29,14 @@ class _OrderscreenState extends State<Orderscreen> {
   Map<String, dynamic>? _jsonString;
   String dropdownValue = 'แบรนด์'; // Default value
   int cartItemCount = 1;
+
+  List<Order> _orders = [];
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     _loadJson();
+    _loadOrdersFromStorage();
   }
 
   Future<void> _loadJson() async {
@@ -39,6 +44,20 @@ class _OrderscreenState extends State<Orderscreen> {
     setState(() {
       _jsonString = jsonDecode(jsonString)['route']["order_screen"];
     });
+  }
+
+  Future<void> _loadOrdersFromStorage() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    // Get the JSON string list from SharedPreferences
+    List<String>? jsonOrders = prefs.getStringList('orders');
+    if (jsonOrders != null) {
+      setState(() {
+        // Decode each JSON string and convert it to an Order object
+        _orders = jsonOrders
+            .map((jsonOrder) => Order.fromJson(jsonDecode(jsonOrder)))
+            .toList();
+      });
+    }
   }
 
   @override
@@ -267,7 +286,7 @@ class _OrderscreenState extends State<Orderscreen> {
         ),
       ),
       floatingActionButton: Cartbutton(
-        count: "4",
+        count: "${_orders.length}",
         screen: ShoppingCartScreen(
             customerNo: widget.customerNo,
             customerName: widget.customerName,

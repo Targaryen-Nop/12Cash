@@ -108,7 +108,7 @@ class _OrderTableState extends State<OrderTable> {
                     _buildDataRow(
                         '1011447875',
                         'ผงปรุงรสไก่ ฟ้าไทย 75g x10x8',
-                        '12',
+                        '500',
                         GobalStyles.paddingBackgroundColor,
                         Colors.blue,
                         4),
@@ -129,19 +129,35 @@ class _OrderTableState extends State<OrderTable> {
     );
   }
 
-  Widget _buildDataRow(String itemCode, String itemName, String price,
+  Widget _buildDataRow(String itemCode, String itemName, String qty,
       Color? bgColor, Color? textColor, int index) {
     // Alternate row background color
     Color rowBgColor =
         (index % 2 == 0) ? Colors.white : GobalStyles.backgroundTableColor;
+    // Color? badgeColor = int.parse(qty) >= 500
+    //     ? Styles.successBackgroundColor
+    //     : int.parse(qty) >= 100
+    //         ? Styles.warningBackgroundColor
+    //         : Styles.failBackgroundColor;
 
+    Color? badgeColor = int.parse(qty) >= 500
+        ? Colors.green[200]
+        : int.parse(qty) >= 100
+            ? Colors.orange[200]
+            : Colors.red[200];
+
+    // Color? badgeTextColor = int.parse(qty) >= 500
+    //     ? Styles.successTextColor
+    //     : int.parse(qty) >= 100
+    //         ? Styles.warningTextColor
+    //         : Styles.failTextColor;
     return InkWell(
       onTap: () {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => OrderDetail(
-                itemCode: itemCode, itemName: itemName, price: price),
+            builder: (context) =>
+                OrderDetail(itemCode: itemCode, itemName: itemName, price: qty),
           ),
         );
       },
@@ -156,8 +172,8 @@ class _OrderTableState extends State<OrderTable> {
                 child: _buildTableCell(
                     itemCode)), // Use Expanded to distribute space equally
             Expanded(flex: 3, child: _buildTableCell(itemName)),
-            Expanded(child: _buildTableCell(price)),
-            _buildStatusCell(price, bgColor, textColor, 50),
+            Expanded(child: _buildBadgeCell(qty, badgeColor)),
+            _buildStatusCell(qty, bgColor, textColor, 50),
           ],
         ),
       ),
@@ -165,7 +181,7 @@ class _OrderTableState extends State<OrderTable> {
   }
 
   Widget _buildStatusCell(
-      String price, Color? bgColor, Color? textColor, double? width) {
+      String qty, Color? bgColor, Color? textColor, double? width) {
     return Container(
       width: width,
       alignment: Alignment.center,
@@ -181,6 +197,23 @@ class _OrderTableState extends State<OrderTable> {
         alignment: Alignment.center,
         child: const Icon(Icons.add, color: Colors.white, size: 40),
       ),
+    );
+  }
+
+  Widget _buildBadgeCell(
+    String text,
+    Color? bgColor,
+    // Color? textColor,
+  ) {
+    return Container(
+      decoration: BoxDecoration(
+        color: bgColor,
+        borderRadius:
+            BorderRadius.circular(5), // Rounded corners for the inner container
+      ),
+      alignment: Alignment.center,
+      padding: const EdgeInsets.all(8),
+      child: Text(text, style: Styles.black18(context)),
     );
   }
 
