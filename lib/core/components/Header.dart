@@ -42,45 +42,56 @@ class Header extends StatelessWidget {
     // final isPortrait =
     //     MediaQuery.of(context).orientation == Orientation.portrait;
     // print(isPortrait);
-    return Container(
-      color: GobalStyles.primaryColor,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          // SizedBox(height: screenWidth / 50),
-          Flexible(
-            flex: 1,
-            child: Container(
-              margin: EdgeInsets.only(top: 20),
-              padding: const EdgeInsets.symmetric(horizontal: 25),
-              // color: Colors.amber,
-              child: leading2,
-            ),
+    return LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints viewportConstraints) {
+      return SingleChildScrollView(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            minHeight: viewportConstraints.maxHeight,
           ),
-          SizedBox(height: screenWidth / 25),
-          Flexible(
-            flex: 4,
-            fit: FlexFit.loose,
+          child: IntrinsicHeight(
             child: Container(
-              decoration: BoxDecoration(
-                boxShadow: const [
-                  BoxShadow(
-                    color: Colors.black26, // Soft black color for shadow
-                    offset: Offset(0, 5), // Slight downward shadow
-                    blurRadius: 100, // Soften the shadow
-                    spreadRadius: 10, // How far the shadow extends
+              color: GobalStyles.primaryColor,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  SizedBox(height: screenWidth / 20),
+                  Container(
+                    height: screenWidth / 4,
+                    margin: EdgeInsets.only(top: 20),
+                    padding: const EdgeInsets.symmetric(horizontal: 25),
+                    // color: Colors.amber,
+                    child: leading2,
+                  ),
+                  SizedBox(height: screenWidth / 25),
+                  Flexible(
+                    flex: 4,
+                    fit: FlexFit.loose,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        boxShadow: const [
+                          BoxShadow(
+                            color:
+                                Colors.black26, // Soft black color for shadow
+                            offset: Offset(0, 5), // Slight downward shadow
+                            blurRadius: 100, // Soften the shadow
+                            spreadRadius: 10, // How far the shadow extends
+                          ),
+                        ],
+                        color: Colors.grey[100],
+                        borderRadius: const BorderRadius.vertical(
+                            top: Radius.circular(46)),
+                      ),
+                      child: leading!,
+                    ),
                   ),
                 ],
-                color: Colors.grey[100],
-                borderRadius:
-                    const BorderRadius.vertical(top: Radius.circular(46)),
               ),
-              child: leading!,
             ),
           ),
-        ],
-      ),
-    );
+        ),
+      );
+    });
   }
 }

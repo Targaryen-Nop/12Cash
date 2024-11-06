@@ -21,6 +21,7 @@ class AppbarCustom extends StatefulWidget {
 class _AppbarCustomState extends State<AppbarCustom> {
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
     return Container(
       decoration: BoxDecoration(
         boxShadow: [
@@ -35,33 +36,34 @@ class _AppbarCustomState extends State<AppbarCustom> {
       ),
       child: ClipRRect(
         borderRadius: const BorderRadius.vertical(
-          bottom: Radius.circular(50),
+          // top: Radius.circular(180),
+          bottom: Radius.circular(15),
           // top: Radius.circular(50) // Radius at the bottom of the AppBar
         ),
         child: AppBar(
-          leading: Padding(
-            padding: const EdgeInsets.only(left: 15),
-            child: IconButton(
-              icon: const Icon(
-                Icons.arrow_back,
-                size: 50,
-                weight: 10,
-              ), // Set the custom size here
-              onPressed: () {
-                Navigator.of(context).pop(); // Action to go back
-              },
-            ),
+          leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back,
+              size: screenWidth / 10,
+              weight: screenWidth,
+            ), // Set the custom size here
+            onPressed: () {
+              Navigator.of(context).pop(); // Action to go back
+            },
           ),
-          title: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-            Icon(
-              widget.icon,
-              size: 50,
-            ),
-            Text(widget.title),
-          ]),
+          title: Container(
+            // color: Colors.amber,
+            child: Row(children: [
+              Icon(
+                widget.icon,
+                size: screenWidth / 15,
+              ),
+              Text(widget.title),
+            ]),
+          ),
           centerTitle: true,
           foregroundColor: Colors.white,
-          titleTextStyle: Styles.headerWhite32(context),
+          titleTextStyle: Styles.headerWhite24(context),
           backgroundColor: GobalStyles.primaryColor,
         ),
       ),

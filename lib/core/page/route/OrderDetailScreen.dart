@@ -107,27 +107,93 @@ class _OrderDetailState extends State<OrderDetail> {
             const Spacer(),
 
             // Total Price and Quantity Control
-            Container(
-              margin: const EdgeInsets.all(8.0),
-              padding: const EdgeInsets.all(16.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'รวมราคา ${totalPrice.toStringAsFixed(2)} บาท',
-                    style: GobalStyles.textbBlack3,
-                  ),
-                  Row(
+            // Container(
+            //   margin: const EdgeInsets.all(8.0),
+            //   padding: const EdgeInsets.all(16.0),
+            //   child: Row(
+            //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //     children: [
+            //       Text(
+            //         'รวมราคา ${totalPrice.toStringAsFixed(2)} บาท',
+            //         style: Styles.black18(context),
+            //       ),
+            //       Row(
+            //         children: [
+            //           IconButton(
+            //             onPressed: () {
+            //               setState(() {
+            //                 count++;
+            //                 totalPrice = price * count * unit;
+            //               });
+            //             },
+            //             icon: const Icon(Icons.add, color: Colors.black),
+            //             iconSize: 40,
+            //           ),
+            //           Container(
+            //             decoration: BoxDecoration(
+            //               color: Colors.white,
+            //               border: Border.all(
+            //                 color: Colors.grey,
+            //                 width: 2,
+            //               ),
+            //             ),
+            //             width: 100,
+            //             alignment: Alignment.center,
+            //             child: Text(
+            //               '$count',
+            //               style: Styles.black18(context),
+            //             ),
+            //           ),
+            //           IconButton(
+            //             onPressed: () {
+            //               setState(() {
+            //                 if (count > 1) {
+            //                   count--;
+            //                   totalPrice = price * count * unit;
+            //                 }
+            //               });
+            //             },
+            //             icon: const Icon(Icons.remove, color: Colors.black),
+            //             iconSize: 40,
+            //           ),
+            //         ],
+            //       ),
+            //     ],
+            //   ),
+            // ),
+
+            // Bottom Add Button
+            Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
                     children: [
-                      IconButton(
-                        onPressed: () {
-                          setState(() {
-                            count++;
-                            totalPrice = price * count * unit;
-                          });
-                        },
-                        icon: const Icon(Icons.add, color: Colors.black),
-                        iconSize: 40,
+                      GestureDetector(
+                        onTap: () => setState(() {
+                          if (count > 0) {
+                            setState(() {
+                              count--;
+                              totalPrice = price * count * unit;
+                            });
+                          }
+                        }),
+                        child: Container(
+                          alignment: Alignment.center,
+                          child: Container(
+                            width: screenWidth / 15,
+                            margin: const EdgeInsets.all(8.0),
+                            decoration: BoxDecoration(
+                              color: Colors.grey,
+                              borderRadius: BorderRadius.circular(180),
+                            ),
+                            child: Icon(
+                              Icons.remove,
+                              color: Colors.white,
+                              size: screenWidth / 15,
+                            ),
+                          ),
+                        ),
                       ),
                       Container(
                         decoration: BoxDecoration(
@@ -137,49 +203,70 @@ class _OrderDetailState extends State<OrderDetail> {
                             width: 2,
                           ),
                         ),
-                        width: 100,
+                        width: screenWidth / 8,
                         alignment: Alignment.center,
                         child: Text(
                           '$count',
-                          style: GobalStyles.textbBlack3,
+                          style: Styles.black18(context),
                         ),
                       ),
-                      IconButton(
-                        onPressed: () {
+                      GestureDetector(
+                        onTap: () => setState(() {
                           setState(() {
-                            if (count > 1) {
-                              count--;
-                              totalPrice = price * count * unit;
-                            }
+                            count++;
+                            totalPrice = price * count * unit;
                           });
-                        },
-                        icon: const Icon(Icons.remove, color: Colors.black),
-                        iconSize: 40,
+                        }),
+                        child: Container(
+                          alignment: Alignment.center,
+                          child: Container(
+                            width: screenWidth / 15,
+                            margin: const EdgeInsets.all(8.0),
+                            decoration: BoxDecoration(
+                              color: Colors.grey,
+                              borderRadius: BorderRadius.circular(180),
+                            ),
+                            child: Icon(
+                              Icons.add,
+                              color: Colors.white,
+                              size: screenWidth / 15,
+                            ),
+                          ),
+                        ),
                       ),
                     ],
                   ),
-                ],
-              ),
-            ),
-
-            // Bottom Add Button
-            Container(
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: Colors.grey[800],
-                borderRadius: BorderRadius.circular(16), // Rounded corners
-              ),
-              margin: const EdgeInsets.all(8.0),
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: TextButton(
-                onPressed: () {
-                  // Action for the add button
-                },
-                child: Text(
-                  "เพิ่ม",
-                  style: Styles.white18(context),
                 ),
-              ),
+                Expanded(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Styles.successButtonColor,
+                      borderRadius:
+                          BorderRadius.circular(16), // Rounded corners
+                    ),
+                    // margin: const EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: TextButton(
+                      onPressed: () {
+                        // Action for the add button
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "เพิ่ม",
+                            style: Styles.headerWhite24(context),
+                          ),
+                          Text(
+                            '${totalPrice.toStringAsFixed(2)} บาท',
+                            style: Styles.headerWhite24(context),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ],
         ),

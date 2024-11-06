@@ -245,29 +245,23 @@ class _OrderscreenState extends State<Orderscreen> {
                 ],
               ),
               SizedBox(height: screenWidth / 80),
-              Align(
-                alignment: Alignment.center,
-                child: Text(
-                  "${_jsonString?['item_selected'] ?? 'Item Selected'}",
-                  style: Styles.headerBlack24(context),
-                ),
-              ),
+              // Align(
+              //   alignment: Alignment.center,
+              //   child: Text(
+              //     "${_jsonString?['item_selected'] ?? 'Item Selected'}",
+              //     style: Styles.headerBlack24(context),
+              //   ),
+              // ),
               SizedBox(height: screenWidth / 80),
-              Container(
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: const OrderTable(),
-              ),
+              const OrderTable(),
               SizedBox(height: screenWidth / 80),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  "${_jsonString?['amount'] ?? 'Amount'} 38000.00",
-                  style: Styles.headerBlack24(context),
-                ),
-              ),
+              // Align(
+              //   alignment: Alignment.centerLeft,
+              //   child: Text(
+              //     "${_jsonString?['amount'] ?? 'Amount'} 38000.00",
+              //     style: Styles.headerBlack24(context),
+              //   ),
+              // ),
             ],
           ),
         ),

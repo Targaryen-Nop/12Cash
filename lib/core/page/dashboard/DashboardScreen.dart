@@ -70,6 +70,8 @@ class _DashboardscreenState extends State<Dashboardscreen> {
         child: Column(
           children: [
             Container(height: 500, width: 400, child: LineChartSample()),
+            Container(height: 500, width: 400, child: LineChartSample()),
+            Container(height: 500, width: 400, child: LineChartSample()),
             // Container(height: 500, width: 300, child: LineChartSample())
             // CameraButtonWidget()
             // ShippingDropdownSearch(),

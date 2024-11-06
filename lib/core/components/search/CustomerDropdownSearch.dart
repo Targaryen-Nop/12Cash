@@ -1,22 +1,24 @@
 import 'dart:convert';
 
+import 'package:_12sale_app/core/styles/style.dart';
 import 'package:_12sale_app/data/models/Customer.dart';
 import 'package:_12sale_app/core/styles/gobalStyle.dart';
 import 'package:_12sale_app/data/repositories/apiService.dart';
-import 'package:dio/dio.dart';
+
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+
+import 'package:path/path.dart';
 
 class CustomerDropdownSearch extends StatefulWidget {
   // final List<CustomerModel> customerModel;
   // final VoidCallback onPressed;
 
   const CustomerDropdownSearch({
-    Key? key,
+    super.key,
 
     // required this.onPressed,
-  }) : super(key: key);
+  });
 
   @override
   State<CustomerDropdownSearch> createState() => _CustomerDropdownSearchState();
@@ -27,72 +29,69 @@ class _CustomerDropdownSearchState extends State<CustomerDropdownSearch> {
   List<CustomerModel> customerList = [];
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
     return DropdownSearch<CustomerModel>(
-      items: customerList,
+      // showSearchBox: true,
 
-      dropdownButtonProps: const DropdownButtonProps(
+      // mode: Mode.BOTTOM_SHEET,
+      asyncItems: (String filter) =>
+          getCustomers(), // Filters data as user types
+      dropdownButtonProps: DropdownButtonProps(
         icon: Padding(
-          padding: EdgeInsets.only(right: 2.0),
+          padding: const EdgeInsets.only(right: 2.0),
           child: Icon(
             Icons.search,
-            size: 20,
+            size: screenWidth / 20,
             color: Colors.black54,
           ),
         ),
       ),
-      dropdownDecoratorProps: const DropDownDecoratorProps(
+      dropdownDecoratorProps: DropDownDecoratorProps(
         dropdownSearchDecoration: InputDecoration(
-          // labelText: "Customer",
-          hintText: "Select Customer",
-          labelStyle: const TextStyle(
-            fontSize: 20, // Adjust the label font size
-            color: Colors.black, // Set the color of the label
-            fontWeight: FontWeight.bold, // Optional: Change font weight
-          ),
-          floatingLabelBehavior: FloatingLabelBehavior
-              .always, // Always show the label above the dropdown
+          hintText: "ค้นหาร้านค้า",
+          hintStyle: Styles.grey18(context),
+          labelStyle: Styles.black18(context),
+          floatingLabelBehavior: FloatingLabelBehavior.always,
           filled: true,
-          fillColor:
-              Colors.white, // Optional: Set background color for the dropdown
+          fillColor: Colors.white,
           border: const OutlineInputBorder(
-            borderRadius: BorderRadius.all(
-                Radius.circular(8)), // Customize the border radius
+            borderRadius: BorderRadius.all(Radius.circular(8)),
             borderSide: BorderSide(
-              color: Color.fromARGB(255, 100, 100, 100), // Border color
-              width: 1, // Border width
+              color: Color.fromARGB(255, 100, 100, 100),
+              width: 1,
             ),
           ),
           enabledBorder: const OutlineInputBorder(
-            borderRadius: BorderRadius.all(
-                Radius.circular(8)), // Border radius when enabled
+            borderRadius: BorderRadius.all(Radius.circular(8)),
             borderSide: BorderSide(
-              color: Color.fromARGB(
-                  255, 100, 100, 100), // Border color for enabled state
+              color: Color.fromARGB(255, 100, 100, 100),
               width: 1,
             ),
           ),
           focusedBorder: const OutlineInputBorder(
-            borderRadius: BorderRadius.all(
-                Radius.circular(8)), // Border radius when focused
+            borderRadius: BorderRadius.all(Radius.circular(8)),
             borderSide: BorderSide(
-              color: Colors.indigo, // Border color for focused state
+              color: Colors.indigo,
               width: 1.5,
             ),
           ),
           contentPadding:
-              const EdgeInsets.symmetric(vertical: 10, horizontal: 20), //
+              const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
         ),
       ),
       onChanged: (CustomerModel? data) => setState(() {
-        // Users.customer = data!.name.toString();
         _selectedCustomer = data;
       }),
       selectedItem: _selectedCustomer,
-      asyncItems: (filter) => getCustomers(),
-      // compareFn: (i, s) => i.isEqual(s),
-      popupProps: PopupPropsMultiSelection.menu(
-        showSearchBox: true,
-        itemBuilder: _customCustomer,
+      // popupProps: const PopupProps.menu(
+      //   showSearchBox: false,
+      //   fit: FlexFit.loose,
+      //   constraints: BoxConstraints(),
+      // ),
+      popupProps: PopupProps.menu(
+        showSearchBox: true, // Disable the popup search box
+        itemBuilder: _customCustomer, // Custom item builder for dropdown items
+        // constraints: const BoxConstraints(),
       ),
     );
   }

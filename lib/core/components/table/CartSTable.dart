@@ -35,12 +35,10 @@ class _CartTableState extends State<CartTable> {
     return Center(
       child: Container(
         height: screenWidth / 1.4,
-        margin: EdgeInsets.all(
-            screenWidth / 50), // Adds space around the entire table
+        // Adds space around the entire table
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(
               16), // Rounded corners for the outer container
-          border: Border.all(color: Colors.grey, width: 1), // Outer border
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

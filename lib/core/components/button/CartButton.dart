@@ -1,4 +1,5 @@
 import 'package:_12sale_app/core/styles/gobalStyle.dart';
+import 'package:_12sale_app/core/styles/style.dart';
 import 'package:flutter/material.dart';
 
 class Cartbutton extends StatefulWidget {
@@ -21,8 +22,8 @@ class _CartbuttonState extends State<Cartbutton> {
           alignment: Alignment(1.5, -1.5),
           children: [
             SizedBox(
-              width: screenWidth / 8, // Set the width of the button
-              height: screenWidth / 8, // Set the height of the button
+              width: screenWidth / 6.5, // Set the width of the button
+              height: screenWidth / 6.5, // Set the height of the button
               child: FloatingActionButton(
                 // Your actual Fab
                 onPressed: () {
@@ -35,17 +36,16 @@ class _CartbuttonState extends State<Cartbutton> {
                 },
                 backgroundColor: GobalStyles.primaryColor,
                 shape: CircleBorder(),
-                child: const Icon(
+                child: Icon(
                   Icons.shopping_cart,
                   color: Colors.white,
-                  size: 50,
+                  size: screenWidth / 12,
                 ),
               ),
             ),
             Container(
-              width: screenWidth / 17, // Set the width of the button
-              height: screenWidth / 17,
-              padding: EdgeInsets.all(8),
+              width: screenWidth / 14, // Set the width of the button
+              height: screenWidth / 14,
               constraints: BoxConstraints(minHeight: 32, minWidth: 32),
               decoration: BoxDecoration(
                 // This controls the shadow
@@ -61,8 +61,7 @@ class _CartbuttonState extends State<Cartbutton> {
               // This is your Badge
               child: Center(
                 // Here you can put whatever content you want inside your Badge
-                child: Text(widget.count,
-                    style: const TextStyle(color: Colors.white, fontSize: 18)),
+                child: Text(widget.count, style: Styles.white18(context)),
               ),
             ),
           ],

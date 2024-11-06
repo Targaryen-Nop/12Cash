@@ -37,14 +37,27 @@ class _ShopRouteTableState extends State<ShopRouteTable> {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
+
     return Center(
       child: Container(
-        margin: EdgeInsets.all(
-            screenWidth / 50), // Adds space around the entire table
+        // height: screenHeight / 1.5,
+        padding: const EdgeInsets.only(bottom: 10),
+        // Adds space around the entire table
         decoration: BoxDecoration(
+          color: Colors.white, // Set background color if needed
           borderRadius: BorderRadius.circular(
               16), // Rounded corners for the outer container
-          border: Border.all(color: Colors.grey, width: 1), // Outer border
+
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black
+                  .withOpacity(0.2), // Shadow color with transparency
+              spreadRadius: 2, // Spread of the shadow
+              blurRadius: 8, // Blur radius of the shadow
+              offset:
+                  Offset(0, 4), // Offset of the shadow (horizontal, vertical)
+            ),
+          ],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -147,19 +160,21 @@ class _ShopRouteTableState extends State<ShopRouteTable> {
 
             Expanded(
                 flex: 1,
-                child: _buildStatusCell(status, bgColor,
-                    textColor)), // Custom function for "สถานะ" column
+                child: _buildStatusCell(status, bgColor, textColor,
+                    context)), // Custom function for "สถานะ" column
           ],
         ),
       ),
     );
   }
 
-  Widget _buildStatusCell(String status, Color? bgColor, Color? textColor) {
+  Widget _buildStatusCell(
+      String status, Color? bgColor, Color? textColor, BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
     return Container(
       alignment: Alignment.center,
       child: Container(
-        width: 100, // Optional inner width for the status cell
+        width: screenWidth / 5, // Optional inner width for the status cell
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
         decoration: BoxDecoration(
           color: bgColor,
@@ -169,7 +184,8 @@ class _ShopRouteTableState extends State<ShopRouteTable> {
         alignment: Alignment.center,
         child: Text(
           status,
-          style: GoogleFonts.kanit(color: textColor, fontSize: 18),
+          style:
+              GoogleFonts.kanit(color: textColor, fontSize: screenWidth / 35),
         ),
       ),
     );

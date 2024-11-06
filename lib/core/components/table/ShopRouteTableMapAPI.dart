@@ -93,11 +93,25 @@ class _ShopRouteTableState extends State<ShopRouteTable> {
       child: isLoading
           ? const CircularProgressIndicator() // Show loader while fetching data
           : Container(
+              padding: const EdgeInsets.only(bottom: 10),
               margin: EdgeInsets.all(
                   screenWidth / 50), // Adds space around the table
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: Colors.grey, width: 1),
+                color: Colors.white, // Set background color if needed
+                borderRadius: BorderRadius.circular(
+                    16), // Rounded corners for the outer container
+                border:
+                    Border.all(color: Colors.grey, width: 1), // Outer border
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black
+                        .withOpacity(0.2), // Shadow color with transparency
+                    spreadRadius: 2, // Spread of the shadow
+                    blurRadius: 8, // Blur radius of the shadow
+                    offset: Offset(
+                        0, 4), // Offset of the shadow (horizontal, vertical)
+                  ),
+                ],
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

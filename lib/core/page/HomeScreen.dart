@@ -75,9 +75,7 @@ class _HomeScreenState extends State<HomeScreen> {
     double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       body: Header(
-        leading: Center(
-          child: _widgetOptions.elementAt(_selectedIndex),
-        ),
+        leading: Center(child: _widgetOptions.elementAt(_selectedIndex)),
         leading2: _widgetOptionsHeader.elementAt(_selectedIndex),
       ),
       bottomNavigationBar: Container(

@@ -84,10 +84,19 @@ class _CameraButtonWidgetState extends State<CameraButtonWidget> {
             color:
                 Colors.grey[300], // Background color before image is captured
             child: imagePath == null
-                ? const Icon(
-                    Icons.camera_alt_outlined,
-                    size: 50,
-                    color: Colors.black54,
+                ? Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(
+                        Icons.camera_alt_outlined,
+                        size: 50,
+                        color: Colors.black54,
+                      ),
+                      Text(
+                        "กดเพื่อถ่ายรูป",
+                        style: Styles.black24(context),
+                      )
+                    ],
                   )
                 : Image.file(
                     height: 200,
@@ -97,29 +106,6 @@ class _CameraButtonWidgetState extends State<CameraButtonWidget> {
                   ),
           ),
           const SizedBox(height: 8),
-          ElevatedButton(
-            onPressed: () =>
-                _openCamera(context), // Open camera when button is pressed
-            style: ElevatedButton.styleFrom(
-                backgroundColor: GobalStyles.successButtonColor,
-                padding: const EdgeInsets.symmetric(vertical: 12),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                )),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  child: const Icon(
-                    Icons.camera_alt_outlined,
-                    color: Colors.white,
-                    size: 25,
-                  ),
-                ),
-                Text(' กล้อง', style: Styles.white18(context)),
-              ],
-            ),
-          ),
         ],
       ),
     );

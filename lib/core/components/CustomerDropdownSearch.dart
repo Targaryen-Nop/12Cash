@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:_12sale_app/core/styles/style.dart';
 import 'package:_12sale_app/data/models/Customer.dart';
 import 'package:_12sale_app/core/styles/gobalStyle.dart';
 import 'package:dio/dio.dart';
@@ -27,7 +28,6 @@ class _CustomerDropdownSearchState extends State<CustomerDropdownSearch> {
   Widget build(BuildContext context) {
     return DropdownSearch<CustomerModel>(
       items: customerList,
-
       dropdownButtonProps: const DropdownButtonProps(
         icon: Padding(
           padding: EdgeInsets.only(right: 2.0),
@@ -38,15 +38,14 @@ class _CustomerDropdownSearchState extends State<CustomerDropdownSearch> {
           ),
         ),
       ),
-      dropdownDecoratorProps: const DropDownDecoratorProps(
+      dropdownDecoratorProps: DropDownDecoratorProps(
         dropdownSearchDecoration: InputDecoration(
           // labelText: "Customer",
-          hintText: "Select Customer",
-          labelStyle: const TextStyle(
-            fontSize: 20, // Adjust the label font size
-            color: Colors.black, // Set the color of the label
-            fontWeight: FontWeight.bold, // Optional: Change font weight
-          ),
+          labelText: "ร้านค้า",
+          suffixText: '10',
+          hintText: "ค้นหาร้านค้า",
+          hintStyle: Styles.grey18(context),
+          labelStyle: Styles.black18(context),
           floatingLabelBehavior: FloatingLabelBehavior
               .always, // Always show the label above the dropdown
           filled: true,
@@ -88,8 +87,39 @@ class _CustomerDropdownSearchState extends State<CustomerDropdownSearch> {
       selectedItem: _selectedCustomer,
       asyncItems: (filter) => getCustomers(),
       // compareFn: (i, s) => i.isEqual(s),
-      popupProps: PopupPropsMultiSelection.menu(
+      popupProps: PopupPropsMultiSelection.dialog(
         showSearchBox: true,
+        searchFieldProps: TextFieldProps(
+          style: Styles.black18(context), // Set text color to black
+          decoration: InputDecoration(
+            hintText: "ค้นหาร้านค้า",
+            hintStyle: Styles.grey18(context), // Optional: Set hint color
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+          ),
+        ),
+        // title: Container(
+        //   decoration: BoxDecoration(color: Colors.deepPurple),
+        //   alignment: Alignment.center,
+        //   padding: EdgeInsets.symmetric(vertical: 16),
+        //   child: Text(
+        //     'Numbers 1..30',
+        //     style: TextStyle(
+        //         fontSize: 21,
+        //         fontWeight: FontWeight.bold,
+        //         color: Colors.white70),
+        //   ),
+        // ),
+        // searchFieldProps: TextFieldProps(
+        //     decoration: InputDecoration(
+        //         // border: InputBorder.none,
+        //         labelText: 'daw',
+        //         hintText: "Search Customer",
+        //         hintStyle: Styles.black18(context),
+        //         fillColor: Colors.white,
+        //         filled: true,
+        //         contentPadding: const EdgeInsets.symmetric())),
         itemBuilder: _customCustomer,
       ),
     );
@@ -145,7 +175,7 @@ class _CustomerDropdownSearchState extends State<CustomerDropdownSearch> {
               : BoxDecoration(
                   border: Border.all(color: Theme.of(context).primaryColor),
                   borderRadius: BorderRadius.circular(5),
-                  color: Colors.white,
+                  color: Colors.black,
                 ),
           child: ListTile(
             selected: isSelected,

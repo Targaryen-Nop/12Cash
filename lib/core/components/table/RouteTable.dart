@@ -34,13 +34,23 @@ class _RouteTableState extends State<RouteTable> {
     double screenWidth = MediaQuery.of(context).size.width;
     return Center(
       child: Container(
-        height: screenWidth / 2.5,
-        margin: EdgeInsets.all(
-            screenWidth / 50), // Adds space around the entire table
+        // height: screenWidth / 2.5,
+        // Adds space around the entire table
         decoration: BoxDecoration(
+          color: Colors.white, // Set background color if needed
           borderRadius: BorderRadius.circular(
               16), // Rounded corners for the outer container
-          border: Border.all(color: Colors.grey, width: 1), // Outer border
+
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black
+                  .withOpacity(0.2), // Shadow color with transparency
+              spreadRadius: 2, // Spread of the shadow
+              blurRadius: 8, // Blur radius of the shadow
+              offset:
+                  Offset(0, 4), // Offset of the shadow (horizontal, vertical)
+            ),
+          ],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -132,19 +142,21 @@ class _RouteTableState extends State<RouteTable> {
             Expanded(child: _buildTableCell(route)),
             // Expanded(child: _buildTableCell(route)),
             Expanded(
-                child: _buildStatusCell(status, bgColor,
-                    textColor)), // Custom function for "สถานะ" column
+                child: _buildStatusCell(status, bgColor, textColor,
+                    context)), // Custom function for "สถานะ" column
           ],
         ),
       ),
     );
   }
 
-  Widget _buildStatusCell(String status, Color? bgColor, Color? textColor) {
+  Widget _buildStatusCell(
+      String status, Color? bgColor, Color? textColor, BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
     return Container(
       alignment: Alignment.center,
       child: Container(
-        width: 100, // Optional inner width for the status cell
+        width: screenWidth / 5, // Optional inner width for the status cell
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
         decoration: BoxDecoration(
           color: bgColor,
@@ -154,7 +166,8 @@ class _RouteTableState extends State<RouteTable> {
         alignment: Alignment.center,
         child: Text(
           status,
-          style: GoogleFonts.kanit(color: textColor, fontSize: 18),
+          style:
+              GoogleFonts.kanit(color: textColor, fontSize: screenWidth / 35),
         ),
       ),
     );

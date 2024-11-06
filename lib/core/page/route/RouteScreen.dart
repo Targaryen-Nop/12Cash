@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:_12sale_app/core/components/search/CustomerDropdownSearch.dart';
+import 'package:_12sale_app/core/components/search/TestDropdown.dart';
 import 'package:_12sale_app/core/components/table/RouteTable.dart';
 import 'package:_12sale_app/core/styles/gobalStyle.dart';
 import 'package:_12sale_app/core/styles/style.dart';
@@ -23,9 +24,11 @@ class _RoutescreenState extends State<Routescreen> {
         // SizedBox(
         //   height: screenWidth / 30,
         // ),
-        Container(
-            margin: EdgeInsets.all(screenWidth / 50),
-            child: const RouteTable()),
+        Expanded(
+          child: Container(
+              margin: EdgeInsets.all(screenWidth / 50),
+              child: const RouteTable()),
+        ),
       ],
     );
   }
@@ -125,13 +128,18 @@ class _RouteHeaderState extends State<RouteHeader> {
                           style: Styles.headerWhite24(context),
                         ),
                       ),
-                      const Flexible(
-                          fit: FlexFit.loose, child: CustomerDropdownSearch()),
                     ],
                   ),
                 ),
               ),
             ],
+          ),
+        ),
+        const Flexible(
+          fit: FlexFit.tight,
+          child: Padding(
+            padding: EdgeInsets.all(8.0),
+            child: CustomerDropdownSearch(),
           ),
         ),
       ],

@@ -29,6 +29,7 @@ class DetailScreen extends StatefulWidget {
 class _DetailScreenState extends State<DetailScreen> {
   Map<String, dynamic>? _jsonString;
   String? imagePath; // Path to store the captured image
+  String? selectedCause;
   @override
   void initState() {
     // TODO: implement initState
@@ -110,6 +111,23 @@ class _DetailScreenState extends State<DetailScreen> {
                   _showBottomCamera(context);
                 },
               ),
+              _buildCustomButton(
+                context,
+                icon: Icons.transfer_within_a_station_sharp,
+                label: 'คืนสินค้า',
+                color: const Color.fromARGB(255, 234, 175, 0),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => Orderscreen(
+                          customerNo: widget.customerNo,
+                          customerName: widget.customerName,
+                          status: widget.status),
+                    ),
+                  );
+                },
+              ),
             ],
           ),
         ),
@@ -128,13 +146,8 @@ class _DetailScreenState extends State<DetailScreen> {
               const SizedBox(height: 10),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Container(
+                child: SizedBox(
                   height: screenWidth,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: Colors.grey, width: 1),
-                  ),
                   child: ShopRouteTable(
                     day: widget.day,
                   ),
@@ -158,31 +171,35 @@ class _DetailScreenState extends State<DetailScreen> {
     return InkWell(
       onTap: onPressed,
       child: Container(
-        width: screenWidth / 7, // Fixed width for the button
-        height: screenWidth / 7, // Fixed height for the button
+        width: screenWidth / 6, // Fixed width for the button
+        height: screenWidth / 6, // Fixed height for the button
         // margin: EdgeInsets.all(2),
         decoration: BoxDecoration(
-          color: color,
-          borderRadius: BorderRadius.circular(16),
+          color: color, // Set background color if needed
+          borderRadius: BorderRadius.circular(
+              16), // Rounded corners for the outer container
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.2), // Shadow color
-              spreadRadius: 5, // How much the shadow spreads
-              blurRadius: 8, // The amount of blur for the shadow
-              offset: const Offset(0, 0), // Spread evenly in all directions
+              color: Colors.black
+                  .withOpacity(0.2), // Shadow color with transparency
+              spreadRadius: 2, // Spread of the shadow
+              blurRadius: 8, // Blur radius of the shadow
+              offset:
+                  Offset(0, 4), // Offset of the shadow (horizontal, vertical)
             ),
           ],
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            SizedBox(height: screenWidth / 40),
             Icon(
               icon,
               color: Colors.white,
-              size: 50,
+              size: screenWidth / 12,
               // weight: 25,
             ),
-            SizedBox(height: 8),
+            // SizedBox(height: 8),
             Text(
               label,
               style: Styles.white18(context),
@@ -222,8 +239,11 @@ class _DetailScreenState extends State<DetailScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('ระบุสาเหตุที่ร้านค้าไม่ซื้อ',
-                        style: Styles.headerBlack24(context)),
+                    Text(
+                      'ระบุสาเหตุที่ร้านค้าไม่ซื้อ',
+                      style: Styles.headerBlack32(context),
+                      textAlign: TextAlign.center,
+                    ),
                     IconButton(
                       icon: Icon(Icons.close),
                       onPressed: () {
@@ -236,11 +256,11 @@ class _DetailScreenState extends State<DetailScreen> {
                 // Store Information
                 Text(
                   'รหัสร้าน 10334587',
-                  style: Styles.headerBlack24(context),
+                  style: Styles.black24(context),
                 ),
                 Text(
                   'ร้าน เจริญพรค้าขาย',
-                  style: Styles.headerBlack24(context),
+                  style: Styles.black24(context),
                 ),
                 const SizedBox(height: 16),
 
@@ -255,7 +275,7 @@ class _DetailScreenState extends State<DetailScreen> {
                         borderSide:
                             BorderSide.none, // Remove border if not needed
                       ),
-                      contentPadding: const EdgeInsets.only(left: 250)),
+                      contentPadding: EdgeInsets.only(left: screenWidth / 2.5)),
                   style: Styles.headerWhite32(context),
 
                   value: 'อื่นๆ', // Default value
@@ -273,23 +293,28 @@ class _DetailScreenState extends State<DetailScreen> {
                       ),
                     );
                   }).toList(),
-                  onChanged: (String? newValue) {},
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      selectedCause = newValue;
+                    });
+                  },
                 ),
                 const SizedBox(height: 16),
-
+                selectedCause == 'อื่นๆ'
+                    ? TextField(
+                        maxLines: 5,
+                        decoration: InputDecoration(
+                          hintText: 'ใส่ข้อมูล',
+                          hintStyle: Styles.black18(context),
+                          filled: true,
+                          fillColor: Colors.white,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                      )
+                    : SizedBox(height: 0),
                 // Text input field
-                TextField(
-                  maxLines: 5,
-                  decoration: InputDecoration(
-                    hintText: 'ใส่ข้อมูล',
-                    hintStyle: Styles.black18(context),
-                    filled: true,
-                    fillColor: Colors.white,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                ),
 
                 SizedBox(height: 16),
 
@@ -323,7 +348,7 @@ class _DetailScreenState extends State<DetailScreen> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true, // Makes the bottom sheet full screen height
-      shape: RoundedRectangleBorder(
+      shape: const RoundedRectangleBorder(
         side: BorderSide(color: Colors.grey, width: 0.5),
         borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
       ),
@@ -348,12 +373,12 @@ class _DetailScreenState extends State<DetailScreen> {
                   // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     IconButton(
-                      icon: Icon(Icons.close),
+                      icon: const Icon(Icons.close),
                       onPressed: () {
                         Navigator.of(context).pop(); // Close bottom sheet
                       },
                     ),
-                    Text('จัดเก็บรูปภาพ', style: Styles.headerBlack24(context)),
+                    Text('จัดเก็บรูปภาพ', style: Styles.headerBlack32(context)),
                   ],
                 ),
                 const SizedBox(height: 8),

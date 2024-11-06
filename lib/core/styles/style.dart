@@ -17,7 +17,7 @@ class Styles {
   // ));
   static TextStyle headerBlack18(BuildContext context) => GoogleFonts.kanit(
         textStyle: TextStyle(
-          fontSize: getResponsiveFontSize(context, 24),
+          fontSize: getResponsiveFontSize(context, 18),
           fontWeight: FontWeight.bold,
           color: Colors.black,
         ),
@@ -30,7 +30,7 @@ class Styles {
   // ));
   static TextStyle black18(BuildContext context) => GoogleFonts.kanit(
         textStyle: TextStyle(
-          fontSize: getResponsiveFontSize(context, 24),
+          fontSize: getResponsiveFontSize(context, 18),
           fontWeight: FontWeight.normal,
           color: Colors.black,
         ),
