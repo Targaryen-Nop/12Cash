@@ -58,6 +58,7 @@ dependencies:
   charset_converter: ^2.2.1
   sprintf: ^7.0.0
   flutter_screenutil: ^5.9.3
+  timelines: ^0.1.0
 
 
 
@@ -88,6 +89,8 @@ flutter:
     - assets/images/logo12.png
     - lang/main-th.json
     - .env
+    - data/store.json
+    - data/all_store.json
    
 
   # An image asset can refer to one or more resolution-specific "variants", see

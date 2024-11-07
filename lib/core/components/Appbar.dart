@@ -11,7 +11,6 @@ class AppbarCustom extends StatefulWidget {
     super.key,
     required this.title,
     required this.icon,
-
     // required this.onPressed,
   });
 
@@ -54,8 +53,9 @@ class _AppbarCustomState extends State<AppbarCustom> {
           ),
           title: Container(
             // color: Colors.amber,
-            child: Row(children: [
-              SizedBox(width: screenWidth / 6),
+
+            child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+              // SizedBox(width: screenWidth / 6),
               Icon(
                 widget.icon,
                 size: screenWidth / 15,

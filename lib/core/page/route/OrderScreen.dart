@@ -25,12 +25,7 @@ class Orderscreen extends StatefulWidget {
   State<Orderscreen> createState() => _OrderscreenState();
 }
 
-class _OrderscreenState extends State<Orderscreen> {
-  Map<String, dynamic>? _jsonString;
-  String dropdownValue = 'แบรนด์'; // Default value
-  int cartItemCount = 1;
-
-  List<Order> _orders = [];
+class _OrderscreenState extends State<Orderscreen> with RouteAware {
   @override
   void initState() {
     // TODO: implement initState
@@ -38,6 +33,41 @@ class _OrderscreenState extends State<Orderscreen> {
     _loadJson();
     _loadOrdersFromStorage();
   }
+
+  // Regis
+  //ter the observer when the widget is inserted into the widget tree
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    routeObserver.subscribe(this, ModalRoute.of(context)!);
+  }
+
+  // Unregister the observer when the widget is removed from the widget tree
+  @override
+  void dispose() {
+    routeObserver.unsubscribe(this);
+    super.dispose();
+  }
+
+  // Called when this route is shown again after another route was popped off
+  @override
+  void didPopNext() {
+    print("Screen is visible again - reloading orders."); // Debugging print
+    _loadOrdersFromStorage(); // Reload orders when returning to this screen
+  }
+
+  @override
+  void didUpdateWidget(covariant Orderscreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _loadOrdersFromStorage(); // Reload data when widget is updated
+  }
+
+  Map<String, dynamic>? _jsonString;
+  String dropdownValue = 'แบรนด์'; // Default value
+  int cartItemCount = 1;
+  final RouteObserver<ModalRoute> routeObserver = RouteObserver<ModalRoute>();
+
+  List<Order> _orders = [];
 
   Future<void> _loadJson() async {
     String jsonString = await rootBundle.loadString('lang/main-th.json');
@@ -47,16 +77,20 @@ class _OrderscreenState extends State<Orderscreen> {
   }
 
   Future<void> _loadOrdersFromStorage() async {
+    print("Loading orders from storage..."); // Debugging print
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    // Get the JSON string list from SharedPreferences
     List<String>? jsonOrders = prefs.getStringList('orders');
+
     if (jsonOrders != null) {
       setState(() {
-        // Decode each JSON string and convert it to an Order object
         _orders = jsonOrders
             .map((jsonOrder) => Order.fromJson(jsonDecode(jsonOrder)))
             .toList();
+        cartItemCount = _orders.length;
       });
+      print("Orders loaded: ${_orders.length} items"); // Confirm data loading
+    } else {
+      print("No orders found in storage."); // If no data is found
     }
   }
 
@@ -272,7 +306,11 @@ class _OrderscreenState extends State<Orderscreen> {
               //   ),
               // ),
               SizedBox(height: screenWidth / 80),
-              const OrderTable(),
+              OrderTable(
+                customerNo: widget.customerNo,
+                customerName: widget.customerName,
+                status: widget.status,
+              ),
               SizedBox(height: screenWidth / 80),
               // Align(
               //   alignment: Alignment.centerLeft,
@@ -286,11 +324,12 @@ class _OrderscreenState extends State<Orderscreen> {
         ),
       ),
       floatingActionButton: Cartbutton(
-        count: "${_orders.length}",
+        count: "${cartItemCount}",
         screen: ShoppingCartScreen(
-            customerNo: widget.customerNo,
-            customerName: widget.customerName,
-            status: widget.status),
+          customerNo: widget.customerNo,
+          customerName: widget.customerName,
+          status: widget.status,
+        ),
       ),
     );
   }

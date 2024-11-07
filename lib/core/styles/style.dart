@@ -258,7 +258,7 @@ class Styles {
   static const Color paddingTextColor = Color(0xFF1E429F);
 
   static const Color warningBackgroundColor = Color(0xFFFFF3CD);
-  static const Color warningTextColor = Color(0xFF7A5200);
+  static const Color warningTextColor = Color(0xFFEDB900);
 
   static const Color accentColor = Colors.orange;
 

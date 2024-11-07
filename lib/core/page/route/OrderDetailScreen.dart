@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:_12sale_app/core/components/Appbar.dart';
 import 'package:_12sale_app/core/components/TossAnimation.dart';
+import 'package:_12sale_app/core/page/route/OrderScreen.dart';
 import 'package:_12sale_app/core/styles/gobalStyle.dart';
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:_12sale_app/data/models/Order.dart';
@@ -13,13 +14,18 @@ class OrderDetail extends StatefulWidget {
   final String itemCode;
   final String itemName;
   final String price;
+  String? customerNo;
+  String? customerName;
+  String? status;
 
-  const OrderDetail({
-    super.key,
-    required this.itemCode,
-    required this.itemName,
-    required this.price,
-  });
+  OrderDetail(
+      {super.key,
+      required this.itemCode,
+      required this.itemName,
+      required this.price,
+      this.customerNo,
+      this.customerName,
+      this.status});
 
   @override
   State<OrderDetail> createState() => _OrderDetailState();
@@ -49,7 +55,7 @@ class _OrderDetailState extends State<OrderDetail>
   // ----------------------------Animations-----------------------------
   int _cartItemCount = 0;
   bool _isAnimating2 = false;
-  late AnimationController _controller2;
+  // late AnimationController _controller2;
   late Animation<Offset> _positionAnimation;
   late Animation<double> _scaleAnimation;
   final GlobalKey _cartKey2 = GlobalKey();
@@ -67,53 +73,53 @@ class _OrderDetailState extends State<OrderDetail>
     );
     //-------------------------------------------------
 
-    _controller2 = AnimationController(
-      duration: Duration(milliseconds: 700),
-      vsync: this,
-    );
+    // _controller2 = AnimationController(
+    //   duration: Duration(milliseconds: 700),
+    //   vsync: this,
+    // );
 
-    _scaleAnimation = Tween<double>(begin: 1.0, end: 0.3).animate(
-      CurvedAnimation(parent: _controller2, curve: Curves.easeOut),
-    );
-    _controller2.addStatusListener((status) {
-      if (status == AnimationStatus.completed) {
-        setState(() {
-          _isAnimating2 = false;
-          _cartItemCount++;
-        });
-        _controller2.reset();
-      }
-    });
+    // _scaleAnimation = Tween<double>(begin: 1.0, end: 0.3).animate(
+    //   CurvedAnimation(parent: _controller2, curve: Curves.easeOut),
+    // );
+    // _controller2.addStatusListener((status) {
+    //   if (status == AnimationStatus.completed) {
+    //     setState(() {
+    //       _isAnimating2 = false;
+    //       _cartItemCount++;
+    //     });
+    //     _controller2.reset();
+    //   }
+    // });
 // ------------------------------------------------------
     _loadJson();
     _loadOrdersFromStorage();
   }
 
-  void _startAddToCartAnimationToss() {
-    final buttonPosition = _getWidgetPosition(_buttonKey);
-    final cartPosition = _getWidgetPosition(_cartKey);
+  // void _startAddToCartAnimationToss() {
+  //   final buttonPosition = _getWidgetPosition(_buttonKey);
+  //   final cartPosition = _getWidgetPosition(_cartKey);
 
-    if (buttonPosition != null && cartPosition != null) {
-      final dx = cartPosition.dx - buttonPosition.dx;
-      final dy = cartPosition.dy - buttonPosition.dy;
+  //   if (buttonPosition != null && cartPosition != null) {
+  //     final dx = cartPosition.dx - buttonPosition.dx;
+  //     final dy = cartPosition.dy - buttonPosition.dy;
 
-      setState(() {
-        _positionAnimation = Tween<Offset>(
-          begin: Offset.zero,
-          end: Offset(dx, dy),
-        ).animate(
-            CurvedAnimation(parent: _controller2, curve: Curves.easeInOut));
-        _isAnimating = true;
-      });
+  //     setState(() {
+  //       _positionAnimation = Tween<Offset>(
+  //         begin: Offset.zero,
+  //         end: Offset(dx, dy),
+  //       ).animate(
+  //           CurvedAnimation(parent: _controller2, curve: Curves.easeInOut));
+  //       _isAnimating = true;
+  //     });
 
-      _controller2.forward();
-    }
-  }
+  //     _controller2.forward();
+  //   }
+  // }
 
-  Offset? _getWidgetPositionToss(GlobalKey key) {
-    final renderBox = key.currentContext?.findRenderObject() as RenderBox?;
-    return renderBox?.localToGlobal(Offset.zero);
-  }
+  // Offset? _getWidgetPositionToss(GlobalKey key) {
+  //   final renderBox = key.currentContext?.findRenderObject() as RenderBox?;
+  //   return renderBox?.localToGlobal(Offset.zero);
+  // }
 
   // Function to add a new order
   void _addOrder() {
@@ -126,6 +132,7 @@ class _OrderDetailState extends State<OrderDetail>
         count: count,
         unit: unit,
         pricePerUnit: price,
+        qty: _orders.length + 1,
       );
       _orders.insert(0, newOrder); // Add order to the beginning of the list
       _listKey.currentState?.insertItem(0); // Trigger animation at index 0
@@ -240,7 +247,7 @@ class _OrderDetailState extends State<OrderDetail>
   @override
   void dispose() {
     _controller.dispose();
-    _controller2.dispose();
+    // _controller2.dispose();
     _animatedListController.dispose();
     _listViewController.dispose();
     super.dispose();
@@ -253,10 +260,67 @@ class _OrderDetailState extends State<OrderDetail>
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(70),
-        child: AppbarCustom(
-          title: " ${_jsonString?["title"] ?? 'Order Detail'}",
-          icon: Icons.inventory_2_outlined,
+        child: Container(
+          decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                color:
+                    Colors.black.withOpacity(0.2), // Shadow color with opacity
+                spreadRadius: 3, // Spread radius
+                blurRadius: 50, // Blur radius
+                offset: const Offset(0, 3),
+                // Changes position of the shadow (x, y)
+              ),
+            ],
+          ),
+          child: ClipRRect(
+            borderRadius: const BorderRadius.vertical(
+              // top: Radius.circular(180),
+              bottom: Radius.circular(15),
+              // top: Radius.circular(50) // Radius at the bottom of the AppBar
+            ),
+            child: AppBar(
+              leading: IconButton(
+                icon: Icon(
+                  Icons.arrow_back,
+                  size: screenWidth / 12,
+                  // weight: screenWidth,
+                ), // Set the custom size here
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => Orderscreen(
+                          customerNo: widget.customerNo ?? '',
+                          customerName: widget.customerName ?? '',
+                          status: widget.status ?? ''),
+                    ),
+                  ); // Action to go back
+                },
+              ),
+              title: Container(
+                // color: Colors.amber,
+                child: Row(children: [
+                  SizedBox(width: screenWidth / 6),
+                  Icon(
+                    Icons.inventory_2_outlined,
+                    size: screenWidth / 15,
+                  ),
+                  Text(
+                    " ${_jsonString?["title"] ?? 'Order Detail'}",
+                  ),
+                ]),
+              ),
+              centerTitle: true,
+              foregroundColor: Colors.white,
+              titleTextStyle: Styles.headerWhite32(context),
+              backgroundColor: GobalStyles.primaryColor,
+            ),
+          ),
         ),
+        // child: AppbarCustom(
+        //   title: " ${_jsonString?["title"] ?? 'Order Detail'}",
+        //   icon: Icons.inventory_2_outlined,
+        // ),
       ),
       body: Container(
         color: Colors.grey[100],
@@ -503,31 +567,31 @@ class _OrderDetailState extends State<OrderDetail>
                               ],
                             ),
                           ),
-                          if (_cartItemCount > 0)
-                            Positioned(
-                              right: 8,
-                              top: 8,
-                              child: Container(
-                                padding: EdgeInsets.all(4),
-                                decoration: BoxDecoration(
-                                  color: Colors.red,
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                constraints: BoxConstraints(
-                                  minWidth: 20,
-                                  minHeight: 20,
-                                ),
-                                child: Text(
-                                  '$_cartItemCount',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                            ),
+                          // if (_cartItemCount > 0)
+                          //   Positioned(
+                          //     right: 8,
+                          //     top: 8,
+                          //     child: Container(
+                          //       padding: EdgeInsets.all(4),
+                          //       decoration: BoxDecoration(
+                          //         color: Colors.red,
+                          //         borderRadius: BorderRadius.circular(12),
+                          //       ),
+                          //       constraints: BoxConstraints(
+                          //         minWidth: 20,
+                          //         minHeight: 20,
+                          //       ),
+                          //       child: Text(
+                          //         '$_cartItemCount',
+                          //         style: TextStyle(
+                          //           color: Colors.white,
+                          //           fontSize: 12,
+                          //           fontWeight: FontWeight.bold,
+                          //         ),
+                          //         textAlign: TextAlign.center,
+                          //       ),
+                          //     ),
+                          //   ),
                         ]),
                       ),
                     ),

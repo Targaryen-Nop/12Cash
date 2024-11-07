@@ -2,14 +2,14 @@ import 'package:_12sale_app/core/styles/style.dart';
 import 'package:flutter/material.dart';
 import 'package:_12sale_app/core/styles/gobalStyle.dart';
 
-class Policyaddnewshop extends StatefulWidget {
-  const Policyaddnewshop({super.key});
+class PolicyScreen extends StatefulWidget {
+  const PolicyScreen({super.key});
 
   @override
-  State<Policyaddnewshop> createState() => _PolicyaddnewshopState();
+  State<PolicyScreen> createState() => _PolicyScreenState();
 }
 
-class _PolicyaddnewshopState extends State<Policyaddnewshop> {
+class _PolicyScreenState extends State<PolicyScreen> {
   final ScrollController _scrollController = ScrollController();
   bool isChecked = false;
   bool _isCheckboxEnabled = false;
@@ -94,8 +94,6 @@ class _PolicyaddnewshopState extends State<Policyaddnewshop> {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     return Container(
-      width: screenWidth, // Fixed width
-      height: screenWidth + 100,
       padding: EdgeInsets.only(
         left: 16.0,
         right: 16.0,

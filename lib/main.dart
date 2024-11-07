@@ -16,6 +16,7 @@ import 'package:flutter/services.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 
 late List<CameraDescription> _cameras;
 
@@ -59,9 +60,12 @@ class MyApp extends StatelessWidget {
             primarySwatch: Colors.blue,
             textTheme: Typography.englishLike2018.apply(fontSizeFactor: 1.sp),
           ),
-          home: const HomeScreen(
-            index: 0,
+          home: const KeyboardVisibilityProvider(
+            child: HomeScreen(
+              index: 0,
+            ),
           ),
+          navigatorObservers: [RouteObserver<ModalRoute>()],
           // home: AddToCartAnimationPage(),
         );
       },

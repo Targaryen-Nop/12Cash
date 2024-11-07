@@ -6,6 +6,7 @@ class Order {
   final double unit;
   final double pricePerUnit;
   final double totalPrice;
+  double qty = 0;
 
   Order({
     required this.textShow,
@@ -14,6 +15,7 @@ class Order {
     required this.count,
     required this.unit,
     required this.pricePerUnit,
+    required this.qty,
   }) : totalPrice = count *
             unit *
             pricePerUnit; // Calculate total price based on count and unit
@@ -28,6 +30,7 @@ class Order {
       'unit': unit,
       'pricePerUnit': pricePerUnit,
       'totalPrice': totalPrice,
+      'qty': qty,
     };
   }
 
@@ -40,6 +43,7 @@ class Order {
       count: json['count'],
       unit: json['unit'],
       pricePerUnit: json['pricePerUnit'],
+      qty: json['qty'],
     );
   }
 }

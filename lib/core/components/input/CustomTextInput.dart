@@ -1,3 +1,4 @@
+import 'package:_12sale_app/core/styles/style.dart';
 import 'package:flutter/material.dart';
 
 class Customtextinput extends StatefulWidget {
@@ -16,13 +17,14 @@ class _CustomtextinputState extends State<Customtextinput> {
     return TextFormField(
       decoration: InputDecoration(
         labelText: widget.label,
+        labelStyle: Styles.grey18(context),
         hintText: widget.hint != null ? widget.hint : null,
+        hintStyle: Styles.grey18(context),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
           borderSide: BorderSide(color: Colors.grey),
         ),
         contentPadding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
-        hintStyle: TextStyle(color: Colors.grey[500]),
       ),
     );
   }

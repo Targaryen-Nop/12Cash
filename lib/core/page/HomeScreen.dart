@@ -5,7 +5,7 @@ import 'package:_12sale_app/core/page/manage/ManageScreen.dart';
 import 'package:_12sale_app/core/page/report/ReportScreen.dart';
 import 'package:_12sale_app/core/page/route/RouteScreen.dart';
 import 'package:_12sale_app/core/page/setting/SettingScreen.dart';
-import 'package:_12sale_app/core/page/shop/ShopScreen.dart';
+import 'package:_12sale_app/core/page/store/StoreScreen.dart';
 // import 'package:_12sale_app/page/TestTabel.dart';
 import 'package:_12sale_app/core/styles/gobalStyle.dart';
 import 'package:_12sale_app/core/components/Header.dart';

@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:_12sale_app/core/page/shop/DetailShopScreen.dart';
+import 'package:_12sale_app/core/page/store/DetailStoreScreen.dart';
 import 'package:_12sale_app/core/styles/gobalStyle.dart';
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:flutter/material.dart';

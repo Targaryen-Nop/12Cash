@@ -1,5 +1,5 @@
 import 'package:_12sale_app/core/components/Appbar.dart';
-import 'package:_12sale_app/core/page/shop/AddShopScreen.dart';
+import 'package:_12sale_app/core/page/store/AddStoreScreen.dart';
 import 'package:_12sale_app/core/styles/gobalStyle.dart';
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:flutter/material.dart';

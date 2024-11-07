@@ -7,7 +7,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class OrderTable extends StatefulWidget {
-  const OrderTable({super.key});
+  final String customerNo;
+  final String customerName;
+  final String status;
+  const OrderTable(
+      {super.key,
+      required this.customerNo,
+      required this.customerName,
+      required this.status});
 
   @override
   State<OrderTable> createState() => _OrderTableState();
@@ -156,8 +163,14 @@ class _OrderTableState extends State<OrderTable> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) =>
-                OrderDetail(itemCode: itemCode, itemName: itemName, price: qty),
+            builder: (context) => OrderDetail(
+              itemCode: itemCode,
+              itemName: itemName,
+              price: qty,
+              customerNo: widget.customerNo,
+              customerName: widget.customerName,
+              status: widget.status,
+            ),
           ),
         );
       },
