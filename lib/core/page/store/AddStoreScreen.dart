@@ -90,23 +90,13 @@ class _AddShopScreenState extends State<AddShopScreen> {
                             '${_jsonString?['shop_tax_hint'] ?? "Don't More Than 13 Characters"}',
                       ),
                       const SizedBox(height: 16),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Customtextinput(
-                              context,
-                              label: 'โทรศัพท์',
-                            ),
-                          ),
-                          const SizedBox(width: 16),
-                          Expanded(
-                            child: Customtextinput(
-                              context,
-                              label: 'เส้นทาง',
-                            ),
-                          ),
-                        ],
+                      Expanded(
+                        child: Customtextinput(
+                          context,
+                          label: 'โทรศัพท์',
+                        ),
                       ),
+                      const SizedBox(width: 16),
                       const SizedBox(height: 16),
                       Customtextinput(
                         context,

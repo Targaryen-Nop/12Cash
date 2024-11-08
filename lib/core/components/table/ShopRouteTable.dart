@@ -22,13 +22,11 @@ class ShopRouteTable extends StatefulWidget {
 
 class _ShopRouteTableState extends State<ShopRouteTable> {
   Map<String, dynamic>? _jsonString;
-  List<Order> _orders = [];
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     _loadJson();
-    _loadOrdersFromStorage();
   }
 
   Future<void> _loadJson() async {
@@ -36,22 +34,6 @@ class _ShopRouteTableState extends State<ShopRouteTable> {
     setState(() {
       _jsonString = jsonDecode(jsonString)["shop_route_table"];
     });
-  }
-
-  Future<void> _loadOrdersFromStorage() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    // Get the JSON string list from SharedPreferences
-    List<String>? jsonOrders = prefs.getStringList('orders');
-
-    if (jsonOrders != null) {
-      setState(() {
-        // Decode each JSON string and convert it to an Order object
-        _orders = jsonOrders
-            .map((jsonOrder) => Order.fromJson(jsonDecode(jsonOrder)))
-            .toList();
-      });
-    }
   }
 
   @override

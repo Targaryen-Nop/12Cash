@@ -35,7 +35,7 @@ class StoreCartNew extends StatelessWidget {
                 style: Styles.headerBlack24(context),
               ),
               Container(
-                width: screenWidth / 8,
+                width: screenWidth / 6,
                 padding: EdgeInsets.all(4),
                 // height: screenWidth / ,
                 decoration: BoxDecoration(

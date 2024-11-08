@@ -1,6 +1,7 @@
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:flutter/material.dart';
 import 'package:_12sale_app/core/styles/gobalStyle.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class PolicyScreen extends StatefulWidget {
   const PolicyScreen({super.key});
@@ -105,18 +106,7 @@ class _PolicyScreenState extends State<PolicyScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Header with close button
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text('ขอความยินยอม', style: Styles.headerBlack24(context)),
-              IconButton(
-                icon: Icon(Icons.close),
-                onPressed: () {
-                  Navigator.of(context).pop(); // Close bottom sheet
-                },
-              ),
-            ],
-          ),
+          Text('ขอความยินยอม', style: Styles.headerBlack24(context)),
           SizedBox(height: 8),
           Text(
             'ข้อมูลร้านค้า ข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้า',
@@ -164,11 +154,13 @@ class _PolicyScreenState extends State<PolicyScreen> {
               ),
               Text(
                 'ฉันยินยอมให้เก็บข้อมูล',
-                style: TextStyle(
-                    fontSize: 18,
-                    color: _isCheckboxEnabled
-                        ? Colors.black
-                        : Colors.grey), // Disable the text as well
+                style: GoogleFonts.kanit(
+                  textStyle: TextStyle(
+                    fontSize: screenWidth / 35,
+                    fontWeight: FontWeight.w600,
+                    color: _isCheckboxEnabled ? Colors.black : Colors.grey,
+                  ),
+                ), //, // Disable the text as well
               ),
             ],
           ),

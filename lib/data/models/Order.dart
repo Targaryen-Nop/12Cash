@@ -1,33 +1,34 @@
 class Order {
   final String textShow;
   final String itemName;
-  // final String itemCode;
-  final double count;
+  final String itemCode;
+  double count; // Make count mutable to allow updates
   final double unit;
+  final String unitText;
   final double pricePerUnit;
-  final double totalPrice;
-  double qty = 0;
+  double totalPrice;
+  double qty;
 
   Order({
     required this.textShow,
     required this.itemName,
-    // required this.itemCode,
+    required this.itemCode,
     required this.count,
     required this.unit,
+    required this.unitText,
     required this.pricePerUnit,
     required this.qty,
-  }) : totalPrice = count *
-            unit *
-            pricePerUnit; // Calculate total price based on count and unit
+  }) : totalPrice = count * unit * pricePerUnit;
 
   // Convert an Order object to a Map (for JSON encoding)
   Map<String, dynamic> toJson() {
     return {
       'textShow': textShow,
       'itemName': itemName,
-      // 'itemCode': itemCode,
+      'itemCode': itemCode,
       'count': count,
       'unit': unit,
+      'unitText': unitText,
       'pricePerUnit': pricePerUnit,
       'totalPrice': totalPrice,
       'qty': qty,
@@ -39,11 +40,18 @@ class Order {
     return Order(
       textShow: json['textShow'],
       itemName: json['itemName'],
-      // itemCode: json['itemCode'],
+      itemCode: json['itemCode'],
       count: json['count'],
       unit: json['unit'],
+      unitText: json['unitText'],
       pricePerUnit: json['pricePerUnit'],
       qty: json['qty'],
     );
+  }
+
+  // Method to update count and total price
+  void updateOrder(double additionalCount) {
+    count += additionalCount;
+    totalPrice = count * unit * pricePerUnit;
   }
 }

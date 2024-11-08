@@ -19,6 +19,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 
 late List<CameraDescription> _cameras;
+final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 
 void main() async {
   // Initialize the locale data for Thai language
@@ -65,7 +66,7 @@ class MyApp extends StatelessWidget {
               index: 0,
             ),
           ),
-          navigatorObservers: [RouteObserver<ModalRoute>()],
+          navigatorObservers: [routeObserver],
           // home: AddToCartAnimationPage(),
         );
       },

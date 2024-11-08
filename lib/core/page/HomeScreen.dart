@@ -10,8 +10,10 @@ import 'package:_12sale_app/core/page/store/StoreScreen.dart';
 import 'package:_12sale_app/core/styles/gobalStyle.dart';
 import 'package:_12sale_app/core/components/Header.dart';
 import 'package:_12sale_app/core/styles/style.dart';
+import 'package:_12sale_app/data/models/Order.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeScreen extends StatefulWidget {
   final int index;
@@ -62,12 +64,24 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  List<Order> _orders = <Order>[];
+
+  Future<void> _clearOrders() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove('orders'); // Clear orders from SharedPreferences
+
+    setState(() {
+      _orders.clear(); // Clear orders in the UI
+    });
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     _selectedIndex = widget.index; //_selectedIndex
     super.initState();
     _loadJson();
+    _clearOrders();
   }
 
   @override

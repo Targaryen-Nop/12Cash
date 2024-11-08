@@ -32,7 +32,7 @@ class OrderDetail extends StatefulWidget {
 }
 
 class _OrderDetailState extends State<OrderDetail>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin, RouteAware {
   Map<String, dynamic>? _jsonString;
   String selectedLabel = "";
   double count = 1.0; // Initialized with 1
@@ -61,12 +61,27 @@ class _OrderDetailState extends State<OrderDetail>
   final GlobalKey _cartKey2 = GlobalKey();
   final GlobalKey _buttonKey = GlobalKey();
 
+  final RouteObserver<ModalRoute> routeObserver = RouteObserver<ModalRoute>();
+
+  late AnimationController _buttonAnimationController;
+  late Animation<double> _buttonScaleAnimation;
+
   @override
   void initState() {
     super.initState();
     price = double.parse(widget.price);
     qty = double.parse(widget.price);
     totalPrice = price; // Initialize the totalPrice
+
+    _buttonAnimationController = AnimationController(
+      duration: const Duration(milliseconds: 150),
+      vsync: this,
+    );
+
+    _buttonScaleAnimation = Tween<double>(begin: 1.0, end: 1.1).animate(
+      CurvedAnimation(
+          parent: _buttonAnimationController, curve: Curves.easeInOut),
+    );
     _controller = AnimationController(
       duration: const Duration(seconds: 1),
       vsync: this,
@@ -122,25 +137,59 @@ class _OrderDetailState extends State<OrderDetail>
   // }
 
   // Function to add a new order
-  void _addOrder() {
+  void _addOrder() async {
     if (qty >= count * unit && selectedLabel != "") {
-      final newOrder = Order(
-        textShow:
-            "${_orders.length + 1}. ${widget.itemName} ${count} ${selectedLabel} ราคา ${totalPrice.toStringAsFixed(2)}",
-        itemName: widget.itemName,
-        // itemCode: widget.itemCode,
-        count: count,
-        unit: unit,
-        pricePerUnit: price,
-        qty: _orders.length + 1,
-      );
-      _orders.insert(0, newOrder); // Add order to the beginning of the list
-      _listKey.currentState?.insertItem(0); // Trigger animation at index 0
+      // Trigger button scale animation
+      await _buttonAnimationController.forward();
+      await _buttonAnimationController.reverse();
 
-      setState(() {
-        qty = qty - (count * unit);
-      });
-      _saveOrdersToStorage(); // Save the updated list to storage
+      // Rest of your add order logic
+      Order? existingOrder;
+      try {
+        existingOrder = _orders.firstWhere(
+          (order) => order.itemCode == widget.itemCode && order.unit == unit,
+        );
+      } catch (e) {
+        existingOrder = null;
+      }
+
+      if (existingOrder != null) {
+        setState(() {
+          existingOrder?.count += count;
+          existingOrder?.totalPrice = existingOrder.count *
+              existingOrder.unit *
+              existingOrder.pricePerUnit;
+          qty -= (count * unit);
+        });
+        int existingIndex = _orders.indexOf(existingOrder);
+        _listKey.currentState?.setState(() {
+          _listKey.currentState?.removeItem(
+            existingIndex,
+            (context, animation) =>
+                _buildOrderItem(existingOrder!, animation, existingIndex),
+          );
+          _listKey.currentState?.insertItem(existingIndex);
+        });
+      } else {
+        final newOrder = Order(
+          textShow:
+              "${_orders.length + 1}. ${widget.itemName} $count $selectedLabel ราคา ${totalPrice.toStringAsFixed(2)}",
+          itemName: widget.itemName,
+          itemCode: widget.itemCode,
+          count: count,
+          unit: unit,
+          unitText: selectedLabel,
+          pricePerUnit: price,
+          qty: _orders.length + 1,
+        );
+        _orders.insert(0, newOrder);
+        _listKey.currentState?.insertItem(0);
+
+        setState(() {
+          qty -= (count * unit);
+        });
+      }
+      _saveOrdersToStorage();
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -247,10 +296,18 @@ class _OrderDetailState extends State<OrderDetail>
   @override
   void dispose() {
     _controller.dispose();
+    routeObserver.unsubscribe(this);
+    _buttonAnimationController.dispose();
     // _controller2.dispose();
     _animatedListController.dispose();
     _listViewController.dispose();
     super.dispose();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    routeObserver.subscribe(this, ModalRoute.of(context)!);
   }
 
   @override
@@ -260,67 +317,78 @@ class _OrderDetailState extends State<OrderDetail>
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(70),
-        child: Container(
-          decoration: BoxDecoration(
-            boxShadow: [
-              BoxShadow(
-                color:
-                    Colors.black.withOpacity(0.2), // Shadow color with opacity
-                spreadRadius: 3, // Spread radius
-                blurRadius: 50, // Blur radius
-                offset: const Offset(0, 3),
-                // Changes position of the shadow (x, y)
-              ),
-            ],
-          ),
-          child: ClipRRect(
-            borderRadius: const BorderRadius.vertical(
-              // top: Radius.circular(180),
-              bottom: Radius.circular(15),
-              // top: Radius.circular(50) // Radius at the bottom of the AppBar
-            ),
-            child: AppBar(
-              leading: IconButton(
-                icon: Icon(
-                  Icons.arrow_back,
-                  size: screenWidth / 12,
-                  // weight: screenWidth,
-                ), // Set the custom size here
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => Orderscreen(
-                          customerNo: widget.customerNo ?? '',
-                          customerName: widget.customerName ?? '',
-                          status: widget.status ?? ''),
-                    ),
-                  ); // Action to go back
-                },
-              ),
-              title: Container(
-                // color: Colors.amber,
-                child: Row(children: [
-                  SizedBox(width: screenWidth / 6),
-                  Icon(
-                    Icons.inventory_2_outlined,
-                    size: screenWidth / 15,
-                  ),
-                  Text(
-                    " ${_jsonString?["title"] ?? 'Order Detail'}",
-                  ),
-                ]),
-              ),
-              centerTitle: true,
-              foregroundColor: Colors.white,
-              titleTextStyle: Styles.headerWhite32(context),
-              backgroundColor: GobalStyles.primaryColor,
-            ),
-          ),
-        ),
-        // child: AppbarCustom(
-        //   title: " ${_jsonString?["title"] ?? 'Order Detail'}",
-        //   icon: Icons.inventory_2_outlined,
+        // child: Container(
+        //   decoration: BoxDecoration(
+        //     boxShadow: [
+        //       BoxShadow(
+        //         color:
+        //             Colors.black.withOpacity(0.2), // Shadow color with opacity
+        //         spreadRadius: 3, // Spread radius
+        //         blurRadius: 50, // Blur radius
+        //         offset: const Offset(0, 3),
+        //         // Changes position of the shadow (x, y)
+        //       ),
+        //     ],
+        //   ),
+        //   child: ClipRRect(
+        //     borderRadius: const BorderRadius.vertical(
+        //       // top: Radius.circular(180),
+        //       bottom: Radius.circular(15),
+        //       // top: Radius.circular(50) // Radius at the bottom of the AppBar
+        //     ),
+        //     child: AppBar(
+        //       leading: IconButton(
+        //         icon: Icon(
+        //           Icons.arrow_back,
+        //           size: screenWidth / 12,
+        //           // weight: screenWidth,
+        //         ), // Set the custom size here
+        //         onPressed: () {
+        //           // Navigator.of(context).pushAndRemoveUntil(
+        //           //   MaterialPageRoute(
+        //           //     builder: (context) => Orderscreen(
+        //           //       customerNo: widget.customerNo ?? '',
+        //           //       customerName: widget.customerName ?? '',
+        //           //       status: widget.status ?? '',
+        //           //     ),
+        //           //   ),
+        //           //   ModalRoute.withName(
+        //           //       '/homeScreen'), // Keeps only '/homeScreen' in the stack
+        //           // );
+        //           // Navigator.of(context).push(
+        //           //   MaterialPageRoute(
+        //           //     builder: (context) => Orderscreen(
+        //           //         customerNo: widget.customerNo ?? '',
+        //           //         customerName: widget.customerName ?? '',
+        //           //         status: widget.status ?? ''),
+        //           //   ),
+        //           // ); // Action to go back
+        //         },
+        //       ),
+        //       title: Container(
+        //         // color: Colors.amber,
+        //         child: Row(children: [
+        //           SizedBox(width: screenWidth / 6),
+        //           Icon(
+        //             Icons.inventory_2_outlined,
+        //             size: screenWidth / 15,
+        //           ),
+        //           Text(
+        //             " ${_jsonString?["title"] ?? 'Order Detail'}",
+        //           ),
+        //         ]),
+        //       ),
+        //       centerTitle: true,
+        //       foregroundColor: Colors.white,
+        //       titleTextStyle: Styles.headerWhite32(context),
+        //       backgroundColor: GobalStyles.primaryColor,
+        //     ),
+        //   ),
         // ),
+        child: AppbarCustom(
+          title: " ${_jsonString?["title"] ?? 'Order Detail'}",
+          icon: Icons.inventory_2_outlined,
+        ),
       ),
       body: Container(
         color: Colors.grey[100],
@@ -550,9 +618,17 @@ class _OrderDetailState extends State<OrderDetail>
                         ),
                         margin: const EdgeInsets.all(8.0),
                         padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        child: Stack(children: [
-                          TextButton(
-                            onPressed: _addOrder,
+                        child: ScaleTransition(
+                          scale: _buttonScaleAnimation,
+                          child: TextButton(
+                            onPressed: () async {
+                              // Start the scale animation
+                              await _buttonAnimationController.forward();
+                              await _buttonAnimationController.reverse();
+
+                              // Call the add order function
+                              _addOrder();
+                            },
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -567,32 +643,7 @@ class _OrderDetailState extends State<OrderDetail>
                               ],
                             ),
                           ),
-                          // if (_cartItemCount > 0)
-                          //   Positioned(
-                          //     right: 8,
-                          //     top: 8,
-                          //     child: Container(
-                          //       padding: EdgeInsets.all(4),
-                          //       decoration: BoxDecoration(
-                          //         color: Colors.red,
-                          //         borderRadius: BorderRadius.circular(12),
-                          //       ),
-                          //       constraints: BoxConstraints(
-                          //         minWidth: 20,
-                          //         minHeight: 20,
-                          //       ),
-                          //       child: Text(
-                          //         '$_cartItemCount',
-                          //         style: TextStyle(
-                          //           color: Colors.white,
-                          //           fontSize: 12,
-                          //           fontWeight: FontWeight.bold,
-                          //         ),
-                          //         textAlign: TextAlign.center,
-                          //       ),
-                          //     ),
-                          //   ),
-                        ]),
+                        ),
                       ),
                     ),
                   ],

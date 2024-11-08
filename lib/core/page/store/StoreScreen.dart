@@ -61,10 +61,10 @@ class _ShopScreenState extends State<ShopScreen> {
           },
           backgroundColor: GobalStyles.primaryColor,
           shape: const CircleBorder(),
-          child: const Icon(
+          child: Icon(
             Icons.add,
             color: Colors.white,
-            size: 60,
+            size: screenWidth / 12,
           ),
         ),
       ),
@@ -97,7 +97,7 @@ class _ShopScreenState extends State<ShopScreen> {
                       ),
                     ),
                     child: Text(
-                      'ร้านค้าทั้งหมด',
+                      'ทั้งหมด',
                       style: Styles.headerBlack32(context),
                     ),
                   ),
@@ -122,7 +122,7 @@ class _ShopScreenState extends State<ShopScreen> {
                       ),
                     ),
                     child: Text(
-                      'ร้านค้าใหม่',
+                      'ใหม่',
                       style: Styles.headerBlack32(context),
                     ),
                   ),
@@ -240,12 +240,12 @@ class _ShopHeaderState extends State<ShopHeader> {
                                 children: [
                                   Container(
                                     child: Icon(Icons.store,
-                                        size: screenWidth / 15,
+                                        size: screenWidth / 10,
                                         color: Colors.white),
                                   ),
                                   Text(
                                     ' ร้านค้า',
-                                    style: Styles.headerWhite24(context),
+                                    style: Styles.headerWhite32(context),
                                     textAlign: TextAlign.start,
                                   ),
                                 ],
@@ -254,18 +254,18 @@ class _ShopHeaderState extends State<ShopHeader> {
                           ),
                         ),
                       ),
-                      Flexible(
-                        fit: FlexFit.loose,
-                        child: Container(
-                          // width: screenWidth / 3,
-                          child: const CustomerDropdownSearch(),
-                        ),
-                      ),
                     ],
                   ),
                 ),
               ),
             ],
+          ),
+        ),
+        const Flexible(
+          fit: FlexFit.tight,
+          child: Padding(
+            padding: EdgeInsets.all(8.0),
+            child: CustomerDropdownSearch(),
           ),
         ),
       ],

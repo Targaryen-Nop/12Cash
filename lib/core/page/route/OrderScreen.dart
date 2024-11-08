@@ -6,6 +6,7 @@ import 'package:_12sale_app/core/components/table/OrderTable.dart';
 import 'package:_12sale_app/core/page/route/ShoppingCartScreen.dart';
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:_12sale_app/data/models/Order.dart';
+import 'package:_12sale_app/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -34,13 +35,14 @@ class _OrderscreenState extends State<Orderscreen> with RouteAware {
     _loadOrdersFromStorage();
   }
 
-  // Regis
-  //ter the observer when the widget is inserted into the widget tree
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    routeObserver.subscribe(this, ModalRoute.of(context)!);
+    routeObserver.subscribe(this, ModalRoute.of(context)! as PageRoute);
   }
+
+  // Regis
+  //ter the observer when the widget is inserted into the widget tree
 
   // Unregister the observer when the widget is removed from the widget tree
   @override
@@ -49,12 +51,22 @@ class _OrderscreenState extends State<Orderscreen> with RouteAware {
     super.dispose();
   }
 
+  // @override
+  // void didPush() {
+  //   print('HomeScreen: didPush');
+  // }
+
   // Called when this route is shown again after another route was popped off
   @override
   void didPopNext() {
     print("Screen is visible again - reloading orders."); // Debugging print
     _loadOrdersFromStorage(); // Reload orders when returning to this screen
   }
+
+  // @override
+  // void didPop() {
+  //   print('HomeScreen: didPop');
+  // }
 
   @override
   void didUpdateWidget(covariant Orderscreen oldWidget) {
@@ -64,8 +76,7 @@ class _OrderscreenState extends State<Orderscreen> with RouteAware {
 
   Map<String, dynamic>? _jsonString;
   String dropdownValue = 'แบรนด์'; // Default value
-  int cartItemCount = 1;
-  final RouteObserver<ModalRoute> routeObserver = RouteObserver<ModalRoute>();
+  int cartItemCount = 0;
 
   List<Order> _orders = [];
 
@@ -324,7 +335,7 @@ class _OrderscreenState extends State<Orderscreen> with RouteAware {
         ),
       ),
       floatingActionButton: Cartbutton(
-        count: "${cartItemCount}",
+        count: "${_orders.length}",
         screen: ShoppingCartScreen(
           customerNo: widget.customerNo,
           customerName: widget.customerName,

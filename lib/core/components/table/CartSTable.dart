@@ -126,8 +126,10 @@ class _CartTableState extends State<CartTable> {
         ),
         child: Row(
           children: [
-            _buildTableCellName(order.itemName, screenWidth / 2),
-            Expanded(child: _buildTableCell(order.count.toStringAsFixed(2))),
+            _buildTableCellName(order.itemName, screenWidth / 2.5),
+            Expanded(
+                child: _buildTableCell('${order.count.toStringAsFixed(2)}')),
+            Expanded(child: _buildTableCell(' ${order.unitText}')),
             Expanded(
                 child: _buildTableCell(order.totalPrice.toStringAsFixed(2))),
             _buildStatusCell(

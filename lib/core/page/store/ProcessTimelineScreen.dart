@@ -4,6 +4,7 @@ import 'package:_12sale_app/core/components/sheet/PolicyAddNewShop.dart';
 import 'package:_12sale_app/core/page/store/PolicyScreen.dart';
 import 'package:_12sale_app/core/page/store/StoreAddressScreen.dart';
 import 'package:_12sale_app/core/page/store/StoreDataScreen.dart';
+import 'package:_12sale_app/core/page/store/VerifyStoreScreen.dart';
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -11,7 +12,7 @@ import 'package:timelines/timelines.dart';
 
 const kTileHeight = 50.0;
 const completeColor = Color(0xff5e6172);
-const inProgressColor = Color(0xff5ec792);
+const inProgressColor = Styles.primaryColor;
 const todoColor = Color(0xffd1d2d7);
 
 class ProcessTimelinePage extends StatefulWidget {
@@ -33,9 +34,7 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
       case 2:
         return const StoreAddressScreen();
       case 3:
-        return Center(child: Text("Contract: Prepare the contract."));
-      case 4:
-        return Center(child: Text("Settled: Complete the settlement."));
+        return const VerifyStoreScreen();
       default:
         return Center(child: Text("Unknown step"));
     }
@@ -78,30 +77,32 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
                 builder: TimelineTileBuilder.connected(
                   connectionDirection: ConnectionDirection.before,
                   itemExtentBuilder: (_, __) =>
-                      MediaQuery.of(context).size.width / _processes.length,
+                      MediaQuery.of(context).size.width / 4.4,
                   oppositeContentsBuilder: (context, index) {
                     // Define a list of icons for each step
                     final List<IconData> stepIcons = [
                       Icons.handshake, // Icon for "Prospect"
                       Icons.store_mall_directory, // Icon for "Tour"
                       Icons.map, // Icon for "Offer"
-                      Icons.assignment, // Icon for "Contract"
-                      Icons.home, // Icon for "Settled"
+                      Icons.check_circle_outlined, // Icon for "Contract"
                     ];
 
                     return Padding(
-                      padding: const EdgeInsets.only(bottom: 15.0),
-                      child: Icon(
-                        stepIcons[
-                            index], // Use the icon corresponding to the current step
-                        size: 30.0,
-                        color: getColor(index),
+                      padding: const EdgeInsets.only(bottom: 5.0),
+                      child: GestureDetector(
+                        onTap: () => setState(() => _processIndex = index),
+                        child: Icon(
+                          stepIcons[
+                              index], // Use the icon corresponding to the current step
+                          size: 30.0,
+                          color: getColor(index),
+                        ),
                       ),
                     );
                   },
                   contentsBuilder: (context, index) {
                     return Padding(
-                      padding: const EdgeInsets.only(top: 15.0),
+                      padding: const EdgeInsets.only(top: 5.0),
                       child: Text(
                         _processes[index],
                         style: Styles.black18(context),
@@ -122,10 +123,13 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
                       );
                     } else if (index < _processIndex) {
                       color = completeColor;
-                      child = const Icon(
-                        Icons.check,
-                        color: Colors.white,
-                        size: 15.0,
+                      child = GestureDetector(
+                        onTap: () => setState(() => _processIndex = index),
+                        child: const Icon(
+                          Icons.check,
+                          color: Colors.white,
+                          size: 15.0,
+                        ),
                       );
                     } else {
                       color = todoColor;
@@ -207,6 +211,23 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
             Expanded(
               flex: 8,
               child: Container(
+                padding: const EdgeInsets.all(16.0),
+                decoration: BoxDecoration(
+                  color: Colors.white, // Set background color if needed
+                  borderRadius: BorderRadius.circular(
+                      16), // Rounded corners for the outer container
+
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black
+                          .withOpacity(0.2), // Shadow color with transparency
+                      spreadRadius: 2, // Spread of the shadow
+                      blurRadius: 8, // Blur radius of the shadow
+                      offset: const Offset(
+                          0, 4), // Offset of the shadow (horizontal, vertical)
+                    ),
+                  ],
+                ),
                 // color: Colors.black,
                 child: _getBodyContent(),
               ), // Displays different content for each step
@@ -219,14 +240,32 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      SizedBox(
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(
+                              16), // Rounded corners for the outer container
+
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(
+                                  0.2), // Shadow color with transparency
+                              spreadRadius: 2, // Spread of the shadow
+                              blurRadius: 8, // Blur radius of the shadow
+                              offset: const Offset(0,
+                                  4), // Offset of the shadow (horizontal, vertical)
+                            ),
+                          ],
+                        ),
                         width: screenWidth / 3,
                         child: ElevatedButton(
                           onPressed: () {
-                            setState(() {
-                              _processIndex =
-                                  (_processIndex - 1) % _processes.length;
-                            });
+                            if (_processIndex == 0) {
+                            } else {
+                              setState(() {
+                                _processIndex =
+                                    (_processIndex - 1) % _processes.length;
+                              });
+                            }
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Styles.primaryColor,
@@ -240,14 +279,45 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
                           child: Text('กลับ', style: Styles.white18(context)),
                         ),
                       ),
-                      SizedBox(
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(
+                              16), // Rounded corners for the outer container
+
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(
+                                  0.2), // Shadow color with transparency
+                              spreadRadius: 2, // Spread of the shadow
+                              blurRadius: 8, // Blur radius of the shadow
+                              offset: const Offset(0,
+                                  4), // Offset of the shadow (horizontal, vertical)
+                            ),
+                          ],
+                        ),
                         width: screenWidth / 3,
                         child: ElevatedButton(
                           onPressed: () {
-                            setState(() {
-                              _processIndex =
-                                  (_processIndex + 1) % _processes.length;
-                            });
+                            if (_processIndex == 3) {
+                            } else {
+                              setState(() {
+                                _processIndex =
+                                    (_processIndex + 1) % _processes.length;
+                              });
+                            }
+
+                            switch (_processIndex) {
+                              case 0:
+                                return print('1');
+                              case 1:
+                                return print('2');
+                              case 2:
+                                return print('3');
+                              case 3:
+                                return print('4');
+                              default:
+                                return print('error');
+                            }
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Styles.successButtonColor,
@@ -258,7 +328,8 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
                               borderRadius: BorderRadius.circular(8),
                             ),
                           ),
-                          child: Text('ถัดไป', style: Styles.white18(context)),
+                          child: Text(_processIndex == 3 ? 'ยืนยัน' : 'ถัดไป',
+                              style: Styles.white18(context)),
                         ),
                       ),
                     ],
@@ -353,10 +424,4 @@ class _BezierPainter extends CustomPainter {
   }
 }
 
-final _processes = [
-  'ความยินยอม',
-  'ข้อมูลร้าน',
-  'ที่อยู่',
-  'Contract',
-  'Settled',
-];
+final _processes = ['ความยินยอม', 'ข้อมูลร้าน', 'ที่อยู่', 'ยืนยัน'];
