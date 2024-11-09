@@ -40,7 +40,11 @@ void main() async {
     DeviceOrientation.landscapeLeft,
     DeviceOrientation.landscapeRight,
   ]).then((_) {
-    runApp(const MyApp());
+    runApp(
+      const KeyboardVisibilityProvider(
+        child: MyApp(),
+      ),
+    );
   });
 }
 
@@ -61,10 +65,8 @@ class MyApp extends StatelessWidget {
             primarySwatch: Colors.blue,
             textTheme: Typography.englishLike2018.apply(fontSizeFactor: 1.sp),
           ),
-          home: const KeyboardVisibilityProvider(
-            child: HomeScreen(
-              index: 0,
-            ),
+          home: const HomeScreen(
+            index: 0,
           ),
           navigatorObservers: [routeObserver],
           // home: AddToCartAnimationPage(),

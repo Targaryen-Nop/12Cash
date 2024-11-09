@@ -59,6 +59,7 @@ dependencies:
   sprintf: ^7.0.0
   flutter_screenutil: ^5.9.3
   timelines: ^0.1.0
+  quickalert: ^1.1.0
 
 
 

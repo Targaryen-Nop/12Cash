@@ -61,23 +61,23 @@ class _StoreAddressScreenState extends State<StoreAddressScreen> {
                 label: 'ที่อยู่ *',
               ),
               SizedBox(height: screenWidth / 37),
-              DropdownCustom(
-                label: 'เลือกอำเภอ *',
-                items: ['Option 1', 'Option 2', 'Option 3'],
-                onChanged: (value) {},
-              ),
-              SizedBox(height: screenWidth / 37),
-              DropdownCustom(
-                label: 'เลือกอำเภอ *',
-                items: ['Option 1', 'Option 2', 'Option 3'],
-                onChanged: (value) {},
-              ),
-              SizedBox(height: screenWidth / 37),
-              DropdownCustom(
-                label: 'ตำบล *',
-                items: ['Option 1', 'Option 2', 'Option 3'],
-                onChanged: (value) {},
-              ),
+              // DropdownCustom(
+              //   label: 'เลือกอำเภอ *',
+              //   items: ['Option 1', 'Option 2', 'Option 3'],
+              //   onChanged: (value) {},
+              // ),
+              // SizedBox(height: screenWidth / 37),
+              // DropdownCustom(
+              //   label: 'เลือกอำเภอ *',
+              //   items: ['Option 1', 'Option 2', 'Option 3'],
+              //   onChanged: (value) {},
+              // ),
+              // SizedBox(height: screenWidth / 37),
+              // DropdownCustom(
+              //   label: 'ตำบล *',
+              //   items: ['Option 1', 'Option 2', 'Option 3'],
+              //   onChanged: (value) {},
+              // ),
               SizedBox(height: screenWidth / 37),
               Customtextinput(
                 context,

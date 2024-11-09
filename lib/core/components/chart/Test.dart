@@ -50,21 +50,21 @@ class TableRowData {
   }
 }
 
-class ApiService {
-  final Dio _dio = Dio();
+// class ApiService {
+//   final Dio _dio = Dio();
 
-  Future<List<TableRowData>> fetchData() async {
-    try {
-      final response = await _dio
-          .get('https://example.com/api/data'); // Replace with your API URL
-      if (response.statusCode == 200) {
-        List<dynamic> data = response.data;
-        return data.map((item) => TableRowData.fromMap(item)).toList();
-      } else {
-        throw Exception('Failed to load data');
-      }
-    } catch (e) {
-      throw Exception('Failed to load data: $e');
-    }
-  }
-}
+//   Future<List<TableRowData>> fetchData() async {
+//     try {
+//       final response = await _dio
+//           .get('https://example.com/api/data'); // Replace with your API URL
+//       if (response.statusCode == 200) {
+//         List<dynamic> data = response.data;
+//         return data.map((item) => TableRowData.fromMap(item)).toList();
+//       } else {
+//         throw Exception('Failed to load data');
+//       }
+//     } catch (e) {
+//       throw Exception('Failed to load data: $e');
+//     }
+//   }
+// }

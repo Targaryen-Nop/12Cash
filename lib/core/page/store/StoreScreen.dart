@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:_12sale_app/core/components/button/AddStoreButton.dart';
 import 'package:_12sale_app/core/components/card/StoreCardAll.dart';
 import 'package:_12sale_app/core/components/card/StoreCardNew.dart';
 import 'package:_12sale_app/core/components/search/CustomerDropdownSearch.dart';
@@ -50,7 +51,8 @@ class _ShopScreenState extends State<ShopScreen> {
       floatingActionButton: SizedBox(
         width: 100, // Set the width of the button
         height: screenWidth / 8, // Set the height of the button
-        child: FloatingActionButton(
+        child: AddStoreButton(
+          icon: Icons.add,
           onPressed: () {
             Navigator.push(
               context,
@@ -59,13 +61,6 @@ class _ShopScreenState extends State<ShopScreen> {
               ),
             );
           },
-          backgroundColor: GobalStyles.primaryColor,
-          shape: const CircleBorder(),
-          child: Icon(
-            Icons.add,
-            color: Colors.white,
-            size: screenWidth / 12,
-          ),
         ),
       ),
       body: Container(
@@ -145,11 +140,10 @@ class _ShopScreenState extends State<ShopScreen> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => DetailShopScreen(
-                                            customerNo:
-                                                storeItems[index].storeId,
-                                            customerName:
-                                                storeItems[index].name)),
+                                      builder: (context) => DetailShopScreen(
+                                          customerNo: storeItems[index].storeId,
+                                          customerName: storeItems[index].name),
+                                    ),
                                   );
                                   print(
                                       'Details for ${storeItems[index].name}');
@@ -169,8 +163,14 @@ class _ShopScreenState extends State<ShopScreen> {
                               return StoreCartAll(
                                 item: storeItems[index],
                                 onDetailsPressed: () {
-                                  print(
-                                      'Details for ${storeItems[index].name}');
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => DetailShopScreen(
+                                          customerNo: storeItems[index].storeId,
+                                          customerName: storeItems[index].name),
+                                    ),
+                                  );
                                 },
                               );
                             },

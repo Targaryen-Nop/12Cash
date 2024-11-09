@@ -32,7 +32,6 @@ class _CustomerDropdownSearchState extends State<CustomerDropdownSearch> {
     double screenWidth = MediaQuery.of(context).size.width;
     return DropdownSearch<CustomerModel>(
       // showSearchBox: true,
-
       // mode: Mode.BOTTOM_SHEET,
       asyncItems: (String filter) =>
           getCustomers(), // Filters data as user types

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:_12sale_app/core/components/button/Button.dart';
@@ -6,6 +7,9 @@ import 'package:_12sale_app/core/components/input/CustomTextInput.dart';
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
+
+late StreamSubscription<bool> keyboardSubscription;
 
 class StoreDataScreen extends StatefulWidget {
   const StoreDataScreen({super.key});
@@ -16,10 +20,35 @@ class StoreDataScreen extends StatefulWidget {
 
 class _StoreDataScreenState extends State<StoreDataScreen> {
   Map<String, dynamic>? _jsonString;
+  bool storeInput = true;
+  bool taxInput = true;
+  bool phoneInput = true;
+  bool shoptypeInput = true;
+  bool lineIDInput = true;
+  bool causeInput = true;
+
+  var keyboardVisibilityController = KeyboardVisibilityController();
+
+  //  late final KeyboardVisibilityController keyboardVisibilityController; // Declare it here
   @override
   void initState() {
     super.initState();
     _loadJson();
+    keyboardSubscription =
+        keyboardVisibilityController.onChange.listen((bool visible) {
+      print('Keyboard visibility update. Is visible: $visible');
+      if (visible) {
+      } else {
+        setState(() {
+          storeInput = true;
+          taxInput = true; // Toggle the flag
+          phoneInput = true;
+          shoptypeInput = true;
+          lineIDInput = true;
+          causeInput = true;
+        });
+      }
+    });
   }
 
   Future<void> _loadJson() async {
@@ -30,8 +59,19 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
   }
 
   @override
+  void dispose() {
+    keyboardSubscription.cancel();
+    // TODO: implement dispose
+    super.dispose();
+  }
+  // Listen to the keyboard visibility changes
+
+  @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
+    bool isKeyboardVisible =
+        KeyboardVisibilityProvider.isKeyboardVisible(context);
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -55,61 +95,116 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Customtextinput(
-                context,
-                label: '${_jsonString?['shop_name'] ?? "Shop Name"} *',
-                hint:
-                    '${_jsonString?['shop_name_hint'] ?? "Max 36 Characters"}',
-              ),
-              const SizedBox(height: 16),
-              Customtextinput(
-                context,
-                label: '${_jsonString?['shop_tax'] ?? "Tax ID"} ',
-                hint: '${_jsonString?['shop_tax_hint'] ?? "Max 13 Characters"}',
-              ),
-              const SizedBox(height: 16),
-              Customtextinput(
-                context,
-                label: 'โทรศัพท์',
-              ),
-              const SizedBox(height: 16),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    flex: 2,
-                    child: SizedBox(
-                      // height: 50,
-                      child: DropdownCustom(
-                        label: 'เลือกประเภทร้านค้า *',
-                        items: ['Option 1', 'Option 2', 'Option 3'],
-                        onChanged: (value) {},
+              if (storeInput)
+                Customtextinput(
+                  onFieldTap: () {
+                    setState(() {
+                      storeInput = true;
+                      taxInput = false; // Toggle the flag
+                      phoneInput = false;
+                      shoptypeInput = false;
+                      lineIDInput = false;
+                      causeInput = false;
+                    });
+                  },
+                  context,
+                  label: '${_jsonString?['shop_name'] ?? "Shop Name"} *',
+                  hint:
+                      '${_jsonString?['shop_name_hint'] ?? "Max 36 Characters"}',
+                ),
+              if (storeInput) const SizedBox(height: 16),
+              if (storeInput)
+                Customtextinput(
+                  onFieldTap: () {
+                    setState(() {
+                      storeInput = true;
+                      taxInput = true; // Toggle the flag
+                      phoneInput = false;
+                      shoptypeInput = false;
+                      lineIDInput = false;
+                      causeInput = false;
+                    });
+                  },
+                  context,
+                  label: '${_jsonString?['shop_tax'] ?? "Tax ID"} ',
+                  hint:
+                      '${_jsonString?['shop_tax_hint'] ?? "Max 13 Characters"}',
+                ),
+              if (storeInput) const SizedBox(height: 16),
+              if (storeInput)
+                Customtextinput(
+                  onFieldTap: () {
+                    setState(() {
+                      storeInput = true;
+                      taxInput = false; // Toggle the flag
+                      phoneInput = true;
+                      shoptypeInput = false;
+                      lineIDInput = false;
+                      causeInput = false;
+                    });
+                  },
+                  context,
+                  label: 'โทรศัพท์',
+                ),
+              if (storeInput) const SizedBox(height: 16),
+              if (storeInput)
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      flex: 2,
+                      child: SizedBox(
+                        child: ShopTypeDropdown(
+                          label: 'เลือกประเภทร้านค้า *',
+                          onChanged: (value) {},
+                        ),
                       ),
                     ),
-                  ),
-                  const SizedBox(width: 8.0),
-                  Expanded(
-                    child: SizedBox(
-                      // height: 50,
-                      child: DropdownCustom(
-                        label: 'เลือกรูท *',
-                        items: ['Option 1', 'Option 2', 'Option 3'],
-                        onChanged: (value) {},
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-              Customtextinput(
-                context,
-                label: 'Line ID',
-              ),
-              const SizedBox(height: 16),
-              Customtextinput(
-                context,
-                label: 'หมายเหตุ',
-              ),
+                    const SizedBox(width: 8.0),
+                    // Expanded(
+                    //   child: SizedBox(
+                    //     // height: 50,
+                    //     child: DropdownCustom(
+                    //       label: 'เลือกรูท *',
+                    //       items: ['Option 1', 'Option 2', 'Option 3'],
+                    //       onChanged: (value) {},
+                    //     ),
+                    //   ),
+                    // ),
+                  ],
+                ),
+              if (storeInput) const SizedBox(height: 16),
+              if (storeInput)
+                Customtextinput(
+                  onFieldTap: () {
+                    setState(() {
+                      storeInput = true;
+                      taxInput = false; // Toggle the flag
+                      phoneInput = false;
+                      shoptypeInput = false;
+                      lineIDInput = false;
+                      causeInput = false;
+                    });
+                  },
+                  context,
+                  label: 'Line ID',
+                ),
+              if (causeInput) const SizedBox(height: 16),
+              if (causeInput)
+                Customtextinput(
+                  onFieldTap: () {
+                    setState(() {
+                      storeInput = false;
+                      taxInput = false; // Toggle the flag
+                      phoneInput = false;
+                      shoptypeInput = false;
+                      lineIDInput = false;
+                      causeInput = true;
+                    });
+                  },
+                  context,
+                  label: 'หมายเหตุ',
+                ),
             ],
           ),
         ),
