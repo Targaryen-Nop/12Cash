@@ -2,7 +2,8 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:_12sale_app/core/components/button/Button.dart';
-import 'package:_12sale_app/core/components/dropdown/DropdownCustom.dart';
+import 'package:_12sale_app/core/components/dropdown/RouteDropdown.dart';
+import 'package:_12sale_app/core/components/dropdown/ShopTypeDropdown.dart';
 import 'package:_12sale_app/core/components/input/CustomTextInput.dart';
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:flutter/material.dart';
@@ -161,16 +162,13 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
                       ),
                     ),
                     const SizedBox(width: 8.0),
-                    // Expanded(
-                    //   child: SizedBox(
-                    //     // height: 50,
-                    //     child: DropdownCustom(
-                    //       label: 'เลือกรูท *',
-                    //       items: ['Option 1', 'Option 2', 'Option 3'],
-                    //       onChanged: (value) {},
-                    //     ),
-                    //   ),
-                    // ),
+                    Expanded(
+                      child: SizedBox(
+                        // height: 50,
+                        child: RouteDropdown(
+                            label: "เลือกรูท *", onChanged: (value) {}),
+                      ),
+                    ),
                   ],
                 ),
               if (storeInput) const SizedBox(height: 16),

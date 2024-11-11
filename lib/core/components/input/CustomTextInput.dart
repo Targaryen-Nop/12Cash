@@ -4,13 +4,19 @@ import 'package:flutter/material.dart';
 class Customtextinput extends StatefulWidget {
   final String label;
   final String? hint;
+  final String? initialValue;
+  final bool readonly;
   VoidCallback? onFieldTap; // Callback for custom actions
+  final TextEditingController? controller; // Add controller as an option
   Customtextinput(
     BuildContext context, {
     super.key,
     required this.label,
     this.hint,
+    this.initialValue,
+    this.readonly = false,
     this.onFieldTap,
+    this.controller,
   });
 
   @override
@@ -27,7 +33,9 @@ class _CustomtextinputState extends State<Customtextinput> {
           widget.onFieldTap!();
         }
       },
+      readOnly: widget.readonly,
       style: Styles.black18(context),
+      controller: widget.controller, // Use controller if provided
       decoration: InputDecoration(
         labelText: widget.label,
         labelStyle: Styles.grey18(context),

@@ -92,6 +92,11 @@ flutter:
     - .env
     - data/store.json
     - data/all_store.json
+    - data/route.json
+    - data/district.json
+    - data/subdistrict.json
+    - data/poscode.json
+    - data/province.json
    
 
   # An image asset can refer to one or more resolution-specific "variants", see

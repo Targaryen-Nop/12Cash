@@ -274,7 +274,7 @@ class _OrderDetailState extends State<OrderDetail>
         _orders.map((order) => jsonEncode(order.toJson())).toList();
 
     // Save the JSON string list to SharedPreferences
-    await prefs.setStringList('orders', jsonOrders);
+    await prefs.setStringList('ท', jsonOrders);
   }
 
   Future<void> _loadOrdersFromStorage() async {

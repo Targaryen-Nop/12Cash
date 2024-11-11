@@ -9,6 +9,8 @@ import 'package:_12sale_app/core/styles/style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:timelines/timelines.dart';
 
 const kTileHeight = 50.0;
@@ -307,6 +309,36 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
                         child: ElevatedButton(
                           onPressed: () {
                             if (_processIndex == 3) {
+                              QuickAlert.show(
+                                context: context,
+                                type: QuickAlertType.confirm,
+                                title: "",
+
+                                // text:
+                                //     'กรุณาตรวจเช็คความถูกต้องก่อนกดยืนยันการบันทึกข้อมูล',
+                                widget: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "ยืนยันข้อมูล",
+                                      style: Styles.headerBlack32(
+                                          context), // Custom style for the title
+                                    ),
+                                    const SizedBox(height: 10),
+                                    Text(
+                                      'กรุณาตรวจเช็คความถูกต้องก่อนกดยืนยันการบันทึกข้อมูล',
+                                      style: Styles.headerBlack24(
+                                          context), // Custom style for the text
+                                    ),
+                                  ],
+                                ),
+                                confirmBtnText: 'ยืนยัน',
+                                confirmBtnTextStyle: Styles.white18(context),
+                                cancelBtnTextStyle: Styles.grey18(context),
+                                cancelBtnText: 'ไม่ยืนยัน',
+
+                                confirmBtnColor: Styles.successButtonColor,
+                              );
                             } else {
                               setState(() {
                                 _processIndex =
