@@ -1,3 +1,4 @@
+import 'package:_12sale_app/core/components/QuickAlertGobal.dart';
 import 'package:_12sale_app/core/page/route/RouteScreen.dart';
 import 'package:_12sale_app/core/styles/gobalStyle.dart';
 import 'package:_12sale_app/core/styles/style.dart';
@@ -113,46 +114,14 @@ class _ButtonFullWidthState extends State<ButtonFullWidth> {
       child: ElevatedButton(
         onPressed: () {
           if (widget.screen != null) {
-            QuickAlert.show(
+            ConfirmationAlert(
               context: context,
-              type: QuickAlertType.confirm,
-              title: "",
-
-              // text:
-              //     'กรุณาตรวจเช็คความถูกต้องก่อนกดยืนยันการบันทึกข้อมูล',
-              widget: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "ยืนยันข้อมูล",
-                        style: Styles.headerBlack32(
-                            context), // Custom style for the title
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 10),
-                  Text(
-                    'กรุณาตรวจเช็คความถูกต้องก่อนกดยืนยันการบันทึกข้อมูล',
-                    style: Styles.headerBlack24(
-                        context), // Custom style for the text
-                  ),
-                ],
-              ),
-              confirmBtnText: 'ยืนยัน',
-              onConfirmBtnTap: () {
+              onConfirm: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(builder: (context) => widget.screen!),
                 );
               },
-              confirmBtnTextStyle: Styles.white18(context),
-              cancelBtnTextStyle: Styles.grey18(context),
-              cancelBtnText: 'ไม่ยืนยัน',
-
-              confirmBtnColor: Styles.successButtonColor,
-            );
+            ).show();
           }
           if (widget.onPressed != null) {
             widget.onPressed!();
