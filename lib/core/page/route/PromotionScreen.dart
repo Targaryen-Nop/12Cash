@@ -57,21 +57,67 @@ class _PromotionscreenState extends State<Promotionscreen> {
           children: [
             Text("${_jsonString?['giveaway'] ?? 'Giveaway'}",
                 style: Styles.headerBlack24(context)),
-            Container(
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey),
-                borderRadius: BorderRadius.circular(10),
+            Expanded(
+              flex: 5,
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Container(
+                      height: double
+                          .infinity, // Expands to the maximum height availableF
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(16),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(
+                                0.2), // Shadow color with transparency
+                            spreadRadius: 2, // Spread of the shadow
+                            blurRadius: 8, // Blur radius of the shadow
+                            offset: const Offset(0,
+                                4), // Offset of the shadow (horizontal, vertical)
+                          ),
+                        ],
+                        // border: Border.all(color: Colors.grey),
+                        // borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: SizedBox(),
+                    ),
+                  ),
+                ],
               ),
-              child: const Promotiontable(),
             ),
             Text("${_jsonString?['discount'] ?? 'Discount'}",
                 style: Styles.headerBlack24(context)),
-            Container(
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey),
-                borderRadius: BorderRadius.circular(10),
+            Expanded(
+              flex: 2,
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Container(
+                      height: double
+                          .infinity, // Expands to the maximum height availableF
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(16),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(
+                                0.2), // Shadow color with transparency
+                            spreadRadius: 2, // Spread of the shadow
+                            blurRadius: 8, // Blur radius of the shadow
+                            offset: const Offset(0,
+                                4), // Offset of the shadow (horizontal, vertical)
+                          ),
+                        ],
+                        // border: Border.all(color: Colors.grey),
+                        // borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: SizedBox(),
+                    ),
+                  ),
+                ],
               ),
-              child: const Promotiontable(),
             ),
             const Spacer(),
             SizedBox(

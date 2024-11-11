@@ -59,7 +59,9 @@ dependencies:
   sprintf: ^7.0.0
   flutter_screenutil: ^5.9.3
   timelines: ^0.1.0
+  awesome_dialog: ^3.2.1
   quickalert: ^1.1.0
+  toastification: ^2.3.0
 
 
 

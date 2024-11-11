@@ -69,7 +69,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> _clearOrders() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.remove('orders'); // Clear orders from SharedPreferences
-
+    await prefs.remove('ท'); // Clear orders from SharedPreferences
     setState(() {
       _orders.clear(); // Clear orders in the UI
     });

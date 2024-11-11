@@ -184,7 +184,7 @@ class _OrderDetailState extends State<OrderDetail>
         );
         _orders.insert(0, newOrder);
         _listKey.currentState?.insertItem(0);
-
+        print("Success $_orders");
         setState(() {
           qty -= (count * unit);
         });
@@ -274,7 +274,7 @@ class _OrderDetailState extends State<OrderDetail>
         _orders.map((order) => jsonEncode(order.toJson())).toList();
 
     // Save the JSON string list to SharedPreferences
-    await prefs.setStringList('ท', jsonOrders);
+    await prefs.setStringList('orders', jsonOrders);
   }
 
   Future<void> _loadOrdersFromStorage() async {

@@ -1,6 +1,9 @@
 import 'package:_12sale_app/core/page/route/RouteScreen.dart';
 import 'package:_12sale_app/core/styles/gobalStyle.dart';
+import 'package:_12sale_app/core/styles/style.dart';
 import 'package:flutter/material.dart';
+import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
 
 class CustomButton extends StatefulWidget {
   final String title;
@@ -104,13 +107,51 @@ class ButtonFullWidth extends StatefulWidget {
 class _ButtonFullWidthState extends State<ButtonFullWidth> {
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return Container(
+      // padding: EdgeInsets.symmetric(vertical: 16),
       width: double.infinity,
       child: ElevatedButton(
         onPressed: () {
           if (widget.screen != null) {
-            Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => widget.screen!),
+            QuickAlert.show(
+              context: context,
+              type: QuickAlertType.confirm,
+              title: "",
+
+              // text:
+              //     'กรุณาตรวจเช็คความถูกต้องก่อนกดยืนยันการบันทึกข้อมูล',
+              widget: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "ยืนยันข้อมูล",
+                        style: Styles.headerBlack32(
+                            context), // Custom style for the title
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    'กรุณาตรวจเช็คความถูกต้องก่อนกดยืนยันการบันทึกข้อมูล',
+                    style: Styles.headerBlack24(
+                        context), // Custom style for the text
+                  ),
+                ],
+              ),
+              confirmBtnText: 'ยืนยัน',
+              onConfirmBtnTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => widget.screen!),
+                );
+              },
+              confirmBtnTextStyle: Styles.white18(context),
+              cancelBtnTextStyle: Styles.grey18(context),
+              cancelBtnText: 'ไม่ยืนยัน',
+
+              confirmBtnColor: Styles.successButtonColor,
             );
           }
           if (widget.onPressed != null) {
@@ -118,7 +159,7 @@ class _ButtonFullWidthState extends State<ButtonFullWidth> {
           }
         },
         style: ElevatedButton.styleFrom(
-          padding: const EdgeInsets.symmetric(vertical: 6),
+          padding: const EdgeInsets.symmetric(vertical: 16),
           backgroundColor: widget.blackGroundColor,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:_12sale_app/core/components/Appbar.dart';
+import 'package:_12sale_app/core/components/card/CartCard.dart';
 import 'package:_12sale_app/core/components/table/CartSTable.dart';
 import 'package:_12sale_app/core/page/route/OrderScreen.dart';
 import 'package:_12sale_app/core/page/route/PromotionScreen.dart';
@@ -57,24 +58,49 @@ class _ShoppingCartScreenState extends State<ShoppingCartScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text("รหัสร้าน ${widget.customerNo}",
-                style: Styles.headerBlack24(context)),
-            Text("ร้าน ${widget.customerName}",
-                style: Styles.headerBlack24(context)),
+                style: Styles.black24(context)),
+            Text("ร้าน ${widget.customerName}", style: Styles.black24(context)),
             Align(
               alignment: Alignment.center,
               child: Text(
                 "${_jsonString?["item_selected"] ?? 'Item Selected'}",
-                style: Styles.headerBlack24(context),
+                style: Styles.black24(context),
               ),
             ),
-            Container(
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey),
-                borderRadius: BorderRadius.circular(10),
+            Expanded(
+              flex: 8,
+              child: Row(
+                children: [
+                  Expanded(
+                    // Use Expanded here for the container to take available width
+                    child: Container(
+                      height: double
+                          .infinity, // Expands to the maximum height availableF
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(16),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(
+                                0.2), // Shadow color with transparency
+                            spreadRadius: 2, // Spread of the shadow
+                            blurRadius: 8, // Blur radius of the shadow
+                            offset: const Offset(0,
+                                4), // Offset of the shadow (horizontal, vertical)
+                          ),
+                        ],
+                        // border: Border.all(color: Colors.grey),
+                        // borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: CartCard(onDetailsPressed: () {}),
+                    ),
+                  ),
+                ],
               ),
-              child: const CartTable(),
             ),
-            const Spacer(),
+            const Spacer(
+              flex: 1,
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -142,12 +168,12 @@ class _ShoppingCartScreenState extends State<ShoppingCartScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text("${_jsonString?["qty"] ?? 'Quantity'}",
-                    style: Styles.headerBlack24(context)),
+                    style: Styles.black24(context)),
                 Row(
                   children: [
-                    Text("$count    ", style: Styles.headerBlack24(context)),
+                    Text("$count    ", style: Styles.black24(context)),
                     Text("${_jsonString?["item"] ?? '    Items'}",
-                        style: Styles.headerBlack24(context)),
+                        style: Styles.black24(context)),
                   ],
                 ),
               ],
@@ -156,13 +182,12 @@ class _ShoppingCartScreenState extends State<ShoppingCartScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text("${_jsonString?["amount"] ?? 'Amount'}",
-                    style: Styles.headerBlack24(context)),
+                    style: Styles.black24(context)),
                 Row(
                   children: [
-                    Text("$price          ",
-                        style: Styles.headerBlack24(context)),
+                    Text("$price          ", style: Styles.black24(context)),
                     Text("${_jsonString?["bath"] ?? 'Bath'}",
-                        style: Styles.headerBlack24(context)),
+                        style: Styles.black24(context)),
                   ],
                 ),
               ],

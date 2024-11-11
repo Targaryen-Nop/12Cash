@@ -319,10 +319,16 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
                                 widget: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(
-                                      "ยืนยันข้อมูล",
-                                      style: Styles.headerBlack32(
-                                          context), // Custom style for the title
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          "ยืนยันข้อมูล",
+                                          style: Styles.headerBlack32(
+                                              context), // Custom style for the title
+                                        ),
+                                      ],
                                     ),
                                     const SizedBox(height: 10),
                                     Text(
