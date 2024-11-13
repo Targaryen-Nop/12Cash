@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'package:_12sale_app/core/components/Appbar.dart';
 import 'package:_12sale_app/core/components/BoxShadowCustom.dart';
 import 'package:_12sale_app/core/components/button/CameraButton.dart';
+import 'package:_12sale_app/core/components/button/MenuButton.dart';
+import 'package:_12sale_app/core/components/dropdown/DropDownStandarad.dart';
 import 'package:_12sale_app/core/components/table/DetailTable.dart';
 // import 'package:_12sale_app/core/components/table/ShopRouteTable.dart';
 import 'package:_12sale_app/core/components/table/ShopRouteTableMapAPI.dart';
@@ -36,7 +38,7 @@ class DetailScreen extends StatefulWidget {
 class _DetailScreenState extends State<DetailScreen> {
   Map<String, dynamic>? _jsonString;
   String? imagePath; // Path to store the captured image
-  String? selectedCause;
+  String selectedCause = 'เลือกเหตุผล';
   Store? store;
   @override
   void initState() {
@@ -109,8 +111,7 @@ class _DetailScreenState extends State<DetailScreen> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              _buildCustomButton(
-                context,
+              MenuButton(
                 icon: Icons.cancel_rounded,
                 label: _jsonString?['cancel_order_button'] ?? 'Cancel Order',
                 color: Colors.red,
@@ -118,8 +119,7 @@ class _DetailScreenState extends State<DetailScreen> {
                   _showBottomSheet(context);
                 },
               ),
-              _buildCustomButton(
-                context,
+              MenuButton(
                 icon: Icons.add_shopping_cart_rounded,
                 label: _jsonString?['order_button'] ?? 'Order',
                 color: Colors.teal,
@@ -135,8 +135,7 @@ class _DetailScreenState extends State<DetailScreen> {
                   );
                 },
               ),
-              _buildCustomButton(
-                context,
+              MenuButton(
                 icon: Icons.add_a_photo,
                 label: _jsonString?['camera_button'] ?? 'Camera',
                 color: Colors.blue,
@@ -144,8 +143,7 @@ class _DetailScreenState extends State<DetailScreen> {
                   _showBottomCamera(context);
                 },
               ),
-              _buildCustomButton(
-                context,
+              MenuButton(
                 icon: Icons.transfer_within_a_station_sharp,
                 label: _jsonString?['credit_note_button'] ?? 'CN',
                 color: const Color.fromARGB(255, 234, 175, 0),
@@ -199,57 +197,6 @@ class _DetailScreenState extends State<DetailScreen> {
     );
   }
 
-  Widget _buildCustomButton(
-    BuildContext context, {
-    required IconData icon,
-    required String label,
-    required Color color,
-    required VoidCallback onPressed,
-  }) {
-    double screenWidth = MediaQuery.of(context).size.width;
-    return InkWell(
-      onTap: onPressed,
-      child: Container(
-        width: screenWidth / 6, // Fixed width for the button
-        height: screenWidth / 6, // Fixed height for the button
-        // margin: EdgeInsets.all(2),
-        decoration: BoxDecoration(
-          color: color, // Set background color if needed
-          borderRadius: BorderRadius.circular(
-              16), // Rounded corners for the outer container
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black
-                  .withOpacity(0.2), // Shadow color with transparency
-              spreadRadius: 2, // Spread of the shadow
-              blurRadius: 8, // Blur radius of the shadow
-              offset:
-                  Offset(0, 4), // Offset of the shadow (horizontal, vertical)
-            ),
-          ],
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SizedBox(height: screenWidth / 40),
-            Icon(
-              icon,
-              color: Colors.white,
-              size: screenWidth / 12,
-              // weight: 25,
-            ),
-            // SizedBox(height: 8),
-            Text(
-              label,
-              style: Styles.white18(context),
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   void _showBottomSheet(BuildContext context) {
     showModalBottomSheet(
       context: context,
@@ -258,127 +205,114 @@ class _DetailScreenState extends State<DetailScreen> {
         side: BorderSide(color: Colors.grey, width: 0.5),
         borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
       ),
-      builder: (BuildContext context) {
+      builder: (
+        BuildContext context,
+      ) {
         double screenWidth = MediaQuery.of(context).size.width;
-        return Container(
-          width: screenWidth, // Fixed width
-          height: screenWidth * 0.8,
-          padding: EdgeInsets.only(
-            left: 16.0,
-            right: 16.0,
-            top: 16.0,
-            bottom: MediaQuery.of(context).viewInsets.bottom,
-          ),
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Header with close button
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'ระบุสาเหตุที่ร้านค้าไม่ซื้อ',
-                      style: Styles.headerBlack32(context),
-                      textAlign: TextAlign.center,
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.close),
-                      onPressed: () {
-                        Navigator.of(context).pop(); // Close bottom sheet
-                      },
-                    ),
-                  ],
-                ),
-                SizedBox(height: 8),
-                // Store Information
-                Text(
-                  'รหัสร้าน 10334587',
-                  style: Styles.black24(context),
-                ),
-                Text(
-                  'ร้าน เจริญพรค้าขาย',
-                  style: Styles.black24(context),
-                ),
-                const SizedBox(height: 16),
-
-                // Dropdown field
-                DropdownButtonFormField<String>(
-                  decoration: InputDecoration(
-                      filled: true,
-                      fillColor: Colors
-                          .grey[300], // Set the fill color to match the image
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide:
-                            BorderSide.none, // Remove border if not needed
+        return StatefulBuilder(
+            builder: (BuildContext context, StateSetter setModalState) {
+          return Container(
+            width: screenWidth, // Fixed width
+            height: screenWidth * 0.8,
+            padding: EdgeInsets.only(
+              left: 16.0,
+              right: 16.0,
+              top: 16.0,
+              bottom: MediaQuery.of(context).viewInsets.bottom,
+            ),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Header with close button
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'ระบุสาเหตุที่ร้านค้าไม่ซื้อ',
+                        style: Styles.headerBlack32(context),
+                        textAlign: TextAlign.center,
                       ),
-                      contentPadding: EdgeInsets.only(left: screenWidth / 2.5)),
-                  style: Styles.headerWhite32(context),
-
-                  value: 'อื่นๆ', // Default value
-                  alignment: Alignment.center, // Center the selected value text
-                  items: <String>['อื่นๆ', 'เหตุผล 1', 'เหตุผล 2']
-                      .map((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Center(
-                        // Center-align the text inside the dropdown items
-                        child: Text(
-                          value,
-                          style: Styles.black18(context),
-                        ),
+                      IconButton(
+                        icon: const Icon(Icons.close),
+                        onPressed: () {
+                          Navigator.of(context).pop(); // Close bottom sheet
+                        },
                       ),
-                    );
-                  }).toList(),
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      selectedCause = newValue;
-                    });
-                  },
-                ),
-                const SizedBox(height: 16),
-                selectedCause == 'อื่นๆ'
-                    ? TextField(
-                        maxLines: 5,
-                        decoration: InputDecoration(
-                          hintText: 'ใส่ข้อมูล',
-                          hintStyle: Styles.black18(context),
-                          filled: true,
-                          fillColor: Colors.white,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                        ),
-                      )
-                    : SizedBox(height: 0),
-                // Text input field
-
-                SizedBox(height: 16),
-
-                // Save button
-                SizedBox(
-                  width: double.infinity, // Full width button
-                  child: ElevatedButton(
-                    onPressed: () {
-                      // Perform save action
-                      Navigator.of(context).pop(); // Close the bottom sheet
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  // Store Information
+                  Text(
+                    'รหัสร้าน 10334587',
+                    style: Styles.black24(context),
+                  ),
+                  Text(
+                    'ร้าน เจริญพรค้าขาย',
+                    style: Styles.black24(context),
+                  ),
+                  const SizedBox(height: 16),
+                  DropDownStandard(
+                    selectedValue: selectedCause,
+                    items: const [
+                      'เลือกเหตุผล',
+                      'เหตุผล 1',
+                      'เหตุผล 2',
+                      'อื่นๆ'
+                    ],
+                    hintText: 'เลือกเหตุผล', // Default hint text
+                    onChanged: (String? newValue) {
+                      setModalState(() {
+                        selectedCause = newValue!;
+                      });
+                      // print('Selected Cause: $selectedCause');
                     },
-                    child: Text('บันทึก', style: Styles.headerWhite32(context)),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: GobalStyles.successButtonColor,
-                      // padding: EdgeInsets.symmetric(vertical: 12),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
+                  ),
+                  const SizedBox(height: 16),
+                  selectedCause == 'อื่นๆ'
+                      ? TextField(
+                          style: Styles.black18(context),
+                          maxLines: 5,
+                          decoration: InputDecoration(
+                            hintText: 'ใส่ข้อมูล',
+                            hintStyle: Styles.black18(context),
+                            filled: true,
+                            fillColor: Colors.white,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                        )
+                      : const SizedBox(height: 0),
+                  // Text input field
+
+                  const SizedBox(height: 16),
+
+                  // Save button
+                  SizedBox(
+                    width: double.infinity, // Full width button
+                    child: ElevatedButton(
+                      onPressed: () {
+                        // Perform save action
+                        Navigator.of(context).pop(); // Close the bottom sheet
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: GobalStyles.successButtonColor,
+                        // padding: EdgeInsets.symmetric(vertical: 12),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
                       ),
+                      child:
+                          Text('บันทึก', style: Styles.headerWhite32(context)),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        );
+          );
+        });
       },
     );
   }

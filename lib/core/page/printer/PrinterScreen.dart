@@ -73,14 +73,14 @@ class _BluetoothPrinterScreen4State extends State<BluetoothPrinterScreen4> {
       //   "disamount": "0.00",
       //   "itemamount": "0.00"
       // },
-      // {
-      //   "itemname": "ผงปรุงรสไก่ ฟ้าไทย 80g x10x8",
-      //   "qtytext": "2",
-      //   "unit": "แพ็ค",
-      //   "OBSAPR": "0.00",
-      //   "disamount": "0.00",
-      //   "itemamount": "0.00"
-      // },
+      {
+        "itemname": "ผงปรุงรสไก่ ฟ้าไทย 80g x10x8",
+        "qtytext": "2",
+        "unit": "แพ็ค",
+        "OBSAPR": "0.00",
+        "disamount": "0.00",
+        "itemamount": "0.00"
+      },
       // {
       //   "itemname": "ผงปรุงรสไก่ ฟ้าไทย 900g x6",
       //   "qtytext": "1",
@@ -89,14 +89,14 @@ class _BluetoothPrinterScreen4State extends State<BluetoothPrinterScreen4> {
       //   "disamount": "0.00",
       //   "itemamount": "0.00"
       // },
-      // {
-      //   "itemname": "ผงปรุงรสไก่ ฟ้าไทย 850g x6 แถมรสไก่ 80g",
-      //   "qtytext": "7",
-      //   "unit": "กระปุก",
-      //   "OBSAPR": "0.00",
-      //   "disamount": "0.00",
-      //   "itemamount": "0.00"
-      // }
+      {
+        "itemname": "ผงปรุงรสไก่ ฟ้าไทย 850g x6 แถมรสไก่ 80g",
+        "qtytext": "7",
+        "unit": "กระปุก",
+        "OBSAPR": "0.00",
+        "disamount": "0.00",
+        "itemamount": "0.00"
+      }
     ],
     "totaltext": "3672.45",
     "ex_vat": "3431.78",
@@ -235,9 +235,9 @@ class _BluetoothPrinterScreen4State extends State<BluetoothPrinterScreen4> {
       String price, String discount, String total) {
     const int nameWidth = 31;
     const int qtyWidth = 3;
-    const int unitWidth = 7;
+    const int unitWidth = 5;
     const int priceWidth = 8;
-    const int discountWidth = 7;
+    const int discountWidth = 8;
     const int totalWidth = 8;
     List<String> wrapText(String text, int width) {
       List<String> lines = [];
@@ -257,7 +257,7 @@ class _BluetoothPrinterScreen4State extends State<BluetoothPrinterScreen4> {
 
     String formattedQty = qty.padLeft(qtyWidth);
     String formattedUnit =
-        unit.padLeft(unitWidth + _getNoOfUpperLowerChars(unit));
+        unit.padRight(unitWidth + _getNoOfUpperLowerChars(unit));
     String formattedPrice = price.padLeft(priceWidth);
     String formattedDiscount = discount.padLeft(discountWidth);
     String formattedTotal = total.padLeft(totalWidth);
@@ -270,7 +270,7 @@ class _BluetoothPrinterScreen4State extends State<BluetoothPrinterScreen4> {
       if (i == 0) {
         // First line includes other columns
         rowBuffer.write(
-            '${'   $formattedQty'}${'$formattedUnit '}${'  $formattedPrice'}${' $formattedDiscount'}${' $formattedTotal'}\n');
+            '${'   $formattedQty'}${' $formattedUnit'}${'  $formattedPrice'}${' $formattedDiscount'}${' $formattedTotal'}\n');
       } else {
         // Subsequent lines only contain the item name to create a wrapped effect
         rowBuffer.write('\n');
@@ -346,7 +346,7 @@ class _BluetoothPrinterScreen4State extends State<BluetoothPrinterScreen4> {
       await printBodyBill(receiptData);
       await printHeaderSeparator();
       await printHeaderBill('ใบลดหนี้');
-      // await printBodyBill(receiptData);
+      await printBodyBill(receiptData);
     } else {
       print("Printer is disconnected ($connectionStatus)");
       ScaffoldMessenger.of(context).showSnackBar(
@@ -379,7 +379,7 @@ ${centerText('เอกสารออกเป็นชุด', paperWidthHeade
     // String body = formatFixedWidthRow2(
     //     'รายการสินค้า', 'จํานวน', '', 'ราคา', 'ส่วนลด', 'รวม');
     String body = '''
-รายการสินค้า${' ' * (21)}จำนวน/หน่วย${' ' * (7)}ราคา${' ' * (3)}ส่วนลด${' ' * (6)}รวม
+รายการสินค้า${' ' * (21)}จำนวน${' ' * (10)}ราคา${' ' * (4)}ส่วนลด${' ' * (6)}รวม
 ''';
     // Print table header
 //     String header = '''

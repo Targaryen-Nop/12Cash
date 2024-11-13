@@ -81,15 +81,14 @@ class _DetailTableState extends State<DetailTable> {
           color: Colors.white, // Set background color if needed
           borderRadius: BorderRadius.circular(
               16), // Rounded corners for the outer container
-
           boxShadow: [
             BoxShadow(
               color: Colors.black
                   .withOpacity(0.2), // Shadow color with transparency
               spreadRadius: 2, // Spread of the shadow
               blurRadius: 8, // Blur radius of the shadow
-              offset:
-                  Offset(0, 4), // Offset of the shadow (horizontal, vertical)
+              offset: const Offset(
+                  0, 4), // Offset of the shadow (horizontal, vertical)
             ),
           ],
         ),
@@ -125,40 +124,7 @@ class _DetailTableState extends State<DetailTable> {
                         GobalStyles.successBackgroundColor,
                         GobalStyles.successTextColor,
                         index);
-                  })
-                  // _buildDataRow(
-                  //     'VB23600127',
-                  //     'ร้าน ตาชาย',
-                  //     'เช็คอิน',
-                  //     GobalStyles.successBackgroundColor,
-                  //     GobalStyles.successTextColor,
-                  //     0),
-                  // _buildDataRow(
-                  //     'VB23600537',
-                  //     'ร้านก้อย หนองใหญ่',
-                  //     'เช็คอิน',
-                  //     GobalStyles.successBackgroundColor,
-                  //     GobalStyles.successTextColor,
-                  //     1),
-                  // _buildDataRow(
-                  //     'VB23600556',
-                  //     'เข้มข้นขนมจีนน้ำยา ',
-                  //     'รอเยี่ยม',
-                  //     GobalStyles.failBackgroundColor,
-                  //     GobalStyles.failTextColor,
-                  //     2),
-                  // _buildDataRow('VB23600330', 'เข้มข้นขนมจีนน้ำยา', 'ขายแล้ว',
-                  //     GobalStyles.paddingBackgroundColor, Colors.blue, 3),
-                  // _buildDataRow('VB23600177', 'เข้มข้นขนมจีนน้ำยา', 'ขายแล้ว',
-                  //     GobalStyles.paddingBackgroundColor, Colors.blue, 4),
-                  // _buildDataRow(
-                  //     'VB23600177',
-                  //     'เข้มข้นขนมจีนน้ำยา',
-                  //     'เช็คอิน',
-                  //     GobalStyles.successBackgroundColor,
-                  //     GobalStyles.successTextColor,
-                  //     5),
-                  ,
+                  }),
                 ),
               ),
             ),

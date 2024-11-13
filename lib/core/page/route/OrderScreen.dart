@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:_12sale_app/core/components/Appbar.dart';
 import 'package:_12sale_app/core/components/button/CartButton.dart';
+import 'package:_12sale_app/core/components/dropdown/DropDownStandarad.dart';
 import 'package:_12sale_app/core/components/table/OrderTable.dart';
 import 'package:_12sale_app/core/page/route/ShoppingCartScreen.dart';
 import 'package:_12sale_app/core/styles/style.dart';
@@ -123,9 +124,10 @@ class _OrderscreenState extends State<Orderscreen> with RouteAware {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("รหัสร้าน 10334587", style: Styles.headerBlack24(context)),
+              Text("รหัสร้าน ${widget.customerNo}",
+                  style: Styles.headerBlack24(context)),
               Text(
-                "ร้าน เจริญพรค้าขาย",
+                "ร้าน ${widget.customerName}",
                 style: Styles.headerBlack24(context),
               ),
               SizedBox(height: screenWidth / 80),
@@ -134,86 +136,31 @@ class _OrderscreenState extends State<Orderscreen> with RouteAware {
                   Flexible(
                     child: Container(
                       padding: const EdgeInsets.only(right: 10),
-                      child: DropdownButtonFormField<String>(
-                        decoration: InputDecoration(
-                          filled: true,
-                          fillColor: Colors.grey[300], // Light grey background
-                          border: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.circular(5), // Rounded corners
-                            borderSide: BorderSide.none, // Remove border
-                          ),
-                          contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 8), // Padding for the dropdown
-                        ),
-                        value: dropdownValue,
-                        icon: const Icon(
-                          Icons.chevron_left,
-                          size: 25,
-                        ), // Icon on the right (chevron)
-                        style: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 16,
-                        ),
-                        items: <String>[
-                          'แบรนด์',
-                          'Option 1',
-                          'Option 2',
-                          'Option 3'
-                        ].map((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList(),
-                        onChanged: (String? newValue) {
-                          setState(() {
-                            dropdownValue = newValue!;
-                          });
-                        },
+                      child: DropDownStandard(
+                        selectedValue: 'ประเภท',
+                        items: const [
+                          'ประเภท',
+                          'เหตุผล 1',
+                          'เหตุผล 2',
+                          'อื่นๆ'
+                        ],
+                        onChanged: (String? newValue) {},
                       ),
                     ),
                   ),
                   Flexible(
-                    child: DropdownButtonFormField<String>(
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Colors.grey[300], // Light grey background
-                        border: OutlineInputBorder(
-                          borderRadius:
-                              BorderRadius.circular(5), // Rounded corners
-                          borderSide: BorderSide.none, // Remove border
-                        ),
-                        contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 8), // Padding for the dropdown
+                    child: Container(
+                      padding: const EdgeInsets.only(right: 10),
+                      child: DropDownStandard(
+                        selectedValue: 'แบรนด์',
+                        items: const [
+                          'แบรนด์',
+                          'เหตุผล 1',
+                          'เหตุผล 2',
+                          'อื่นๆ'
+                        ],
+                        onChanged: (String? newValue) {},
                       ),
-                      value: dropdownValue,
-                      icon: const Icon(
-                        Icons.chevron_left,
-                        size: 25,
-                      ), // Icon on the right (chevron)
-                      style: const TextStyle(
-                        color: Colors.black,
-                        fontSize: 16,
-                      ),
-                      items: <String>[
-                        'แบรนด์',
-                        'Option 1',
-                        'Option 2',
-                        'Option 3'
-                      ].map((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          dropdownValue = newValue!;
-                        });
-                      },
                     ),
                   ),
                 ],
@@ -224,86 +171,28 @@ class _OrderscreenState extends State<Orderscreen> with RouteAware {
                   Flexible(
                     child: Container(
                       padding: const EdgeInsets.only(right: 10),
-                      child: DropdownButtonFormField<String>(
-                        decoration: InputDecoration(
-                          filled: true,
-                          fillColor: Colors.grey[300], // Light grey background
-                          border: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.circular(5), // Rounded corners
-                            borderSide: BorderSide.none, // Remove border
-                          ),
-                          contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 8), // Padding for the dropdown
-                        ),
-                        value: dropdownValue,
-                        icon: const Icon(
-                          Icons.chevron_left,
-                          size: 25,
-                        ), // Icon on the right (chevron)
-                        style: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 16,
-                        ),
-                        items: <String>[
-                          'แบรนด์',
-                          'Option 1',
-                          'Option 2',
-                          'Option 3'
-                        ].map((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList(),
-                        onChanged: (String? newValue) {
-                          setState(() {
-                            dropdownValue = newValue!;
-                          });
-                        },
+                      child: DropDownStandard(
+                        selectedValue: 'ขนาด',
+                        items: const ['ขนาด', 'เหตุผล 1', 'เหตุผล 2', 'อื่นๆ'],
+                        onChanged: (String? newValue) {},
                       ),
                     ),
                   ),
                   Flexible(
-                    child: DropdownButtonFormField<String>(
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Colors.grey[300], // Light grey background
-                        border: OutlineInputBorder(
-                          borderRadius:
-                              BorderRadius.circular(5), // Rounded corners
-                          borderSide: BorderSide.none, // Remove border
+                    child: Container(
+                      padding: const EdgeInsets.only(right: 10),
+                      child: Container(
+                        child: DropDownStandard(
+                          selectedValue: 'รสชาติ',
+                          items: const [
+                            'รสชาติ',
+                            'เหตุผล 1',
+                            'เหตุผล 2',
+                            'อื่นๆ'
+                          ],
+                          onChanged: (String? newValue) {},
                         ),
-                        contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 8), // Padding for the dropdown
                       ),
-                      value: dropdownValue,
-                      icon: const Icon(
-                        Icons.chevron_left,
-                        size: 25,
-                      ), // Icon on the right (chevron)
-                      style: const TextStyle(
-                        color: Colors.black,
-                        fontSize: 16,
-                      ),
-                      items: <String>[
-                        'แบรนด์',
-                        'Option 1',
-                        'Option 2',
-                        'Option 3'
-                      ].map((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          dropdownValue = newValue!;
-                        });
-                      },
                     ),
                   ),
                 ],

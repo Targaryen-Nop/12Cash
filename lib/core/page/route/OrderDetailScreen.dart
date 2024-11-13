@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:_12sale_app/core/components/Appbar.dart';
+import 'package:_12sale_app/core/components/BoxShadowCustom.dart';
 import 'package:_12sale_app/core/components/TossAnimation.dart';
 import 'package:_12sale_app/core/page/route/OrderScreen.dart';
 import 'package:_12sale_app/core/styles/gobalStyle.dart';
@@ -355,39 +356,41 @@ class _OrderDetailState extends State<OrderDetail>
           child: Column(
             children: [
               // Product Info Section
-              Container(
-                margin: const EdgeInsets.all(8.0),
-                color: Colors.white,
-                child: Row(
-                  children: [
-                    Flexible(
-                      flex: 1,
-                      child: Container(
-                        height: screenWidth / 3,
-                        width: screenWidth / 3,
-                        decoration: const BoxDecoration(
-                          image: DecorationImage(
-                            image:
-                                AssetImage('assets/images/12TradingLogo.png'),
+              BoxShadowCustom(
+                child: Container(
+                  margin: const EdgeInsets.all(8.0),
+                  child: Row(
+                    children: [
+                      Flexible(
+                        flex: 1,
+                        child: Container(
+                          height: screenWidth / 3,
+                          width: screenWidth / 3,
+                          decoration: const BoxDecoration(
+                            image: DecorationImage(
+                              image:
+                                  AssetImage('assets/images/12TradingLogo.png'),
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.all(8.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text("รหัสสินค้า ${widget.itemCode}",
-                              style: Styles.black18(context)),
-                          Text(widget.itemName, style: Styles.black18(context)),
-                          Text("จำนวนทั้งหมด $qty",
-                              style: Styles.black18(context)),
-                          Text("ราคา $price", style: Styles.black18(context)),
-                        ],
+                      Container(
+                        margin: const EdgeInsets.all(8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("รหัสสินค้า ${widget.itemCode}",
+                                style: Styles.black18(context)),
+                            Text(widget.itemName,
+                                style: Styles.black18(context)),
+                            Text("จำนวนทั้งหมด $qty",
+                                style: Styles.black18(context)),
+                            Text("ราคา $price", style: Styles.black18(context)),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
               SizedBox(height: screenWidth / 50),
@@ -401,57 +404,58 @@ class _OrderDetailState extends State<OrderDetail>
               ),
               SizedBox(height: screenWidth / 50),
               Expanded(
-                child: Container(
-                  margin: const EdgeInsets.all(8.0),
-                  color: Colors.white,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          Row(
-                            children: [
-                              Text("โปรโมทชั่น",
-                                  style: Styles.black18(context)),
+                child: BoxShadowCustom(
+                  child: Container(
+                    margin: const EdgeInsets.all(8.0),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            Row(
+                              children: [
+                                Text("โปรโมทชั่น",
+                                    style: Styles.black18(context)),
 
-                              // Text("ราคา", style: Styles.black18(context)),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Text("จํานวน", style: Styles.black18(context)),
-                              Text("ราคา", style: Styles.black18(context)),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Text("$count", style: Styles.black18(context)),
-                              Text("$totalPrice",
-                                  style: Styles.black18(context)),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Text("$count", style: Styles.black18(context)),
-                              Text("$totalPrice",
-                                  style: Styles.black18(context)),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Text("$count", style: Styles.black18(context)),
-                              Text("$totalPrice",
-                                  style: Styles.black18(context)),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Text("$count", style: Styles.black18(context)),
-                              Text("$totalPrice",
-                                  style: Styles.black18(context)),
-                            ],
-                          ),
-                        ],
+                                // Text("ราคา", style: Styles.black18(context)),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Text("จํานวน", style: Styles.black18(context)),
+                                Text("ราคา", style: Styles.black18(context)),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Text("$count", style: Styles.black18(context)),
+                                Text("$totalPrice",
+                                    style: Styles.black18(context)),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Text("$count", style: Styles.black18(context)),
+                                Text("$totalPrice",
+                                    style: Styles.black18(context)),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Text("$count", style: Styles.black18(context)),
+                                Text("$totalPrice",
+                                    style: Styles.black18(context)),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Text("$count", style: Styles.black18(context)),
+                                Text("$totalPrice",
+                                    style: Styles.black18(context)),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -459,165 +463,201 @@ class _OrderDetailState extends State<OrderDetail>
               ),
               SizedBox(height: screenWidth / 50),
               Expanded(
-                child: Container(
-                  margin: const EdgeInsets.all(8.0),
-                  color: Colors.white,
-                  child: Scrollbar(
-                    controller: _animatedListController,
-                    thumbVisibility: true,
-                    child: Column(
-                      children: [
-                        Expanded(
-                          child: AnimatedList(
-                            key: _listKey,
-                            controller: _animatedListController,
-                            initialItemCount: _orders.length,
-                            itemBuilder: (context, index, animation) {
-                              return _buildOrderItem(
-                                  _orders[index], animation, index);
-                            },
+                child: BoxShadowCustom(
+                  child: Container(
+                    margin: const EdgeInsets.all(8.0),
+                    child: Scrollbar(
+                      controller: _animatedListController,
+                      thumbVisibility: true,
+                      child: Column(
+                        children: [
+                          Expanded(
+                            child: AnimatedList(
+                              key: _listKey,
+                              controller: _animatedListController,
+                              initialItemCount: _orders.length,
+                              itemBuilder: (context, index, animation) {
+                                return _buildOrderItem(
+                                    _orders[index], animation, index);
+                              },
+                            ),
                           ),
-                        ),
-                        // Expanded(
-                        //   child: Scrollbar(
-                        //     controller:
-                        //         _listViewController, // Scrollbar attached to ListView
-                        //     thumbVisibility: true,
-                        //     child: ListView.builder(
-                        //       controller: _listViewController,
-                        //       itemCount: _orders.length,
-                        //       itemBuilder: (context, index) {
-                        //         return Text(_orders[index].textShow);
-                        //       },
-                        //     ),
-                        //   ),
-                        // ),
-                      ],
+                          // Expanded(
+                          //   child: Scrollbar(
+                          //     controller:
+                          //         _listViewController, // Scrollbar attached to ListView
+                          //     thumbVisibility: true,
+                          //     child: ListView.builder(
+                          //       controller: _listViewController,
+                          //       itemCount: _orders.length,
+                          //       itemBuilder: (context, index) {
+                          //         return Text(_orders[index].textShow);
+                          //       },
+                          //     ),
+                          //   ),
+                          // ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
               ),
               SizedBox(height: screenWidth / 50),
               // Bottom Add Button
-              Container(
-                margin: const EdgeInsets.all(8.0),
-                color: Colors.white,
-                child: Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        children: [
-                          GestureDetector(
-                            onTap: () => setState(() {
-                              if (count > 0) {
-                                count--;
+              BoxShadowCustom(
+                child: Container(
+                  margin: const EdgeInsets.all(8.0),
+                  child: Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          children: [
+                            GestureDetector(
+                              onTap: () => setState(() {
+                                if (count > 0) {
+                                  count--;
+                                  totalPrice = price * count * unit;
+                                }
+                              }),
+                              child: Container(
+                                alignment: Alignment.center,
+                                width: screenWidth / 15,
+                                margin: const EdgeInsets.all(8.0),
+                                decoration: BoxDecoration(
+                                  color: Colors.grey,
+                                  borderRadius: BorderRadius.circular(180),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(
+                                          0.2), // Shadow color with transparency
+                                      spreadRadius: 2, // Spread of the shadow
+                                      blurRadius:
+                                          8, // Blur radius of the shadow
+                                      offset: Offset(0,
+                                          4), // Offset of the shadow (horizontal, vertical)
+                                    ),
+                                  ],
+                                ),
+                                child: Icon(
+                                  Icons.remove,
+                                  color: Colors.white,
+                                  size: screenWidth / 15,
+                                ),
+                              ),
+                            ),
+                            Container(
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                border: Border.all(
+                                  color: Colors.grey,
+                                  width: 2,
+                                ),
+                              ),
+                              width: screenWidth / 8,
+                              alignment: Alignment.center,
+                              child: Text(
+                                '${count.toStringAsFixed(0)}',
+                                style: Styles.black18(context),
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: () => setState(() {
+                                count++;
                                 totalPrice = price * count * unit;
-                              }
-                            }),
-                            child: Container(
-                              alignment: Alignment.center,
-                              width: screenWidth / 15,
-                              margin: const EdgeInsets.all(8.0),
-                              decoration: BoxDecoration(
-                                color: Colors.grey,
-                                borderRadius: BorderRadius.circular(180),
-                              ),
-                              child: Icon(
-                                Icons.remove,
-                                color: Colors.white,
-                                size: screenWidth / 15,
-                              ),
-                            ),
-                          ),
-                          Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              border: Border.all(
-                                color: Colors.grey,
-                                width: 2,
-                              ),
-                            ),
-                            width: screenWidth / 8,
-                            alignment: Alignment.center,
-                            child: Text(
-                              '${count.toStringAsFixed(0)}',
-                              style: Styles.black18(context),
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: () => setState(() {
-                              count++;
-                              totalPrice = price * count * unit;
-                            }),
-                            child: Container(
-                              alignment: Alignment.center,
-                              width: screenWidth / 15,
-                              margin: const EdgeInsets.all(8.0),
-                              decoration: BoxDecoration(
-                                color: Colors.grey,
-                                borderRadius: BorderRadius.circular(180),
-                              ),
-                              child: Icon(
-                                Icons.add,
-                                color: Colors.white,
-                                size: screenWidth / 15,
+                              }),
+                              child: Container(
+                                alignment: Alignment.center,
+                                width: screenWidth / 15,
+                                margin: const EdgeInsets.all(8.0),
+                                decoration: BoxDecoration(
+                                  color: Colors.grey,
+                                  borderRadius: BorderRadius.circular(180),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(
+                                          0.2), // Shadow color with transparency
+                                      spreadRadius: 2, // Spread of the shadow
+                                      blurRadius:
+                                          8, // Blur radius of the shadow
+                                      offset: Offset(0,
+                                          4), // Offset of the shadow (horizontal, vertical)
+                                    ),
+                                  ],
+                                ),
+                                child: Icon(
+                                  Icons.add,
+                                  color: Colors.white,
+                                  size: screenWidth / 15,
+                                ),
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Styles.successButtonColor,
-                          borderRadius: BorderRadius.circular(16),
+                          ],
                         ),
-                        margin: const EdgeInsets.all(8.0),
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        child: ScaleTransition(
-                          scale: _buttonScaleAnimation,
-                          child: TextButton(
-                            onPressed: () async {
-                              // Start the scale animation
-                              await _buttonAnimationController.forward();
-                              await _buttonAnimationController.reverse();
+                      ),
+                      Expanded(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Styles.successButtonColor,
+                            borderRadius: BorderRadius.circular(16),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(
+                                    0.2), // Shadow color with transparency
+                                spreadRadius: 2, // Spread of the shadow
+                                blurRadius: 8, // Blur radius of the shadow
+                                offset: const Offset(0,
+                                    4), // Offset of the shadow (horizontal, vertical)
+                              ),
+                            ],
+                          ),
+                          margin: const EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          child: ScaleTransition(
+                            scale: _buttonScaleAnimation,
+                            child: TextButton(
+                              onPressed: () async {
+                                // Start the scale animation
+                                await _buttonAnimationController.forward();
+                                await _buttonAnimationController.reverse();
 
-                              // Call the add order function
-                              _addOrder();
+                                // Call the add order function
+                                _addOrder();
 
-                              toastification.show(
-                                primaryColor: Colors.green,
-                                context:
-                                    context, // optional if you use ToastificationWrapper
-                                type: ToastificationType.success,
-                                style: ToastificationStyle.flatColored,
-                                title: Text(
-                                  'เพิ่มรายการสำเร็จ!',
-                                  style: Styles.black18(context),
-                                ),
-                                autoCloseDuration: const Duration(seconds: 5),
-                              );
-                            },
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  "เพิ่ม",
-                                  style: Styles.headerWhite24(context),
-                                ),
-                                Text(
-                                  '${totalPrice.toStringAsFixed(2)}',
-                                  style: Styles.headerWhite24(context),
-                                ),
-                              ],
+                                toastification.show(
+                                  primaryColor: Colors.green,
+                                  // ignore: use_build_context_synchronously
+                                  context:
+                                      context, // optional if you use ToastificationWrapper
+                                  type: ToastificationType.success,
+                                  style: ToastificationStyle.flatColored,
+                                  title: Text(
+                                    'เพิ่มรายการสําเร็จ!',
+                                    style: Styles.black18(context),
+                                  ),
+                                  autoCloseDuration: const Duration(seconds: 5),
+                                );
+                              },
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    "เพิ่ม",
+                                    style: Styles.headerWhite24(context),
+                                  ),
+                                  Text(
+                                    totalPrice.toStringAsFixed(2),
+                                    style: Styles.headerWhite24(context),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ],
@@ -637,8 +677,18 @@ class _OrderDetailState extends State<OrderDetail>
         margin: const EdgeInsets.all(8.0),
         height: 100,
         decoration: BoxDecoration(
-          color: isSelected ? Colors.green : Colors.green[100],
+          color: isSelected ? Styles.successButtonColor : Colors.green[100],
           borderRadius: BorderRadius.circular(8),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black
+                  .withOpacity(0.2), // Shadow color with transparency
+              spreadRadius: 2, // Spread of the shadow
+              blurRadius: 8, // Blur radius of the shadow
+              offset: const Offset(
+                  0, 4), // Offset of the shadow (horizontal, vertical)
+            ),
+          ],
         ),
         child: TextButton(
           onPressed: () {

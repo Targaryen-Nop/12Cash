@@ -82,7 +82,7 @@ class _DetailShopScreenState extends State<DetailShopScreen> {
                                   0.2), // Shadow color with transparency
                               spreadRadius: 2, // Spread of the shadow
                               blurRadius: 8, // Blur radius of the shadow
-                              offset: Offset(0,
+                              offset: const Offset(0,
                                   4), // Offset of the shadow (horizontal, vertical)
                             ),
                           ],

@@ -29,7 +29,6 @@ class ConfirmationAlert extends StatelessWidget {
     QuickAlert.show(
       context: context,
       type: QuickAlertType.confirm,
-      title: "",
       widget: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -38,7 +37,7 @@ class ConfirmationAlert extends StatelessWidget {
             children: [
               Text(
                 title,
-                style: Styles.headerWhite32(context),
+                style: Styles.headerBlack32(context),
               ),
             ],
           ),

@@ -118,15 +118,15 @@ class CameraPreviewScreen extends StatelessWidget {
   final Function(String) onImageCaptured;
 
   const CameraPreviewScreen({
-    Key? key,
+    super.key,
     required this.cameraController,
     required this.onImageCaptured,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('dawd Preview')),
+      appBar: AppBar(title: const Text('ตัวอย่างการถ่ายรูป')),
       body: FutureBuilder<void>(
         future: cameraController.initialize(),
         builder: (context, snapshot) {
@@ -150,19 +150,20 @@ class CameraPreviewScreen extends StatelessWidget {
                           onImageCaptured(image.path);
 
                           // Pop the current screen after the photo is taken
+                          // ignore: use_build_context_synchronously
                           Navigator.pop(context);
                         } catch (e) {
                           print(e);
                         }
                       },
-                      child: Icon(Icons.camera_alt),
+                      child: const Icon(Icons.camera_alt),
                     ),
                   ),
                 ),
               ],
             );
           } else {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           }
         },
       ),

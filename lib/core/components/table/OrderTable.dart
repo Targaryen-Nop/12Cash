@@ -148,10 +148,10 @@ class _OrderTableState extends State<OrderTable> {
     //         : Styles.failBackgroundColor;
 
     Color? badgeColor = int.parse(qty) >= 500
-        ? Colors.green[200]
+        ? Colors.green[900]
         : int.parse(qty) >= 100
-            ? Colors.orange[200]
-            : Colors.red[200];
+            ? Colors.orange[900]
+            : Colors.red[900];
 
     // Color? badgeTextColor = int.parse(qty) >= 500
     //     ? Styles.successTextColor
@@ -226,7 +226,7 @@ class _OrderTableState extends State<OrderTable> {
       ),
       alignment: Alignment.center,
       padding: const EdgeInsets.all(8),
-      child: Text(text, style: Styles.black18(context)),
+      child: Text(text, style: Styles.white18(context)),
     );
   }
 
