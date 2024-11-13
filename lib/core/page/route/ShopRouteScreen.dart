@@ -4,6 +4,8 @@ import 'package:_12sale_app/core/components/CustomerDropdownSearch.dart';
 import 'package:_12sale_app/core/components/badge/CustomBadge.dart';
 import 'package:_12sale_app/core/components/table/ShopRouteTable.dart';
 import 'package:_12sale_app/core/styles/style.dart';
+import 'package:_12sale_app/data/models/SaleRoute.dart';
+import 'package:_12sale_app/function/SavetoStorage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -24,17 +26,31 @@ class Shoproutescreen extends StatefulWidget {
 
 class _ShoproutescreenState extends State<Shoproutescreen> {
   Map<String, dynamic>? _jsonString;
+  SaleRoute? routes;
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     _loadJson();
+    _loadSaleRoute();
   }
 
   Future<void> _loadJson() async {
     String jsonString = await rootBundle.loadString('lang/main-th.json');
     setState(() {
       _jsonString = jsonDecode(jsonString)["route"]["shop_screen"];
+    });
+  }
+
+  Future<void> _loadSaleRoute() async {
+    List<SaleRoute> routesData =
+        await loadFromStorage('saleRoutes', (json) => SaleRoute.fromJson(json));
+    SaleRoute? routeFilter = routesData.firstWhere(
+      (route) => route.day == widget.day.split(" ")[1],
+    );
+    setState(() {
+      routes = routeFilter;
     });
   }
 
@@ -52,24 +68,24 @@ class _ShoproutescreenState extends State<Shoproutescreen> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            CustomerDropdownSearch(),
+            const CustomerDropdownSearch(),
             SizedBox(
               height: screenWidth / 30,
             ),
             Container(
               alignment: Alignment.center,
-              child: const Row(
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   CustomBadge(
                     label: 'เช็คอิน',
-                    count: '16',
+                    count: '${routes?.storeCheckin ?? '0'}',
                     backgroundColor: Styles.successTextColor,
                     countBackgroundColor: Colors.white,
                   ),
                   CustomBadge(
                     label: 'ขายแล้ว',
-                    count: '16',
+                    count: '${routes?.storeBuy ?? '0'}',
                     backgroundColor: Styles.paddingTextColor,
                     countBackgroundColor: Colors.white,
                   ),
@@ -81,18 +97,18 @@ class _ShoproutescreenState extends State<Shoproutescreen> {
             ),
             Container(
               alignment: Alignment.center,
-              child: const Row(
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   CustomBadge(
                     label: 'ขายไม่ได้',
-                    count: '16',
+                    count: '${routes?.storeNotBuy ?? '0'}',
                     backgroundColor: Styles.failTextColor,
                     countBackgroundColor: Colors.white,
                   ),
                   CustomBadge(
                     label: 'ทั้งหมด',
-                    count: '16',
+                    count: '${routes?.storeAll ?? '0'}',
                     backgroundColor: Colors.grey,
                     countBackgroundColor: Colors.white,
                   ),
@@ -102,22 +118,7 @@ class _ShoproutescreenState extends State<Shoproutescreen> {
             SizedBox(
               height: screenWidth / 30,
             ),
-            // Padding(
-            //   padding: const EdgeInsets.all(16.0),
-            //   child: Row(
-            //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //     children: [
-            //       Text(
-            //         widget.status,
-            //         style: Styles.headerBlack24(context),
-            //       ),
-            //       Text(
-            //         widget.route,
-            //         style: Styles.headerBlack24(context),
-            //       )
-            //     ],
-            //   ),
-            // ),
+
             Expanded(
               child: ShopRouteTable(
                 day: widget.day,

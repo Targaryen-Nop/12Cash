@@ -60,31 +60,31 @@ class _CartCardState extends State<CartCard> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        '${index + 1}. ${order.itemName}',
-                        style: Styles.black24(context),
-                      ),
-                      Container(
-                        width: screenWidth / 12,
-                        alignment: Alignment.center,
-                        child: GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              _orders
-                                  .removeAt(index); // Optionally remove order
-                            });
-                          },
-                          child: Container(
-                            width: 50,
-                            margin: const EdgeInsets.all(5),
-                            decoration: BoxDecoration(
-                              color: Colors.red,
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                            alignment: Alignment.center,
-                            child: Icon(Icons.close,
-                                color: Colors.white, size: screenWidth / 15),
+                      Expanded(
+                        child: Container(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            '${index + 1}. ${order.itemName}',
+                            style: Styles.black24(context),
                           ),
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _orders.removeAt(index); // Optionally remove order
+                          });
+                        },
+                        child: Container(
+                          width: screenWidth / 12,
+                          margin: const EdgeInsets.all(5),
+                          decoration: BoxDecoration(
+                            color: Colors.red,
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                          alignment: Alignment.center,
+                          child: Icon(Icons.close,
+                              color: Colors.white, size: screenWidth / 15),
                         ),
                       ),
                     ],
@@ -149,7 +149,10 @@ class _CartCardState extends State<CartCard> {
                                       alignment: Alignment.center,
                                       child: Text(
                                         '${order.count.toStringAsFixed(0)}',
-                                        style: Styles.black18(context),
+                                        style: TextStyle(
+                                          fontSize: screenWidth / 25,
+                                          color: Colors.black,
+                                        ),
                                       ),
                                     ),
                                     GestureDetector(

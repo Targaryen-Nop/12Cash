@@ -30,14 +30,15 @@ class _DistrictSearchState extends State<DistrictSearch> {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
     return DropdownSearch<District>(
       items: district,
-      dropdownButtonProps: const DropdownButtonProps(
+      dropdownButtonProps: DropdownButtonProps(
         icon: Padding(
           padding: EdgeInsets.only(right: 8.0),
           child: Icon(
             Icons.arrow_drop_down,
-            size: 30,
+            size: screenWidth / 20,
             color: Colors.black54,
           ),
         ),

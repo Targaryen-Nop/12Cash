@@ -9,6 +9,7 @@ import 'package:_12sale_app/data/models/Order.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:toastification/toastification.dart';
 
 class OrderDetail extends StatefulWidget {
   final String itemCode;
@@ -88,53 +89,10 @@ class _OrderDetailState extends State<OrderDetail>
     );
     //-------------------------------------------------
 
-    // _controller2 = AnimationController(
-    //   duration: Duration(milliseconds: 700),
-    //   vsync: this,
-    // );
-
-    // _scaleAnimation = Tween<double>(begin: 1.0, end: 0.3).animate(
-    //   CurvedAnimation(parent: _controller2, curve: Curves.easeOut),
-    // );
-    // _controller2.addStatusListener((status) {
-    //   if (status == AnimationStatus.completed) {
-    //     setState(() {
-    //       _isAnimating2 = false;
-    //       _cartItemCount++;
-    //     });
-    //     _controller2.reset();
-    //   }
-    // });
 // ------------------------------------------------------
     _loadJson();
     _loadOrdersFromStorage();
   }
-
-  // void _startAddToCartAnimationToss() {
-  //   final buttonPosition = _getWidgetPosition(_buttonKey);
-  //   final cartPosition = _getWidgetPosition(_cartKey);
-
-  //   if (buttonPosition != null && cartPosition != null) {
-  //     final dx = cartPosition.dx - buttonPosition.dx;
-  //     final dy = cartPosition.dy - buttonPosition.dy;
-
-  //     setState(() {
-  //       _positionAnimation = Tween<Offset>(
-  //         begin: Offset.zero,
-  //         end: Offset(dx, dy),
-  //       ).animate(
-  //           CurvedAnimation(parent: _controller2, curve: Curves.easeInOut));
-  //       _isAnimating = true;
-  //     });
-
-  //     _controller2.forward();
-  //   }
-  // }
-
-  // Offset? _getWidgetPositionToss(GlobalKey key) {
-  //   final renderBox = key.currentContext?.findRenderObject() as RenderBox?;
-  //   return renderBox?.localToGlobal(Offset.zero);
-  // }
 
   // Function to add a new order
   void _addOrder() async {
@@ -628,6 +586,19 @@ class _OrderDetailState extends State<OrderDetail>
 
                               // Call the add order function
                               _addOrder();
+
+                              toastification.show(
+                                primaryColor: Colors.green,
+                                context:
+                                    context, // optional if you use ToastificationWrapper
+                                type: ToastificationType.success,
+                                style: ToastificationStyle.flatColored,
+                                title: Text(
+                                  'เพิ่มรายการสำเร็จ!',
+                                  style: Styles.black18(context),
+                                ),
+                                autoCloseDuration: const Duration(seconds: 5),
+                              );
                             },
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,

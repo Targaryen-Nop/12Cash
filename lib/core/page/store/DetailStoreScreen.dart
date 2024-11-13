@@ -42,107 +42,150 @@ class _DetailShopScreenState extends State<DetailShopScreen> {
             title: " รายละเอียดร้านค้า",
             icon: Icons.store_mall_directory_rounded),
       ),
-      body: Container(
-        padding: const EdgeInsets.all(16.0),
-        margin: const EdgeInsets.all(8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                const Icon(
-                  Icons.store, // Use any icon you want, or load custom icons
-                  size: 40,
-                ),
-                const SizedBox(
-                    width: 8), // Adds some spacing between the icon and text
-                Text(
-                  "ข้อมูลร้านค้า",
-                  style: Styles.black18(context),
-                ),
-              ],
-            ),
-            SizedBox(height: screenWidth / 80),
-            Expanded(
+      body: LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints viewportConstraints) {
+        return SingleChildScrollView(
+          child: ConstrainedBox(
+            constraints:
+                BoxConstraints(minHeight: viewportConstraints.maxHeight),
+            child: IntrinsicHeight(
               child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black
-                          .withOpacity(0.2), // Shadow color with transparency
-                      spreadRadius: 2, // Spread of the shadow
-                      blurRadius: 8, // Blur radius of the shadow
-                      offset: Offset(
-                          0, 4), // Offset of the shadow (horizontal, vertical)
+                padding: const EdgeInsets.all(16.0),
+                margin: const EdgeInsets.all(8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        const Icon(
+                          Icons
+                              .store, // Use any icon you want, or load custom icons
+                          size: 40,
+                        ),
+                        const SizedBox(
+                            width:
+                                8), // Adds some spacing between the icon and text
+                        Text(
+                          "ข้อมูลร้านค้า",
+                          style: Styles.black18(context),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: screenWidth / 80),
+                    Expanded(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(
+                                  0.2), // Shadow color with transparency
+                              spreadRadius: 2, // Spread of the shadow
+                              blurRadius: 8, // Blur radius of the shadow
+                              offset: Offset(0,
+                                  4), // Offset of the shadow (horizontal, vertical)
+                            ),
+                          ],
+                          // border: Border.all(color: Colors.grey),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Column(
+                            children: [
+                              _buildCustomFormField('ชื่อร้านค้า',
+                                  widget.customerName, Icons.store),
+                              _buildCustomFormField('เลขประจำตัวผู้เสียภาษี',
+                                  '1234567891011', Icons.person_outline),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: _buildCustomFormField(
+                                        'โทรศัพท์', '089-2463592', Icons.phone),
+                                  ),
+                                  const SizedBox(width: 16),
+                                  Expanded(
+                                    child: _buildCustomFormField(
+                                        'เส้นทาง', 'R01', Icons.location_on),
+                                  ),
+                                ],
+                              ),
+                              _buildCustomFormField(
+                                  'ไลน์', '@testja', Icons.alternate_email),
+                              _buildCustomFormField('ประเภทร้านค้า',
+                                  'แผงตลาดสด', Icons.store_mall_directory),
+                              _buildCustomFormField(
+                                  'หมายเหตุ',
+                                  'ร้านปิดอาทิตย์ รับของ 15.00 - 16.00',
+                                  Icons.note),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: screenWidth / 37),
+                    Expanded(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(
+                                  0.2), // Shadow color with transparency
+                              spreadRadius: 2, // Spread of the shadow
+                              blurRadius: 8, // Blur radius of the shadow
+                              offset: Offset(0,
+                                  4), // Offset of the shadow (horizontal, vertical)
+                            ),
+                          ],
+                          // border: Border.all(color: Colors.grey),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Column(
+                            children: [
+                              Text(
+                                "Function in Store",
+                                style: Styles.black18(context),
+                              ),
+                              _buildCustomFormField('ชื่อร้านค้า',
+                                  widget.customerName, Icons.store),
+                              _buildCustomFormField('เลขประจำตัวผู้เสียภาษี',
+                                  '1234567891011', Icons.person_outline),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: _buildCustomFormField(
+                                        'โทรศัพท์', '089-2463592', Icons.phone),
+                                  ),
+                                  const SizedBox(width: 16),
+                                  Expanded(
+                                    child: _buildCustomFormField(
+                                        'เส้นทาง', 'R01', Icons.location_on),
+                                  ),
+                                ],
+                              ),
+                              _buildCustomFormField(
+                                  'ไลน์', '@testja', Icons.alternate_email),
+                              _buildCustomFormField('ประเภทร้านค้า',
+                                  'แผงตลาดสด', Icons.store_mall_directory),
+                              _buildCustomFormField(
+                                  'หมายเหตุ',
+                                  'ร้านปิดอาทิตย์ รับของ 15.00 - 16.00',
+                                  Icons.note),
+                            ],
+                          ),
+                        ),
+                      ),
                     ),
                   ],
-                  // border: Border.all(color: Colors.grey),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    children: [
-                      _buildCustomFormField(
-                          'ชื่อร้านค้า', widget.customerName, Icons.store),
-                      _buildCustomFormField('เลขประจำตัวผู้เสียภาษี',
-                          '1234567891011', Icons.person_outline),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: _buildCustomFormField(
-                                'โทรศัพท์', '089-2463592', Icons.phone),
-                          ),
-                          const SizedBox(width: 16),
-                          Expanded(
-                            child: _buildCustomFormField(
-                                'เส้นทาง', 'R01', Icons.location_on),
-                          ),
-                        ],
-                      ),
-                      _buildCustomFormField(
-                          'ไลน์', '@testja', Icons.alternate_email),
-                      _buildCustomFormField('ประเภทร้านค้า', 'แผงตลาดสด',
-                          Icons.store_mall_directory),
-                      _buildCustomFormField('หมายเหตุ',
-                          'ร้านปิดอาทิตย์ รับของ 15.00 - 16.00', Icons.note),
-                    ],
-                  ),
                 ),
               ),
             ),
-
-            // Row(
-            //   mainAxisAlignment: MainAxisAlignment.end,
-            //   children: [
-            //     SizedBox(
-            //       width: 100, // Set the width of the button
-            //       height: screenWidth / 8, // Set the height of the button
-            //       child: FloatingActionButton(
-            //         // Your actual Fab
-            //         onPressed: () {
-            //           Navigator.push(
-            //             context,
-            //             MaterialPageRoute(
-            //               builder: (context) => AddShopScreen(),
-            //             ),
-            //           );
-            //         },
-            //         backgroundColor: GobalStyles.primaryColor,
-            //         shape: CircleBorder(),
-            //         child: const Icon(
-            //           Icons.add,
-            //           color: Colors.white,
-            //           size: 60,
-            //         ),
-            //       ),
-            //     )
-            //   ],
-            // )
-          ],
-        ),
-      ),
+          ),
+        );
+      }),
     );
   }
 

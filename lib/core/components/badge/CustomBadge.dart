@@ -33,6 +33,16 @@ class CustomBadge extends StatelessWidget {
       decoration: BoxDecoration(
         color: backgroundColor,
         borderRadius: BorderRadius.circular(10),
+        boxShadow: [
+          BoxShadow(
+            color:
+                Colors.black.withOpacity(0.2), // Shadow color with transparency
+            spreadRadius: 2, // Spread of the shadow
+            blurRadius: 8, // Blur radius of the shadow
+            offset: const Offset(
+                0, 4), // Offset of the shadow (horizontal, vertical)
+          ),
+        ],
       ),
       alignment: Alignment.center,
       child: Row(
@@ -50,6 +60,16 @@ class CustomBadge extends StatelessWidget {
             decoration: BoxDecoration(
               color: countBackgroundColor,
               borderRadius: BorderRadius.circular(360),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black
+                      .withOpacity(0.2), // Shadow color with transparency
+                  spreadRadius: 2, // Spread of the shadow
+                  blurRadius: 8, // Blur radius of the shadow
+                  offset: const Offset(
+                      0, 4), // Offset of the shadow (horizontal, vertical)
+                ),
+              ],
             ),
             alignment: Alignment.center,
             child: Text(

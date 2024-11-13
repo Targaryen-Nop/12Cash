@@ -99,6 +99,7 @@ flutter:
     - data/subdistrict.json
     - data/poscode.json
     - data/province.json
+    - data/sale_route.json
    
 
   # An image asset can refer to one or more resolution-specific "variants", see

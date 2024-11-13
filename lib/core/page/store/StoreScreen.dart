@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:_12sale_app/core/components/BoxShadowCustom.dart';
 import 'package:_12sale_app/core/components/button/AddStoreButton.dart';
 import 'package:_12sale_app/core/components/card/StoreCardAll.dart';
 import 'package:_12sale_app/core/components/card/StoreCardNew.dart';
@@ -131,25 +132,29 @@ class _ShopScreenState extends State<ShopScreen> {
                         ? const Center(
                             child:
                                 CircularProgressIndicator()) // Show loading spinner if data isn't loaded
-                        : ListView.builder(
-                            itemCount: storeItems.length,
-                            itemBuilder: (context, index) {
-                              return StoreCartNew(
-                                item: storeItems[index],
-                                onDetailsPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => DetailShopScreen(
-                                          customerNo: storeItems[index].storeId,
-                                          customerName: storeItems[index].name),
-                                    ),
-                                  );
-                                  print(
-                                      'Details for ${storeItems[index].name}');
-                                },
-                              );
-                            },
+                        : BoxShadowCustom(
+                            child: ListView.builder(
+                              itemCount: storeItems.length,
+                              itemBuilder: (context, index) {
+                                return StoreCartNew(
+                                  item: storeItems[index],
+                                  onDetailsPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => DetailShopScreen(
+                                            customerNo:
+                                                storeItems[index].storeId,
+                                            customerName:
+                                                storeItems[index].name),
+                                      ),
+                                    );
+                                    print(
+                                        'Details for ${storeItems[index].name}');
+                                  },
+                                );
+                              },
+                            ),
                           ),
                   )
                 : Expanded(
@@ -157,23 +162,27 @@ class _ShopScreenState extends State<ShopScreen> {
                         ? const Center(
                             child:
                                 CircularProgressIndicator()) // Show loading spinner if data isn't loaded
-                        : ListView.builder(
-                            itemCount: storeItems.length,
-                            itemBuilder: (context, index) {
-                              return StoreCartAll(
-                                item: storeItems[index],
-                                onDetailsPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => DetailShopScreen(
-                                          customerNo: storeItems[index].storeId,
-                                          customerName: storeItems[index].name),
-                                    ),
-                                  );
-                                },
-                              );
-                            },
+                        : BoxShadowCustom(
+                            child: ListView.builder(
+                              itemCount: storeItems.length,
+                              itemBuilder: (context, index) {
+                                return StoreCartAll(
+                                  item: storeItems[index],
+                                  onDetailsPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => DetailShopScreen(
+                                            customerNo:
+                                                storeItems[index].storeId,
+                                            customerName:
+                                                storeItems[index].name),
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
+                            ),
                           ),
                   ),
           ],

@@ -9,22 +9,26 @@ import 'package:_12sale_app/function/SavetoStorage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class ShopRouteTable extends StatefulWidget {
+class DetailTable extends StatefulWidget {
   final String day;
-  const ShopRouteTable({
+  final String customerNo;
+  const DetailTable({
     super.key,
     required this.day,
+    required this.customerNo,
   });
 
   @override
-  State<ShopRouteTable> createState() => _ShopRouteTableState();
+  State<DetailTable> createState() => _DetailTableState();
 }
 
-class _ShopRouteTableState extends State<ShopRouteTable> {
+class _DetailTableState extends State<DetailTable> {
   Map<String, dynamic>? _jsonString;
   List<Store> stores = [];
+  List<ListOrder> orders = [];
   @override
   void initState() {
     // TODO: implement initState
@@ -47,9 +51,21 @@ class _ShopRouteTableState extends State<ShopRouteTable> {
         .where((route) => route.day == widget.day.split(" ")[1])
         .expand((route) => route.listStore)
         .toList();
+    List<ListOrder> filteredOrders = filteredStores
+        .where((store) => store.storeInfo.storeId == widget.customerNo)
+        .expand((store) => store.listOrder)
+        .toList();
+
     setState(() {
-      stores = filteredStores;
+      orders = filteredOrders;
     });
+  }
+
+  String formatDate(String dateStr) {
+    DateTime date = DateTime.parse(dateStr); // Parse the original date string
+    DateFormat formatter =
+        DateFormat('dd/MM/yyyy'); // Define the desired format
+    return formatter.format(date); // Format the date
   }
 
   @override
@@ -72,8 +88,8 @@ class _ShopRouteTableState extends State<ShopRouteTable> {
                   .withOpacity(0.2), // Shadow color with transparency
               spreadRadius: 2, // Spread of the shadow
               blurRadius: 8, // Blur radius of the shadow
-              offset: const Offset(
-                  0, 4), // Offset of the shadow (horizontal, vertical)
+              offset:
+                  Offset(0, 4), // Offset of the shadow (horizontal, vertical)
             ),
           ],
         ),
@@ -89,11 +105,8 @@ class _ShopRouteTableState extends State<ShopRouteTable> {
               ),
               child: Row(
                 children: [
-                  _buildHeaderCell(
-                      _jsonString?['customer_no'] ?? 'Customer No'),
-                  _buildHeaderCell(
-                      _jsonString?['customer_name'] ?? 'Customer Name'),
-                  _buildHeaderCell(_jsonString?['status'] ?? 'Status'),
+                  Expanded(child: _buildHeaderCell("วันที่")),
+                  Expanded(flex: 2, child: _buildHeaderCell("รายการ")),
                 ],
               ),
             ),
@@ -102,17 +115,50 @@ class _ShopRouteTableState extends State<ShopRouteTable> {
               child: SingleChildScrollView(
                 scrollDirection: Axis.vertical,
                 child: Column(
-                  children: List.generate(stores.length, (index) {
-                    final store = stores[index];
+                  children: List.generate(orders.length, (index) {
+                    final order = orders[index];
                     return _buildDataRow(
-                        store.storeInfo.storeId,
-                        store.storeInfo.storeName,
-                        store.storeInfo.storeAddress,
-                        store.statusText,
+                        formatDate(order.date.toString()),
+                        order.orderId,
+                        order.orderId,
+                        order.orderId,
                         GobalStyles.successBackgroundColor,
                         GobalStyles.successTextColor,
                         index);
-                  }),
+                  })
+                  // _buildDataRow(
+                  //     'VB23600127',
+                  //     'ร้าน ตาชาย',
+                  //     'เช็คอิน',
+                  //     GobalStyles.successBackgroundColor,
+                  //     GobalStyles.successTextColor,
+                  //     0),
+                  // _buildDataRow(
+                  //     'VB23600537',
+                  //     'ร้านก้อย หนองใหญ่',
+                  //     'เช็คอิน',
+                  //     GobalStyles.successBackgroundColor,
+                  //     GobalStyles.successTextColor,
+                  //     1),
+                  // _buildDataRow(
+                  //     'VB23600556',
+                  //     'เข้มข้นขนมจีนน้ำยา ',
+                  //     'รอเยี่ยม',
+                  //     GobalStyles.failBackgroundColor,
+                  //     GobalStyles.failTextColor,
+                  //     2),
+                  // _buildDataRow('VB23600330', 'เข้มข้นขนมจีนน้ำยา', 'ขายแล้ว',
+                  //     GobalStyles.paddingBackgroundColor, Colors.blue, 3),
+                  // _buildDataRow('VB23600177', 'เข้มข้นขนมจีนน้ำยา', 'ขายแล้ว',
+                  //     GobalStyles.paddingBackgroundColor, Colors.blue, 4),
+                  // _buildDataRow(
+                  //     'VB23600177',
+                  //     'เข้มข้นขนมจีนน้ำยา',
+                  //     'เช็คอิน',
+                  //     GobalStyles.successBackgroundColor,
+                  //     GobalStyles.successTextColor,
+                  //     5),
+                  ,
                 ),
               ),
             ),
@@ -152,12 +198,7 @@ class _ShopRouteTableState extends State<ShopRouteTable> {
                 flex: 1,
                 child: _buildTableCell(
                     customerNo)), // Use Expanded to distribute space equally
-            Expanded(flex: 1, child: _buildTableCell(customerName)),
-
-            Expanded(
-                flex: 1,
-                child: _buildStatusCell(status, bgColor, textColor,
-                    context)), // Custom function for "สถานะ" column
+            Expanded(flex: 2, child: _buildTableCell(customerName)),
           ],
         ),
       ),
@@ -196,14 +237,12 @@ class _ShopRouteTableState extends State<ShopRouteTable> {
   }
 
   Widget _buildHeaderCell(String text) {
-    return Expanded(
-      child: Container(
-        alignment: Alignment.center,
-        padding: const EdgeInsets.all(8),
-        child: Text(
-          text,
-          style: Styles.grey18(context),
-        ),
+    return Container(
+      alignment: Alignment.center,
+      padding: const EdgeInsets.all(8),
+      child: Text(
+        text,
+        style: Styles.grey18(context),
       ),
     );
   }

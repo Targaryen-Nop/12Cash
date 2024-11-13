@@ -1,8 +1,9 @@
 import 'package:_12sale_app/core/components/Gird.dart';
-import 'package:_12sale_app/core/page/BluetoothPrinterScreen.dart';
-import 'package:_12sale_app/core/page/PrinterScreen.dart';
-import 'package:_12sale_app/core/page/TestPrint.dart';
-import 'package:_12sale_app/core/page/TestPrinterScreen.dart';
+import 'package:_12sale_app/core/page/printer/BluetoothPrinterScreen.dart';
+import 'package:_12sale_app/core/page/printer/PrinterBluetoothScreen.dart';
+import 'package:_12sale_app/core/page/printer/PrinterScreen.dart';
+import 'package:_12sale_app/core/page/printer/TestPrint.dart';
+import 'package:_12sale_app/core/page/printer/TestPrinterScreen.dart';
 import 'package:_12sale_app/core/page/dashboard/DashboardScreen.dart';
 import 'package:_12sale_app/core/page/HomeScreen.dart';
 import 'package:_12sale_app/core/page/LoginScreen.dart';
@@ -68,6 +69,7 @@ class MyApp extends StatelessWidget {
           home: const HomeScreen(
             index: 0,
           ),
+          // home: BluetoothPrinterScreen4(),
           navigatorObservers: [routeObserver],
           // home: AddToCartAnimationPage(),
         );

@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:_12sale_app/core/page/route/ShopRouteScreen.dart';
 import 'package:_12sale_app/core/styles/gobalStyle.dart';
 import 'package:_12sale_app/core/styles/style.dart';
+import 'package:_12sale_app/data/models/SaleRoute.dart';
+import 'package:_12sale_app/function/SavetoStorage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -16,16 +18,26 @@ class RouteTable extends StatefulWidget {
 
 class _RouteTableState extends State<RouteTable> {
   Map<String, dynamic>? _jsonString;
+  List<SaleRoute> routes = [];
   @override
   void initState() {
     super.initState();
     _loadJson();
+    _loadSaleRoute();
   }
 
   Future<void> _loadJson() async {
     String jsonString = await rootBundle.loadString('lang/main-th.json');
     setState(() {
       _jsonString = jsonDecode(jsonString)["route_table"];
+    });
+  }
+
+  Future<void> _loadSaleRoute() async {
+    List<SaleRoute> routes =
+        await loadFromStorage('saleRoutes', (json) => SaleRoute.fromJson(json));
+    setState(() {
+      this.routes = routes;
     });
   }
 
@@ -47,8 +59,8 @@ class _RouteTableState extends State<RouteTable> {
                   .withOpacity(0.2), // Shadow color with transparency
               spreadRadius: 2, // Spread of the shadow
               blurRadius: 8, // Blur radius of the shadow
-              offset:
-                  Offset(0, 4), // Offset of the shadow (horizontal, vertical)
+              offset: const Offset(
+                  0, 4), // Offset of the shadow (horizontal, vertical)
             ),
           ],
         ),
@@ -77,33 +89,24 @@ class _RouteTableState extends State<RouteTable> {
                 scrollDirection: Axis.vertical,
                 child: Column(
                   children: [
-                    _buildDataRow(
-                        'วันที่ 01',
-                        '1',
-                        '5/5',
-                        Styles.successBackgroundColor,
-                        Styles.successTextColor,
-                        0),
-                    _buildDataRow(
-                        'วันที่ 02',
-                        '2',
-                        '6/6',
-                        Styles.successBackgroundColor,
-                        Styles.successTextColor,
-                        1),
-                    _buildDataRow('วันที่ 03', '4', '0/9',
-                        Styles.failBackgroundColor, Styles.failTextColor, 2),
-                    _buildDataRow('วันที่ 04', '5', '11/16',
-                        Styles.paddingBackgroundColor, Colors.blue, 3),
-                    _buildDataRow('วันที่ 05', '6', '2/9',
-                        Styles.paddingBackgroundColor, Colors.blue, 4),
-                    _buildDataRow(
-                        'วันที่ 06',
-                        '7',
-                        '9/9',
-                        Styles.successBackgroundColor,
-                        Styles.successTextColor,
-                        5),
+                    ...List.generate(routes.length, (index) {
+                      final route = routes[index];
+                      return _buildDataRow(
+                          'วันที่ ${route.day}',
+                          '${int.tryParse(route.day)}',
+                          '${route.storeTotal}/${route.storeAll}',
+                          route.storeTotal == route.storeAll
+                              ? Styles.successBackgroundColor
+                              : route.storeTotal == 0
+                                  ? Styles.failBackgroundColor
+                                  : Styles.paddingBackgroundColor,
+                          route.storeTotal == route.storeAll
+                              ? Styles.successTextColor
+                              : route.storeTotal == 0
+                                  ? Styles.failTextColor
+                                  : Colors.blue,
+                          index);
+                    }),
                   ],
                 ),
               ),

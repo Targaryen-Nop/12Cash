@@ -136,19 +136,19 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
                 Customtextinput(
                   onFieldTap: () {
                     setState(() {
-                      storeInput = true;
+                      storeInput = false;
                       taxInput = false; // Toggle the flag
-                      phoneInput = true;
+                      phoneInput = false;
                       shoptypeInput = false;
                       lineIDInput = false;
-                      causeInput = false;
+                      causeInput = true;
                     });
                   },
                   context,
                   label: 'โทรศัพท์',
                 ),
-              if (storeInput) const SizedBox(height: 16),
-              if (storeInput)
+              if (causeInput) const SizedBox(height: 16),
+              if (causeInput)
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -171,17 +171,17 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
                     ),
                   ],
                 ),
-              if (storeInput) const SizedBox(height: 16),
-              if (storeInput)
+              if (causeInput) const SizedBox(height: 16),
+              if (causeInput)
                 Customtextinput(
                   onFieldTap: () {
                     setState(() {
-                      storeInput = true;
+                      storeInput = false;
                       taxInput = false; // Toggle the flag
                       phoneInput = false;
                       shoptypeInput = false;
                       lineIDInput = false;
-                      causeInput = false;
+                      causeInput = true;
                     });
                   },
                   context,

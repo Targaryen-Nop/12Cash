@@ -72,7 +72,7 @@
     "route": {
         "detail_screen": {
             "title": "เข้าเยี่ยม",
-            "cancel_order_button": "ไม่ขาย",
+            "cancel_order_button": "ขายไม่ได้",
             "order_button": "ขาย",
             "camera_button": "ถ่ายรูป",
             "credit_note_button": "คืน"

@@ -1,11 +1,15 @@
 import 'dart:convert';
 import 'package:_12sale_app/core/components/Appbar.dart';
+import 'package:_12sale_app/core/components/BoxShadowCustom.dart';
 import 'package:_12sale_app/core/components/button/CameraButton.dart';
+import 'package:_12sale_app/core/components/table/DetailTable.dart';
 // import 'package:_12sale_app/core/components/table/ShopRouteTable.dart';
 import 'package:_12sale_app/core/components/table/ShopRouteTableMapAPI.dart';
 import 'package:_12sale_app/core/page/route/OrderScreen.dart';
 import 'package:_12sale_app/core/styles/gobalStyle.dart';
 import 'package:_12sale_app/core/styles/style.dart';
+import 'package:_12sale_app/data/models/SaleRoute.dart';
+import 'package:_12sale_app/function/SavetoStorage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -14,6 +18,7 @@ class DetailScreen extends StatefulWidget {
   final String customerNo;
   final String day;
   final String customerName;
+  final String address;
   final String status;
 
   const DetailScreen(
@@ -21,6 +26,7 @@ class DetailScreen extends StatefulWidget {
       required this.customerNo,
       required this.day,
       required this.customerName,
+      required this.address,
       required this.status});
 
   @override
@@ -31,11 +37,13 @@ class _DetailScreenState extends State<DetailScreen> {
   Map<String, dynamic>? _jsonString;
   String? imagePath; // Path to store the captured image
   String? selectedCause;
+  Store? store;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     _loadJson();
+    // _loadStoreDetail();
   }
 
   Future<void> _loadJson() async {
@@ -44,6 +52,30 @@ class _DetailScreenState extends State<DetailScreen> {
       _jsonString = jsonDecode(jsonString)['route']["detail_screen"];
     });
   }
+
+  // Future<void> _loadStoreDetail() async {
+  //   List<SaleRoute> routesData =
+  //       await loadFromStorage('saleRoutes', (json) => SaleRoute.fromJson(json));
+
+  //   // Extract day from the widget's `day` property
+  //   String day = widget.day.split(" ")[1];
+
+  //   // Find the first `SaleRoute` where the `day` matches
+  //   SaleRoute? routeFilter = routesData.firstWhere(
+  //     (route) => route.day == day,
+  //   );
+
+  //   // If a matching route is found, find the store with the specific storeId
+  //   Store? storeDetail;
+
+  //   storeDetail = routeFilter.listStore.firstWhere(
+  //     (store) => store.storeInfo.storeId == widget.customerNo,
+  //   );
+
+  //   setState(() {
+  //     store = storeDetail;
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -140,19 +172,26 @@ class _DetailScreenState extends State<DetailScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("xxxxxxxxxx xxxxx", style: Styles.headerBlack24(context)),
-              Text("xxxxxxxxxx xxxxx", style: Styles.headerBlack24(context)),
-              // Text(
-              //     "ออเดอร์ ${widget.day} เดือน ${DateFormat('MMMM', 'th').format(DateTime.now())} ${DateTime.now().year + 543}",
-              //     style: Styles.headerBlack24(context)),
-              // Text("ยอดรวม 2000.00 บาท", style: Styles.headerBlack24(context)),
+              Text('รหัสร้าน ${widget.customerNo}',
+                  style: Styles.headerBlack24(context)),
+              Text("ร้าน ${widget.customerName}",
+                  style: Styles.headerBlack24(context)),
+              Text("ที่อยู่ ${widget.address}",
+                  style: Styles.headerBlack24(context)),
               const SizedBox(height: 10),
               SizedBox(
-                height: screenWidth,
-                child: ShopRouteTable(
+                height: screenWidth / 2,
+                child: DetailTable(
                   day: widget.day,
+                  customerNo: widget.customerNo,
                 ),
               ),
+              SizedBox(height: screenWidth / 37),
+              BoxShadowCustom(
+                  child: Container(
+                color: Colors.white,
+                height: screenWidth / 2,
+              ))
             ],
           ),
         ),

@@ -46,6 +46,7 @@ class _CustomerDropdownSearchState extends State<CustomerDropdownSearch> {
         ),
       ),
       dropdownDecoratorProps: DropDownDecoratorProps(
+        baseStyle: Styles.black18(context),
         dropdownSearchDecoration: InputDecoration(
           hintText: "ค้นหาร้านค้า",
           hintStyle: Styles.grey18(context),

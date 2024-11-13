@@ -60,7 +60,7 @@ class _RouteDropdownState extends State<RouteDropdown> {
             const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
       ),
       value: selectedValue,
-      icon: const Icon(Icons.arrow_drop_down),
+      // icon: const Icon(Icons.arrow_drop_down),
       style: Styles.black18(context),
       items: routes.map((RouteStore item) {
         return DropdownMenuItem<RouteStore>(

@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 import 'package:sprintf/sprintf.dart';
-import 'package:_12sale_app/core/page/StingHelper.dart';
+import 'package:_12sale_app/core/page/printer/StingHelper.dart';
 import 'package:charset_converter/charset_converter.dart';
 import 'package:flutter/material.dart';
 import 'package:print_bluetooth_thermal/print_bluetooth_thermal.dart';
@@ -41,62 +41,62 @@ class _BluetoothPrinterScreen4State extends State<BluetoothPrinterScreen4> {
         "disamount": "0.00",
         "itemamount": "2910.00"
       },
-      {
-        "itemname": "ผงปรุงรสหมู ฟ้าไทย 10g x24x10 ชนิดแผง",
-        "qtytext": "1",
-        "unit": "ซอง",
-        "OBSAPR": "762.00",
-        "disamount": "0.00",
-        "itemamount": "762.00"
-      },
-      {
-        "itemname": "ผงปรุงรสหมู ฟ้าไทย 80g x10x8 แถมช้อนจีน",
-        "qtytext": "1",
-        "unit": "ถุง",
-        "OBSAPR": "0.00",
-        "disamount": "0.00",
-        "itemamount": "0.00"
-      },
-      {
-        "itemname": "ผงปรุงรสหมู ฟ้าไทย 450g x12 แถมชามพลาสติก",
-        "qtytext": "6",
-        "unit": "แผง",
-        "OBSAPR": "0.00",
-        "disamount": "102.00",
-        "itemamount": "0.00"
-      },
-      {
-        "itemname": "ผงปรุงรสหมู ฟ้าไทย 80g x10x8 แถมเห็ด 10g",
-        "qtytext": "13",
-        "unit": "กระสอบ",
-        "OBSAPR": "0.00",
-        "disamount": "0.00",
-        "itemamount": "0.00"
-      },
-      {
-        "itemname": "ผงปรุงรสไก่ ฟ้าไทย 80g x10x8",
-        "qtytext": "2",
-        "unit": "แพ็ค",
-        "OBSAPR": "0.00",
-        "disamount": "0.00",
-        "itemamount": "0.00"
-      },
-      {
-        "itemname": "ผงปรุงรสไก่ ฟ้าไทย 900g x6",
-        "qtytext": "1",
-        "unit": "กล่อง",
-        "OBSAPR": "0.00",
-        "disamount": "0.00",
-        "itemamount": "0.00"
-      },
-      {
-        "itemname": "ผงปรุงรสไก่ ฟ้าไทย 850g x6 แถมรสไก่ 80g",
-        "qtytext": "7",
-        "unit": "กระปุก",
-        "OBSAPR": "0.00",
-        "disamount": "0.00",
-        "itemamount": "0.00"
-      }
+      // {
+      //   "itemname": "ผงปรุงรสหมู ฟ้าไทย 10g x24x10 ชนิดแผง",
+      //   "qtytext": "1",
+      //   "unit": "ซอง",
+      //   "OBSAPR": "762.00",
+      //   "disamount": "0.00",
+      //   "itemamount": "762.00"
+      // },
+      // {
+      //   "itemname": "ผงปรุงรสหมู ฟ้าไทย 80g x10x8 แถมช้อนจีน",
+      //   "qtytext": "1",
+      //   "unit": "ถุง",
+      //   "OBSAPR": "0.00",
+      //   "disamount": "0.00",
+      //   "itemamount": "0.00"
+      // },
+      // {
+      //   "itemname": "ผงปรุงรสหมู ฟ้าไทย 450g x12 แถมชามพลาสติก",
+      //   "qtytext": "6",
+      //   "unit": "แผง",
+      //   "OBSAPR": "0.00",
+      //   "disamount": "102.00",
+      //   "itemamount": "0.00"
+      // },
+      // {
+      //   "itemname": "ผงปรุงรสหมู ฟ้าไทย 80g x10x8 แถมเห็ด 10g",
+      //   "qtytext": "13",
+      //   "unit": "กระสอบ",
+      //   "OBSAPR": "0.00",
+      //   "disamount": "0.00",
+      //   "itemamount": "0.00"
+      // },
+      // {
+      //   "itemname": "ผงปรุงรสไก่ ฟ้าไทย 80g x10x8",
+      //   "qtytext": "2",
+      //   "unit": "แพ็ค",
+      //   "OBSAPR": "0.00",
+      //   "disamount": "0.00",
+      //   "itemamount": "0.00"
+      // },
+      // {
+      //   "itemname": "ผงปรุงรสไก่ ฟ้าไทย 900g x6",
+      //   "qtytext": "1",
+      //   "unit": "กล่อง",
+      //   "OBSAPR": "0.00",
+      //   "disamount": "0.00",
+      //   "itemamount": "0.00"
+      // },
+      // {
+      //   "itemname": "ผงปรุงรสไก่ ฟ้าไทย 850g x6 แถมรสไก่ 80g",
+      //   "qtytext": "7",
+      //   "unit": "กระปุก",
+      //   "OBSAPR": "0.00",
+      //   "disamount": "0.00",
+      //   "itemamount": "0.00"
+      // }
     ],
     "totaltext": "3672.45",
     "ex_vat": "3431.78",
@@ -324,21 +324,29 @@ class _BluetoothPrinterScreen4State extends State<BluetoothPrinterScreen4> {
     return text.padRight(length + extraSpaces);
   }
 
+  String centerTextSeparator(String text, int width) {
+    int totalPadding = width - text.length;
+    int leftPadding = totalPadding ~/ 2;
+    int rightPadding = totalPadding - leftPadding;
+    return '-' * leftPadding + text + '-' * rightPadding;
+  }
+
+  Future<void> printHeaderSeparator() async {
+    String header =
+        '''\n${centerTextSeparator('ตัดตามรอยปะ', paperWidth)}\n\n\n''';
+    Uint8List encodedContent = await CharsetConverter.encode('TIS-620', header);
+    await PrintBluetoothThermal.writeBytes(List<int>.from(encodedContent));
+  }
+
   Future<void> printTest() async {
     bool connectionStatus = await PrintBluetoothThermal.connectionStatus;
     if (connectionStatus) {
-      await printHeaderBill();
+      // await printHeaderSeparator();
+      await printHeaderBill('บิลเงินสด/ใบกำกับภาษี');
       await printBodyBill(receiptData);
-      // Print header
-      // final receiptContent =
-      //     await formatReceipt(receiptData); // Format the receipt content
-      // Encode the receipt text for TIS-620 before sending to the printer
-      // Uint8List encodedContent =
-      //     await CharsetConverter.encode('TIS-620', receiptContent);
-      // // Send the encoded content to the Bluetooth printer
-      // await PrintBluetoothThermal.writeBytes(List<int>.from(encodedContent));
-
-      // Convert each section of the text to UTF-8 before sending to the printer
+      await printHeaderSeparator();
+      await printHeaderBill('ใบลดหนี้');
+      // await printBodyBill(receiptData);
     } else {
       print("Printer is disconnected ($connectionStatus)");
       ScaffoldMessenger.of(context).showSnackBar(
@@ -347,7 +355,7 @@ class _BluetoothPrinterScreen4State extends State<BluetoothPrinterScreen4> {
     }
   }
 
-  Future<void> printHeaderBill() async {
+  Future<void> printHeaderBill(String typeBill) async {
     String header = '''
 ${centerText('บริษัท วันทูเทรดดิ้ง จำกัด', paperWidthHeader)}
 ${centerText('58/3 หมู่ที่ 6 ถ.พระประโทน-บ้านแพ้ว', paperWidthHeader)}
@@ -355,26 +363,28 @@ ${centerText('ต.ตลาดจินดา อ.สามพราน จ.น�
 ${centerText('โทร.(034) 981-555', paperWidthHeader)}
 ${centerText('เลขประจำตัวผู้เสียภาษี 0105563063410', paperWidthHeader)}
 ${centerText('ออกใบกำกับภาษีโดยสำนักงานใหญ่', paperWidthHeader)}
-${centerText('(บิลเงินสด/ใบกำกับภาษี)', paperWidthHeader)}
+${centerText('($typeBill)', paperWidthHeader)}
 ${centerText('เอกสารออกเป็นชุด', paperWidthHeader)}''';
     Uint8List encodedContent = await CharsetConverter.encode('TIS-620', header);
     await PrintBluetoothThermal.writeBytes(List<int>.from(encodedContent));
   }
 
   Future<void> printBodyBill(Map<String, dynamic> data) async {
-    // const int nameWidth = 30; // Width for item name
-    // const int qtyWidth = 10; // Width for quantity
-    // const int discountWidth = 4; // Width for discount
-
     await printBetween('รหัสลูกค้า ${data['customer']['customercode']}',
         'เลขที่ ${data['CUOR']}');
     await printBetween('ชื่อลูกค้า ${data['customer']['customername']}',
         'วันที่ ${data['OAORDT']}');
+    await printBill(
+        'ที่อยู่ ${data['customer']['address1']} ${data['customer']['address2']} ${data['customer']['address3']}');
     // String body = formatFixedWidthRow2(
     //     'รายการสินค้า', 'จํานวน', '', 'ราคา', 'ส่วนลด', 'รวม');
     String body = '''
-รายการสินค้า${' ' * (26)}จำนวน${' ' * (7)}ราคา${' ' * (3)}ส่วนลด${' ' * (6)}รวม
+รายการสินค้า${' ' * (21)}จำนวน/หน่วย${' ' * (7)}ราคา${' ' * (3)}ส่วนลด${' ' * (6)}รวม
 ''';
+    // Print table header
+//     String header = '''
+// ${padThaiText('รายการสินค้า', nameWidth)}${padThaiText('จำนวน', 11)}${padThaiText('ราคา', priceWidth)}${padThaiText('ส่วนลด', discountWidth)}${padThaiText('รวม', totalWidth)}
+// ''';
     Uint8List encodedBody = await CharsetConverter.encode('TIS-620', body);
     await PrintBluetoothThermal.writeBytes(List<int>.from(encodedBody));
 
@@ -406,71 +416,12 @@ ${centerText('เอกสารออกเป็นชุด', paperWidthHeade
     await printBetween('จำนวนเงินรวมสุทธิ', data['total'].toString());
     await printBetween("", "($totalText)");
     String footer = '''
-    ${leftRightText('ผู้รับเงิน ${data['OBSMCD']}', '.........................', 70)}
+    ${leftRightText('ผู้รับเงิน 20406-${data['OBSMCD']}', '.........................', 70)}
     ${leftRightText('', 'ลายเซ็นลูกค้า', 58)}
     ''';
     Uint8List encodedFooter = await CharsetConverter.encode('TIS-620', footer);
     await PrintBluetoothThermal.writeBytes(List<int>.from(encodedFooter));
-
-//     String footer = '''
-// ${leftRightText('ส่วนลด', '0.00', paperWidth)}
-// ${leftRightText('ภาษีมูลค่าเพิ่ม 7%', data['vat'].toString(), paperWidth)}
-// ${leftRightText('ส่วนลดท้ายบิล', '0.00', paperWidth)}
-// ${leftRightText('ส่วนลดร้านค้า', data['totaldis'].toString(), paperWidth)}
-// ${leftRightText('จำนวนเงินรวมสุทธิ', data['total'].toString(), paperWidth)}
-// ${rightText('($totalText)', paperWidth)}
-// ${leftRightText('ผู้รับเงิน ${data['OBSMCD']}', '.........................', paperWidth)}
-// ${leftRightText('', 'ลายเซ็นลูกค้า', paperWidth)}
-// ''';
   }
-
-  // String formatItemRow(String index, String itemName, String qty, String price,
-  //     String discount, String total) {
-  //   const int indexWidth = 3;
-  //   const int itemNameWidth = 30;
-  //   const int qtyWidth = 8;
-  //   const int priceWidth = 10;
-  //   const int discountWidth = 10;
-  //   const int totalWidth = 10;
-
-  //   String formattedIndex = index.padRight(indexWidth);
-  //   String formattedQty = qty.padLeft(qtyWidth);
-  //   String formattedPrice = price.padLeft(priceWidth);
-  //   String formattedDiscount = discount.padLeft(discountWidth);
-  //   String formattedTotal = total.padLeft(totalWidth);
-
-  //   // Split item name if it exceeds the width
-  //   List<String> wrappedItemName = _wrapText(itemName, itemNameWidth);
-
-  //   // Build the first row with index, item name, qty, price, discount, and total
-  //   String formattedRow =
-  //       '$formattedIndex${wrappedItemName[0].padRight(itemNameWidth)}'
-  //       '$formattedQty$formattedPrice$formattedDiscount$formattedTotal';
-
-  //   // Append any additional lines for wrapped item names, aligning them to the item column
-  //   for (int i = 1; i < wrappedItemName.length; i++) {
-  //     formattedRow += '\n' +
-  //         ' '.padRight(indexWidth) +
-  //         wrappedItemName[i].padRight(itemNameWidth) +
-  //         ' ' *
-  //             (qtyWidth +
-  //                 priceWidth +
-  //                 discountWidth +
-  //                 totalWidth); // Fill remaining columns with spaces
-  //   }
-
-  //   return formattedRow;
-  // }
-
-  // static List<String> _wrapText(String text, int maxWidth) {
-  //   List<String> lines = [];
-  //   while (text.length > maxWidth) {
-  //     lines.add(text.substring(0, maxWidth));
-  //     text = text.substring(maxWidth);
-  //   }
-  //   lines.add(text); // Add remaining text
-  //   return lines;
-  // }
 
   String formatFixedWidthRow(String itemName, String qty, String unit,
       String price, String discount, String total) {
@@ -481,13 +432,6 @@ ${centerText('เอกสารออกเป็นชุด', paperWidthHeade
     const int discountWidth = 8;
     const int totalWidth = 8;
 
-    // // Define fixed widths for each column
-    // const int nameWidth = 20; // Width for item name
-    // const int qtyWidth = 15; // Width for quantity
-    // const int priceWidth = 10; // Width for price
-    // const int discountWidth = 10; // Width for discount
-    // const int totalWidth = 10; // Width for total
-    // Helper to split long text into lines of fixed width
     List<String> wrapText(String text, int width) {
       List<String> lines = [];
       for (int i = 0; i < text.length; i += width) {

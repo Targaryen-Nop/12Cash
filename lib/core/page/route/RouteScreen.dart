@@ -4,9 +4,12 @@ import 'package:_12sale_app/core/components/search/TestDropdown.dart';
 import 'package:_12sale_app/core/components/table/RouteTable.dart';
 import 'package:_12sale_app/core/styles/gobalStyle.dart';
 import 'package:_12sale_app/core/styles/style.dart';
+import 'package:_12sale_app/data/models/SaleRoute.dart';
+import 'package:_12sale_app/function/SavetoStorage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Routescreen extends StatefulWidget {
   const Routescreen({super.key});
@@ -16,6 +19,48 @@ class Routescreen extends StatefulWidget {
 }
 
 class _RoutescreenState extends State<Routescreen> {
+  List<SaleRoute> _routes = [];
+
+  @override
+  initState() {
+    super.initState();
+    _loadSaleRoute();
+  }
+
+  Future<void> _loadSaleRoute() async {
+    String jsonSaleRoute = await rootBundle.loadString('data/sale_route.json');
+    List<dynamic> jsonData = jsonDecode(jsonSaleRoute);
+
+    setState(() {
+      _routes = jsonData
+          .map((data) => SaleRoute.fromJson(data as Map<String, dynamic>))
+          .toList();
+    });
+    await saveToStorage('saleRoutes', _routes);
+  }
+
+  // Future<void> _saveSaleRouteToStorage(List<SaleRoute> routes) async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+
+  //   // Convert each SaleRoute to JSON and encode it as a JSON string
+  //   List<String> jsonRoutes =
+  //       routes.map((route) => jsonEncode(route.toJson())).toList();
+
+  //   // Save the JSON string list to SharedPreferences
+  //   await prefs.setStringList('saleRoutes', jsonRoutes);
+  // }
+
+  // Future<List<SaleRoute>> _loadSaleRouteFromStorage() async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   List<String>? jsonRoutes = prefs.getStringList('saleRoutes');
+
+  //   if (jsonRoutes == null) return [];
+
+  //   return jsonRoutes
+  //       .map((jsonRoute) => SaleRoute.fromJson(jsonDecode(jsonRoute)))
+  //       .toList();
+  // }
+
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -26,7 +71,8 @@ class _RoutescreenState extends State<Routescreen> {
         // ),
         Expanded(
           child: Container(
-              margin: EdgeInsets.all(screenWidth / 50),
+              padding: const EdgeInsets.all(8),
+              margin: EdgeInsets.all(screenWidth / 45),
               child: const RouteTable()),
         ),
       ],
