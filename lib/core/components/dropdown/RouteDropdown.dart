@@ -11,12 +11,14 @@ class RouteDropdown extends StatefulWidget {
   final String label;
   final String? hint;
   final ValueChanged<RouteStore?> onChanged;
+  final String? initialSelectedValue; // Now a String? for route name
 
-  const RouteDropdown({
+  RouteDropdown({
     Key? key,
     required this.label,
     this.hint,
     required this.onChanged,
+    this.initialSelectedValue, // Expecting route name or identifier as String
   }) : super(key: key);
 
   @override
@@ -41,6 +43,13 @@ class _RouteDropdownState extends State<RouteDropdown> {
     // Map JSON data to RouteStore model
     setState(() {
       routes = (data as List).map((json) => RouteStore.fromJson(json)).toList();
+
+      // Find the initial selected RouteStore based on the route name
+      if (routes.isNotEmpty && widget.initialSelectedValue != null) {
+        selectedValue = routes.firstWhere(
+          (route) => route.route == widget.initialSelectedValue,
+        );
+      }
     });
   }
 
@@ -60,12 +69,11 @@ class _RouteDropdownState extends State<RouteDropdown> {
             const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
       ),
       value: selectedValue,
-      // icon: const Icon(Icons.arrow_drop_down),
       style: Styles.black18(context),
       items: routes.map((RouteStore item) {
         return DropdownMenuItem<RouteStore>(
           value: item,
-          child: Text(item.route), // Display name of RouteStore in dropdown
+          child: Text(item.route), // Display the route name
         );
       }).toList(),
       onChanged: (RouteStore? newValue) {

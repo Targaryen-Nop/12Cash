@@ -16,7 +16,24 @@ import 'package:shared_preferences/shared_preferences.dart';
 late StreamSubscription<bool> keyboardSubscription;
 
 class StoreDataScreen extends StatefulWidget {
-  const StoreDataScreen({super.key});
+  Store storeData;
+  TextEditingController storeNameController;
+  TextEditingController storeTaxIDController;
+  TextEditingController storeTelController;
+  TextEditingController storeLineController;
+  TextEditingController storeNoteController;
+  String initialSelectedRoute;
+
+  StoreDataScreen({
+    Key? key,
+    required this.storeData,
+    required this.storeNameController,
+    required this.storeTaxIDController,
+    required this.storeTelController,
+    required this.storeLineController,
+    required this.storeNoteController,
+    required this.initialSelectedRoute,
+  }) : super(key: key);
 
   @override
   State<StoreDataScreen> createState() => _StoreDataScreenState();
@@ -30,9 +47,8 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
   bool shoptypeInput = true;
   bool sectionOne = true;
   bool sectionTwo = true;
-  Store? _storeData;
+  // Store? _storeData;
   Timer? _throttle;
-  late TextEditingController storeNameController;
 
   var keyboardVisibilityController = KeyboardVisibilityController();
 
@@ -40,7 +56,7 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
   @override
   void initState() {
     super.initState();
-    storeNameController = TextEditingController();
+
     _loadJson();
     _loadStoreFromStorage();
     keyboardSubscription =
@@ -52,7 +68,7 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
           sectionOne = true;
           sectionTwo = true;
         });
-        print('storeNameController: ${storeNameController.text}');
+        // print('storeNameController: ${storeNameController.text}');
         // print(storeNameController);
       }
     });
@@ -67,7 +83,7 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
 
   void _onTextChanged(String text, String field) {
     setState(() {
-      _storeData = _storeData?.copyWithDynamicField(field, text);
+      widget.storeData = widget.storeData!.copyWithDynamicField(field, text);
     });
     _saveStoreToStorage();
     // Cancel any existing timer to reset the delay
@@ -91,7 +107,7 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
 
   void _onTextChangedNote(String text, String field) {
     setState(() {
-      _storeData = _storeData?.copyWithDynamicField(field, text);
+      widget.storeData = widget.storeData!.copyWithDynamicField(field, text);
     });
     _saveStoreToStorage();
     // Cancel any existing timer to reset the delay
@@ -108,7 +124,7 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
 
     if (jsonStore != null) {
       setState(() {
-        _storeData =
+        widget.storeData =
             (jsonStore == null ? null : Store.fromJson(jsonDecode(jsonStore)))!;
       });
     }
@@ -118,7 +134,7 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     // Convert Store object to JSON string
-    String jsonStoreString = json.encode(_storeData!.toJson());
+    String jsonStoreString = json.encode(widget.storeData!.toJson());
 
     // Save the JSON string list to SharedPreferences
     await prefs.setString('add_store', jsonStoreString);
@@ -126,11 +142,10 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
 
   @override
   void dispose() {
-    storeNameController.dispose();
     keyboardSubscription.cancel();
     _throttle?.cancel();
-    // TODO: implement dispose
     super.dispose();
+    // TODO: implement dispose
   }
   // Listen to the keyboard visibility changes
 
@@ -165,13 +180,11 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
             children: [
               if (sectionOne)
                 Customtextinput(
-                  onChanged: (text) =>
-                      _onTextChanged(text, 'name'), // Specify field as 'name',
-                  controller: storeNameController,
-                  // onFieldSubmitted: (submittedText) {
-                  //   print(
-                  //       'storeNameController: $submittedText'); // Prints the submitted text
-                  // },
+                  onChanged: (text) {
+                    _onTextChanged(text, 'name');
+                  }, // Specify field as 'name',
+                  // initialValue: widget.storeData.name,
+                  controller: widget.storeNameController,
                   onFieldTap: () {
                     setState(() {
                       sectionOne = true;
@@ -186,6 +199,7 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
               if (sectionOne) const SizedBox(height: 16),
               if (sectionOne)
                 Customtextinput(
+                  controller: widget.storeTaxIDController,
                   onChanged: (text) =>
                       _onTextChanged(text, 'taxId'), // Specify field as 'name',
                   onFieldTap: () {
@@ -202,6 +216,7 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
               if (sectionOne) const SizedBox(height: 16),
               if (sectionOne)
                 Customtextinput(
+                  controller: widget.storeTelController,
                   onChanged: (text) => _onTextChanged(text, 'tel'),
                   onFieldTap: () {
                     setState(() {
@@ -224,8 +239,9 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
                           label: 'เลือกประเภทร้านค้า *',
                           onChanged: (value) {
                             setState(() {
-                              _storeData = _storeData?.copyWithDynamicField(
-                                  'typeName', value!.name);
+                              widget.storeData = widget.storeData!
+                                  .copyWithDynamicField(
+                                      'typeName', value!.name);
                             });
                             _saveStoreToStorage();
                           },
@@ -237,11 +253,13 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
                       child: SizedBox(
                         // height: 50,
                         child: RouteDropdown(
+                            initialSelectedValue: widget.initialSelectedRoute,
                             label: "เลือกรูท *",
                             onChanged: (value) {
                               setState(() {
-                                _storeData = _storeData?.copyWithDynamicField(
-                                    'route', value!.route);
+                                widget.storeData = widget.storeData!
+                                    .copyWithDynamicField(
+                                        'route', value!.route);
                               });
                               _saveStoreToStorage();
                             }),
@@ -252,6 +270,7 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
               if (sectionOne) const SizedBox(height: 16),
               if (sectionOne)
                 Customtextinput(
+                  controller: widget.storeLineController,
                   onChanged: (text) => _onTextChangedNote(text, 'lineId'),
                   onFieldTap: () {
                     setState(() {
@@ -265,6 +284,7 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
               if (sectionOne) const SizedBox(height: 16),
               if (sectionOne)
                 Customtextinput(
+                  controller: widget.storeNoteController,
                   onChanged: (text) => _onTextChangedNote(text, 'note'),
                   onFieldTap: () {
                     setState(() {

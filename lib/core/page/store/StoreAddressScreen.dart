@@ -201,7 +201,6 @@ class _StoreAddressScreenState extends State<StoreAddressScreen> {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
-
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -231,7 +230,7 @@ class _StoreAddressScreenState extends State<StoreAddressScreen> {
                 context,
                 label: 'ที่อยู่ *',
               ),
-              SizedBox(height: screenWidth / 37),
+              // SizedBox(height: screenWidth / 37),
 
               // Province dropdown to select the province
               // ProvinceDropdown(
@@ -288,14 +287,15 @@ class _StoreAddressScreenState extends State<StoreAddressScreen> {
                     });
                     _loadSubDistrictsFromJson(province, amphoe);
                   }
-                  print(amphoe);
-                  print(province);
-                  print(subDistricts);
+                  // print(amphoe);
+                  // print(province);
+                  // print(subDistricts);
                 },
               ),
               SizedBox(height: screenWidth / 37),
               SubDistrictDropdown(
                 label: "เลือกตำบล",
+                // value: subDistricts,
                 onChanged: (SubDistrict? value) {
                   if (value != null) {
                     setState(() {
@@ -308,7 +308,7 @@ class _StoreAddressScreenState extends State<StoreAddressScreen> {
                   }
                   // print(amphoe);
                   // print(province);
-                  print(poscode);
+                  // print(poscode);
                   // print(poscode[0].zipcode);
                 },
                 subDistricts: subDistricts,

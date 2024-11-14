@@ -39,6 +39,7 @@ class _CustomtextinputState extends State<Customtextinput> {
           widget.onFieldTap!();
         }
       },
+      initialValue: widget.controller != null ? null : 'กรุณากรอกข้อมูล',
       // onFieldSubmitted: widget.onFieldSubmitted,
       readOnly: widget.readonly,
       style: Styles.black18(context),

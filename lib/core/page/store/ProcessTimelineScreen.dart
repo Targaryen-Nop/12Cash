@@ -31,12 +31,33 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
   int _processIndex = 0;
   bool isPolicy = false;
   late Store _storeData;
+  late TextEditingController storeNameController;
+  late TextEditingController storeTaxIDController;
+  late TextEditingController storeTelController;
+  late TextEditingController storeLineController;
+  late TextEditingController storeNoteController;
+  String initialSelectedRoute = '';
 
   @override
   initState() {
     super.initState();
     _processIndex = 0;
     _clearStore();
+    storeNameController = TextEditingController();
+    storeTaxIDController = TextEditingController();
+    storeTelController = TextEditingController();
+    storeLineController = TextEditingController();
+    storeNoteController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    storeNameController.dispose();
+    storeTaxIDController.dispose();
+    storeTelController.dispose();
+    storeLineController.dispose();
+    storeNoteController.dispose();
+    super.dispose();
   }
 
   Widget _getBodyContent() {
@@ -45,9 +66,18 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
       case 0:
         return const PolicyScreen();
       case 1:
-        return const StoreDataScreen();
+        return StoreDataScreen(
+            storeData: _storeData,
+            storeNameController: storeNameController,
+            storeTaxIDController: storeTaxIDController,
+            storeTelController: storeTelController,
+            storeLineController: storeLineController,
+            storeNoteController: storeNoteController,
+            initialSelectedRoute: initialSelectedRoute);
       case 2:
-        return const StoreAddressScreen();
+        return StoreAddressScreen(
+            // storeData: _storeData,
+            );
       case 3:
         return VerifyStoreScreen(
           storeData: _storeData,
@@ -400,6 +430,22 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
                                 return () {
                                   _loadStoreFromStorage().then((_) {
                                     setState(() {
+                                      storeNameController =
+                                          TextEditingController(
+                                              text: _storeData.name);
+                                      storeTelController =
+                                          TextEditingController(
+                                              text: _storeData.tel);
+                                      storeTaxIDController =
+                                          TextEditingController(
+                                              text: _storeData.taxId);
+                                      storeLineController =
+                                          TextEditingController(
+                                              text: _storeData.lineId);
+                                      storeNoteController =
+                                          TextEditingController(
+                                              text: _storeData.note);
+                                      initialSelectedRoute = _storeData.route;
                                       _processIndex = (_processIndex + 1) %
                                           _processes.length;
                                     });
