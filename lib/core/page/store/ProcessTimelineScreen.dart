@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:math';
 import 'package:_12sale_app/core/components/Appbar.dart';
 import 'package:_12sale_app/core/components/sheet/PolicyAddNewShop.dart';
@@ -6,11 +7,13 @@ import 'package:_12sale_app/core/page/store/StoreAddressScreen.dart';
 import 'package:_12sale_app/core/page/store/StoreDataScreen.dart';
 import 'package:_12sale_app/core/page/store/VerifyStoreScreen.dart';
 import 'package:_12sale_app/core/styles/style.dart';
+import 'package:_12sale_app/data/models/Store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timelines/timelines.dart';
 
 const kTileHeight = 50.0;
@@ -26,6 +29,15 @@ class ProcessTimelinePage extends StatefulWidget {
 
 class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
   int _processIndex = 0;
+  bool isPolicy = false;
+  late Store _storeData;
+
+  @override
+  initState() {
+    super.initState();
+    _processIndex = 0;
+    _clearStore();
+  }
 
   Widget _getBodyContent() {
     // Returns different widgets based on the _processIndex
@@ -37,7 +49,9 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
       case 2:
         return const StoreAddressScreen();
       case 3:
-        return const VerifyStoreScreen();
+        return VerifyStoreScreen(
+          storeData: _storeData,
+        );
       default:
         return Center(child: Text("Unknown step"));
     }
@@ -50,6 +64,29 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
       return completeColor;
     } else {
       return todoColor;
+    }
+  }
+
+  Future<void> _clearStore() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove('add_store'); // Clear orders from SharedPreferences
+  }
+
+  Future<void> _loadStoreFromStorage() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    // Get the JSON string list from SharedPreferences
+    String? jsonStore = prefs.getString("add_store");
+
+    if (jsonStore != null) {
+      setState(() {
+        _storeData =
+            // ignore: unnecessary_null_comparison
+            (jsonStore == null ? null : Store.fromJson(jsonDecode(jsonStore)))!;
+      });
+      if (_storeData?.policyConsent[0].status == 'Agree') {
+        isPolicy = true;
+      }
     }
   }
 
@@ -345,20 +382,38 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
 
                                 confirmBtnColor: Styles.successButtonColor,
                               );
-                            } else {
-                              setState(() {
-                                _processIndex =
-                                    (_processIndex + 1) % _processes.length;
-                              });
-                            }
+                            } else {}
 
                             switch (_processIndex) {
                               case 0:
-                                return print('1');
+                                return () {
+                                  _loadStoreFromStorage().then((_) {
+                                    if (isPolicy == true) {
+                                      setState(() {
+                                        _processIndex = (_processIndex + 1) %
+                                            _processes.length;
+                                      });
+                                    }
+                                  });
+                                }();
                               case 1:
-                                return print('2');
+                                return () {
+                                  _loadStoreFromStorage().then((_) {
+                                    setState(() {
+                                      _processIndex = (_processIndex + 1) %
+                                          _processes.length;
+                                    });
+                                  });
+                                }();
                               case 2:
-                                return print('3');
+                                return () {
+                                  _loadStoreFromStorage().then((_) {
+                                    setState(() {
+                                      _processIndex = (_processIndex + 1) %
+                                          _processes.length;
+                                    });
+                                  });
+                                }();
                               case 3:
                                 return print('4');
                               default:

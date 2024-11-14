@@ -1,11 +1,18 @@
 import 'dart:convert';
 
 import 'package:_12sale_app/core/styles/style.dart';
+import 'package:_12sale_app/data/models/Store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class VerifyStoreScreen extends StatefulWidget {
-  const VerifyStoreScreen({super.key});
+  final Store storeData;
+
+  const VerifyStoreScreen({
+    Key? key,
+    required this.storeData,
+  }) : super(key: key);
 
   @override
   State<VerifyStoreScreen> createState() => _VerifyStoreScreenState();
@@ -13,10 +20,13 @@ class VerifyStoreScreen extends StatefulWidget {
 
 class _VerifyStoreScreenState extends State<VerifyStoreScreen> {
   Map<String, dynamic>? _jsonString;
+  // Store? _storeData;
+
   @override
   void initState() {
     super.initState();
     _loadJson();
+    // _loadStoreFromStorage();
   }
 
   Future<void> _loadJson() async {
@@ -25,6 +35,20 @@ class _VerifyStoreScreenState extends State<VerifyStoreScreen> {
       _jsonString = jsonDecode(jsonString)['shop']["add_shop_screen"];
     });
   }
+
+  // Future<void> _loadStoreFromStorage() async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   // Get the JSON string list from SharedPreferences
+  //   String? jsonStore = prefs.getString("add_store");
+
+  //   if (jsonStore != null) {
+  //     setState(() {
+  //       _storeData =
+  //           // ignore: unnecessary_null_comparison
+  //           jsonStore == null ? null : Store.fromJson(jsonDecode(jsonStore));
+  //     });
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +78,7 @@ class _VerifyStoreScreenState extends State<VerifyStoreScreen> {
             style: Styles.headerBlack18(context),
             children: <TextSpan>[
               TextSpan(
-                text: '123456', // Inline bold text
+                text: " ${widget.storeData.name}",
                 style: Styles.black18(context),
               ),
             ],
@@ -67,7 +91,7 @@ class _VerifyStoreScreenState extends State<VerifyStoreScreen> {
             style: Styles.headerBlack18(context),
             children: <TextSpan>[
               TextSpan(
-                text: '123456', // Inline bold text
+                text: ' ${widget.storeData.tel}', // Inline bold text
                 style: Styles.black18(context),
               ),
             ],
@@ -80,7 +104,7 @@ class _VerifyStoreScreenState extends State<VerifyStoreScreen> {
             style: Styles.headerBlack18(context),
             children: <TextSpan>[
               TextSpan(
-                text: '123456', // Inline bold text
+                text: '${widget.storeData.typeName}', // Inline bold text
                 style: Styles.black18(context),
               ),
             ],
@@ -93,7 +117,7 @@ class _VerifyStoreScreenState extends State<VerifyStoreScreen> {
             style: Styles.headerBlack18(context),
             children: <TextSpan>[
               TextSpan(
-                text: '123456', // Inline bold text
+                text: '${widget.storeData.lineId}', // Inline bold text
                 style: Styles.black18(context),
               ),
             ],
@@ -106,7 +130,7 @@ class _VerifyStoreScreenState extends State<VerifyStoreScreen> {
             style: Styles.headerBlack18(context),
             children: <TextSpan>[
               TextSpan(
-                text: '123456', // Inline bold text
+                text: '${widget.storeData.note}', // Inline bold text
                 style: Styles.black18(context),
               ),
             ],
@@ -134,7 +158,7 @@ class _VerifyStoreScreenState extends State<VerifyStoreScreen> {
             style: Styles.headerBlack18(context),
             children: <TextSpan>[
               TextSpan(
-                text: '123456', // Inline bold text
+                text: '${widget.storeData.address}', // Inline bold text
                 style: Styles.black18(context),
               ),
             ],
@@ -147,7 +171,7 @@ class _VerifyStoreScreenState extends State<VerifyStoreScreen> {
             style: Styles.headerBlack18(context),
             children: <TextSpan>[
               TextSpan(
-                text: '123456', // Inline bold text
+                text: '${widget.storeData.subDistrict}', // Inline bold text
                 style: Styles.black18(context),
               ),
             ],
@@ -160,7 +184,7 @@ class _VerifyStoreScreenState extends State<VerifyStoreScreen> {
             style: Styles.headerBlack18(context),
             children: <TextSpan>[
               TextSpan(
-                text: '123456', // Inline bold text
+                text: '${widget.storeData.district}', // Inline bold text
                 style: Styles.black18(context),
               ),
             ],
@@ -173,7 +197,7 @@ class _VerifyStoreScreenState extends State<VerifyStoreScreen> {
             style: Styles.headerBlack18(context),
             children: <TextSpan>[
               TextSpan(
-                text: '123456', // Inline bold text
+                text: '${widget.storeData.province}', // Inline bold text
                 style: Styles.black18(context),
               ),
             ],
@@ -186,7 +210,7 @@ class _VerifyStoreScreenState extends State<VerifyStoreScreen> {
             style: Styles.headerBlack18(context),
             children: <TextSpan>[
               TextSpan(
-                text: '123456', // Inline bold text
+                text: '${widget.storeData.provinceCode}', // Inline bold text
                 style: Styles.black18(context),
               ),
             ],

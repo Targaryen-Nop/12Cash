@@ -32,7 +32,7 @@ class DropDownStandard extends StatelessWidget {
           borderSide: BorderSide.none,
         ),
       ),
-      value: selectedValue,
+      // value: selectedValue,
       style: Styles.black18(context),
       items: items.map((String value) {
         return DropdownMenuItem<String>(

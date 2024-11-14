@@ -7,6 +7,9 @@ class Customtextinput extends StatefulWidget {
   final String? initialValue;
   final bool readonly;
   VoidCallback? onFieldTap; // Callback for custom actions
+  final ValueChanged<String> onChanged;
+  // final ValueChanged<String> onFieldSubmitted; // Accepts the submitted text
+
   final TextEditingController? controller; // Add controller as an option
   Customtextinput(
     BuildContext context, {
@@ -16,6 +19,8 @@ class Customtextinput extends StatefulWidget {
     this.initialValue,
     this.readonly = false,
     this.onFieldTap,
+    required this.onChanged,
+    // required this.onFieldSubmitted,
     this.controller,
   });
 
@@ -27,12 +32,14 @@ class _CustomtextinputState extends State<Customtextinput> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      onChanged: widget.onChanged, // Pass the onChanged callback
       onTap: () {
         // Check if onFieldTap is not null before calling it
         if (widget.onFieldTap != null) {
           widget.onFieldTap!();
         }
       },
+      // onFieldSubmitted: widget.onFieldSubmitted,
       readOnly: widget.readonly,
       style: Styles.black18(context),
       controller: widget.controller, // Use controller if provided

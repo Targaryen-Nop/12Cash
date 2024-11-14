@@ -53,6 +53,112 @@ class Store {
     required this.updatedDate,
   });
 
+  Store copyWithDynamicField(String field, String value) {
+    switch (field) {
+      case 'storeId':
+        return copyWith(storeId: value);
+      case 'name':
+        return copyWith(name: value);
+      case 'taxId':
+        return copyWith(taxId: value);
+      case 'tel':
+        return copyWith(tel: value);
+      case 'route':
+        return copyWith(route: value);
+      case 'type':
+        return copyWith(type: value);
+      case 'typeName':
+        return copyWith(typeName: value);
+      case 'address':
+        return copyWith(address: value);
+      case 'district':
+        return copyWith(district: value);
+      case 'subDistrict':
+        return copyWith(subDistrict: value);
+      case 'province':
+        return copyWith(province: value);
+      case 'provinceCode':
+        return copyWith(provinceCode: value);
+      case 'zone':
+        return copyWith(zone: value);
+      case 'area':
+        return copyWith(area: value);
+      case 'latitude':
+        return copyWith(latitude: value);
+      case 'longitude':
+        return copyWith(longitude: value);
+      case 'lineId':
+        return copyWith(lineId: value);
+      case 'note':
+        return copyWith(note: value);
+      case 'status':
+        return copyWith(status: value);
+      case 'createdDate':
+        return copyWith(createdDate: value);
+      case 'updatedDate':
+        return copyWith(updatedDate: value);
+      // Add cases for other fields as needed
+      default:
+        return this; // If the field does not match, return the current instance unchanged
+    }
+  }
+
+  Store copyWith({
+    String? storeId,
+    String? name,
+    String? taxId,
+    String? tel,
+    String? route,
+    String? type,
+    String? typeName,
+    String? address,
+    String? district,
+    String? subDistrict,
+    String? province,
+    String? provinceCode,
+    String? zone,
+    String? area,
+    String? latitude,
+    String? longitude,
+    String? lineId,
+    String? note,
+    Approve? approve,
+    String? status,
+    List<PolicyConsent>? policyConsent,
+    List<String>? imageList,
+    List<String>? shippingAddress,
+    String? createdDate,
+    String? updatedDate,
+  }) {
+    return Store(
+      storeId: storeId ?? this.storeId,
+      name: name ?? this.name,
+      taxId: taxId ?? this.taxId,
+      tel: tel ?? this.tel,
+      route: route ?? this.route,
+      type: type ?? this.type,
+      typeName: typeName ?? this.typeName,
+      address: address ?? this.address,
+      district: district ?? this.district,
+      subDistrict: subDistrict ?? this.subDistrict,
+      province: province ?? this.province,
+      provinceCode: provinceCode ?? this.provinceCode,
+      zone: zone ?? this.zone,
+      area: area ?? this.area,
+      latitude: latitude ?? this.latitude,
+      longitude: longitude ?? this.longitude,
+      lineId: lineId ?? this.lineId,
+      note: note ?? this.note,
+      approve: approve ?? this.approve,
+      status: status ?? this.status,
+      policyConsent: policyConsent ?? this.policyConsent,
+      imageList: imageList ?? this.imageList,
+      shippingAddress: shippingAddress ?? this.shippingAddress,
+      createdDate: createdDate ?? this.createdDate,
+      updatedDate: updatedDate ?? this.updatedDate,
+    );
+  }
+
   // Factory constructor to create a Store instance from JSON
   factory Store.fromJson(Map<String, dynamic> json) {
     return Store(

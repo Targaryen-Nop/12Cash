@@ -100,6 +100,7 @@ flutter:
     - data/poscode.json
     - data/province.json
     - data/sale_route.json
+    - data/product_group.json
    
 
   # An image asset can refer to one or more resolution-specific "variants", see

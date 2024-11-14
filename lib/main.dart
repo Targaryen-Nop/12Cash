@@ -66,10 +66,10 @@ class MyApp extends StatelessWidget {
             primarySwatch: Colors.blue,
             textTheme: Typography.englishLike2018.apply(fontSizeFactor: 1.sp),
           ),
-          // home: const HomeScreen(
-          //   index: 0,
-          // ),
-          home: BluetoothPrinterScreen4(),
+          home: const HomeScreen(
+            index: 0,
+          ),
+          // home: BluetoothPrinterScreen4(),
           navigatorObservers: [routeObserver],
           // home: AddToCartAnimationPage(),
         );

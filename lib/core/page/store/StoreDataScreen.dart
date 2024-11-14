@@ -6,9 +6,12 @@ import 'package:_12sale_app/core/components/dropdown/RouteDropdown.dart';
 import 'package:_12sale_app/core/components/dropdown/ShopTypeDropdown.dart';
 import 'package:_12sale_app/core/components/input/CustomTextInput.dart';
 import 'package:_12sale_app/core/styles/style.dart';
+import 'package:_12sale_app/data/models/Store.dart';
+import 'package:_12sale_app/function/SavetoStorage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 late StreamSubscription<bool> keyboardSubscription;
 
@@ -25,8 +28,11 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
   bool taxInput = true;
   bool phoneInput = true;
   bool shoptypeInput = true;
-  bool lineIDInput = true;
-  bool causeInput = true;
+  bool sectionOne = true;
+  bool sectionTwo = true;
+  Store? _storeData;
+  Timer? _throttle;
+  late TextEditingController storeNameController;
 
   var keyboardVisibilityController = KeyboardVisibilityController();
 
@@ -34,20 +40,20 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
   @override
   void initState() {
     super.initState();
+    storeNameController = TextEditingController();
     _loadJson();
+    _loadStoreFromStorage();
     keyboardSubscription =
         keyboardVisibilityController.onChange.listen((bool visible) {
       print('Keyboard visibility update. Is visible: $visible');
       if (visible) {
       } else {
         setState(() {
-          storeInput = true;
-          taxInput = true; // Toggle the flag
-          phoneInput = true;
-          shoptypeInput = true;
-          lineIDInput = true;
-          causeInput = true;
+          sectionOne = true;
+          sectionTwo = true;
         });
+        print('storeNameController: ${storeNameController.text}');
+        // print(storeNameController);
       }
     });
   }
@@ -59,9 +65,70 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
     });
   }
 
+  void _onTextChanged(String text, String field) {
+    setState(() {
+      _storeData = _storeData?.copyWithDynamicField(field, text);
+    });
+    _saveStoreToStorage();
+    // Cancel any existing timer to reset the delay
+    if (_throttle?.isActive ?? false) {
+      _throttle!.cancel();
+    }
+    // Set a new timer for 3 milliseconds
+    // _throttle = Timer(const Duration(milliseconds: 3000), () {
+    //   print(
+    //       'Throttled text: $text'); // This will print the text with throttling
+    //   setState(() {
+    //     _storeData = _storeData?.copyWithDynamicField(field, text);
+    //   });
+    //   _saveStoreToStorage();
+    //   // Cancel any existing timer to reset the delay
+    //   if (_throttle?.isActive ?? false) {
+    //     _throttle!.cancel();
+    //   }
+    // });
+  }
+
+  void _onTextChangedNote(String text, String field) {
+    setState(() {
+      _storeData = _storeData?.copyWithDynamicField(field, text);
+    });
+    _saveStoreToStorage();
+    // Cancel any existing timer to reset the delay
+    if (_throttle?.isActive ?? false) {
+      _throttle!.cancel();
+    }
+  }
+
+  Future<void> _loadStoreFromStorage() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    // Get the JSON string list from SharedPreferences
+    String? jsonStore = prefs.getString("add_store");
+
+    if (jsonStore != null) {
+      setState(() {
+        _storeData =
+            (jsonStore == null ? null : Store.fromJson(jsonDecode(jsonStore)))!;
+      });
+    }
+  }
+
+  Future<void> _saveStoreToStorage() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    // Convert Store object to JSON string
+    String jsonStoreString = json.encode(_storeData!.toJson());
+
+    // Save the JSON string list to SharedPreferences
+    await prefs.setString('add_store', jsonStoreString);
+  }
+
   @override
   void dispose() {
+    storeNameController.dispose();
     keyboardSubscription.cancel();
+    _throttle?.cancel();
     // TODO: implement dispose
     super.dispose();
   }
@@ -96,16 +163,19 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              if (storeInput)
+              if (sectionOne)
                 Customtextinput(
+                  onChanged: (text) =>
+                      _onTextChanged(text, 'name'), // Specify field as 'name',
+                  controller: storeNameController,
+                  // onFieldSubmitted: (submittedText) {
+                  //   print(
+                  //       'storeNameController: $submittedText'); // Prints the submitted text
+                  // },
                   onFieldTap: () {
                     setState(() {
-                      storeInput = true;
-                      taxInput = false; // Toggle the flag
-                      phoneInput = false;
-                      shoptypeInput = false;
-                      lineIDInput = false;
-                      causeInput = false;
+                      sectionOne = true;
+                      sectionTwo = false;
                     });
                   },
                   context,
@@ -113,17 +183,15 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
                   hint:
                       '${_jsonString?['shop_name_hint'] ?? "Max 36 Characters"}',
                 ),
-              if (storeInput) const SizedBox(height: 16),
-              if (storeInput)
+              if (sectionOne) const SizedBox(height: 16),
+              if (sectionOne)
                 Customtextinput(
+                  onChanged: (text) =>
+                      _onTextChanged(text, 'taxId'), // Specify field as 'name',
                   onFieldTap: () {
                     setState(() {
-                      storeInput = true;
-                      taxInput = true; // Toggle the flag
-                      phoneInput = false;
-                      shoptypeInput = false;
-                      lineIDInput = false;
-                      causeInput = false;
+                      sectionOne = true;
+                      sectionTwo = false;
                     });
                   },
                   context,
@@ -131,24 +199,21 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
                   hint:
                       '${_jsonString?['shop_tax_hint'] ?? "Max 13 Characters"}',
                 ),
-              if (storeInput) const SizedBox(height: 16),
-              if (storeInput)
+              if (sectionOne) const SizedBox(height: 16),
+              if (sectionOne)
                 Customtextinput(
+                  onChanged: (text) => _onTextChanged(text, 'tel'),
                   onFieldTap: () {
                     setState(() {
-                      storeInput = false;
-                      taxInput = false; // Toggle the flag
-                      phoneInput = false;
-                      shoptypeInput = false;
-                      lineIDInput = false;
-                      causeInput = true;
+                      sectionOne = true;
+                      sectionTwo = false;
                     });
                   },
                   context,
                   label: 'โทรศัพท์',
                 ),
-              if (causeInput) const SizedBox(height: 16),
-              if (causeInput)
+              if (sectionTwo) const SizedBox(height: 16),
+              if (sectionTwo)
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -157,7 +222,13 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
                       child: SizedBox(
                         child: ShopTypeDropdown(
                           label: 'เลือกประเภทร้านค้า *',
-                          onChanged: (value) {},
+                          onChanged: (value) {
+                            setState(() {
+                              _storeData = _storeData?.copyWithDynamicField(
+                                  'typeName', value!.name);
+                            });
+                            _saveStoreToStorage();
+                          },
                         ),
                       ),
                     ),
@@ -166,38 +237,39 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
                       child: SizedBox(
                         // height: 50,
                         child: RouteDropdown(
-                            label: "เลือกรูท *", onChanged: (value) {}),
+                            label: "เลือกรูท *",
+                            onChanged: (value) {
+                              setState(() {
+                                _storeData = _storeData?.copyWithDynamicField(
+                                    'route', value!.route);
+                              });
+                              _saveStoreToStorage();
+                            }),
                       ),
                     ),
                   ],
                 ),
-              if (causeInput) const SizedBox(height: 16),
-              if (causeInput)
+              if (sectionOne) const SizedBox(height: 16),
+              if (sectionOne)
                 Customtextinput(
+                  onChanged: (text) => _onTextChangedNote(text, 'lineId'),
                   onFieldTap: () {
                     setState(() {
-                      storeInput = false;
-                      taxInput = false; // Toggle the flag
-                      phoneInput = false;
-                      shoptypeInput = false;
-                      lineIDInput = false;
-                      causeInput = true;
+                      sectionOne = true;
+                      sectionTwo = false;
                     });
                   },
                   context,
                   label: 'Line ID',
                 ),
-              if (causeInput) const SizedBox(height: 16),
-              if (causeInput)
+              if (sectionOne) const SizedBox(height: 16),
+              if (sectionOne)
                 Customtextinput(
+                  onChanged: (text) => _onTextChangedNote(text, 'note'),
                   onFieldTap: () {
                     setState(() {
-                      storeInput = false;
-                      taxInput = false; // Toggle the flag
-                      phoneInput = false;
-                      shoptypeInput = false;
-                      lineIDInput = false;
-                      causeInput = true;
+                      sectionOne = true;
+                      sectionTwo = false;
                     });
                   },
                   context,

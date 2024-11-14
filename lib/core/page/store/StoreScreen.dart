@@ -48,6 +48,8 @@ class _ShopScreenState extends State<ShopScreen> {
     double screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
+      backgroundColor:
+          Colors.transparent, // set scaffold background color to transparent
       // Using Scaffold to provide better structure for FloatingActionButton
       floatingActionButton: SizedBox(
         width: 100, // Set the width of the button
@@ -67,6 +69,8 @@ class _ShopScreenState extends State<ShopScreen> {
       body: Container(
         padding: const EdgeInsets.all(16.0),
         margin: const EdgeInsets.all(8.0),
+
+        // color: Colors.amber,
         child: Column(
           children: [
             Row(
