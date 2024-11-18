@@ -45,7 +45,7 @@ class _RouteDropdownState extends State<RouteDropdown> {
       routes = (data as List).map((json) => RouteStore.fromJson(json)).toList();
 
       // Find the initial selected RouteStore based on the route name
-      if (routes.isNotEmpty && widget.initialSelectedValue != null) {
+      if (routes.isNotEmpty && widget.initialSelectedValue != '') {
         selectedValue = routes.firstWhere(
           (route) => route.route == widget.initialSelectedValue,
         );

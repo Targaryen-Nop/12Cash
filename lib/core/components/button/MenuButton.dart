@@ -1,3 +1,4 @@
+import 'package:_12sale_app/core/styles/style.dart';
 import 'package:flutter/material.dart';
 
 class MenuButton extends StatelessWidget {
@@ -46,10 +47,7 @@ class MenuButton extends StatelessWidget {
             ),
             Text(
               label,
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 18,
-              ),
+              style: Styles.white18(context),
               textAlign: TextAlign.center,
             ),
           ],

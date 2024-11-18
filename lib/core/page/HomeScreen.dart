@@ -94,8 +94,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       bottomNavigationBar: Container(
         decoration: const BoxDecoration(
-          color:
-              GobalStyles.primaryColor, // Primary color of the navigation bar
+          color: Styles.primaryColor, // Primary color of the navigation bar
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(16),
             topRight: Radius.circular(16),

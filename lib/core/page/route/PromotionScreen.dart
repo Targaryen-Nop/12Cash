@@ -47,7 +47,7 @@ class _PromotionscreenState extends State<Promotionscreen> {
         preferredSize: Size.fromHeight(70),
         child: AppbarCustom(
             title: " ${_jsonString?['title'] ?? 'Promotion&Discount'}",
-            icon: Icons.cancel_outlined),
+            icon: Icons.campaign_rounded),
       ),
       body: Container(
         padding: const EdgeInsets.all(16.0),

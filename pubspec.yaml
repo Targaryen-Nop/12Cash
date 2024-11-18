@@ -62,6 +62,8 @@ dependencies:
   awesome_dialog: ^3.2.1
   quickalert: ^1.1.0
   toastification: ^2.3.0
+  flutter_offline: ^4.0.0
+
 
 
 

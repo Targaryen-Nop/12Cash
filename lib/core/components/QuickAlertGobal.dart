@@ -1,6 +1,6 @@
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart';
+
 import 'package:quickalert/quickalert.dart';
 
 class ConfirmationAlert extends StatelessWidget {

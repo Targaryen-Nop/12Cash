@@ -50,7 +50,7 @@ class _VerifyorderscreenState extends State<Verifyorderscreen> {
         preferredSize: Size.fromHeight(70),
         child: AppbarCustom(
             title: " ${_jsonString?['title'] ?? 'Verify Order'}",
-            icon: Icons.save_outlined),
+            icon: Icons.receipt_long),
       ),
       body: Container(
         padding: const EdgeInsets.all(16.0),

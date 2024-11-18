@@ -1,5 +1,7 @@
+import 'package:_12sale_app/core/styles/style.dart';
 import 'package:flutter/material.dart';
 import 'package:_12sale_app/core/styles/gobalStyle.dart';
+import 'package:flutter_offline/flutter_offline.dart';
 
 class Header extends StatelessWidget {
   final String? title;
@@ -50,43 +52,86 @@ class Header extends StatelessWidget {
             minHeight: viewportConstraints.maxHeight,
           ),
           child: IntrinsicHeight(
-            child: Container(
-              color: GobalStyles.primaryColor,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  SizedBox(height: screenWidth / 20),
-                  Container(
-                    height: screenWidth / 4,
-                    margin: EdgeInsets.only(top: 20),
-                    padding: const EdgeInsets.symmetric(horizontal: 25),
-                    // color: Colors.amber,
-                    child: leading2,
-                  ),
-                  SizedBox(height: screenWidth / 25),
-                  Flexible(
-                    flex: 4,
-                    fit: FlexFit.loose,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        boxShadow: const [
-                          BoxShadow(
-                            color:
-                                Colors.black26, // Soft black color for shadow
-                            offset: Offset(0, 5), // Slight downward shadow
-                            blurRadius: 100, // Soften the shadow
-                            spreadRadius: 10, // How far the shadow extends
-                          ),
-                        ],
-                        color: Colors.grey[100],
-                        borderRadius: const BorderRadius.vertical(
-                            top: Radius.circular(46)),
-                      ),
-                      child: leading!,
+            child: OfflineBuilder(
+              connectivityBuilder: (
+                BuildContext context,
+                List<ConnectivityResult> connectivity,
+                Widget child,
+              ) {
+                final bool connected = connectivity.any((result) =>
+                    result == ConnectivityResult.wifi ||
+                    result == ConnectivityResult.mobile);
+
+                return connected ? child : Container();
+              },
+              child: Container(
+                color: Styles.primaryColor,
+                child: Column(
+                  // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  // crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    // SizedBox(height: screenWidth / 30),
+                    Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Container(
+                              margin: const EdgeInsets.only(right: 30, top: 30),
+                              // padding: EdgeInsets.all(8),
+                              height: screenWidth / 20,
+                              width: screenWidth / 20,
+                              decoration: const BoxDecoration(
+                                color: Colors
+                                    .amber, // Primary color of the navigation bar
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(360)),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black26, // Shadow color
+                                    blurRadius: 10, // Soft blur effect
+                                    spreadRadius: 2, // Spread of the shadow
+                                    offset: Offset(
+                                        0, -3), // Shadow positioned upwards
+                                  ),
+                                ],
+                              ),
+                              // child: Text('data'),
+                            ),
+                          ],
+                        ),
+                        Container(
+                          height: screenWidth / 4,
+                          // margin: EdgeInsets.only(top: 20),
+                          padding: const EdgeInsets.symmetric(horizontal: 25),
+                          child: leading2,
+                        ),
+                      ],
                     ),
-                  ),
-                ],
+                    // SizedBox(height: screenWidth / 25),
+                    Flexible(
+                      flex: 4,
+                      fit: FlexFit.loose,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          boxShadow: const [
+                            BoxShadow(
+                              color:
+                                  Colors.black26, // Soft black color for shadow
+                              offset: Offset(0, 5), // Slight downward shadow
+                              blurRadius: 100, // Soften the shadow
+                              spreadRadius: 10, // How far the shadow extends
+                            ),
+                          ],
+                          color: Colors.grey[100],
+                          borderRadius: const BorderRadius.vertical(
+                              top: Radius.circular(46)),
+                        ),
+                        child: leading!,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
