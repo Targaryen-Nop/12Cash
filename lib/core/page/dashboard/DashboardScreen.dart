@@ -1,9 +1,12 @@
 import 'dart:convert';
 
+import 'package:_12sale_app/core/components/CalendarPicker.dart';
 import 'package:_12sale_app/core/components/button/CameraButton.dart';
+import 'package:_12sale_app/core/components/card/WeightCude.dart';
 import 'package:_12sale_app/core/components/chart/BarChart.dart';
 import 'package:_12sale_app/core/components/chart/LineChart.dart';
 import 'package:_12sale_app/core/components/chart/TrendingMusicChart.dart';
+import 'package:_12sale_app/core/page/Ractangle3D.dart';
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:_12sale_app/data/models/Customer.dart';
 import 'package:_12sale_app/data/models/Shipping.dart';
@@ -69,9 +72,27 @@ class _DashboardscreenState extends State<Dashboardscreen> {
         // width: screenWidth / 1.5,
         child: Column(
           children: [
+            SizedBox(height: screenWidth / 25),
+            WeightCudeCard(),
             Container(height: 500, width: 400, child: LineChartSample()),
-            Container(height: 500, width: 400, child: LineChartSample()),
-            Container(height: 500, width: 400, child: LineChartSample()),
+            SizedBox(height: screenWidth / 25),
+            CalendarPicker(
+              label: "Select Date",
+              initialDate: DateTime.now(),
+              firstDate: DateTime(2000),
+              lastDate: DateTime(2100),
+              onDateSelected: (selectedDate) {
+                // Perform any action with the selected date
+                debugPrint("Selected Date: $selectedDate");
+              },
+            ),
+            SizedBox(height: screenWidth / 25),
+
+            // Container(height: 500, width: 400, child: LineChartSample()),
+            // Container(height: 500, width: 400, child: LineChartSample()),
+            Expanded(
+                child: Container(
+                    height: 500, width: 500, child: TrendingMusicChart())),
             // Container(height: 500, width: 300, child: LineChartSample())
             // CameraButtonWidget()
             // ShippingDropdownSearch(),

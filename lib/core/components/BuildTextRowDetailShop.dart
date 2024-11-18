@@ -48,12 +48,12 @@ class _BuildTextRowDetailShopState extends State<BuildTextRowDetailShop> {
   }
 }
 
-class BuildTextRowBetween extends StatefulWidget {
+class BuildTextRowBetweenCurrency extends StatefulWidget {
   final String text;
   final double price;
   final TextStyle? style;
 
-  const BuildTextRowBetween({
+  const BuildTextRowBetweenCurrency({
     super.key,
     required this.text,
     required this.price,
@@ -61,10 +61,12 @@ class BuildTextRowBetween extends StatefulWidget {
   });
 
   @override
-  State<BuildTextRowBetween> createState() => _BuildTextRowBetweenState();
+  State<BuildTextRowBetweenCurrency> createState() =>
+      _BuildTextRowBetweenCurrencyState();
 }
 
-class _BuildTextRowBetweenState extends State<BuildTextRowBetween> {
+class _BuildTextRowBetweenCurrencyState
+    extends State<BuildTextRowBetweenCurrency> {
   late String formattedCurrency;
   void initState() {
     super.initState();
@@ -84,6 +86,41 @@ class _BuildTextRowBetweenState extends State<BuildTextRowBetween> {
         ),
         Text(
           formattedCurrency,
+          style: widget.style,
+        ),
+      ],
+    );
+  }
+}
+
+class BuildTextRowBetween extends StatefulWidget {
+  final String text;
+  final String text2;
+  final TextStyle? style;
+
+  const BuildTextRowBetween({
+    super.key,
+    required this.text,
+    required this.text2,
+    required this.style,
+  });
+
+  @override
+  State<BuildTextRowBetween> createState() => _BuildTextRowBetweenState();
+}
+
+class _BuildTextRowBetweenState extends State<BuildTextRowBetween> {
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          widget.text,
+          style: widget.style,
+        ),
+        Text(
+          widget.text2,
           style: widget.style,
         ),
       ],

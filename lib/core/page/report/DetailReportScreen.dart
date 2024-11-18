@@ -99,23 +99,23 @@ class _DetailReportScreenState extends State<DetailReportScreen> {
               Divider(
                 color: Colors.grey,
               ),
-              BuildTextRowBetween(
+              BuildTextRowBetweenCurrency(
                   text: "ยอดรวม",
                   price: 800.00,
                   style: GobalStyles.textbBlack3),
-              BuildTextRowBetween(
+              BuildTextRowBetweenCurrency(
                   text: "ส่วนลดท้ายบิล",
                   price: 8430.00,
                   style: GobalStyles.textbBlack3),
-              BuildTextRowBetween(
+              BuildTextRowBetweenCurrency(
                   text: "ราคาไม่รวมภาษี",
                   price: 00.00,
                   style: GobalStyles.textbBlack3),
-              BuildTextRowBetween(
+              BuildTextRowBetweenCurrency(
                   text: "ภาษี 7% (VAT)",
                   price: 7878.50,
                   style: GobalStyles.textbBlack3),
-              BuildTextRowBetween(
+              BuildTextRowBetweenCurrency(
                   text: "ยอดชำระสุทธิ",
                   price: 8430.00,
                   style: GobalStyles.textbBlack3),

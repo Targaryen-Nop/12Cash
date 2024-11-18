@@ -1,5 +1,7 @@
+import 'package:_12sale_app/core/styles/style.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:path/path.dart';
 
 class TrendingMusicChart extends StatefulWidget {
   @override
@@ -12,141 +14,144 @@ class _TrendingMusicChartState extends State<TrendingMusicChart> {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Top Trending Music 2024'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'TOP TRENDING MUSIC 2024',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                DropdownButton<String>(
-                  value: _selectedGenre,
-                  items: ['All', 'Jazz Music', 'Pop Music', 'Rock Music']
-                      .map((String genre) {
-                    return DropdownMenuItem<String>(
-                      value: genre,
-                      child: Text(genre),
-                    );
-                  }).toList(),
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      _selectedGenre = newValue!;
-                    });
-                  },
-                ),
-              ],
+            Text(
+              'TRENDING MUSIC',
+              style: Styles.black24(context),
             ),
-            SizedBox(height: screenWidth / 25),
-            Expanded(
-              child: BarChart(
-                BarChartData(
-                  maxY: 25, // Adjust based on your data
-                  barGroups: _buildBarGroups(),
-                  gridData: FlGridData(
-                    show: true,
-                    drawHorizontalLine: true,
-                    horizontalInterval: 5,
-                    getDrawingHorizontalLine: (value) {
-                      return FlLine(
-                        color: Colors.grey.withOpacity(0.3),
-                        strokeWidth: 1,
-                      );
-                    },
-                    drawVerticalLine: false,
-                  ),
-                  borderData: FlBorderData(
-                    show: false,
-                  ),
-                  titlesData: FlTitlesData(
-                    show: true,
-                    bottomTitles: AxisTitles(
-                      sideTitles: SideTitles(
-                        showTitles: true,
-                        getTitlesWidget: (double value, TitleMeta meta) {
-                          const style = TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 12,
-                          );
-                          switch (value.toInt()) {
-                            case 0:
-                              return Text('Jan', style: style);
-                            case 1:
-                              return Text('Feb', style: style);
-                            case 2:
-                              return Text('Mar', style: style);
-                            case 3:
-                              return Text('Apr', style: style);
-                            case 4:
-                              return Text('May', style: style);
-                            case 5:
-                              return Text('Jun', style: style);
-                            case 6:
-                              return Text('Jul', style: style);
-                            case 7:
-                              return Text('Aug', style: style);
-                            case 8:
-                              return Text('Sep', style: style);
-                            case 9:
-                              return Text('Oct', style: style);
-                            case 10:
-                              return Text('Nov', style: style);
-                            case 11:
-                              return Text('Dec', style: style);
-                            default:
-                              return Text('', style: style);
-                          }
-                        },
-                        reservedSize: 28,
-                      ),
-                    ),
-                    leftTitles: AxisTitles(
-                      sideTitles: SideTitles(
-                        showTitles: true,
-                        reservedSize: 40,
-                        interval: 5,
-                        getTitlesWidget: (value, meta) {
-                          return Text(
-                            '${value.toInt()}',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 12,
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  ),
-                  barTouchData: BarTouchData(enabled: true),
-                ),
+            Container(
+              width: screenWidth / 3,
+              padding: EdgeInsets.only(left: 8),
+              decoration: BoxDecoration(
+                border: Border.all(color: Styles.primaryColor),
+                borderRadius: BorderRadius.circular(8),
+                // color: Colors.amber,
               ),
-            ),
-            SizedBox(height: screenWidth / 25),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                _buildLegend('Jazz Music', Colors.orange),
-                SizedBox(width: 10),
-                _buildLegend('Pop Music', Colors.teal),
-                SizedBox(width: 10),
-                _buildLegend('Rock Music', Colors.blue),
-              ],
+              child: DropdownButton<String>(
+                value: _selectedGenre,
+                style: Styles.black18(context),
+                items: ['All', 'Jazz Music', 'Pop Music', 'Rock Music']
+                    .map((String genre) {
+                  return DropdownMenuItem<String>(
+                    value: genre,
+                    child: Text(
+                      genre,
+                      style: Styles.black18(context),
+                    ),
+                  );
+                }).toList(),
+                onChanged: (String? newValue) {
+                  setState(() {
+                    _selectedGenre = newValue!;
+                  });
+                },
+              ),
             ),
           ],
         ),
-      ),
+        SizedBox(height: screenWidth / 25),
+        Expanded(
+          child: BarChart(
+            BarChartData(
+              maxY: 25, // Adjust based on your data
+              barGroups: _buildBarGroups(),
+              gridData: FlGridData(
+                show: true,
+                drawHorizontalLine: true,
+                horizontalInterval: 5,
+                getDrawingHorizontalLine: (value) {
+                  return FlLine(
+                    color: Colors.grey.withOpacity(0.3),
+                    strokeWidth: 1,
+                  );
+                },
+                drawVerticalLine: false,
+              ),
+              borderData: FlBorderData(
+                show: false,
+              ),
+              titlesData: FlTitlesData(
+                  show: true,
+                  bottomTitles: AxisTitles(
+                    sideTitles: SideTitles(
+                      showTitles: true,
+                      getTitlesWidget: (double value, TitleMeta meta) {
+                        final style = Styles.black12(context);
+                        switch (value.toInt()) {
+                          case 0:
+                            return Text('Jan', style: style);
+                          case 1:
+                            return Text('Feb', style: style);
+                          case 2:
+                            return Text('Mar', style: style);
+                          case 3:
+                            return Text('Apr', style: style);
+                          case 4:
+                            return Text('May', style: style);
+                          case 5:
+                            return Text('Jun', style: style);
+                          case 6:
+                            return Text('Jul', style: style);
+                          case 7:
+                            return Text('Aug', style: style);
+                          case 8:
+                            return Text('Sep', style: style);
+                          case 9:
+                            return Text('Oct', style: style);
+                          case 10:
+                            return Text('Nov', style: style);
+                          case 11:
+                            return Text('Dec', style: style);
+                          default:
+                            return Text('', style: style);
+                        }
+                      },
+                      reservedSize: 28,
+                    ),
+                  ),
+                  leftTitles: AxisTitles(
+                    sideTitles: SideTitles(
+                      showTitles: true,
+                      reservedSize: 40,
+                      interval: 5,
+                      getTitlesWidget: (value, meta) {
+                        return Text(
+                          '${value.toInt()}',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 12,
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  rightTitles: AxisTitles(
+                    sideTitles: SideTitles(
+                      showTitles: false,
+                    ),
+                  ),
+                  topTitles: AxisTitles()),
+              barTouchData: BarTouchData(enabled: true),
+            ),
+          ),
+        ),
+        SizedBox(height: screenWidth / 25),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            _buildLegend('Jazz Music', Colors.orange),
+            SizedBox(width: 10),
+            _buildLegend('Pop Music', Colors.teal),
+            SizedBox(width: 10),
+            _buildLegend('Rock Music', Colors.blue),
+          ],
+        ),
+      ],
     );
   }
 

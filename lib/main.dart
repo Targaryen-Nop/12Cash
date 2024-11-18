@@ -1,4 +1,6 @@
 import 'package:_12sale_app/core/components/Gird.dart';
+import 'package:_12sale_app/core/page/Ractangle3D.dart';
+import 'package:_12sale_app/core/page/Square3D.dart';
 import 'package:_12sale_app/core/page/printer/BluetoothPrinterScreen.dart';
 import 'package:_12sale_app/core/page/printer/PrinterBluetoothScreen.dart';
 import 'package:_12sale_app/core/page/printer/PrinterScreen.dart';
@@ -10,6 +12,7 @@ import 'package:_12sale_app/core/page/LoginScreen.dart';
 import 'package:_12sale_app/core/page/HomeScreen.dart';
 import 'package:_12sale_app/core/page/dashboard/DashboardScreen.dart';
 import 'package:_12sale_app/core/page/route/TossAddToCartScreen.dart';
+import 'package:_12sale_app/core/page/testOffline.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart'; // For date localization
@@ -69,6 +72,7 @@ class MyApp extends StatelessWidget {
           home: const HomeScreen(
             index: 0,
           ),
+          // home: RectanglePainterPage(),
           // home: BluetoothPrinterScreen4(),
           navigatorObservers: [routeObserver],
           // home: AddToCartAnimationPage(),

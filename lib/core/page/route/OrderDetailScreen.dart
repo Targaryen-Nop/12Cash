@@ -6,6 +6,7 @@ import 'package:_12sale_app/core/components/TossAnimation.dart';
 import 'package:_12sale_app/core/page/route/OrderScreen.dart';
 import 'package:_12sale_app/core/styles/gobalStyle.dart';
 import 'package:_12sale_app/core/styles/style.dart';
+import 'package:_12sale_app/core/utils/tost_util.dart';
 import 'package:_12sale_app/data/models/Order.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -160,8 +161,9 @@ class _OrderDetailState extends State<OrderDetail>
 
   Future<void> _loadJson() async {
     String jsonString = await rootBundle.loadString('lang/main-th.json');
-    setState(() {
-      _jsonString = jsonDecode(jsonString)['route']["order_detail_screen"];
+    setState(() async {
+      _jsonString =
+          await jsonDecode(jsonString)['route']["order_detail_screen"];
     });
   }
 
@@ -624,18 +626,11 @@ class _OrderDetailState extends State<OrderDetail>
                                 // Call the add order function
                                 _addOrder();
 
-                                toastification.show(
-                                  primaryColor: Colors.green,
-                                  // ignore: use_build_context_synchronously
-                                  context:
-                                      context, // optional if you use ToastificationWrapper
+                                showToast(
+                                  context: context,
+                                  message: 'เพิ่มรายการสำเร็จ!',
                                   type: ToastificationType.success,
-                                  style: ToastificationStyle.flatColored,
-                                  title: Text(
-                                    'เพิ่มรายการสําเร็จ!',
-                                    style: Styles.black18(context),
-                                  ),
-                                  autoCloseDuration: const Duration(seconds: 5),
+                                  primaryColor: Colors.green,
                                 );
                               },
                               child: Row(
