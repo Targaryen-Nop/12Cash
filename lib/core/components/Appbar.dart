@@ -28,7 +28,6 @@ class _AppbarCustomState extends State<AppbarCustom> {
         stream: ConnectivityService().connectivityStream,
         builder: (context, snapshot) {
           bool isConnected = snapshot.data ?? true;
-
           return Container(
             decoration: BoxDecoration(
               boxShadow: [

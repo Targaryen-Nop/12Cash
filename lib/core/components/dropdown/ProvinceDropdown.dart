@@ -1,4 +1,5 @@
 import 'package:_12sale_app/core/components/chart/Test.dart';
+import 'package:_12sale_app/data/models/Location.dart';
 import 'package:_12sale_app/data/models/Province.dart';
 import 'package:_12sale_app/data/models/Route.dart';
 import 'package:_12sale_app/data/repositories/apiService.dart';
@@ -11,7 +12,7 @@ import 'dart:convert';
 class ProvinceDropdown extends StatefulWidget {
   final String label;
   final String? hint;
-  final ValueChanged<Province?> onChanged;
+  final ValueChanged<Location?> onChanged;
 
   const ProvinceDropdown({
     Key? key,
@@ -25,29 +26,34 @@ class ProvinceDropdown extends StatefulWidget {
 }
 
 class _ProvinceDropdownState extends State<ProvinceDropdown> {
-  Province? selectedValue;
-  List<Province> routes = [];
+  Location? selectedValue;
+  List<Location> routes = [];
 
   @override
   void initState() {
     super.initState();
-    _loadRoutesFromJson();
+    _loadDataFromJson();
   }
 
-  Future<void> _loadRoutesFromJson() async {
-    // Load the JSON file
-    final String response = await rootBundle.loadString('data/province.json');
-    final data = json.decode(response);
+  Future<void> _loadDataFromJson() async {
+    try {
+      // Load the JSON file
+      final String response = await rootBundle.loadString('data/province.json');
+      List<dynamic> jsonList = json.decode(response);
 
-    // Map JSON data to Province model
-    setState(() {
-      routes = (data as List).map((json) => Province.fromJson(json)).toList();
-    });
+      // Map JSON data to Location model
+      setState(() {
+        routes = jsonList.map((json) => Location.fromJson(json)).toList();
+      });
+    } catch (e) {
+      // Handle any errors that occur during JSON loading
+      print("Error loading province data: $e");
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return DropdownButtonFormField<Province>(
+    return DropdownButtonFormField<Location>(
       decoration: InputDecoration(
         labelText: widget.label,
         labelStyle: Styles.grey18(context),
@@ -63,13 +69,13 @@ class _ProvinceDropdownState extends State<ProvinceDropdown> {
       value: selectedValue,
       icon: const Icon(Icons.arrow_drop_down),
       style: Styles.black18(context),
-      items: routes.map((Province item) {
-        return DropdownMenuItem<Province>(
+      items: routes.map((Location item) {
+        return DropdownMenuItem<Location>(
           value: item,
-          child: Text(item.province), // Display name of Province in dropdown
+          child: Text(item.province), // Display name of the province
         );
       }).toList(),
-      onChanged: (Province? newValue) {
+      onChanged: (Location? newValue) {
         setState(() {
           selectedValue = newValue;
         });

@@ -210,7 +210,7 @@ class _VerifyStoreScreenState extends State<VerifyStoreScreen> {
             style: Styles.headerBlack18(context),
             children: <TextSpan>[
               TextSpan(
-                text: '${widget.storeData.provinceCode}', // Inline bold text
+                text: '${widget.storeData.postcode}', // Inline bold text
                 style: Styles.black18(context),
               ),
             ],

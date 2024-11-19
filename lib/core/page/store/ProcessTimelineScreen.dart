@@ -8,6 +8,7 @@ import 'package:_12sale_app/core/page/store/StoreDataScreen.dart';
 import 'package:_12sale_app/core/page/store/VerifyStoreScreen.dart';
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:_12sale_app/data/models/Store.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -36,7 +37,12 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
   late TextEditingController storeTelController;
   late TextEditingController storeLineController;
   late TextEditingController storeNoteController;
+  late TextEditingController storeAddressController;
   String initialSelectedRoute = '';
+  String initialSelectedProvince = '';
+  String initialSelectedAmphoe = '';
+  String initialSelectedSubDistrict = '';
+  String initialSelectedPoscode = '';
 
   @override
   initState() {
@@ -48,6 +54,7 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
     storeTelController = TextEditingController();
     storeLineController = TextEditingController();
     storeNoteController = TextEditingController();
+    storeAddressController = TextEditingController();
   }
 
   @override
@@ -57,6 +64,7 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
     storeTelController.dispose();
     storeLineController.dispose();
     storeNoteController.dispose();
+    storeAddressController.dispose();
     super.dispose();
   }
 
@@ -76,8 +84,12 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
             initialSelectedRoute: initialSelectedRoute);
       case 2:
         return StoreAddressScreen(
-            // storeData: _storeData,
-            );
+          storeData: _storeData,
+          storeAddressController: storeAddressController,
+          initialSelectedProvince: initialSelectedProvince,
+          initialSelectedAmphoe: initialSelectedAmphoe,
+          initialSelectedSubDistrict: initialSelectedSubDistrict,
+        );
       case 3:
         return VerifyStoreScreen(
           storeData: _storeData,
@@ -114,9 +126,62 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
             // ignore: unnecessary_null_comparison
             (jsonStore == null ? null : Store.fromJson(jsonDecode(jsonStore)))!;
       });
-      if (_storeData?.policyConsent[0].status == 'Agree') {
+      if (_storeData.policyConsent[0].status == 'Agree') {
         isPolicy = true;
       }
+    }
+  }
+
+  Future<void> postData() async {
+    // Initialize Dio
+    Dio dio = Dio();
+
+    // Replace with your API endpoint
+    const String apiUrl =
+        "https://d46e-147-50-183-98.ngrok-free.app/api/cash/store/addStore";
+
+    // JSON data
+    Map<String, dynamic> jsonData = {
+      "name": _storeData.name,
+      "taxId": _storeData.taxId,
+      "tel": _storeData.tel,
+      "route": _storeData.route,
+      "type": _storeData.type,
+      "typeName": _storeData.typeName,
+      "address": _storeData.address,
+      "district": _storeData.district,
+      "subDistrict": _storeData.subDistrict,
+      "provincet": _storeData.province,
+      "provinceCode": _storeData.provinceCode.substring(1, 3),
+      "postCode": _storeData.provinceCode,
+      "note": _storeData.note,
+      "zone": "BE",
+      "area": "BE214",
+      "latitude": _storeData.latitude,
+      "longtitude": _storeData.longitude,
+      "lineId": _storeData.lineId,
+      "policyConsent": {"status": _storeData.policyConsent[0].status},
+    };
+
+    try {
+      // Send POST request
+      final response = await dio.post(
+        apiUrl,
+        data: jsonData,
+        options: Options(
+          headers: {
+            "Content-Type": "application/json",
+          },
+        ),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        print("Data posted successfully: ${response.data}");
+      } else {
+        print("Failed to post data: ${response.statusCode}, ${response.data}");
+      }
+    } catch (e) {
+      print("Error occurred: $e");
     }
   }
 
@@ -315,7 +380,7 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Container(
                         decoration: BoxDecoration(
@@ -333,7 +398,7 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
                             ),
                           ],
                         ),
-                        width: screenWidth / 3,
+                        width: screenWidth / 2.5,
                         child: ElevatedButton(
                           onPressed: () {
                             if (_processIndex == 0) {
@@ -372,7 +437,7 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
                             ),
                           ],
                         ),
-                        width: screenWidth / 3,
+                        width: screenWidth / 2.5,
                         child: ElevatedButton(
                           onPressed: () {
                             if (_processIndex == 3) {
@@ -455,13 +520,26 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
                                 return () {
                                   _loadStoreFromStorage().then((_) {
                                     setState(() {
+                                      storeAddressController =
+                                          TextEditingController(
+                                              text: _storeData.address);
+                                      initialSelectedProvince =
+                                          _storeData.province;
+                                      initialSelectedAmphoe =
+                                          _storeData.district;
+                                      initialSelectedSubDistrict =
+                                          _storeData.subDistrict;
+                                      initialSelectedPoscode =
+                                          _storeData.postcode;
                                       _processIndex = (_processIndex + 1) %
                                           _processes.length;
                                     });
                                   });
                                 }();
                               case 3:
-                                return print('4');
+                                return () {
+                                  postData();
+                                }();
                               default:
                                 return print('error');
                             }

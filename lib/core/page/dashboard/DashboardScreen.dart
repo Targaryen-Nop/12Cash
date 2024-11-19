@@ -88,8 +88,8 @@ class _DashboardscreenState extends State<Dashboardscreen> {
             ),
             SizedBox(height: screenWidth / 25),
 
-            // Container(height: 500, width: 400, child: LineChartSample()),
-            // Container(height: 500, width: 400, child: LineChartSample()),
+            Container(height: 500, width: 400, child: LineChartSample()),
+            Container(height: 500, width: 400, child: LineChartSample()),
             Expanded(
                 child: Container(
                     height: 500, width: 500, child: TrendingMusicChart())),

@@ -4,13 +4,18 @@ import 'package:_12sale_app/core/page/store/AddStoreScreen.dart';
 import 'package:_12sale_app/core/page/store/ProcessTimelineScreen.dart';
 import 'package:_12sale_app/core/styles/gobalStyle.dart';
 import 'package:_12sale_app/core/styles/style.dart';
+import 'package:_12sale_app/data/models/Store.dart';
 import 'package:flutter/material.dart';
 
 class DetailShopScreen extends StatefulWidget {
-  final String customerNo;
-  final String customerName;
-  const DetailShopScreen(
-      {super.key, required this.customerNo, required this.customerName});
+  String customerNo;
+  String customerName;
+  Store store;
+  DetailShopScreen(
+      {super.key,
+      required this.customerNo,
+      required this.customerName,
+      required this.store});
 
   @override
   State<DetailShopScreen> createState() => _DetailShopScreenState();
@@ -58,13 +63,10 @@ class _DetailShopScreenState extends State<DetailShopScreen> {
                     Row(
                       children: [
                         const Icon(
-                          Icons
-                              .store, // Use any icon you want, or load custom icons
+                          Icons.store,
                           size: 40,
                         ),
-                        const SizedBox(
-                            width:
-                                8), // Adds some spacing between the icon and text
+                        const SizedBox(width: 8),
                         Text(
                           "ข้อมูลร้านค้า",
                           style: Styles.black18(context),
@@ -95,29 +97,35 @@ class _DetailShopScreenState extends State<DetailShopScreen> {
                             children: [
                               _buildCustomFormField('ชื่อร้านค้า',
                                   widget.customerName, Icons.store),
-                              _buildCustomFormField('เลขประจำตัวผู้เสียภาษี',
-                                  '1234567891011', Icons.person_outline),
+                              _buildCustomFormField(
+                                  'เลขประจำตัวผู้เสียภาษี',
+                                  '${widget.store.taxId}',
+                                  Icons.person_outline),
                               Row(
                                 children: [
                                   Expanded(
-                                    child: _buildCustomFormField(
-                                        'โทรศัพท์', '089-2463592', Icons.phone),
+                                    child: _buildCustomFormField('โทรศัพท์',
+                                        '${widget.store.tel}', Icons.phone),
                                   ),
                                   const SizedBox(width: 16),
                                   Expanded(
                                     child: _buildCustomFormField(
-                                        'เส้นทาง', 'R01', Icons.location_on),
+                                        'เส้นทาง',
+                                        '${widget.store.route}',
+                                        Icons.location_on),
                                   ),
                                 ],
                               ),
                               _buildCustomFormField(
-                                  'ไลน์', '@testja', Icons.alternate_email),
-                              _buildCustomFormField('ประเภทร้านค้า',
-                                  'แผงตลาดสด', Icons.store_mall_directory),
+                                  'ไลน์',
+                                  '${widget.store.lineId}',
+                                  Icons.alternate_email),
                               _buildCustomFormField(
-                                  'หมายเหตุ',
-                                  'ร้านปิดอาทิตย์ รับของ 15.00 - 16.00',
-                                  Icons.note),
+                                  'ประเภทร้านค้า',
+                                  '${widget.store.typeName}',
+                                  Icons.store_mall_directory),
+                              _buildCustomFormField('หมายเหตุ',
+                                  '${widget.store.note}', Icons.note),
                             ],
                           ),
                         ),

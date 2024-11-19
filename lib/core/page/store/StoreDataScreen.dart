@@ -65,6 +65,8 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
       if (visible) {
       } else {
         setState(() {
+          storeInput = true;
+          taxInput = true;
           sectionOne = true;
           sectionTwo = true;
         });
@@ -83,19 +85,19 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
 
   void _onTextChanged(String text, String field) {
     setState(() {
-      widget.storeData = widget.storeData!.copyWithDynamicField(field, text);
+      widget.storeData = widget.storeData.copyWithDynamicField(field, text);
     });
     _saveStoreToStorage();
     // Cancel any existing timer to reset the delay
-    if (_throttle?.isActive ?? false) {
-      _throttle!.cancel();
-    }
-    // Set a new timer for 3 milliseconds
+    // if (_throttle?.isActive ?? false) {
+    //   _throttle!.cancel();
+    // }
+    // // Set a new timer for 3 milliseconds
     // _throttle = Timer(const Duration(milliseconds: 3000), () {
     //   print(
     //       'Throttled text: $text'); // This will print the text with throttling
     //   setState(() {
-    //     _storeData = _storeData?.copyWithDynamicField(field, text);
+    //     widget.storeData = widget.storeData.copyWithDynamicField(field, text);
     //   });
     //   _saveStoreToStorage();
     //   // Cancel any existing timer to reset the delay
@@ -107,13 +109,10 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
 
   void _onTextChangedNote(String text, String field) {
     setState(() {
-      widget.storeData = widget.storeData!.copyWithDynamicField(field, text);
+      widget.storeData = widget.storeData.copyWithDynamicField(field, text);
     });
     _saveStoreToStorage();
     // Cancel any existing timer to reset the delay
-    if (_throttle?.isActive ?? false) {
-      _throttle!.cancel();
-    }
   }
 
   Future<void> _loadStoreFromStorage() async {
@@ -125,6 +124,7 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
     if (jsonStore != null) {
       setState(() {
         widget.storeData =
+            // ignore: unnecessary_null_comparison
             (jsonStore == null ? null : Store.fromJson(jsonDecode(jsonStore)))!;
       });
     }
@@ -180,6 +180,7 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
             children: [
               if (sectionOne)
                 Customtextinput(
+                  max: 36,
                   onChanged: (text) {
                     _onTextChanged(text, 'name');
                   }, // Specify field as 'name',
@@ -199,6 +200,8 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
               if (sectionOne) const SizedBox(height: 16),
               if (sectionOne)
                 Customtextinput(
+                  max: 13,
+                  keypadType: TextInputType.number,
                   controller: widget.storeTaxIDController,
                   onChanged: (text) =>
                       _onTextChanged(text, 'taxId'), // Specify field as 'name',
@@ -216,6 +219,8 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
               if (sectionOne) const SizedBox(height: 16),
               if (sectionOne)
                 Customtextinput(
+                  max: 10,
+                  keypadType: TextInputType.number,
                   controller: widget.storeTelController,
                   onChanged: (text) => _onTextChanged(text, 'tel'),
                   onFieldTap: () {
@@ -239,9 +244,11 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
                           label: 'เลือกประเภทร้านค้า *',
                           onChanged: (value) {
                             setState(() {
-                              widget.storeData = widget.storeData!
+                              widget.storeData = widget.storeData
                                   .copyWithDynamicField(
                                       'typeName', value!.name);
+                              widget.storeData = widget.storeData
+                                  .copyWithDynamicField('type', value.id);
                             });
                             _saveStoreToStorage();
                           },
@@ -257,7 +264,7 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
                             label: "เลือกรูท *",
                             onChanged: (value) {
                               setState(() {
-                                widget.storeData = widget.storeData!
+                                widget.storeData = widget.storeData
                                     .copyWithDynamicField(
                                         'route', value!.route);
                               });

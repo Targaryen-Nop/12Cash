@@ -161,9 +161,8 @@ class _OrderDetailState extends State<OrderDetail>
 
   Future<void> _loadJson() async {
     String jsonString = await rootBundle.loadString('lang/main-th.json');
-    setState(() async {
-      _jsonString =
-          await jsonDecode(jsonString)['route']["order_detail_screen"];
+    setState(() {
+      _jsonString = jsonDecode(jsonString)['route']["order_detail_screen"];
     });
   }
 

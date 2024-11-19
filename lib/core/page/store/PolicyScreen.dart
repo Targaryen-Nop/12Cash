@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:_12sale_app/data/models/Store.dart';
+import 'package:_12sale_app/data/service/locationService.dart';
 import 'package:flutter/material.dart';
 import 'package:_12sale_app/core/styles/gobalStyle.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -22,12 +23,39 @@ class _PolicyScreenState extends State<PolicyScreen> {
   bool _isCheckboxChecked = false;
   // List<Store> _store = [];
   Store? _storeData;
+  String latitude = '';
+  String longitude = '';
+  final LocationService locationService = LocationService();
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    fetchLocation();
     _scrollController.addListener(_onScroll);
+  }
+
+  Future<void> fetchLocation() async {
+    try {
+      // Initialize the location service
+      await locationService.initialize();
+
+      // Get latitude and longitude
+      double? lat = await locationService.getLatitude();
+      double? lon = await locationService.getLongitude();
+
+      setState(() {
+        latitude = lat?.toString() ?? "Unavailable";
+        longitude = lon?.toString() ?? "Unavailable";
+      });
+      print("${latitude}, ${longitude}");
+    } catch (e) {
+      setState(() {
+        latitude = "Error fetching latitude";
+        longitude = "Error fetching longitude";
+      });
+      print("Error: $e");
+    }
   }
 
   final TextEditingController _controller = TextEditingController(
@@ -185,10 +213,11 @@ class _PolicyScreenState extends State<PolicyScreen> {
                             subDistrict: "",
                             province: "",
                             provinceCode: "",
+                            postcode: "",
                             zone: "",
                             area: "",
-                            latitude: "",
-                            longitude: "",
+                            latitude: latitude,
+                            longitude: longitude,
                             lineId: "",
                             note: "",
                             approve: Approve(
@@ -213,6 +242,7 @@ class _PolicyScreenState extends State<PolicyScreen> {
                               ),
                             ],
                           );
+                          print(" Save ${latitude}, ${longitude}");
 
                           // print(_storeData?.policyConsent[0].status);
                           // _storeData = Store(

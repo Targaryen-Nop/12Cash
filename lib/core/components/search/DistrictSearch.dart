@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:_12sale_app/data/models/District.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:path/path.dart';
 
 class DistrictSearch extends StatefulWidget {
@@ -10,6 +13,7 @@ class DistrictSearch extends StatefulWidget {
   // final List<District> districts;
   final ValueChanged<District?> onChanged;
   final Future<List<District>> Function(String) getDistrict;
+  final String? initialSelectedValue;
 
   const DistrictSearch({
     Key? key,
@@ -18,6 +22,7 @@ class DistrictSearch extends StatefulWidget {
     required this.onChanged,
     // required this.districts,
     required this.getDistrict,
+    this.initialSelectedValue,
   }) : super(key: key);
 
   @override
@@ -26,13 +31,37 @@ class DistrictSearch extends StatefulWidget {
 
 class _DistrictSearchState extends State<DistrictSearch> {
   District? _selectedDistrict;
-  List<District> district = [];
+  List<District> districts = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadDataFromJson();
+  }
+
+  Future<void> _loadDataFromJson() async {
+    // Load the JSON file
+    final String response = await rootBundle.loadString('data/district.json');
+    final data = json.decode(response);
+
+    // Map JSON data to RouteStore model
+    setState(() {
+      districts =
+          (data as List).map((json) => District.fromJson(json)).toList();
+      // Find the initial selected RouteStore based on the route name
+      if (districts.isNotEmpty && widget.initialSelectedValue != '') {
+        _selectedDistrict = districts.firstWhere(
+          (district) => district.amphoe == widget.initialSelectedValue,
+        );
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     return DropdownSearch<District>(
-      items: district,
+      // items: districts,
       dropdownButtonProps: DropdownButtonProps(
         icon: Padding(
           padding: EdgeInsets.only(right: 8.0),

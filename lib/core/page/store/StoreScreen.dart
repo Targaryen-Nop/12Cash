@@ -147,6 +147,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) => DetailShopScreen(
+                                            store: storeItems[index],
                                             customerNo:
                                                 storeItems[index].storeId,
                                             customerName:
@@ -177,6 +178,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) => DetailShopScreen(
+                                            store: storeItems[index],
                                             customerNo:
                                                 storeItems[index].storeId,
                                             customerName:

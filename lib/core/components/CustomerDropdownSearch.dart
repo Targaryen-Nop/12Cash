@@ -128,20 +128,14 @@ class _CustomerDropdownSearchState extends State<CustomerDropdownSearch> {
   Future<List<CustomerModel>> getCustomers() async {
     try {
       var dio = Dio();
-      // Correcting the request URL by adding the protocol (http://)
       var response = await dio.post(
         "http://192.168.44.64:8003/erp/customer/",
-        // queryParameters: {
-        //   "filter": filter
-        // }, // Passing filter as a query parameter
         data: jsonEncode({
-          // The body of the request as raw JSON
           "customerNo": "10110070",
         }),
         options: Options(
           headers: {
-            'Content-Type':
-                'application/json', // Setting the content type as JSON
+            'Content-Type': 'application/json',
           },
         ),
       );

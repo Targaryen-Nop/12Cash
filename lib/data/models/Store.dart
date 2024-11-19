@@ -11,6 +11,7 @@ class Store {
   final String subDistrict;
   final String province;
   final String provinceCode;
+  final String postcode;
   final String zone;
   final String area;
   final String latitude;
@@ -38,6 +39,7 @@ class Store {
     required this.subDistrict,
     required this.province,
     required this.provinceCode,
+    required this.postcode,
     required this.zone,
     required this.area,
     required this.latitude,
@@ -79,6 +81,8 @@ class Store {
         return copyWith(province: value);
       case 'provinceCode':
         return copyWith(provinceCode: value);
+      case 'poscost':
+        return copyWith(provinceCode: value);
       case 'zone':
         return copyWith(zone: value);
       case 'area':
@@ -116,6 +120,7 @@ class Store {
     String? subDistrict,
     String? province,
     String? provinceCode,
+    String? postcode,
     String? zone,
     String? area,
     String? latitude,
@@ -143,6 +148,7 @@ class Store {
       subDistrict: subDistrict ?? this.subDistrict,
       province: province ?? this.province,
       provinceCode: provinceCode ?? this.provinceCode,
+      postcode: postcode ?? this.postcode,
       zone: zone ?? this.zone,
       area: area ?? this.area,
       latitude: latitude ?? this.latitude,
@@ -174,6 +180,7 @@ class Store {
       subDistrict: json['subDistrict'],
       province: json['province'],
       provinceCode: json['provinceCode'],
+      postcode: json['postcode'],
       zone: json['zone'],
       area: json['area'],
       latitude: json['latitude'],
@@ -207,6 +214,7 @@ class Store {
       'subDistrict': subDistrict,
       'province': province,
       'provinceCode': provinceCode,
+      'postcode': postcode,
       'zone': zone,
       'area': area,
       'latitude': latitude,

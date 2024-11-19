@@ -8,6 +8,7 @@ import 'package:_12sale_app/core/components/search/DistrictSearch.dart';
 import 'package:_12sale_app/core/components/search/ProvinceSearch.dart';
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:_12sale_app/data/models/District.dart';
+import 'package:_12sale_app/data/models/Location.dart';
 import 'package:_12sale_app/data/models/Poscode.dart';
 import 'package:_12sale_app/data/models/Province.dart';
 import 'package:_12sale_app/data/models/Store.dart';
@@ -17,7 +18,20 @@ import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class StoreAddressScreen extends StatefulWidget {
-  const StoreAddressScreen({super.key});
+  Store storeData;
+  TextEditingController storeAddressController;
+  String initialSelectedProvince;
+  String initialSelectedAmphoe;
+  String initialSelectedSubDistrict;
+
+  StoreAddressScreen({
+    Key? key,
+    required this.storeData,
+    required this.storeAddressController,
+    required this.initialSelectedProvince,
+    required this.initialSelectedAmphoe,
+    required this.initialSelectedSubDistrict,
+  }) : super(key: key);
 
   @override
   State<StoreAddressScreen> createState() => _StoreAddressScreenState();
@@ -44,6 +58,11 @@ class _StoreAddressScreenState extends State<StoreAddressScreen> {
     super.initState();
     _loadJson();
     _loadStoreFromStorage();
+    _loadDistrictsFromJson(widget.initialSelectedProvince);
+    _loadSubDistrictsFromJson(
+        widget.initialSelectedProvince, widget.initialSelectedAmphoe);
+    _loadPoscodeFromJson(widget.initialSelectedProvince,
+        widget.initialSelectedAmphoe, widget.initialSelectedSubDistrict);
   }
 
   Future<void> _loadStoreFromStorage() async {
@@ -57,6 +76,9 @@ class _StoreAddressScreenState extends State<StoreAddressScreen> {
         _storeData =
             (jsonStore == null ? null : Store.fromJson(jsonDecode(jsonStore)))!;
       });
+      province = widget.initialSelectedProvince;
+      amphoe = widget.initialSelectedAmphoe;
+      district = widget.initialSelectedSubDistrict;
     }
   }
 
@@ -158,6 +180,7 @@ class _StoreAddressScreenState extends State<StoreAddressScreen> {
         });
         poscodeController.text = poscode[0].zipcode;
       }
+      // print(poscode);
 
       // // Reset selected district if not in filtered list
       // selectedsubDistricts = subDistricts.contains(selectedsubDistricts)
@@ -178,22 +201,24 @@ class _StoreAddressScreenState extends State<StoreAddressScreen> {
 
   void _onTextChanged(String text, String field) {
     // Set a new timer for 3 milliseconds
-    _throttle = Timer(const Duration(milliseconds: 3000), () {
-      print(
-          'Throttled text: $text'); // This will print the text with throttling
-      setState(() {
-        _storeData = _storeData?.copyWithDynamicField(field, text);
-      });
-      _saveStoreToStorage();
-      // Cancel any existing timer to reset the delay
-      if (_throttle?.isActive ?? false) {
-        _throttle!.cancel();
-      }
+    setState(() {
+      _storeData = _storeData?.copyWithDynamicField(field, text);
     });
+    _saveStoreToStorage();
+    // _throttle = Timer(const Duration(milliseconds: 3000), () {
+    //   print(
+    //       'Throttled text: $text'); // This will print the text with throttling
+
+    //   // Cancel any existing timer to reset the delay
+    //   if (_throttle?.isActive ?? false) {
+    //     _throttle!.cancel();
+    //   }
+    // });
   }
 
   @override
   void dispose() {
+    _throttle?.cancel();
     poscodeController.dispose(); // Dispose controller when widget is removed
     super.dispose();
   }
@@ -226,97 +251,90 @@ class _StoreAddressScreenState extends State<StoreAddressScreen> {
             children: [
               SizedBox(height: screenWidth / 37),
               Customtextinput(
+                max: 36,
+                controller: widget.storeAddressController,
                 onChanged: (value) => _onTextChanged(value, 'address'),
                 context,
                 label: 'ที่อยู่ *',
               ),
-              // SizedBox(height: screenWidth / 37),
-
-              // Province dropdown to select the province
-              // ProvinceDropdown(
-              //   label: "เลือกจังหวัด",
-              //   onChanged: (value) {
-              //     setState(() {
-              //       province = value!.province;
-              //     });
-              //     _loadDistrictsFromJson(
-              //         province); // Load districts for the selected province
-              //   },
-              // ),
-              // SizedBox(height: screenWidth / 37),
-
-              // // District dropdown to select the district based on the province
-              // DistrictDropdown(
-              //   label: "เลือกอำเภอ",
-              //   districts: districts, // Pass the filtered list of districts
-              //   onChanged: (value) {
-              //     setState(() {
-              //       selectedDistrict = value;
-              //     });
-              //   },
-              // ),
-
               SizedBox(height: screenWidth / 37),
               ProvinceSearch(
+                initialSelectedValue: widget.initialSelectedProvince,
                 label: "เลือกจังหวัด",
                 hint: "เลือกจังหวัด",
-                onChanged: (Province? value) {
+                onChanged: (Location? value) {
                   if (value != null) {
                     setState(() {
                       province = value.province;
+                      widget.initialSelectedProvince = value.province;
+                      widget.initialSelectedAmphoe = '';
+                      widget.initialSelectedSubDistrict = '';
+                      poscodeController.text = '';
                       _storeData = _storeData?.copyWithDynamicField(
-                          'province', value!.province);
-                      _saveStoreToStorage();
+                          'province', value.province);
+                      _storeData =
+                          _storeData?.copyWithDynamicField('district', "");
+                      _storeData =
+                          _storeData?.copyWithDynamicField('subDistrict', "");
+                      _storeData =
+                          _storeData?.copyWithDynamicField("poscode", "");
                     });
-                    _loadDistrictsFromJson(
-                        province); // Call _loadDistrictsFromJson with the selected province
+                    _saveStoreToStorage();
                   }
                 },
               ),
               SizedBox(height: screenWidth / 37),
               DistrictSearch(
+                key: ValueKey(
+                    'DistrictSearch-${widget.initialSelectedProvince}'),
+                initialSelectedValue: widget.initialSelectedAmphoe,
                 getDistrict: (filter) => getDistrict(filter, province),
                 label: "เลือกอำเภอ",
                 onChanged: (District? value) {
                   if (value != null) {
                     setState(() {
+                      widget.initialSelectedSubDistrict = '';
+                      poscodeController.text = '';
                       amphoe = value.amphoe;
                       _storeData = _storeData?.copyWithDynamicField(
-                          'district', value!.amphoe);
-                      _saveStoreToStorage();
+                          'district', value.amphoe);
+                      _storeData =
+                          _storeData?.copyWithDynamicField('subDistrict', "");
+                      _storeData =
+                          _storeData?.copyWithDynamicField("poscode", "");
                     });
-                    _loadSubDistrictsFromJson(province, amphoe);
+                    _saveStoreToStorage();
                   }
-                  // print(amphoe);
-                  // print(province);
-                  // print(subDistricts);
                 },
               ),
               SizedBox(height: screenWidth / 37),
               SubDistrictDropdown(
+                key: ValueKey(
+                    'SubDistrictDropdown-${widget.initialSelectedProvince}'),
                 label: "เลือกตำบล",
+                initialSelectedValue: widget.initialSelectedSubDistrict,
                 // value: subDistricts,
                 onChanged: (SubDistrict? value) {
                   if (value != null) {
                     setState(() {
                       district = value.district;
                       _storeData = _storeData?.copyWithDynamicField(
-                          'subDistrict', value!.district);
-                      _saveStoreToStorage();
+                          'subDistrict', value.district);
                     });
-                    _loadPoscodeFromJson(province, amphoe, district);
                   }
-                  // print(amphoe);
                   // print(province);
-                  // print(poscode);
-                  // print(poscode[0].zipcode);
+                  // print(amphoe);
+                  // print(district);
+                  _loadPoscodeFromJson(province, amphoe, district);
+                  _saveStoreToStorage();
                 },
                 subDistricts: subDistricts,
               ),
               SizedBox(height: screenWidth / 37),
               Customtextinput(
+                key: ValueKey('PoscodeInput-${widget.initialSelectedProvince}'),
                 context,
-                onChanged: (value) => _onTextChanged(value, 'provinceCode'),
+                onChanged: (value) => _onTextChanged(value, 'poscode'),
                 readonly: true,
                 controller: poscodeController, // Pass the controller here
                 label: 'รหัสไปรณีย์',
