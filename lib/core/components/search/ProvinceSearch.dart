@@ -1,16 +1,19 @@
 import 'dart:convert';
+
 import 'package:_12sale_app/core/styles/style.dart';
-import 'package:_12sale_app/data/models/Location.dart';
+import 'package:_12sale_app/data/models/District.dart';
+import 'package:_12sale_app/data/models/Province.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:collection/collection.dart';
 
 class ProvinceSearch extends StatefulWidget {
   final String label;
   final String? hint;
-  final ValueChanged<Location?> onChanged;
+  // final List<District> districts;
+  final ValueChanged<Province?> onChanged;
   final String? initialSelectedValue;
+  // final Future<List<Province>> Function(String) getProvince;
 
   const ProvinceSearch({
     Key? key,
@@ -18,6 +21,8 @@ class ProvinceSearch extends StatefulWidget {
     this.hint,
     required this.onChanged,
     this.initialSelectedValue,
+    // required this.districts,
+    // required this.getProvince,
   }) : super(key: key);
 
   @override
@@ -25,78 +30,68 @@ class ProvinceSearch extends StatefulWidget {
 }
 
 class _ProvinceSearchState extends State<ProvinceSearch> {
-  Location? _selected;
-  List<Location> provinces = [];
+  Province? _selected;
+  List<Province> provinces = [];
 
   @override
   void initState() {
     super.initState();
-    _loadInitialData();
+    _loadDataFromJson();
   }
 
-  Future<void> _loadInitialData() async {
-    // Load provinces and set the initial selected value
-    List<Location> loadedProvinces = await getProvince('');
+  Future<void> _loadDataFromJson() async {
+    // Load the JSON file
+    final String response = await rootBundle.loadString('data/province.json');
+    final data = json.decode(response);
+
+    // Map JSON data to RouteStore model
     setState(() {
-      provinces = loadedProvinces;
-      if (widget.initialSelectedValue != null) {
+      provinces =
+          (data as List).map((json) => Province.fromJson(json)).toList();
+      // Find the initial selected RouteStore based on the route name
+      if (provinces.isNotEmpty && widget.initialSelectedValue != '') {
         _selected = provinces.firstWhere(
-          (location) => location.province == widget.initialSelectedValue,
+          (province) => province.province == widget.initialSelectedValue,
         );
       }
     });
   }
 
-  Future<List<Location>> getProvince(String filter) async {
+  Future<List<Province>> getProvince(String filter) async {
     try {
-      // Load the JSON file for provinces
-      String response = await rootBundle.loadString('data/province.json');
-      List<dynamic> data = json.decode(response);
+      // Load the JSON file for districts
+      final String response = await rootBundle.loadString('data/province.json');
+      final data = json.decode(response);
 
-      // Map JSON data to Location model and apply filtering
-      return data
-          .map((json) => Location.fromJson(json))
-          .where((location) =>
-              location.province.toLowerCase().contains(filter.toLowerCase()))
-          .toList();
+      // Filter and map JSON data to District model based on selected province and filter
+      // final List<Province> districts =
+      //     (data as List).map((json) => Province.fromJson(json)).toList();
+
+      setState(() {
+        provinces =
+            (data as List).map((json) => Province.fromJson(json)).toList();
+        // Find the initial selected RouteStore based on the route name
+        if (provinces.isNotEmpty && widget.initialSelectedValue != '') {
+          _selected = provinces.firstWhere(
+            (province) => province.province == widget.initialSelectedValue,
+          );
+        }
+      });
+      return provinces;
     } catch (e) {
-      print("Error occurred while loading provinces: $e");
+      print("Error occurred: $e");
       return [];
-    }
-  }
-
-  Future<Map<String, List<Location>>> getProvinceGroupedByProvince(
-      String filter) async {
-    try {
-      // Load the JSON file for provinces
-      String response = await rootBundle.loadString('data/province.json');
-      List<dynamic> data = json.decode(response);
-
-      // Map JSON data to Location model and apply filtering
-      List<Location> locations = data
-          .map((json) => Location.fromJson(json))
-          .where((location) =>
-              location.province.toLowerCase().contains(filter.toLowerCase()))
-          .toList();
-
-      // Group by province
-      Map<String, List<Location>> groupedProvinces =
-          groupBy(locations, (Location location) => location.province);
-
-      return groupedProvinces;
-    } catch (e) {
-      print("Error occurred while loading and grouping provinces: $e");
-      return {};
     }
   }
 
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
-    return DropdownSearch<Location>(
+    return DropdownSearch<Province>(
+      // items: provinces,
       dropdownButtonProps: DropdownButtonProps(
         icon: Padding(
-          padding: const EdgeInsets.only(right: 8.0),
+          padding: EdgeInsets.only(right: 8.0),
           child: Icon(
             Icons.arrow_drop_down,
             size: screenWidth / 20,
@@ -104,6 +99,7 @@ class _ProvinceSearchState extends State<ProvinceSearch> {
           ),
         ),
       ),
+
       dropdownDecoratorProps: DropDownDecoratorProps(
         baseStyle: Styles.black18(context),
         dropdownSearchDecoration: InputDecoration(
@@ -111,27 +107,39 @@ class _ProvinceSearchState extends State<ProvinceSearch> {
           labelStyle: Styles.grey18(context),
           hintText: widget.hint,
           hintStyle: Styles.grey18(context),
-          floatingLabelBehavior: FloatingLabelBehavior.always,
+          floatingLabelBehavior: FloatingLabelBehavior
+              .always, // Always show the label above the dropdown
           filled: true,
-          fillColor: Colors.white,
+          fillColor:
+              Colors.white, // Optional: Set background color for the dropdown
           border: const OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(8)),
-            borderSide: BorderSide(color: Colors.grey, width: 1),
+            borderRadius: BorderRadius.all(
+                Radius.circular(8)), // Customize the border radius
+            borderSide: BorderSide(
+              color: Colors.grey, // Border color
+              width: 1, // Border width
+            ),
           ),
           enabledBorder: const OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(8)),
+            borderRadius: BorderRadius.all(
+                Radius.circular(8)), // Border radius when enabled
             borderSide: BorderSide(
-              color: Color.fromARGB(255, 100, 100, 100),
+              color: Color.fromARGB(
+                  255, 100, 100, 100), // Border color for enabled state
               width: 1,
             ),
           ),
           focusedBorder: const OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(8)),
-            borderSide: BorderSide(color: Styles.primaryColor, width: 1.5),
+            borderRadius: BorderRadius.all(
+                Radius.circular(8)), // Border radius when focused
+            borderSide: BorderSide(
+              color: Styles.primaryColor, // Border color for focused state
+              width: 1.5,
+            ),
           ),
         ),
       ),
-      onChanged: (Location? data) {
+      onChanged: (Province? data) {
         setState(() {
           _selected = data;
         });
@@ -139,7 +147,8 @@ class _ProvinceSearchState extends State<ProvinceSearch> {
       },
       selectedItem: _selected,
       asyncItems: (filter) => getProvince(filter),
-      popupProps: PopupPropsMultiSelection.dialog(
+      // compareFn: (i, s) => i.isEqual(s),
+      popupProps: PopupPropsMultiSelection.modalBottomSheet(
         showSearchBox: true,
         itemBuilder: popupItemBuild,
         searchFieldProps: TextFieldProps(style: Styles.black18(context)),
@@ -147,22 +156,32 @@ class _ProvinceSearchState extends State<ProvinceSearch> {
     );
   }
 
-  Widget popupItemBuild(BuildContext context, Location item, bool isSelected) {
-    return Container(
-      decoration: isSelected
-          ? BoxDecoration(
-              border: Border.all(color: Theme.of(context).primaryColor),
-              borderRadius: BorderRadius.circular(5),
-              color: Colors.white,
-            )
-          : null,
-      child: ListTile(
-        selected: isSelected,
-        title: Text(
-          item.province,
-          style: Styles.black18(context),
+  Widget popupItemBuild(BuildContext context, Province item, bool isSelected) {
+    return Column(
+      children: [
+        Container(
+          decoration: !isSelected
+              ? null
+              : BoxDecoration(
+                  border: Border.all(color: Theme.of(context).primaryColor),
+                  borderRadius: BorderRadius.circular(5),
+                  color: Colors.white,
+                ),
+          child: ListTile(
+            selected: isSelected,
+            title: Text.rich(
+              TextSpan(
+                children: [
+                  TextSpan(
+                    text: '${item.province}',
+                    style: Styles.black18(context),
+                  ),
+                ],
+              ),
+            ),
+          ),
         ),
-      ),
+      ],
     );
   }
 }

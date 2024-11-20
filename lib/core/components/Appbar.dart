@@ -7,106 +7,104 @@ import 'package:flutter/material.dart';
 class AppbarCustom extends StatefulWidget {
   final String title;
   final IconData icon;
-  // final VoidCallback onPressed;
 
   const AppbarCustom({
-    super.key,
+    Key? key,
     required this.title,
     required this.icon,
-    // required this.onPressed,
-  });
+  }) : super(key: key);
 
   @override
   State<AppbarCustom> createState() => _AppbarCustomState();
 }
 
 class _AppbarCustomState extends State<AppbarCustom> {
+  bool isConnected = true; // Default connectivity state
+
+  @override
+  void initState() {
+    super.initState();
+    // Subscribe to connectivity changes
+    ConnectivityService().connectivityStream.listen((connectionState) {
+      if (mounted) {
+        setState(() {
+          isConnected = connectionState;
+        });
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
-    return StreamBuilder<bool>(
-        stream: ConnectivityService().connectivityStream,
-        builder: (context, snapshot) {
-          bool isConnected = snapshot.data ?? true;
-          return Container(
-            decoration: BoxDecoration(
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black
-                      .withOpacity(0.2), // Shadow color with opacity
-                  spreadRadius: 3, // Spread radius
-                  blurRadius: 50, // Blur radius
-                  offset: const Offset(0, 3),
-                  // Changes position of the shadow (x, y)
-                ),
-              ],
-            ),
-            child: ClipRRect(
-              borderRadius: const BorderRadius.vertical(
-                // top: Radius.circular(180),
-                bottom: Radius.circular(15),
-                // top: Radius.circular(50) // Radius at the bottom of the AppBar
-              ),
-              child: AppBar(
-                leading: IconButton(
-                  icon: Icon(
-                    Icons.arrow_back,
-                    size: screenWidth / 12,
-                    // weight: screenWidth,
-                  ), // Set the custom size here
-                  onPressed: () {
-                    Navigator.of(context).pop(); // Action to go back
-                  },
-                ),
-                title: Container(
-                  // color: Colors.amber,
 
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        // SizedBox(width: screenWidth / 6),
-                        Icon(
-                          widget.icon,
-                          size: screenWidth / 15,
-                        ),
-                        Text(widget.title),
-                      ]),
+    return Container(
+      decoration: BoxDecoration(
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            spreadRadius: 3,
+            blurRadius: 50,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: const BorderRadius.vertical(
+          bottom: Radius.circular(15),
+        ),
+        child: AppBar(
+          leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back,
+              size: screenWidth / 12,
+            ),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Icon(
+                widget.icon,
+                size: screenWidth / 15,
+              ),
+              const SizedBox(width: 8),
+              Text(widget.title),
+            ],
+          ),
+          actions: [
+            Container(
+              margin: const EdgeInsets.only(right: 30),
+              height: screenWidth / 20,
+              width: screenWidth / 20,
+              decoration: BoxDecoration(
+                color: isConnected ? Colors.green : Colors.red,
+                border: Border.all(
+                  width: 4,
+                  color: isConnected
+                      ? Styles.successButtonColor
+                      : Styles.failTextColor,
                 ),
-                actions: [
-                  Container(
-                    margin: const EdgeInsets.only(
-                      right: 30,
-                    ),
-                    height: screenWidth / 20,
-                    width: screenWidth / 20,
-                    decoration: BoxDecoration(
-                      color: isConnected ? Colors.green : Colors.red,
-                      border: Border.all(
-                        width: 4,
-                        color: isConnected
-                            ? Styles.successButtonColor
-                            : Styles.failTextColor,
-                      ),
-                      borderRadius:
-                          const BorderRadius.all(Radius.circular(360)),
-                      boxShadow: const [
-                        BoxShadow(
-                          color: Colors.black26,
-                          blurRadius: 10,
-                          spreadRadius: 2,
-                          offset: Offset(0, -3),
-                        ),
-                      ],
-                    ),
+                borderRadius: const BorderRadius.all(Radius.circular(360)),
+                boxShadow: const [
+                  BoxShadow(
+                    color: Colors.black26,
+                    blurRadius: 10,
+                    spreadRadius: 2,
+                    offset: Offset(0, -3),
                   ),
                 ],
-                centerTitle: true,
-                foregroundColor: Colors.white,
-                titleTextStyle: Styles.headerWhite32(context),
-                backgroundColor: GobalStyles.primaryColor,
               ),
             ),
-          );
-        });
+          ],
+          centerTitle: true,
+          foregroundColor: Colors.white,
+          titleTextStyle: Styles.headerWhite32(context),
+          backgroundColor: GobalStyles.primaryColor,
+        ),
+      ),
+    );
   }
 }

@@ -21,6 +21,17 @@ class ShopType {
     );
   }
 
+    static List<ShopType> fromJsonList(List list) {
+    return list.map((item) => ShopType.fromJson(item)).toList();
+  }
+
+ bool containsFilter(String filter) {
+    final filterLower = filter.toLowerCase();
+    return name.toLowerCase().contains(filterLower);
+       
+  }
+
+
   // Method to convert ShopType instance to JSON
   Map<String, dynamic> toJson() {
     return {

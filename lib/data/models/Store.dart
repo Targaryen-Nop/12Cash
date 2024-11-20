@@ -81,8 +81,8 @@ class Store {
         return copyWith(province: value);
       case 'provinceCode':
         return copyWith(provinceCode: value);
-      case 'poscost':
-        return copyWith(provinceCode: value);
+      case 'postcode':
+        return copyWith(postcode: value);
       case 'zone':
         return copyWith(zone: value);
       case 'area':

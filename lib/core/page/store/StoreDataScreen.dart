@@ -5,9 +5,13 @@ import 'package:_12sale_app/core/components/button/Button.dart';
 import 'package:_12sale_app/core/components/dropdown/RouteDropdown.dart';
 import 'package:_12sale_app/core/components/dropdown/ShopTypeDropdown.dart';
 import 'package:_12sale_app/core/components/input/CustomTextInput.dart';
+import 'package:_12sale_app/core/components/search/DropdownSearchCustom.dart';
 import 'package:_12sale_app/core/styles/style.dart';
+import 'package:_12sale_app/data/models/Route.dart';
+import 'package:_12sale_app/data/models/Shoptype.dart';
 import 'package:_12sale_app/data/models/Store.dart';
 import 'package:_12sale_app/function/SavetoStorage.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
@@ -23,6 +27,7 @@ class StoreDataScreen extends StatefulWidget {
   TextEditingController storeLineController;
   TextEditingController storeNoteController;
   String initialSelectedRoute;
+  String initialSelectedShoptype;
 
   StoreDataScreen({
     Key? key,
@@ -33,6 +38,7 @@ class StoreDataScreen extends StatefulWidget {
     required this.storeLineController,
     required this.storeNoteController,
     required this.initialSelectedRoute,
+    required this.initialSelectedShoptype,
   }) : super(key: key);
 
   @override
@@ -51,6 +57,8 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
   Timer? _throttle;
 
   var keyboardVisibilityController = KeyboardVisibilityController();
+
+  get http => null;
 
   //  late final KeyboardVisibilityController keyboardVisibilityController; // Declare it here
   @override
@@ -140,6 +148,70 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
     await prefs.setString('add_store', jsonStoreString);
   }
 
+  Future<List<ShopType>> getShoptype(filter) async {
+    //  var res = await http.post(Uri.parse(API.getRowCheck), body: {
+    //   'user_code': Users.id,
+    // });
+    var response = await Dio().get(
+      "https://8ac75a59-0e87-42a5-aad0-de57475b1f4e.mock.pstmn.io/cash/shoptype",
+      queryParameters: {"filter": filter},
+    );
+
+    final data = jsonDecode(response.data);
+    //  print('date' + response.data);
+    if (data != null) {
+      return ShopType.fromJsonList(data);
+    }
+
+    return [];
+  }
+
+  // Future<void> _fetchShopTypes() async {
+  //   try {
+  //     final response = await http.get(Uri.parse(
+  //         'https://8ac75a59-0e87-42a5-aad0-de57475b1f4e.mock.pstmn.io/cash/shoptype'));
+
+  //     if (response.statusCode == 200) {
+  //       final List<dynamic> data = json.decode(response.body);
+  //       if (mounted) {
+  //         setState(() {
+  //           items = data.map((json) => ShopType.fromJson(json)).toList();
+
+  //           if (items.isNotEmpty && widget.initialSelectedValue != '') {
+  //             selectedValue = items.firstWhere(
+  //               (item) => item.name == widget.initialSelectedValue,
+  //             );
+  //           }
+  //         });
+  //       }
+  //     } else {
+  //       // Handle other response status codes
+  //       print('Failed to load shop types: ${response.statusCode}');
+  //     }
+  //   } catch (e) {
+  //     print('Error fetching data: $e');
+  //     // Display a message to the user or retry logic
+  //   }
+  // }
+
+  Future<List<RouteStore>> getRoutes(String filter) async {
+    try {
+      // Load the JSON file for districts
+      final String response = await rootBundle.loadString('data/route.json');
+      final data = json.decode(response);
+
+      // Filter and map JSON data to District model based on selected province and filter
+      final List<RouteStore> route =
+          (data as List).map((json) => RouteStore.fromJson(json)).toList();
+
+      // Group districts by amphoe
+      return route;
+    } catch (e) {
+      print("Error occurred: $e");
+      return [];
+    }
+  }
+
   @override
   void dispose() {
     keyboardSubscription.cancel();
@@ -212,7 +284,7 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
                     });
                   },
                   context,
-                  label: '${_jsonString?['shop_tax'] ?? "Tax ID"} ',
+                  label: '${_jsonString?['shop_tax'] ?? "Tax ID"} *',
                   hint:
                       '${_jsonString?['shop_tax_hint'] ?? "Max 13 Characters"}',
                 ),
@@ -238,38 +310,113 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Expanded(
-                      flex: 2,
-                      child: SizedBox(
-                        child: ShopTypeDropdown(
-                          label: 'เลือกประเภทร้านค้า *',
-                          onChanged: (value) {
-                            setState(() {
-                              widget.storeData = widget.storeData
-                                  .copyWithDynamicField(
-                                      'typeName', value!.name);
-                              widget.storeData = widget.storeData
-                                  .copyWithDynamicField('type', value.id);
-                            });
-                            _saveStoreToStorage();
-                          },
-                        ),
-                      ),
-                    ),
+                        flex: 2,
+                        child: SizedBox(
+                          // child: ShopTypeDropdown(
+                          //   label: 'เลือกประเภทร้านค้า *',
+                          //   initialSelectedValue: widget.initialSelectedShoptype,
+                          //   onChanged: (value) {
+                          //     setState(() {
+                          //       widget.storeData = widget.storeData
+                          //           .copyWithDynamicField(
+                          //               'typeName', value!.name);
+                          //       widget.storeData = widget.storeData
+                          //           .copyWithDynamicField('type', value.id);
+                          //     });
+                          //     _saveStoreToStorage();
+                          //   },
+                          // ),
+
+                          child: DropdownSearchCustom<ShopType>(
+                            label: "เลือกร้านค้า *",
+                            titleText: "เลือกร้านค้า",
+                            fetchItems: (filter) => getShoptype(filter),
+                            onChanged: (selected) {
+                              setState(() {
+                                widget.storeData = widget.storeData
+                                    .copyWithDynamicField(
+                                        'typeName', selected!.name);
+                                widget.storeData = widget.storeData
+                                    .copyWithDynamicField('type', selected.id);
+                              });
+                              _saveStoreToStorage();
+                            },
+                            itemAsString: (ShopType data) => data.name,
+                            itemBuilder: (context, item, isSelected) {
+                              return Column(
+                                children: [
+                                  ListTile(
+                                    title: Text(
+                                      " ${item.name}",
+                                      style: Styles.black18(context),
+                                    ),
+                                    selected: isSelected,
+                                  ),
+                                  Divider(
+                                    color: Colors
+                                        .grey[200], // Color of the divider line
+                                    thickness: 1, // Thickness of the line
+                                    indent:
+                                        16, // Left padding for the divider line
+                                    endIndent:
+                                        16, // Right padding for the divider line
+                                  ),
+                                ],
+                              );
+                            },
+                          ),
+                        )),
                     const SizedBox(width: 8.0),
                     Expanded(
                       child: SizedBox(
                         // height: 50,
-                        child: RouteDropdown(
-                            initialSelectedValue: widget.initialSelectedRoute,
-                            label: "เลือกรูท *",
-                            onChanged: (value) {
-                              setState(() {
-                                widget.storeData = widget.storeData
-                                    .copyWithDynamicField(
-                                        'route', value!.route);
-                              });
-                              _saveStoreToStorage();
-                            }),
+                        // child: RouteDropdown(
+                        //     initialSelectedValue: widget.initialSelectedRoute,
+                        //     label: "เลือกรูท *",
+                        //     onChanged: (value) {
+                        //       setState(() {
+                        //         widget.storeData = widget.storeData
+                        //             .copyWithDynamicField(
+                        //                 'route', value!.route);
+                        //       });
+                        //       _saveStoreToStorage();
+                        //     }),
+                        child: DropdownSearchCustom<RouteStore>(
+                          label: "เลือกรูท *",
+                          titleText: "เลือกรูท",
+                          fetchItems: (filter) => getRoutes(filter),
+                          onChanged: (selected) {
+                            setState(() {
+                              widget.storeData = widget.storeData
+                                  .copyWithDynamicField(
+                                      'route', selected!.route);
+                            });
+                            _saveStoreToStorage();
+                          },
+                          itemAsString: (RouteStore data) => data.route,
+                          itemBuilder: (context, item, isSelected) {
+                            return Column(
+                              children: [
+                                ListTile(
+                                  title: Text(
+                                    " ${item.route}",
+                                    style: Styles.black18(context),
+                                  ),
+                                  selected: isSelected,
+                                ),
+                                Divider(
+                                  color: Colors
+                                      .grey[200], // Color of the divider line
+                                  thickness: 1, // Thickness of the line
+                                  indent:
+                                      16, // Left padding for the divider line
+                                  endIndent:
+                                      16, // Right padding for the divider line
+                                ),
+                              ],
+                            );
+                          },
+                        ),
                       ),
                     ),
                   ],

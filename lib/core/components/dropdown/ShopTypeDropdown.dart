@@ -10,12 +10,14 @@ class ShopTypeDropdown extends StatefulWidget {
   final String label;
   final String? hint;
   final ValueChanged<ShopType?> onChanged;
+  final String? initialSelectedValue; // Now a String? for route name
 
   const ShopTypeDropdown({
     Key? key,
     required this.label,
     this.hint,
     required this.onChanged,
+    required this.initialSelectedValue,
   }) : super(key: key);
 
   @override
@@ -39,9 +41,17 @@ class _ShopTypeDropdownState extends State<ShopTypeDropdown> {
 
       if (response.statusCode == 200) {
         final List<dynamic> data = json.decode(response.body);
-        setState(() {
-          items = data.map((json) => ShopType.fromJson(json)).toList();
-        });
+        if (mounted) {
+          setState(() {
+            items = data.map((json) => ShopType.fromJson(json)).toList();
+
+            if (items.isNotEmpty && widget.initialSelectedValue != '') {
+              selectedValue = items.firstWhere(
+                (item) => item.name == widget.initialSelectedValue,
+              );
+            }
+          });
+        }
       } else {
         // Handle other response status codes
         print('Failed to load shop types: ${response.statusCode}');
@@ -54,9 +64,11 @@ class _ShopTypeDropdownState extends State<ShopTypeDropdown> {
 
   void loadShopTypes() async {
     List<ShopType> shopTypes = await getShopTypes();
-    setState(() {
-      items = shopTypes;
-    });
+    if (mounted) {
+      setState(() {
+        items = shopTypes;
+      });
+    }
   }
 
   Future<List<ShopType>> getShopTypes() async {

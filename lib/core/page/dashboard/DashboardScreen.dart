@@ -72,7 +72,7 @@ class _DashboardscreenState extends State<Dashboardscreen> {
         // width: screenWidth / 1.5,
         child: Column(
           children: [
-            SizedBox(height: screenWidth / 25),
+            // SizedBox(height: screenWidth / 25),
             WeightCudeCard(),
             Container(height: 500, width: 400, child: LineChartSample()),
             SizedBox(height: screenWidth / 25),

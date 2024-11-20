@@ -2,11 +2,13 @@ import 'dart:convert';
 import 'dart:math';
 import 'package:_12sale_app/core/components/Appbar.dart';
 import 'package:_12sale_app/core/components/sheet/PolicyAddNewShop.dart';
+import 'package:_12sale_app/core/page/HomeScreen.dart';
 import 'package:_12sale_app/core/page/store/PolicyScreen.dart';
 import 'package:_12sale_app/core/page/store/StoreAddressScreen.dart';
 import 'package:_12sale_app/core/page/store/StoreDataScreen.dart';
 import 'package:_12sale_app/core/page/store/VerifyStoreScreen.dart';
 import 'package:_12sale_app/core/styles/style.dart';
+import 'package:_12sale_app/core/utils/tost_util.dart';
 import 'package:_12sale_app/data/models/Store.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -14,8 +16,10 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timelines/timelines.dart';
+import 'package:toastification/toastification.dart';
 
 const kTileHeight = 50.0;
 const completeColor = Color(0xff5e6172);
@@ -38,11 +42,12 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
   late TextEditingController storeLineController;
   late TextEditingController storeNoteController;
   late TextEditingController storeAddressController;
+  late TextEditingController storePoscodeController;
   String initialSelectedRoute = '';
+  String initialSelectedShoptype = '';
   String initialSelectedProvince = '';
   String initialSelectedAmphoe = '';
   String initialSelectedSubDistrict = '';
-  String initialSelectedPoscode = '';
 
   @override
   initState() {
@@ -55,6 +60,7 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
     storeLineController = TextEditingController();
     storeNoteController = TextEditingController();
     storeAddressController = TextEditingController();
+    storePoscodeController = TextEditingController();
   }
 
   @override
@@ -65,6 +71,7 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
     storeLineController.dispose();
     storeNoteController.dispose();
     storeAddressController.dispose();
+    storePoscodeController.dispose();
     super.dispose();
   }
 
@@ -81,11 +88,13 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
             storeTelController: storeTelController,
             storeLineController: storeLineController,
             storeNoteController: storeNoteController,
-            initialSelectedRoute: initialSelectedRoute);
+            initialSelectedRoute: initialSelectedRoute,
+            initialSelectedShoptype: initialSelectedShoptype);
       case 2:
         return StoreAddressScreen(
           storeData: _storeData,
           storeAddressController: storeAddressController,
+          storePoscodeController: storePoscodeController,
           initialSelectedProvince: initialSelectedProvince,
           initialSelectedAmphoe: initialSelectedAmphoe,
           initialSelectedSubDistrict: initialSelectedSubDistrict,
@@ -152,8 +161,8 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
       "district": _storeData.district,
       "subDistrict": _storeData.subDistrict,
       "provincet": _storeData.province,
-      "provinceCode": _storeData.provinceCode.substring(1, 3),
-      "postCode": _storeData.provinceCode,
+      "provinceCode": _storeData.postcode.substring(1, 3),
+      "postCode": _storeData.postcode,
       "note": _storeData.note,
       "zone": "BE",
       "area": "BE214",
@@ -403,10 +412,65 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
                           onPressed: () {
                             if (_processIndex == 0) {
                             } else {
-                              setState(() {
-                                _processIndex =
-                                    (_processIndex - 1) % _processes.length;
-                              });
+                              switch (_processIndex) {
+                                case 1:
+                                  return () {
+                                    if (_storeData.name == "" ||
+                                        _storeData.typeName == "" ||
+                                        _storeData.taxId == "" ||
+                                        _storeData.route == "") {
+                                      showToast(
+                                        context: context,
+                                        message: 'กรุณากรอกข้อมูลให้ครบ',
+                                        type: ToastificationType.error,
+                                        primaryColor: Colors.red,
+                                      );
+                                    }
+
+                                    if (_storeData.name != "" &&
+                                        _storeData.typeName != "" &&
+                                        _storeData.taxId != "" &&
+                                        _storeData.route != "") {
+                                      setState(() {
+                                        _processIndex = (_processIndex - 1) %
+                                            _processes.length;
+                                      });
+                                    }
+                                  }();
+                                case 2:
+                                  return () {
+                                    if (_storeData.address == "" ||
+                                        _storeData.province == "" ||
+                                        _storeData.district == "" ||
+                                        _storeData.subDistrict == "") {
+                                      showToast(
+                                        context: context,
+                                        message: 'กรุณากรอกข้อมูลให้ครบ',
+                                        type: ToastificationType.error,
+                                        primaryColor: Colors.red,
+                                      );
+                                    }
+
+                                    if (_storeData.address != "" &&
+                                        _storeData.province != "" &&
+                                        _storeData.district != "" &&
+                                        _storeData.subDistrict != "") {
+                                      setState(() {
+                                        _processIndex = (_processIndex - 1) %
+                                            _processes.length;
+                                      });
+                                    }
+                                  }();
+                                case 3:
+                                  return () {
+                                    setState(() {
+                                      _processIndex = (_processIndex - 1) %
+                                          _processes.length;
+                                    });
+                                  }();
+                                default:
+                                  return print('error');
+                              }
                             }
                           },
                           style: ElevatedButton.styleFrom(
@@ -425,7 +489,6 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(
                               16), // Rounded corners for the outer container
-
                           boxShadow: [
                             BoxShadow(
                               color: Colors.black.withOpacity(
@@ -441,42 +504,53 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
                         child: ElevatedButton(
                           onPressed: () {
                             if (_processIndex == 3) {
-                              QuickAlert.show(
+                              Alert(
                                 context: context,
-                                type: QuickAlertType.confirm,
-                                title: "",
-
-                                // text:
-                                //     'กรุณาตรวจเช็คความถูกต้องก่อนกดยืนยันการบันทึกข้อมูล',
-                                widget: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          "ยืนยันข้อมูล",
-                                          style: Styles.headerBlack32(
-                                              context), // Custom style for the title
-                                        ),
-                                      ],
+                                type: AlertType.info,
+                                title: "ยืนยันข้อมูล",
+                                style: AlertStyle(
+                                  animationType: AnimationType.grow,
+                                  isCloseButton: false,
+                                  isOverlayTapDismiss: false,
+                                  descStyle: Styles.black18(context),
+                                  descTextAlign: TextAlign.start,
+                                  animationDuration:
+                                      const Duration(milliseconds: 400),
+                                  alertBorder: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(22.0),
+                                    side: const BorderSide(
+                                      color: Colors.grey,
                                     ),
-                                    const SizedBox(height: 10),
-                                    Text(
-                                      'กรุณาตรวจเช็คความถูกต้องก่อนกดยืนยันการบันทึกข้อมูล',
-                                      style: Styles.headerBlack24(
-                                          context), // Custom style for the text
-                                    ),
-                                  ],
+                                  ),
+                                  titleStyle: Styles.headerBlack32(context),
+                                  alertAlignment: Alignment.center,
                                 ),
-                                confirmBtnText: 'ยืนยัน',
-                                confirmBtnTextStyle: Styles.white18(context),
-                                cancelBtnTextStyle: Styles.grey18(context),
-                                cancelBtnText: 'ไม่ยืนยัน',
-
-                                confirmBtnColor: Styles.successButtonColor,
-                              );
+                                desc:
+                                    "กรุณาตรวจเช็คความถูกต้องก่อนกดยืนยันการบันทึกข้อมูล",
+                                buttons: [
+                                  DialogButton(
+                                    onPressed: () => Navigator.pop(context),
+                                    color: Styles.failTextColor,
+                                    child: Text(
+                                      "ยกเลิก",
+                                      style: Styles.white18(context),
+                                    ),
+                                  ),
+                                  DialogButton(
+                                    onPressed: () => Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const HomeScreen(index: 2)),
+                                    ),
+                                    color: Styles.successButtonColor,
+                                    child: Text(
+                                      "ตกลง",
+                                      style: Styles.white18(context),
+                                    ),
+                                  )
+                                ],
+                              ).show();
                             } else {}
 
                             switch (_processIndex) {
@@ -510,7 +584,30 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
                                       storeNoteController =
                                           TextEditingController(
                                               text: _storeData.note);
+
                                       initialSelectedRoute = _storeData.route;
+                                      initialSelectedShoptype =
+                                          _storeData.typeName;
+
+                                      if (_storeData.name == "" ||
+                                          _storeData.typeName == "" ||
+                                          _storeData.taxId == "" ||
+                                          _storeData.route == "") {
+                                        showToast(
+                                          context: context,
+                                          message: 'กรุณากรอกข้อมูลให้ครบ',
+                                          type: ToastificationType.error,
+                                          primaryColor: Colors.red,
+                                        );
+                                      }
+
+                                      // if (_storeData.name != "" &&
+                                      //     _storeData.typeName != "" &&
+                                      //     _storeData.taxId != "" &&
+                                      //     _storeData.route != "") {
+                                      //   _processIndex = (_processIndex + 1) %
+                                      //       _processes.length;
+                                      // }
                                       _processIndex = (_processIndex + 1) %
                                           _processes.length;
                                     });
@@ -529,8 +626,26 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
                                           _storeData.district;
                                       initialSelectedSubDistrict =
                                           _storeData.subDistrict;
-                                      initialSelectedPoscode =
-                                          _storeData.postcode;
+
+                                      if (_storeData.address == "" ||
+                                          _storeData.province == "" ||
+                                          _storeData.district == "" ||
+                                          _storeData.subDistrict == "") {
+                                        showToast(
+                                          context: context,
+                                          message: 'กรุณากรอกข้อมูลให้ครบ',
+                                          type: ToastificationType.error,
+                                          primaryColor: Colors.red,
+                                        );
+                                      }
+
+                                      // if (_storeData.address != "" &&
+                                      //     _storeData.province != "" &&
+                                      //     _storeData.district != "" &&
+                                      //     _storeData.subDistrict != "") {
+                                      //   _processIndex = (_processIndex + 1) %
+                                      //       _processes.length;
+                                      // }
                                       _processIndex = (_processIndex + 1) %
                                           _processes.length;
                                     });

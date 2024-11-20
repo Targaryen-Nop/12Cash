@@ -54,7 +54,6 @@ dependencies:
   print_bluetooth_thermal: ^1.1.3
   permission_handler: ^10.2.0
   pdf: ^3.11.1
-  printing: ^5.12.0
   charset_converter: ^2.2.1
   sprintf: ^7.0.0
   flutter_screenutil: ^5.9.3
@@ -106,6 +105,8 @@ flutter:
     - data/province.json
     - data/sale_route.json
     - data/product_group.json
+    - data/location.json
+    
    
 
   # An image asset can refer to one or more resolution-specific "variants", see

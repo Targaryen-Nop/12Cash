@@ -26,7 +26,7 @@ class _DetailReportScreenState extends State<DetailReportScreen> {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
-      appBar: PreferredSize(
+      appBar: const PreferredSize(
         preferredSize: Size.fromHeight(70),
         child: AppbarCustom(
             title: " รายละเอียดรายการ", icon: Icons.receipt_long_rounded),

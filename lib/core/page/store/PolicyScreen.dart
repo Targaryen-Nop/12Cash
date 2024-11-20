@@ -50,10 +50,12 @@ class _PolicyScreenState extends State<PolicyScreen> {
       });
       print("${latitude}, ${longitude}");
     } catch (e) {
-      setState(() {
-        latitude = "Error fetching latitude";
-        longitude = "Error fetching longitude";
-      });
+      if (mounted) {
+        setState(() {
+          latitude = "Error fetching latitude";
+          longitude = "Error fetching longitude";
+        });
+      }
       print("Error: $e");
     }
   }

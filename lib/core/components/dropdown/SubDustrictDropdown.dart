@@ -1,56 +1,60 @@
+import 'package:collection/collection.dart'; // Add collection package for grouping
 import 'dart:convert';
 
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:_12sale_app/data/models/District.dart';
-import 'package:_12sale_app/data/models/SubDistrict.dart';
+import 'package:_12sale_app/data/models/Location.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:path/path.dart';
 
-class SubDistrictDropdown extends StatefulWidget {
+class DistrictSearch2 extends StatefulWidget {
   final String label;
   final String? hint;
-  final List<SubDistrict> subDistricts;
-  // final SubDistrict ? selectedSubDistrict
-  final ValueChanged<SubDistrict?> onChanged;
+  final ValueChanged<Location?> onChanged;
+  final Future<List<Location>> Function(String) fetchDistricts;
   final String? initialSelectedValue;
 
-  const SubDistrictDropdown({
+  const DistrictSearch2({
     Key? key,
     required this.label,
     this.hint,
     required this.onChanged,
-    required this.subDistricts,
+    required this.fetchDistricts,
     this.initialSelectedValue,
   }) : super(key: key);
 
   @override
-  State<SubDistrictDropdown> createState() => _SubDistrictDropdownState();
+  State<DistrictSearch2> createState() => _DistrictSearch2State();
 }
 
-class _SubDistrictDropdownState extends State<SubDistrictDropdown> {
-  SubDistrict? selectedDistrict;
-  List<SubDistrict> subdistricts = [];
+class _DistrictSearch2State extends State<DistrictSearch2> {
+  Location? _selectedSubDistrict;
+  List<Location> initialSubDistricts = [];
 
   @override
   void initState() {
     super.initState();
     _loadDataFromJson();
+    // _initializeSelectedDistrict();
   }
 
   Future<void> _loadDataFromJson() async {
     // Load the JSON file
-    final String response =
-        await rootBundle.loadString('data/subdistrict.json');
+    final String response = await rootBundle.loadString('data/location.json');
     final data = json.decode(response);
 
     // Map JSON data to RouteStore model
+
     setState(() {
-      subdistricts =
-          (data as List).map((json) => SubDistrict.fromJson(json)).toList();
+      initialSubDistricts =
+          (data as List).map((json) => Location.fromJson(json)).toList();
       // Find the initial selected RouteStore based on the route name
-      if (subdistricts.isNotEmpty && widget.initialSelectedValue != '') {
-        selectedDistrict = subdistricts.firstWhere(
-          (subdistrict) => subdistrict.district == widget.initialSelectedValue,
+      if (initialSubDistricts.isNotEmpty && widget.initialSelectedValue != '') {
+        _selectedSubDistrict = initialSubDistricts.firstWhere(
+          (province) => province.district == widget.initialSelectedValue,
+          //  orElse: () => null, // Provide a fallback if no match is found
         );
       }
     });
@@ -58,31 +62,98 @@ class _SubDistrictDropdownState extends State<SubDistrictDropdown> {
 
   @override
   Widget build(BuildContext context) {
-    return DropdownButtonFormField<SubDistrict>(
-      // key: ValueKey(selectedDistrict),
-      decoration: InputDecoration(
-        labelText: widget.label,
-        labelStyle: Styles.grey18(context),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
+    double screenWidth = MediaQuery.of(context).size.width;
+    return DropdownSearch<Location>(
+      dropdownButtonProps: DropdownButtonProps(
+        icon: Padding(
+          padding: const EdgeInsets.only(right: 8.0),
+          child: Icon(
+            Icons.arrow_drop_down,
+            size: screenWidth / 20,
+            color: Colors.black54,
+          ),
         ),
       ),
-      value: selectedDistrict,
-      items: subdistricts.map((subDistrict) {
-        return DropdownMenuItem<SubDistrict>(
-          value: subDistrict,
-          child: Text(
-            subDistrict.district,
-            style: Styles.black18(context),
-          ), // Display amphoe (district name)
-        );
-      }).toList(),
-      onChanged: (SubDistrict? newValue) {
+      dropdownDecoratorProps: DropDownDecoratorProps(
+        baseStyle: Styles.black18(context),
+        dropdownSearchDecoration: InputDecoration(
+          labelText: widget.label,
+          labelStyle: Styles.grey18(context),
+          hintText: widget.hint ?? "เลือกตำบล/แขวง",
+          hintStyle: Styles.grey18(context),
+          floatingLabelBehavior: FloatingLabelBehavior.always,
+          filled: true,
+          fillColor: Colors.white,
+          border: const OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(8)),
+            borderSide: BorderSide(color: Colors.grey, width: 1),
+          ),
+          enabledBorder: const OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(8)),
+            borderSide: BorderSide(
+              color: Color.fromARGB(255, 100, 100, 100),
+              width: 1,
+            ),
+          ),
+          focusedBorder: const OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(8)),
+            borderSide: BorderSide(color: Styles.primaryColor, width: 1.5),
+          ),
+        ),
+      ),
+      onChanged: (Location? data) {
         setState(() {
-          selectedDistrict = newValue;
+          _selectedSubDistrict = data;
         });
-        widget.onChanged(newValue);
+        widget.onChanged(data);
       },
+      selectedItem: _selectedSubDistrict,
+      itemAsString: (Location location) => location.district,
+      asyncItems: (filter) async {
+        List<Location> subdistricts = await widget.fetchDistricts(filter);
+        return subdistricts
+            .map((subdistrict) => subdistrict.district)
+            .toSet()
+            .map((district) => Location(
+                  amphoe: '',
+                  province: '', // Empty other fields
+                  district: district,
+                  zipcode: '',
+                  id: '',
+                  amphoeCode: '',
+                  districtCode: '',
+                  provinceCode: '',
+                ))
+            .toList(); // Return grouped districts
+      },
+      popupProps: PopupPropsMultiSelection.dialog(
+        showSearchBox: false,
+        itemBuilder: (context, item, isSelected) {
+          return _popupItemWithGroup(context, item, isSelected);
+        },
+        searchFieldProps: TextFieldProps(style: Styles.black18(context)),
+      ),
+    );
+  }
+
+  Widget _popupItemWithGroup(
+      BuildContext context, Location item, bool isSelected) {
+    return Container(
+      // padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+      color: isSelected ? Colors.grey[300] : Colors.transparent,
+      child: ListTile(
+        selected: isSelected,
+        title: Text.rich(
+          TextSpan(
+            children: [
+              TextSpan(
+                text: '${item.district}',
+                style: Styles.black18(context),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
