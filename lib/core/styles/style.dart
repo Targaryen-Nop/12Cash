@@ -42,11 +42,27 @@ class Styles {
           color: Colors.black,
         ),
       );
+
+  static TextStyle red12(BuildContext context) => GoogleFonts.kanit(
+        textStyle: TextStyle(
+          fontSize: getResponsiveFontSize(context, 12),
+          fontWeight: FontWeight.normal,
+          color: Color(0xFF9B1C1C),
+        ),
+      );
   static TextStyle headerBlack24(BuildContext context) => GoogleFonts.kanit(
         textStyle: TextStyle(
           fontSize: getResponsiveFontSize(context, 24),
           fontWeight: FontWeight.w600,
           color: Colors.black,
+        ),
+      );
+
+  static TextStyle headerRed24(BuildContext context) => GoogleFonts.kanit(
+        textStyle: TextStyle(
+          fontSize: getResponsiveFontSize(context, 24),
+          fontWeight: FontWeight.w600,
+          color: Color(0xFF9B1C1C),
         ),
       );
   static TextStyle strikeBlack24(BuildContext context) => GoogleFonts.kanit(

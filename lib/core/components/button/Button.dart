@@ -76,11 +76,7 @@ class _CustomButtonState extends State<CustomButton> {
         padding: EdgeInsets.symmetric(horizontal: 32, vertical: 16),
         child: Text(
           widget.title,
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-          ),
+          style: Styles.headerWhite18(context),
         ),
       ),
     );

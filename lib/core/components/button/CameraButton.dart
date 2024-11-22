@@ -53,7 +53,7 @@ class _CameraButtonWidgetState extends State<CameraButtonWidget> {
     super.dispose();
   }
 
-  Future<void> _openCamera(BuildContext context) async {
+  Future<void> openCamera(BuildContext context) async {
     await _initializeControllerFuture; // Wait for the camera to initialize
     Navigator.of(context).push(
       MaterialPageRoute(
@@ -73,7 +73,7 @@ class _CameraButtonWidgetState extends State<CameraButtonWidget> {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     return GestureDetector(
-      onTap: () => _openCamera(context),
+      onTap: () => openCamera(context),
       child: Column(
         children: [
           // Display image if available, otherwise show the camera icon placeholder

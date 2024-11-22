@@ -24,7 +24,7 @@ class _TrendingMusicChartState extends State<TrendingMusicChart> {
               style: Styles.black24(context),
             ),
             Container(
-              width: screenWidth / 3,
+              // width: screenWidth / 3,
               padding: EdgeInsets.only(left: 8),
               decoration: BoxDecoration(
                 border: Border.all(color: Styles.primaryColor),
@@ -136,6 +136,7 @@ class _TrendingMusicChartState extends State<TrendingMusicChart> {
                     ),
                   ),
                   topTitles: AxisTitles()),
+
               barTouchData: BarTouchData(enabled: true),
             ),
           ),
@@ -144,18 +145,18 @@ class _TrendingMusicChartState extends State<TrendingMusicChart> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            _buildLegend('Jazz Music', Colors.orange),
+            _buildLegend('Jazz Music', Colors.orange, context),
             SizedBox(width: 10),
-            _buildLegend('Pop Music', Colors.teal),
+            _buildLegend('Pop Music', Colors.teal, context),
             SizedBox(width: 10),
-            _buildLegend('Rock Music', Colors.blue),
+            _buildLegend('Rock Music', Colors.blue, context),
           ],
         ),
       ],
     );
   }
 
-  Widget _buildLegend(String title, Color color) {
+  Widget _buildLegend(String title, Color color, BuildContext context) {
     return Row(
       children: [
         Container(
@@ -166,10 +167,7 @@ class _TrendingMusicChartState extends State<TrendingMusicChart> {
         SizedBox(width: 4),
         Text(
           title,
-          style: TextStyle(
-            fontSize: 12,
-            fontWeight: FontWeight.bold,
-          ),
+          style: Styles.black12(context),
         ),
       ],
     );

@@ -159,6 +159,7 @@ class _HomeScreenState extends State<HomeScreen> {
             selectedItemColor: Styles.white,
             backgroundColor: Styles.primaryColor,
             unselectedItemColor: Styles.grey,
+            unselectedLabelStyle: Styles.grey18(context),
             onTap: _onItemTapped,
             type: BottomNavigationBarType.fixed,
           ),

@@ -7,7 +7,6 @@ import 'package:_12sale_app/core/components/card/StoreCardNew.dart';
 import 'package:_12sale_app/core/components/search/CustomerDropdownSearch.dart';
 import 'package:_12sale_app/core/components/table/ShopTableAll.dart';
 import 'package:_12sale_app/core/components/table/ShopTableNew.dart';
-import 'package:_12sale_app/core/page/store/AddStoreScreen.dart';
 import 'package:_12sale_app/core/page/store/DetailStoreScreen.dart';
 import 'package:_12sale_app/core/page/store/ProcessTimelineScreen.dart';
 import 'package:_12sale_app/core/styles/gobalStyle.dart';

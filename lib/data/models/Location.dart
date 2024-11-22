@@ -1,10 +1,10 @@
 class Location {
   final String? id;
-  final String amphoe;
+  String amphoe;
   final String amphoeCode;
-  final String district;
+  String district;
   final String districtCode;
-  final String province;
+  String province;
   final String provinceCode;
   String? zipcode;
 

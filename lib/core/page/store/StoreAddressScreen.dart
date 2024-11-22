@@ -1,20 +1,13 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:_12sale_app/core/components/dropdown/DistrictDropdown.dart';
-import 'package:_12sale_app/core/components/dropdown/ProvinceDropdown.dart';
-import 'package:_12sale_app/core/components/dropdown/SubDustrictDropdown.dart';
 import 'package:_12sale_app/core/components/input/CustomTextInput.dart';
 import 'package:_12sale_app/core/components/search/DistrictSearch.dart';
 import 'package:_12sale_app/core/components/search/DropdownSearchCustom.dart';
 import 'package:_12sale_app/core/components/search/DropdownSearchGroup.dart';
-import 'package:_12sale_app/core/components/search/ProvinceSearch.dart';
 import 'package:_12sale_app/core/styles/style.dart';
-import 'package:_12sale_app/data/models/District.dart';
 import 'package:_12sale_app/data/models/Location.dart';
 import 'package:_12sale_app/data/models/Poscode.dart';
-import 'package:_12sale_app/data/models/Province.dart';
 import 'package:_12sale_app/data/models/Store.dart';
-import 'package:_12sale_app/data/models/SubDistrict.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path/path.dart';
@@ -25,18 +18,14 @@ class StoreAddressScreen extends StatefulWidget {
   Store storeData;
   TextEditingController storeAddressController;
   TextEditingController storePoscodeController;
-  String initialSelectedProvince;
-  String initialSelectedAmphoe;
-  String initialSelectedSubDistrict;
+  Location initialSelectedLocation;
 
   StoreAddressScreen({
     Key? key,
     required this.storeData,
     required this.storeAddressController,
     required this.storePoscodeController,
-    required this.initialSelectedProvince,
-    required this.initialSelectedAmphoe,
-    required this.initialSelectedSubDistrict,
+    required this.initialSelectedLocation,
   }) : super(key: key);
 
   @override
@@ -62,11 +51,13 @@ class _StoreAddressScreenState extends State<StoreAddressScreen> {
     super.initState();
     _loadJson();
     _loadStoreFromStorage();
-    _loadDistrictsFromJson(widget.initialSelectedProvince);
-    _loadSubDistrictsFromJson(
-        widget.initialSelectedProvince, widget.initialSelectedAmphoe);
-    _loadPoscodeFromJson(widget.initialSelectedProvince,
-        widget.initialSelectedAmphoe, widget.initialSelectedSubDistrict);
+    _loadDistrictsFromJson(widget.initialSelectedLocation.province);
+    _loadSubDistrictsFromJson(widget.initialSelectedLocation.province,
+        widget.initialSelectedLocation.amphoe);
+    _loadPoscodeFromJson(
+        widget.initialSelectedLocation.province,
+        widget.initialSelectedLocation.amphoe,
+        widget.initialSelectedLocation.district);
   }
 
   Future<void> _loadStoreFromStorage() async {
@@ -80,30 +71,34 @@ class _StoreAddressScreenState extends State<StoreAddressScreen> {
         _storeData =
             (jsonStore == null ? null : Store.fromJson(jsonDecode(jsonStore)))!;
       });
-      province = widget.initialSelectedProvince;
-      amphoe = widget.initialSelectedAmphoe;
-      district = widget.initialSelectedSubDistrict;
+      // province = _storeData.province!;
     }
   }
 
-  Future<List<Location>> _fetchDistricts(String filter) async {
-    Map<String, List<Location>> groupedDistricts =
-        await getDistrict(filter, province);
+  Future<List<Location>> _fetchProvince(String filter) async {
+    Map<String, List<Location>> groupedDatasets =
+        await getProvince(filter, province);
 
     // Flatten the grouped results for display
-    return groupedDistricts.values
-        .expand((districtList) => districtList)
-        .toList();
+    return groupedDatasets.values.expand((datalist) => datalist).toList();
+  }
+
+  Future<List<Location>> _fetchDistricts(String filter) async {
+    Map<String, List<Location>> groupedDatasets =
+        await getDistrict(filter, widget.initialSelectedLocation.province);
+
+    // Flatten the grouped results for display
+    return groupedDatasets.values.expand((datalist) => datalist).toList();
   }
 
   Future<List<Location>> _fetchSubDistricts(String filter) async {
-    Map<String, List<Location>> groupedDistricts =
-        await getSubDistrict(filter, province, amphoe);
+    Map<String, List<Location>> groupedDatasets = await getSubDistrict(
+        filter,
+        widget.initialSelectedLocation.province,
+        widget.initialSelectedLocation.amphoe);
 
     // Flatten the grouped results for display
-    return groupedDistricts.values
-        .expand((districtList) => districtList)
-        .toList();
+    return groupedDatasets.values.expand((datalist) => datalist).toList();
   }
 
   Future<Map<String, List<Location>>> getSubDistrict(
@@ -125,6 +120,31 @@ class _StoreAddressScreenState extends State<StoreAddressScreen> {
           .toList();
       Map<String, List<Location>> groupedData =
           groupBy(districts, (Location location) => location.district);
+
+      // Group districts by amphoe
+      return groupedData;
+    } catch (e) {
+      print("Error occurred: $e");
+      return {};
+    }
+  }
+
+  Future<Map<String, List<Location>>> getProvince(
+      String filter, String province) async {
+    try {
+      // Load the JSON file for districts
+      final String response = await rootBundle.loadString('data/location.json');
+      final data = json.decode(response);
+
+      // Filter and map JSON data to District model based on selected province and filter
+      final List<Location> districts = (data as List)
+          .map((json) => Location.fromJson(json))
+          .where((district) => district.province
+              .toLowerCase()
+              .contains(filter.toLowerCase())) // Apply both filters
+          .toList();
+      Map<String, List<Location>> groupedData =
+          groupBy(districts, (Location location) => location.province);
 
       // Group districts by amphoe
       return groupedData;
@@ -317,71 +337,70 @@ class _StoreAddressScreenState extends State<StoreAddressScreen> {
                 label: 'ที่อยู่ *',
               ),
               SizedBox(height: screenWidth / 37),
-              ProvinceSearch(
-                initialSelectedValue: widget.initialSelectedProvince,
-                label: "เลือกจังหวัด",
+              DropdownSearchCustomGroup<Location>(
+                label: "เลือกจังหวัด *",
                 hint: "เลือกจังหวัด",
-                onChanged: (Province? value) {
-                  if (value != null) {
+                titleText: "เลือกจังหวัด",
+                fetchItems: (filter) async {
+                  // Replace with your district fetching logic
+                  return await _fetchProvince(filter);
+                },
+                groupByKey: (Location location) =>
+                    location.province, // Group by amphoe
+                transformGroup: (String province) => Location(
+                  amphoe: '',
+                  province: province,
+                  district: '',
+                  zipcode: '',
+                  id: '',
+                  amphoeCode: '',
+                  districtCode: '',
+                  provinceCode: '',
+                ), // Transform group key into Location
+                itemAsString: (Location location) =>
+                    location.province, // Display amphoe name
+                itemBuilder: (context, item, isSelected) {
+                  return Column(
+                    children: [
+                      ListTile(
+                        title: Text(
+                          " ${item.province}",
+                          style: Styles.black18(context),
+                        ),
+                        selected: isSelected,
+                      ),
+                      Divider(
+                        color: Colors.grey[200], // Color of the divider line
+                        thickness: 1, // Thickness of the line
+                        indent: 16, // Left padding for the divider line
+                        endIndent: 16, // Right padding for the divider line
+                      ),
+                    ],
+                  );
+                },
+                onChanged: (Location? selected) {
+                  if (selected != null) {
                     setState(() {
-                      province = value.province;
-                      widget.initialSelectedProvince = value.province;
-                      widget.initialSelectedAmphoe = '';
-                      widget.initialSelectedSubDistrict = '';
+                      province = selected.province;
+                      widget.initialSelectedLocation.province =
+                          selected.province;
+                      widget.initialSelectedLocation.district = '';
+                      widget.initialSelectedLocation.amphoe = '';
                       widget.storePoscodeController.text = '';
                       _storeData = _storeData?.copyWithDynamicField(
-                          'province', value.province);
+                          'province', selected.province);
                     });
                     _saveStoreToStorage();
                   }
                 },
+                initialSelectedValue:
+                    widget.initialSelectedLocation.province == ''
+                        ? null
+                        : widget.initialSelectedLocation,
               ),
               SizedBox(height: screenWidth / 37),
-              // DropdownSearchCustom<Location>(
-              //   titleText: "เลือกอําเภอ",
-              //   label: "เลือกอําเภอ",
-              //   hint: "เลือกอําเภอ",
-              //   fetchItems: (filter) =>
-              //       _fetchDistricts(filter), // Fetch districts dynamically
-              //   initialSelectedValue: widget.initialSelectedProvince != null
-              //       ? Location(
-              //           amphoe: widget.initialSelectedAmphoe!,
-              //           amphoeCode: '',
-              //           district: '',
-              //           districtCode: '',
-              //           province: '',
-              //           provinceCode: '',
-              //           zipcode: '',
-              //           id: '') // Map initial value
-              //       : null,
-              //   onChanged: (Location? value) {
-              //     if (value != null) {
-              //       setState(() {
-              //         widget.initialSelectedAmphoe = value.amphoe;
-              //         amphoe = value.amphoe;
-              //         _storeData = _storeData?.copyWithDynamicField(
-              //             'district', value.amphoe);
-              //       });
-              //       // _loadPoscodeFromJson(province, amphoe, district);
-              //       _saveStoreToStorage();
-              //     }
-              //   },
-              //   itemAsString: (Location location) =>
-              //       location.amphoe, // Show amphoe name
-              //   itemBuilder: (context, item, isSelected) {
-              //     return ListTile(
-              //       title: Text(
-              //         item.amphoe,
-              //         style: Styles.black18(context),
-              //       ),
-              //       selected: isSelected,
-              //     );
-              //   },
-              //   showSearchBox: true, // Enable search box for filtering
-              // ),
               DropdownSearchCustomGroup<Location>(
-                key: ValueKey(
-                    'DistrictSearch-${widget.initialSelectedProvince}'),
+                key: ValueKey('DistrictSearch-$province'),
                 label: "เลือกอำเภอ/เขต",
                 hint: "เลือกอำเภอ/เขต",
                 titleText: "เลือกอำเภอ/เขต",
@@ -425,21 +444,25 @@ class _StoreAddressScreenState extends State<StoreAddressScreen> {
                 onChanged: (Location? selected) {
                   if (selected != null) {
                     setState(() {
-                      widget.initialSelectedAmphoe = selected.amphoe;
                       amphoe = selected.amphoe;
+                      widget.initialSelectedLocation.amphoe = selected.amphoe;
+                      widget.storePoscodeController.text = '';
+                      widget.initialSelectedLocation.district = '';
                       _storeData = _storeData?.copyWithDynamicField(
                           'district', selected.amphoe);
                     });
-                    // _loadPoscodeFromJson(province, amphoe, district);
+
                     _saveStoreToStorage();
                   }
                 },
-                initialSelectedValue: null,
+                initialSelectedValue:
+                    widget.initialSelectedLocation.amphoe == ''
+                        ? null
+                        : widget.initialSelectedLocation,
               ),
               SizedBox(height: screenWidth / 37),
               DropdownSearchCustomGroup<Location>(
-                key: ValueKey(
-                    'SubDistrictDropdown-${widget.initialSelectedProvince}'),
+                key: ValueKey('SubDistrictDropdown-$province$amphoe'),
                 label: "เลือกตำบล/เขต",
                 hint: "เลือกตำบล/เขต",
                 titleText: "เลือกตำบล/เขต",
@@ -484,87 +507,28 @@ class _StoreAddressScreenState extends State<StoreAddressScreen> {
                   if (selected != null) {
                     setState(() {
                       district = selected.district;
-                      widget.initialSelectedSubDistrict = selected.district;
+                      widget.initialSelectedLocation.district =
+                          selected.district;
                       _storeData = _storeData?.copyWithDynamicField(
                           'subDistrict', selected.district);
                       _storeData = _storeData?.copyWithDynamicField(
                           'postcode', widget.storePoscodeController.text);
                     });
-                    _loadPoscodeFromJson(province, amphoe, district);
+                    _loadPoscodeFromJson(
+                        widget.initialSelectedLocation.province,
+                        widget.initialSelectedLocation.amphoe,
+                        widget.initialSelectedLocation.district);
                     _saveStoreToStorage();
                   }
                 },
-                initialSelectedValue: null,
+                initialSelectedValue:
+                    widget.initialSelectedLocation.district == ''
+                        ? null
+                        : widget.initialSelectedLocation,
               ),
-
-              // DistrictSearch(
-              //   key: ValueKey(
-              //       'DistrictSearch-${widget.initialSelectedProvince}'),
-              //   initialSelectedValue: widget.initialSelectedAmphoe,
-              //   fetchDistricts: (filter) => _fetchDistricts(filter),
-              //   label: "เลือกอำเภอ/เขต",
-              //   onChanged: (Location? value) {
-              //     if (value != null) {
-              //       setState(() {
-              //         widget.initialSelectedAmphoe = value.amphoe;
-              //         amphoe = value.amphoe;
-              //         _storeData = _storeData?.copyWithDynamicField(
-              //             'district', value.amphoe);
-              //       });
-              //       // _loadPoscodeFromJson(province, amphoe, district);
-              //       _saveStoreToStorage();
-              //     }
-              //   },
-              // ),
-
-              // DistrictSearch2(
-              //   key: ValueKey(
-              //       'SubDistrictDropdown-${widget.initialSelectedProvince}'),
-              //   initialSelectedValue: widget.initialSelectedSubDistrict,
-              //   fetchDistricts: (filter) => _fetchSubDistricts(filter),
-              //   label: "เลือกตำบล/แขวง",
-              //   onChanged: (Location? value) {
-              //     if (value != null) {
-              //       setState(() {
-              //         district = value.district;
-              //         widget.initialSelectedSubDistrict = value.district;
-              //         _storeData = _storeData?.copyWithDynamicField(
-              //             'subDistrict', value.district);
-              //         _storeData = _storeData?.copyWithDynamicField(
-              //             'postcode', widget.storePoscodeController.text);
-              //       });
-              //       _loadPoscodeFromJson(province, amphoe, district);
-              //       _saveStoreToStorage();
-              //     }
-              //   },
-              // ),
-              // SubDistrictDropdown(
-              //   key: ValueKey(
-              //       'SubDistrictDropdown-${widget.initialSelectedProvince}'),
-              //   label: "เลือกตำบล",
-              //   initialSelectedValue: widget.initialSelectedSubDistrict,
-              //   // value: subDistricts,
-              //   onChanged: (Location? value) {
-              //     if (value != null) {
-              //       setState(() {
-              //         district = value.district;
-              //         _storeData = _storeData?.copyWithDynamicField(
-              //             'subDistrict', value.district);
-              //         _storeData = _storeData?.copyWithDynamicField(
-              //             'postcode', widget.storePoscodeController.text);
-              //       });
-              //     }
-              //     // print(province);
-              //     // print(amphoe);
-              //     // print(district);
-              //     _loadPoscodeFromJson(province, amphoe, district);
-              //     _saveStoreToStorage();
-              //   },
-              //   subDistricts: subDistricts,
-              // ),
               SizedBox(height: screenWidth / 37),
               Customtextinput(
-                key: ValueKey('PoscodeInput-${widget.initialSelectedProvince}'),
+                key: ValueKey('Postcode-$province'),
                 context,
                 onChanged: (value) => _onTextChanged(value, 'postcode'),
                 readonly: true,

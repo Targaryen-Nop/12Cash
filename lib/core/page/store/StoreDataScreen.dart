@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:_12sale_app/core/components/button/Button.dart';
+import 'package:_12sale_app/core/components/button/IconButtonWithLabel.dart';
 import 'package:_12sale_app/core/components/dropdown/RouteDropdown.dart';
 import 'package:_12sale_app/core/components/dropdown/ShopTypeDropdown.dart';
 import 'package:_12sale_app/core/components/input/CustomTextInput.dart';
@@ -26,8 +27,8 @@ class StoreDataScreen extends StatefulWidget {
   TextEditingController storeTelController;
   TextEditingController storeLineController;
   TextEditingController storeNoteController;
-  String initialSelectedRoute;
-  String initialSelectedShoptype;
+  RouteStore initialSelectedRoute;
+  ShopType initialSelectedShoptype;
 
   StoreDataScreen({
     Key? key,
@@ -47,6 +48,7 @@ class StoreDataScreen extends StatefulWidget {
 
 class _StoreDataScreenState extends State<StoreDataScreen> {
   Map<String, dynamic>? _jsonString;
+  List<String> imageList = [];
   bool storeInput = true;
   bool taxInput = true;
   bool phoneInput = true;
@@ -66,7 +68,6 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
     super.initState();
 
     _loadJson();
-    _loadStoreFromStorage();
     keyboardSubscription =
         keyboardVisibilityController.onChange.listen((bool visible) {
       print('Keyboard visibility update. Is visible: $visible');
@@ -123,26 +124,11 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
     // Cancel any existing timer to reset the delay
   }
 
-  Future<void> _loadStoreFromStorage() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    // Get the JSON string list from SharedPreferences
-    String? jsonStore = prefs.getString("add_store");
-
-    if (jsonStore != null) {
-      setState(() {
-        widget.storeData =
-            // ignore: unnecessary_null_comparison
-            (jsonStore == null ? null : Store.fromJson(jsonDecode(jsonStore)))!;
-      });
-    }
-  }
-
   Future<void> _saveStoreToStorage() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     // Convert Store object to JSON string
-    String jsonStoreString = json.encode(widget.storeData!.toJson());
+    String jsonStoreString = json.encode(widget.storeData.toJson());
 
     // Save the JSON string list to SharedPreferences
     await prefs.setString('add_store', jsonStoreString);
@@ -227,127 +213,162 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
     bool isKeyboardVisible =
         KeyboardVisibilityProvider.isKeyboardVisible(context);
 
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(height: screenWidth / 80),
-        Row(
-          children: [
-            const Icon(Icons.store, size: 40),
-            const SizedBox(width: 8),
-            Text(
-              " ${_jsonString?['shop_detail'] ?? "Shop Detail"}",
-              style: Styles.headerBlack24(context),
-            ),
-          ],
-        ),
-        SizedBox(height: screenWidth / 80),
-        Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+    return SingleChildScrollView(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: screenWidth / 80),
+          Row(
             children: [
-              if (sectionOne)
-                Customtextinput(
-                  max: 36,
-                  onChanged: (text) {
-                    _onTextChanged(text, 'name');
-                  }, // Specify field as 'name',
-                  // initialValue: widget.storeData.name,
-                  controller: widget.storeNameController,
-                  onFieldTap: () {
-                    setState(() {
-                      sectionOne = true;
-                      sectionTwo = false;
-                    });
-                  },
-                  context,
-                  label: '${_jsonString?['shop_name'] ?? "Shop Name"} *',
-                  hint:
-                      '${_jsonString?['shop_name_hint'] ?? "Max 36 Characters"}',
-                ),
-              if (sectionOne) const SizedBox(height: 16),
-              if (sectionOne)
-                Customtextinput(
-                  max: 13,
-                  keypadType: TextInputType.number,
-                  controller: widget.storeTaxIDController,
-                  onChanged: (text) =>
-                      _onTextChanged(text, 'taxId'), // Specify field as 'name',
-                  onFieldTap: () {
-                    setState(() {
-                      sectionOne = true;
-                      sectionTwo = false;
-                    });
-                  },
-                  context,
-                  label: '${_jsonString?['shop_tax'] ?? "Tax ID"} *',
-                  hint:
-                      '${_jsonString?['shop_tax_hint'] ?? "Max 13 Characters"}',
-                ),
-              if (sectionOne) const SizedBox(height: 16),
-              if (sectionOne)
-                Customtextinput(
-                  max: 10,
-                  keypadType: TextInputType.number,
-                  controller: widget.storeTelController,
-                  onChanged: (text) => _onTextChanged(text, 'tel'),
-                  onFieldTap: () {
-                    setState(() {
-                      sectionOne = true;
-                      sectionTwo = false;
-                    });
-                  },
-                  context,
-                  label: 'โทรศัพท์',
-                ),
-              if (sectionTwo) const SizedBox(height: 16),
-              if (sectionTwo)
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                        flex: 2,
+              const Icon(Icons.store, size: 40),
+              const SizedBox(width: 8),
+              Text(
+                " ${_jsonString?['shop_detail'] ?? "Shop Detail"}",
+                style: Styles.headerBlack24(context),
+              ),
+            ],
+          ),
+          SizedBox(height: screenWidth / 80),
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (sectionOne)
+                  Customtextinput(
+                    max: 36,
+                    onChanged: (text) {
+                      _onTextChanged(text, 'name');
+                    }, // Specify field as 'name',
+                    // initialValue: widget.storeData.name,
+                    controller: widget.storeNameController,
+                    onFieldTap: () {
+                      setState(() {
+                        sectionOne = true;
+                        sectionTwo = false;
+                      });
+                    },
+                    context,
+                    label: '${_jsonString?['shop_name'] ?? "Shop Name"} *',
+                    hint:
+                        '${_jsonString?['shop_name_hint'] ?? "Max 36 Characters"}',
+                  ),
+                if (sectionOne) const SizedBox(height: 16),
+                if (sectionOne)
+                  Customtextinput(
+                    max: 13,
+                    keypadType: TextInputType.number,
+                    controller: widget.storeTaxIDController,
+                    onChanged: (text) => _onTextChanged(
+                        text, 'taxId'), // Specify field as 'name',
+                    onFieldTap: () {
+                      setState(() {
+                        sectionOne = true;
+                        sectionTwo = false;
+                      });
+                    },
+                    context,
+                    label: '${_jsonString?['shop_tax'] ?? "Tax ID"} *',
+                    hint:
+                        '${_jsonString?['shop_tax_hint'] ?? "Max 13 Characters"}',
+                  ),
+                if (sectionOne) const SizedBox(height: 16),
+                if (sectionOne)
+                  Customtextinput(
+                    max: 10,
+                    keypadType: TextInputType.number,
+                    controller: widget.storeTelController,
+                    onChanged: (text) => _onTextChanged(text, 'tel'),
+                    onFieldTap: () {
+                      setState(() {
+                        sectionOne = true;
+                        sectionTwo = false;
+                      });
+                    },
+                    context,
+                    label: 'โทรศัพท์',
+                  ),
+                if (sectionTwo) const SizedBox(height: 16),
+                if (sectionTwo)
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                          flex: 2,
+                          child: SizedBox(
+                            child: DropdownSearchCustom<ShopType>(
+                              initialSelectedValue:
+                                  widget.initialSelectedShoptype.name == ''
+                                      ? null
+                                      : widget.initialSelectedShoptype,
+                              label: "เลือกร้านค้า *",
+                              titleText: "เลือกร้านค้า",
+                              fetchItems: (filter) => getShoptype(filter),
+                              onChanged: (selected) {
+                                setState(() {
+                                  widget.storeData = widget.storeData
+                                      .copyWithDynamicField(
+                                          'typeName', selected!.name);
+                                  widget.storeData = widget.storeData
+                                      .copyWithDynamicField(
+                                          'type', selected.id);
+                                });
+                                _saveStoreToStorage();
+                              },
+                              itemAsString: (ShopType data) => data.name,
+                              itemBuilder: (context, item, isSelected) {
+                                return Column(
+                                  children: [
+                                    ListTile(
+                                      title: Text(
+                                        " ${item.name}",
+                                        style: Styles.black18(context),
+                                      ),
+                                      selected: isSelected,
+                                    ),
+                                    Divider(
+                                      color: Colors.grey[
+                                          200], // Color of the divider line
+                                      thickness: 1, // Thickness of the line
+                                      indent:
+                                          16, // Left padding for the divider line
+                                      endIndent:
+                                          16, // Right padding for the divider line
+                                    ),
+                                  ],
+                                );
+                              },
+                            ),
+                          )),
+                      const SizedBox(width: 8.0),
+                      Expanded(
                         child: SizedBox(
-                          // child: ShopTypeDropdown(
-                          //   label: 'เลือกประเภทร้านค้า *',
-                          //   initialSelectedValue: widget.initialSelectedShoptype,
-                          //   onChanged: (value) {
-                          //     setState(() {
-                          //       widget.storeData = widget.storeData
-                          //           .copyWithDynamicField(
-                          //               'typeName', value!.name);
-                          //       widget.storeData = widget.storeData
-                          //           .copyWithDynamicField('type', value.id);
-                          //     });
-                          //     _saveStoreToStorage();
-                          //   },
-                          // ),
-
-                          child: DropdownSearchCustom<ShopType>(
-                            label: "เลือกร้านค้า *",
-                            titleText: "เลือกร้านค้า",
-                            fetchItems: (filter) => getShoptype(filter),
+                          child: DropdownSearchCustom<RouteStore>(
+                            initialSelectedValue:
+                                widget.initialSelectedRoute.route == ''
+                                    ? null
+                                    : widget.initialSelectedRoute,
+                            label: "เลือกรูท *",
+                            titleText: "เลือกรูท",
+                            fetchItems: (filter) => getRoutes(filter),
                             onChanged: (selected) {
                               setState(() {
                                 widget.storeData = widget.storeData
                                     .copyWithDynamicField(
-                                        'typeName', selected!.name);
-                                widget.storeData = widget.storeData
-                                    .copyWithDynamicField('type', selected.id);
+                                        'route', selected!.route);
                               });
                               _saveStoreToStorage();
                             },
-                            itemAsString: (ShopType data) => data.name,
+                            itemAsString: (RouteStore data) => data.route,
                             itemBuilder: (context, item, isSelected) {
                               return Column(
                                 children: [
                                   ListTile(
                                     title: Text(
-                                      " ${item.name}",
+                                      " ${item.route}",
                                       style: Styles.black18(context),
                                     ),
                                     selected: isSelected,
@@ -365,95 +386,131 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
                               );
                             },
                           ),
-                        )),
-                    const SizedBox(width: 8.0),
-                    Expanded(
-                      child: SizedBox(
-                        // height: 50,
-                        // child: RouteDropdown(
-                        //     initialSelectedValue: widget.initialSelectedRoute,
-                        //     label: "เลือกรูท *",
-                        //     onChanged: (value) {
-                        //       setState(() {
-                        //         widget.storeData = widget.storeData
-                        //             .copyWithDynamicField(
-                        //                 'route', value!.route);
-                        //       });
-                        //       _saveStoreToStorage();
-                        //     }),
-                        child: DropdownSearchCustom<RouteStore>(
-                          label: "เลือกรูท *",
-                          titleText: "เลือกรูท",
-                          fetchItems: (filter) => getRoutes(filter),
-                          onChanged: (selected) {
-                            setState(() {
-                              widget.storeData = widget.storeData
-                                  .copyWithDynamicField(
-                                      'route', selected!.route);
-                            });
-                            _saveStoreToStorage();
-                          },
-                          itemAsString: (RouteStore data) => data.route,
-                          itemBuilder: (context, item, isSelected) {
-                            return Column(
-                              children: [
-                                ListTile(
-                                  title: Text(
-                                    " ${item.route}",
-                                    style: Styles.black18(context),
-                                  ),
-                                  selected: isSelected,
-                                ),
-                                Divider(
-                                  color: Colors
-                                      .grey[200], // Color of the divider line
-                                  thickness: 1, // Thickness of the line
-                                  indent:
-                                      16, // Left padding for the divider line
-                                  endIndent:
-                                      16, // Right padding for the divider line
-                                ),
-                              ],
-                            );
-                          },
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              if (sectionOne) const SizedBox(height: 16),
-              if (sectionOne)
-                Customtextinput(
-                  controller: widget.storeLineController,
-                  onChanged: (text) => _onTextChangedNote(text, 'lineId'),
-                  onFieldTap: () {
-                    setState(() {
-                      sectionOne = true;
-                      sectionTwo = false;
-                    });
-                  },
-                  context,
-                  label: 'Line ID',
-                ),
-              if (sectionOne) const SizedBox(height: 16),
-              if (sectionOne)
-                Customtextinput(
-                  controller: widget.storeNoteController,
-                  onChanged: (text) => _onTextChangedNote(text, 'note'),
-                  onFieldTap: () {
-                    setState(() {
-                      sectionOne = true;
-                      sectionTwo = false;
-                    });
-                  },
-                  context,
-                  label: 'หมายเหตุ',
-                ),
+                    ],
+                  ),
+                if (sectionOne) const SizedBox(height: 16),
+                if (sectionOne)
+                  Customtextinput(
+                    controller: widget.storeLineController,
+                    onChanged: (text) => _onTextChangedNote(text, 'lineId'),
+                    onFieldTap: () {
+                      setState(() {
+                        sectionOne = true;
+                        sectionTwo = false;
+                      });
+                    },
+                    context,
+                    label: 'Line ID',
+                  ),
+                if (sectionOne) const SizedBox(height: 16),
+                if (sectionOne)
+                  Customtextinput(
+                    controller: widget.storeNoteController,
+                    onChanged: (text) => _onTextChangedNote(text, 'note'),
+                    onFieldTap: () {
+                      setState(() {
+                        sectionOne = true;
+                        sectionTwo = false;
+                      });
+                    },
+                    context,
+                    label: 'หมายเหตุ',
+                  ),
+              ],
+            ),
+          ),
+          SizedBox(height: screenWidth / 80),
+          Row(
+            children: [
+              const Icon(Icons.photo, size: 40),
+              const SizedBox(width: 8),
+              Text(
+                " ภาพถ่าย",
+                style: Styles.headerBlack24(context),
+              ),
             ],
           ),
-        ),
-        SizedBox(height: screenWidth / 80),
-      ],
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              IconButtonWithLabel(
+                icon: Icons.image_not_supported_outlined,
+                imagePath: widget.storeData.imageList.length > 0
+                    ? widget.storeData.imageList[0]
+                    : null,
+                label: "ร้านค้า",
+                onImageSelected: (String imagePath) {
+                  setState(() {
+                    print("TEST Print Image$imagePath");
+                    imageList.insert(0, imagePath);
+
+                    widget.storeData = widget.storeData
+                        .copyWithDynamicField('imageList', "", imageList);
+                  });
+
+                  _saveStoreToStorage();
+                },
+              ),
+              IconButtonWithLabel(
+                icon: Icons.image_not_supported_outlined,
+                imagePath: widget.storeData.imageList.length > 1
+                    ? widget.storeData.imageList[1]
+                    : null,
+                label: "พรก.",
+                onImageSelected: (String imagePath) {
+                  setState(
+                    () {
+                      imageList.insert(1, imagePath);
+                      widget.storeData = widget.storeData
+                          .copyWithDynamicField('imageList', "", imageList);
+                    },
+                  );
+                  _saveStoreToStorage();
+                },
+              ),
+              IconButtonWithLabel(
+                icon: Icons.image_not_supported_outlined,
+                imagePath: widget.storeData.imageList.length > 2
+                    ? widget.storeData.imageList[2]
+                    : null,
+                label: "บัตรปปช.",
+                onImageSelected: (String imagePath) {
+                  if (imageList.length > 1) {
+                    setState(
+                      () {
+                        imageList.insert(2, imagePath);
+                        widget.storeData = widget.storeData
+                            .copyWithDynamicField('imageList', "", imageList);
+                      },
+                    );
+                    _saveStoreToStorage();
+                  }
+                },
+              ),
+            ],
+          ),
+          GestureDetector(
+            onTap: () {
+              print(widget.storeData.imageList);
+            },
+            child: Text(
+              "Data",
+              style: Styles.black18(context),
+            ),
+          ),
+          GestureDetector(
+            onTap: () {
+              imageList.clear();
+            },
+            child: Text(
+              "Delete",
+              style: Styles.black18(context),
+            ),
+          )
+        ],
+      ),
     );
   }
 }

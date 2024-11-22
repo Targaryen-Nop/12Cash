@@ -55,7 +55,8 @@ class Store {
     required this.updatedDate,
   });
 
-  Store copyWithDynamicField(String field, String value) {
+  Store copyWithDynamicField(String field, String value,
+      [List<String>? imageList]) {
     switch (field) {
       case 'storeId':
         return copyWith(storeId: value);
@@ -97,6 +98,8 @@ class Store {
         return copyWith(note: value);
       case 'status':
         return copyWith(status: value);
+      case 'imageList':
+        return copyWith(imageList: imageList);
       case 'createdDate':
         return copyWith(createdDate: value);
       case 'updatedDate':

@@ -1,6 +1,5 @@
 import 'package:_12sale_app/core/components/Appbar.dart';
 import 'package:_12sale_app/core/components/button/AddStoreButton.dart';
-import 'package:_12sale_app/core/page/store/AddStoreScreen.dart';
 import 'package:_12sale_app/core/page/store/ProcessTimelineScreen.dart';
 import 'package:_12sale_app/core/styles/gobalStyle.dart';
 import 'package:_12sale_app/core/styles/style.dart';

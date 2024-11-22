@@ -9,6 +9,9 @@ import 'package:_12sale_app/core/page/store/StoreDataScreen.dart';
 import 'package:_12sale_app/core/page/store/VerifyStoreScreen.dart';
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:_12sale_app/core/utils/tost_util.dart';
+import 'package:_12sale_app/data/models/Location.dart';
+import 'package:_12sale_app/data/models/Route.dart';
+import 'package:_12sale_app/data/models/Shoptype.dart';
 import 'package:_12sale_app/data/models/Store.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -43,11 +46,23 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
   late TextEditingController storeNoteController;
   late TextEditingController storeAddressController;
   late TextEditingController storePoscodeController;
-  String initialSelectedRoute = '';
-  String initialSelectedShoptype = '';
-  String initialSelectedProvince = '';
+  RouteStore initialSelectedRoute = RouteStore(route: '');
+  ShopType initialSelectedShoptype =
+      ShopType(id: '', name: '', descript: '', status: '');
+  // String initialSelectedShoptype = '';
+  // String initialSelectedProvince = '';
   String initialSelectedAmphoe = '';
+  Location initialSelectedLocation = Location(
+      id: '',
+      amphoe: '',
+      amphoeCode: '',
+      district: '',
+      districtCode: '',
+      province: '',
+      provinceCode: '');
+
   String initialSelectedSubDistrict = '';
+  // Location initialSelectedSubDistrict = '';
 
   @override
   initState() {
@@ -82,22 +97,21 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
         return const PolicyScreen();
       case 1:
         return StoreDataScreen(
-            storeData: _storeData,
-            storeNameController: storeNameController,
-            storeTaxIDController: storeTaxIDController,
-            storeTelController: storeTelController,
-            storeLineController: storeLineController,
-            storeNoteController: storeNoteController,
-            initialSelectedRoute: initialSelectedRoute,
-            initialSelectedShoptype: initialSelectedShoptype);
+          storeData: _storeData,
+          storeNameController: storeNameController,
+          storeTaxIDController: storeTaxIDController,
+          storeTelController: storeTelController,
+          storeLineController: storeLineController,
+          storeNoteController: storeNoteController,
+          initialSelectedRoute: initialSelectedRoute,
+          initialSelectedShoptype: initialSelectedShoptype,
+        );
       case 2:
         return StoreAddressScreen(
           storeData: _storeData,
           storeAddressController: storeAddressController,
           storePoscodeController: storePoscodeController,
-          initialSelectedProvince: initialSelectedProvince,
-          initialSelectedAmphoe: initialSelectedAmphoe,
-          initialSelectedSubDistrict: initialSelectedSubDistrict,
+          initialSelectedLocation: initialSelectedLocation,
         );
       case 3:
         return VerifyStoreScreen(
@@ -160,7 +174,7 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
       "address": _storeData.address,
       "district": _storeData.district,
       "subDistrict": _storeData.subDistrict,
-      "provincet": _storeData.province,
+      "province": _storeData.province,
       "provinceCode": _storeData.postcode.substring(1, 3),
       "postCode": _storeData.postcode,
       "note": _storeData.note,
@@ -170,6 +184,7 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
       "longtitude": _storeData.longitude,
       "lineId": _storeData.lineId,
       "policyConsent": {"status": _storeData.policyConsent[0].status},
+      "imageList": _storeData.imageList,
     };
 
     try {
@@ -199,396 +214,229 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
     double screenWidth = MediaQuery.of(context).size.width;
     bool isKeyboardVisible =
         KeyboardVisibilityProvider.isKeyboardVisible(context);
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: const PreferredSize(
-        preferredSize: Size.fromHeight(70),
-        child: AppbarCustom(
-            title: " เพิ่มร้านค้า", icon: Icons.store_mall_directory_rounded),
+    return ToastificationConfigProvider(
+      config: const ToastificationConfig(
+        // alignment: Alignment.center,
+        itemWidth: 1000,
+        // animationDuration: Duration(milliseconds: 500),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            !isKeyboardVisible
-                ? Expanded(
-                    flex: 2,
-                    child: Timeline.tileBuilder(
-                      theme: TimelineThemeData(
-                        direction: Axis.horizontal,
-                        connectorTheme: const ConnectorThemeData(
-                          space: 30.0,
-                          thickness: 5.0,
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        appBar: const PreferredSize(
+          preferredSize: Size.fromHeight(70),
+          child: AppbarCustom(
+              title: " เพิ่มร้านค้า", icon: Icons.store_mall_directory_rounded),
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              !isKeyboardVisible
+                  ? Expanded(
+                      flex: 2,
+                      child: Timeline.tileBuilder(
+                        theme: TimelineThemeData(
+                          direction: Axis.horizontal,
+                          connectorTheme: const ConnectorThemeData(
+                            space: 30.0,
+                            thickness: 5.0,
+                          ),
                         ),
-                      ),
-                      builder: TimelineTileBuilder.connected(
-                        connectionDirection: ConnectionDirection.before,
-                        itemExtentBuilder: (_, __) =>
-                            MediaQuery.of(context).size.width / 4.4,
-                        oppositeContentsBuilder: (context, index) {
-                          // Define a list of icons for each step
-                          final List<IconData> stepIcons = [
-                            Icons.handshake, // Icon for "Prospect"
-                            Icons.store_mall_directory, // Icon for "Tour"
-                            Icons.map, // Icon for "Offer"
-                            Icons.check_circle_outlined, // Icon for "Contract"
-                          ];
+                        builder: TimelineTileBuilder.connected(
+                          connectionDirection: ConnectionDirection.before,
+                          itemExtentBuilder: (_, __) =>
+                              MediaQuery.of(context).size.width / 4.4,
+                          oppositeContentsBuilder: (context, index) {
+                            // Define a list of icons for each step
+                            final List<IconData> stepIcons = [
+                              Icons.handshake, // Icon for "Prospect"
+                              Icons.store_mall_directory, // Icon for "Tour"
+                              Icons.map, // Icon for "Offer"
+                              Icons
+                                  .check_circle_outlined, // Icon for "Contract"
+                            ];
 
-                          return Padding(
-                            padding: const EdgeInsets.only(bottom: 5.0),
-                            child: GestureDetector(
-                              onTap: () =>
-                                  setState(() => _processIndex = index),
-                              child: Icon(
-                                stepIcons[
-                                    index], // Use the icon corresponding to the current step
-                                size: 30.0,
-                                color: getColor(index),
-                              ),
-                            ),
-                          );
-                        },
-                        contentsBuilder: (context, index) {
-                          return Padding(
-                            padding: const EdgeInsets.only(top: 5.0),
-                            child: Text(
-                              _processes[index],
-                              style: Styles.black18(context),
-                            ),
-                          );
-                        },
-                        indicatorBuilder: (_, index) {
-                          var color;
-                          var child;
-                          if (index == _processIndex) {
-                            color = inProgressColor;
-                            child = const Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: CircularProgressIndicator(
-                                strokeWidth: 3.0,
-                                valueColor:
-                                    AlwaysStoppedAnimation(Colors.white),
-                              ),
-                            );
-                          } else if (index < _processIndex) {
-                            color = completeColor;
-                            child = GestureDetector(
-                              onTap: () =>
-                                  setState(() => _processIndex = index),
-                              child: const Icon(
-                                Icons.check,
-                                color: Colors.white,
-                                size: 15.0,
-                              ),
-                            );
-                          } else {
-                            color = todoColor;
-                          }
-
-                          if (index <= _processIndex) {
-                            return Stack(
-                              children: [
-                                CustomPaint(
-                                  size: Size(30.0, 30.0),
-                                  painter: _BezierPainter(
-                                    color: color,
-                                    drawStart: index > 0,
-                                    drawEnd: index < _processIndex,
-                                  ),
-                                ),
-                                DotIndicator(
+                            return Padding(
+                              padding: const EdgeInsets.only(bottom: 5.0),
+                              child: GestureDetector(
+                                onTap: () =>
+                                    setState(() => _processIndex = index),
+                                child: Icon(
+                                  stepIcons[
+                                      index], // Use the icon corresponding to the current step
                                   size: 30.0,
-                                  color: color,
-                                  child: child,
+                                  color: getColor(index),
                                 ),
-                              ],
+                              ),
                             );
-                          } else {
-                            return Stack(
-                              children: [
-                                CustomPaint(
-                                  size: const Size(15.0, 15.0),
-                                  painter: _BezierPainter(
-                                    color: color,
-                                    drawEnd: index < _processes.length - 1,
-                                  ),
-                                ),
-                                OutlinedDotIndicator(
-                                  borderWidth: 4.0,
-                                  color: color,
-                                ),
-                              ],
+                          },
+                          contentsBuilder: (context, index) {
+                            return Padding(
+                              padding: const EdgeInsets.only(top: 5.0),
+                              child: Text(
+                                _processes[index],
+                                style: Styles.black18(context),
+                              ),
                             );
-                          }
-                        },
-                        connectorBuilder: (_, index, type) {
-                          if (index > 0) {
+                          },
+                          indicatorBuilder: (_, index) {
+                            var color;
+                            var child;
                             if (index == _processIndex) {
-                              final prevColor = getColor(index - 1);
-                              final color = getColor(index);
-                              List<Color> gradientColors;
-                              if (type == ConnectorType.start) {
-                                gradientColors = [
-                                  Color.lerp(prevColor, color, 0.5)!,
-                                  color
-                                ];
-                              } else {
-                                gradientColors = [
-                                  prevColor,
-                                  Color.lerp(prevColor, color, 0.5)!
-                                ];
-                              }
-                              return DecoratedLineConnector(
-                                decoration: BoxDecoration(
-                                  gradient: LinearGradient(
-                                    colors: gradientColors,
-                                  ),
+                              color = inProgressColor;
+                              child = const Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 3.0,
+                                  valueColor:
+                                      AlwaysStoppedAnimation(Colors.white),
+                                ),
+                              );
+                            } else if (index < _processIndex) {
+                              color = completeColor;
+                              child = GestureDetector(
+                                onTap: () =>
+                                    setState(() => _processIndex = index),
+                                child: const Icon(
+                                  Icons.check,
+                                  color: Colors.white,
+                                  size: 15.0,
                                 ),
                               );
                             } else {
-                              return SolidLineConnector(
-                                color: getColor(index),
-                              );
+                              color = todoColor;
                             }
-                          } else {
-                            return null;
-                          }
-                        },
-                        itemCount: _processes.length,
-                      ),
-                    ),
-                  )
-                : SizedBox(),
-            Expanded(
-              flex: 8,
-              child: Container(
-                padding: const EdgeInsets.all(16.0),
-                decoration: BoxDecoration(
-                  color: Colors.white, // Set background color if needed
-                  borderRadius: BorderRadius.circular(
-                      16), // Rounded corners for the outer container
 
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black
-                          .withOpacity(0.2), // Shadow color with transparency
-                      spreadRadius: 2, // Spread of the shadow
-                      blurRadius: 8, // Blur radius of the shadow
-                      offset: const Offset(
-                          0, 4), // Offset of the shadow (horizontal, vertical)
-                    ),
-                  ],
-                ),
-                // color: Colors.black,
-                child: _getBodyContent(),
-              ), // Displays different content for each step
-            ),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(
-                              16), // Rounded corners for the outer container
-
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(
-                                  0.2), // Shadow color with transparency
-                              spreadRadius: 2, // Spread of the shadow
-                              blurRadius: 8, // Blur radius of the shadow
-                              offset: const Offset(0,
-                                  4), // Offset of the shadow (horizontal, vertical)
-                            ),
-                          ],
-                        ),
-                        width: screenWidth / 2.5,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            if (_processIndex == 0) {
+                            if (index <= _processIndex) {
+                              return Stack(
+                                children: [
+                                  CustomPaint(
+                                    size: Size(30.0, 30.0),
+                                    painter: _BezierPainter(
+                                      color: color,
+                                      drawStart: index > 0,
+                                      drawEnd: index < _processIndex,
+                                    ),
+                                  ),
+                                  DotIndicator(
+                                    size: 30.0,
+                                    color: color,
+                                    child: child,
+                                  ),
+                                ],
+                              );
                             } else {
-                              switch (_processIndex) {
-                                case 1:
-                                  return () {
-                                    if (_storeData.name == "" ||
-                                        _storeData.typeName == "" ||
-                                        _storeData.taxId == "" ||
-                                        _storeData.route == "") {
-                                      showToast(
-                                        context: context,
-                                        message: 'กรุณากรอกข้อมูลให้ครบ',
-                                        type: ToastificationType.error,
-                                        primaryColor: Colors.red,
-                                      );
-                                    }
-
-                                    if (_storeData.name != "" &&
-                                        _storeData.typeName != "" &&
-                                        _storeData.taxId != "" &&
-                                        _storeData.route != "") {
-                                      setState(() {
-                                        _processIndex = (_processIndex - 1) %
-                                            _processes.length;
-                                      });
-                                    }
-                                  }();
-                                case 2:
-                                  return () {
-                                    if (_storeData.address == "" ||
-                                        _storeData.province == "" ||
-                                        _storeData.district == "" ||
-                                        _storeData.subDistrict == "") {
-                                      showToast(
-                                        context: context,
-                                        message: 'กรุณากรอกข้อมูลให้ครบ',
-                                        type: ToastificationType.error,
-                                        primaryColor: Colors.red,
-                                      );
-                                    }
-
-                                    if (_storeData.address != "" &&
-                                        _storeData.province != "" &&
-                                        _storeData.district != "" &&
-                                        _storeData.subDistrict != "") {
-                                      setState(() {
-                                        _processIndex = (_processIndex - 1) %
-                                            _processes.length;
-                                      });
-                                    }
-                                  }();
-                                case 3:
-                                  return () {
-                                    setState(() {
-                                      _processIndex = (_processIndex - 1) %
-                                          _processes.length;
-                                    });
-                                  }();
-                                default:
-                                  return print('error');
-                              }
+                              return Stack(
+                                children: [
+                                  CustomPaint(
+                                    size: const Size(15.0, 15.0),
+                                    painter: _BezierPainter(
+                                      color: color,
+                                      drawEnd: index < _processes.length - 1,
+                                    ),
+                                  ),
+                                  OutlinedDotIndicator(
+                                    borderWidth: 4.0,
+                                    color: color,
+                                  ),
+                                ],
+                              );
                             }
                           },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Styles.primaryColor,
-                            padding: EdgeInsets.symmetric(
-                                vertical: screenWidth / 85,
-                                horizontal: screenWidth / 17),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                          child: Text('กลับ', style: Styles.white18(context)),
+                          connectorBuilder: (_, index, type) {
+                            if (index > 0) {
+                              if (index == _processIndex) {
+                                final prevColor = getColor(index - 1);
+                                final color = getColor(index);
+                                List<Color> gradientColors;
+                                if (type == ConnectorType.start) {
+                                  gradientColors = [
+                                    Color.lerp(prevColor, color, 0.5)!,
+                                    color
+                                  ];
+                                } else {
+                                  gradientColors = [
+                                    prevColor,
+                                    Color.lerp(prevColor, color, 0.5)!
+                                  ];
+                                }
+                                return DecoratedLineConnector(
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      colors: gradientColors,
+                                    ),
+                                  ),
+                                );
+                              } else {
+                                return SolidLineConnector(
+                                  color: getColor(index),
+                                );
+                              }
+                            } else {
+                              return null;
+                            }
+                          },
+                          itemCount: _processes.length,
                         ),
                       ),
-                      Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(
-                              16), // Rounded corners for the outer container
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(
-                                  0.2), // Shadow color with transparency
-                              spreadRadius: 2, // Spread of the shadow
-                              blurRadius: 8, // Blur radius of the shadow
-                              offset: const Offset(0,
-                                  4), // Offset of the shadow (horizontal, vertical)
-                            ),
-                          ],
-                        ),
-                        width: screenWidth / 2.5,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            if (_processIndex == 3) {
-                              Alert(
-                                context: context,
-                                type: AlertType.info,
-                                title: "ยืนยันข้อมูล",
-                                style: AlertStyle(
-                                  animationType: AnimationType.grow,
-                                  isCloseButton: false,
-                                  isOverlayTapDismiss: false,
-                                  descStyle: Styles.black18(context),
-                                  descTextAlign: TextAlign.start,
-                                  animationDuration:
-                                      const Duration(milliseconds: 400),
-                                  alertBorder: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(22.0),
-                                    side: const BorderSide(
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                  titleStyle: Styles.headerBlack32(context),
-                                  alertAlignment: Alignment.center,
-                                ),
-                                desc:
-                                    "กรุณาตรวจเช็คความถูกต้องก่อนกดยืนยันการบันทึกข้อมูล",
-                                buttons: [
-                                  DialogButton(
-                                    onPressed: () => Navigator.pop(context),
-                                    color: Styles.failTextColor,
-                                    child: Text(
-                                      "ยกเลิก",
-                                      style: Styles.white18(context),
-                                    ),
-                                  ),
-                                  DialogButton(
-                                    onPressed: () => Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              const HomeScreen(index: 2)),
-                                    ),
-                                    color: Styles.successButtonColor,
-                                    child: Text(
-                                      "ตกลง",
-                                      style: Styles.white18(context),
-                                    ),
-                                  )
-                                ],
-                              ).show();
-                            } else {}
+                    )
+                  : SizedBox(),
+              Expanded(
+                flex: 8,
+                child: Container(
+                  padding: const EdgeInsets.all(16.0),
+                  decoration: BoxDecoration(
+                    color: Colors.white, // Set background color if needed
+                    borderRadius: BorderRadius.circular(
+                        16), // Rounded corners for the outer container
 
-                            switch (_processIndex) {
-                              case 0:
-                                return () {
-                                  _loadStoreFromStorage().then((_) {
-                                    if (isPolicy == true) {
-                                      setState(() {
-                                        _processIndex = (_processIndex + 1) %
-                                            _processes.length;
-                                      });
-                                    }
-                                  });
-                                }();
-                              case 1:
-                                return () {
-                                  _loadStoreFromStorage().then((_) {
-                                    setState(() {
-                                      storeNameController =
-                                          TextEditingController(
-                                              text: _storeData.name);
-                                      storeTelController =
-                                          TextEditingController(
-                                              text: _storeData.tel);
-                                      storeTaxIDController =
-                                          TextEditingController(
-                                              text: _storeData.taxId);
-                                      storeLineController =
-                                          TextEditingController(
-                                              text: _storeData.lineId);
-                                      storeNoteController =
-                                          TextEditingController(
-                                              text: _storeData.note);
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black
+                            .withOpacity(0.2), // Shadow color with transparency
+                        spreadRadius: 2, // Spread of the shadow
+                        blurRadius: 8, // Blur radius of the shadow
+                        offset: const Offset(0,
+                            4), // Offset of the shadow (horizontal, vertical)
+                      ),
+                    ],
+                  ),
+                  // color: Colors.black,
+                  child: _getBodyContent(),
+                ), // Displays different content for each step
+              ),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(
+                                16), // Rounded corners for the outer container
 
-                                      initialSelectedRoute = _storeData.route;
-                                      initialSelectedShoptype =
-                                          _storeData.typeName;
-
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(
+                                    0.2), // Shadow color with transparency
+                                spreadRadius: 2, // Spread of the shadow
+                                blurRadius: 8, // Blur radius of the shadow
+                                offset: const Offset(0,
+                                    4), // Offset of the shadow (horizontal, vertical)
+                              ),
+                            ],
+                          ),
+                          width: screenWidth / 2.5,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              if (_processIndex == 0) {
+                              } else {
+                                switch (_processIndex) {
+                                  case 1:
+                                    return () {
                                       if (_storeData.name == "" ||
                                           _storeData.typeName == "" ||
                                           _storeData.taxId == "" ||
@@ -601,32 +449,22 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
                                         );
                                       }
 
-                                      // if (_storeData.name != "" &&
-                                      //     _storeData.typeName != "" &&
-                                      //     _storeData.taxId != "" &&
-                                      //     _storeData.route != "") {
-                                      //   _processIndex = (_processIndex + 1) %
-                                      //       _processes.length;
-                                      // }
-                                      _processIndex = (_processIndex + 1) %
-                                          _processes.length;
-                                    });
-                                  });
-                                }();
-                              case 2:
-                                return () {
-                                  _loadStoreFromStorage().then((_) {
-                                    setState(() {
-                                      storeAddressController =
-                                          TextEditingController(
-                                              text: _storeData.address);
-                                      initialSelectedProvince =
-                                          _storeData.province;
-                                      initialSelectedAmphoe =
-                                          _storeData.district;
-                                      initialSelectedSubDistrict =
-                                          _storeData.subDistrict;
-
+                                      if (_storeData.name != "" &&
+                                          _storeData.typeName != "" &&
+                                          _storeData.taxId != "" &&
+                                          _storeData.route != "") {
+                                        setState(() {
+                                          _processIndex = (_processIndex - 1) %
+                                              _processes.length;
+                                        });
+                                      }
+                                      setState(() {
+                                        _processIndex = (_processIndex - 1) %
+                                            _processes.length;
+                                      });
+                                    }();
+                                  case 2:
+                                    return () {
                                       if (_storeData.address == "" ||
                                           _storeData.province == "" ||
                                           _storeData.district == "" ||
@@ -639,56 +477,284 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
                                         );
                                       }
 
-                                      // if (_storeData.address != "" &&
-                                      //     _storeData.province != "" &&
-                                      //     _storeData.district != "" &&
-                                      //     _storeData.subDistrict != "") {
-                                      //   _processIndex = (_processIndex + 1) %
-                                      //       _processes.length;
-                                      // }
-                                      _processIndex = (_processIndex + 1) %
-                                          _processes.length;
-                                    });
-                                  });
-                                }();
-                              case 3:
-                                return () {
-                                  postData();
-                                }();
-                              default:
-                                return print('error');
-                            }
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Styles.successButtonColor,
-                            padding: EdgeInsets.symmetric(
-                                vertical: screenWidth / 80,
-                                horizontal: screenWidth / 11),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
+                                      if (_storeData.address != "" &&
+                                          _storeData.province != "" &&
+                                          _storeData.district != "" &&
+                                          _storeData.subDistrict != "") {
+                                        setState(() {
+                                          _processIndex = (_processIndex - 1) %
+                                              _processes.length;
+                                        });
+                                      }
+                                      setState(() {
+                                        _processIndex = (_processIndex - 1) %
+                                            _processes.length;
+                                      });
+                                    }();
+                                  case 3:
+                                    return () {
+                                      setState(() {
+                                        _processIndex = (_processIndex - 1) %
+                                            _processes.length;
+                                      });
+                                    }();
+                                  default:
+                                    return print('error');
+                                }
+                              }
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Styles.primaryColor,
+                              padding: EdgeInsets.symmetric(
+                                  vertical: screenWidth / 85,
+                                  horizontal: screenWidth / 17),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
                             ),
+                            child: Text('กลับ', style: Styles.white18(context)),
                           ),
-                          child: Text(_processIndex == 3 ? 'ยืนยัน' : 'ถัดไป',
-                              style: Styles.white18(context)),
                         ),
-                      ),
-                    ],
-                  ),
-                ],
+                        Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(
+                                16), // Rounded corners for the outer container
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(
+                                    0.2), // Shadow color with transparency
+                                spreadRadius: 2, // Spread of the shadow
+                                blurRadius: 8, // Blur radius of the shadow
+                                offset: const Offset(0,
+                                    4), // Offset of the shadow (horizontal, vertical)
+                              ),
+                            ],
+                          ),
+                          width: screenWidth / 2.5,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              if (_processIndex == 3) {
+                                // Alert(
+                                //   context: context,
+                                //   type: AlertType.info,
+                                //   title: "ยืนยันข้อมูล",
+                                //   style: AlertStyle(
+                                //     animationType: AnimationType.grow,
+                                //     isCloseButton: false,
+                                //     isOverlayTapDismiss: false,
+                                //     descStyle: Styles.black18(context),
+                                //     descTextAlign: TextAlign.start,
+                                //     animationDuration:
+                                //         const Duration(milliseconds: 400),
+                                //     alertBorder: RoundedRectangleBorder(
+                                //       borderRadius: BorderRadius.circular(22.0),
+                                //       side: const BorderSide(
+                                //         color: Colors.grey,
+                                //       ),
+                                //     ),
+                                //     titleStyle: Styles.headerBlack32(context),
+                                //     alertAlignment: Alignment.center,
+                                //   ),
+                                //   desc:
+                                //       "กรุณาตรวจเช็คความถูกต้องก่อนกดยืนยันการบันทึกข้อมูล",
+                                //   buttons: [
+                                //     DialogButton(
+                                //       onPressed: () => Navigator.pop(context),
+                                //       color: Styles.failTextColor,
+                                //       child: Text(
+                                //         "ยกเลิก",
+                                //         style: Styles.white18(context),
+                                //       ),
+                                //     ),
+                                //     DialogButton(
+                                //       onPressed: () => Navigator.push(
+                                //         context,
+                                //         MaterialPageRoute(
+                                //             builder: (context) =>
+                                //                 const HomeScreen(index: 2)),
+                                //       ),
+                                //       color: Styles.successButtonColor,
+                                //       child: Text(
+                                //         "ตกลง",
+                                //         style: Styles.white18(context),
+                                //       ),
+                                //     )
+                                //   ],
+                                // ).show();
+                                // toastification.show(
+                                //     context: context,
+                                //     type: ToastificationType.success,
+                                //     style: ToastificationStyle.flatColored,
+                                //     title: Text(
+                                //       "บันทึกข้อมูลสําเร็จ",
+                                //       style: Styles.headerBlack24(context),
+                                //     ));
+                                showToastMenu(
+                                  context: context,
+                                  icon: Icon(Icons.info_outline),
+                                  type: ToastificationType.error,
+                                  primaryColor: Colors.red,
+                                  titleStyle: Styles.headerRed24(context),
+                                  descriptionStyle: Styles.red12(context),
+                                  message: "พบร้านค้าที่คล้ายกัน",
+                                  description:
+                                      "พบร้านค้าที่คล้ายกันในระบบ สามารถเปิดขายจากร้านที่คล้ายกัน",
+                                );
+                              } else {}
+
+                              switch (_processIndex) {
+                                case 0:
+                                  return () {
+                                    _loadStoreFromStorage().then((_) {
+                                      if (isPolicy == true) {
+                                        setState(() {
+                                          _processIndex = (_processIndex + 1) %
+                                              _processes.length;
+                                        });
+                                      }
+                                    });
+                                  }();
+                                case 1:
+                                  return () {
+                                    _loadStoreFromStorage().then((_) {
+                                      setState(() {
+                                        storeNameController =
+                                            TextEditingController(
+                                                text: _storeData.name);
+                                        storeTelController =
+                                            TextEditingController(
+                                                text: _storeData.tel);
+                                        storeTaxIDController =
+                                            TextEditingController(
+                                                text: _storeData.taxId);
+                                        storeLineController =
+                                            TextEditingController(
+                                                text: _storeData.lineId);
+                                        storeNoteController =
+                                            TextEditingController(
+                                                text: _storeData.note);
+
+                                        initialSelectedRoute =
+                                            RouteStore(route: _storeData.route);
+                                        initialSelectedShoptype = ShopType(
+                                            id: _storeData.type,
+                                            name: _storeData.typeName,
+                                            descript: '',
+                                            status: '');
+
+                                        // if (_storeData.name == "" ||
+                                        //     _storeData.typeName == "" ||
+                                        //     _storeData.taxId == "" ||
+                                        //     _storeData.route == "") {
+                                        //   showToast(
+                                        //     context: context,
+                                        //     message: 'กรุณากรอกข้อมูลให้ครบ',
+                                        //     type: ToastificationType.error,
+                                        //     primaryColor: Colors.red,
+                                        //   );
+                                        // }
+
+                                        // if (_storeData.name != "" &&
+                                        //     _storeData.typeName != "" &&
+                                        //     _storeData.taxId != "" &&
+                                        //     _storeData.route != "") {
+                                        //   _processIndex = (_processIndex + 1) %
+                                        //       _processes.length;
+                                        // }
+                                        _processIndex = (_processIndex + 1) %
+                                            _processes.length;
+                                      });
+                                    });
+                                  }();
+                                case 2:
+                                  return () {
+                                    _loadStoreFromStorage().then((_) {
+                                      setState(() {
+                                        storeAddressController =
+                                            TextEditingController(
+                                                text: _storeData.address);
+                                        // initialSelectedProvince =
+                                        //     _storeData.province;
+
+                                        initialSelectedLocation = Location(
+                                            province: _storeData.province,
+                                            amphoe: _storeData.district,
+                                            districtCode: '',
+                                            zipcode: _storeData.postcode,
+                                            provinceCode: _storeData.postcode
+                                                .substring(1, 3),
+                                            id: '',
+                                            amphoeCode: '',
+                                            district: _storeData.subDistrict);
+
+                                        initialSelectedAmphoe =
+                                            _storeData.district;
+                                        initialSelectedSubDistrict =
+                                            _storeData.subDistrict;
+
+                                        if (_storeData.address == "" ||
+                                            _storeData.province == "" ||
+                                            _storeData.district == "" ||
+                                            _storeData.subDistrict == "") {
+                                          showToast(
+                                            context: context,
+                                            message: 'กรุณากรอกข้อมูลให้ครบ',
+                                            type: ToastificationType.error,
+                                            primaryColor: Colors.red,
+                                          );
+                                        }
+
+                                        // if (_storeData.address != "" &&
+                                        //     _storeData.province != "" &&
+                                        //     _storeData.district != "" &&
+                                        //     _storeData.subDistrict != "") {
+                                        //   _processIndex = (_processIndex + 1) %
+                                        //       _processes.length;
+                                        // }
+                                        _processIndex = (_processIndex + 1) %
+                                            _processes.length;
+                                      });
+                                    });
+                                  }();
+                                case 3:
+                                  return () {
+                                    postData();
+                                  }();
+                                default:
+                                  return print('error');
+                              }
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Styles.successButtonColor,
+                              padding: EdgeInsets.symmetric(
+                                  vertical: screenWidth / 80,
+                                  horizontal: screenWidth / 11),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                            child: Text(_processIndex == 3 ? 'ยืนยัน' : 'ถัดไป',
+                                style: Styles.white18(context)),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
+        // floatingActionButton: FloatingActionButton(
+        //   child: Icon(FontAwesomeIcons.chevronRight),
+        //   onPressed: () {
+        //     setState(() {
+        //       _processIndex = (_processIndex + 1) % _processes.length;
+        //     });
+        //   },
+        //   backgroundColor: inProgressColor,
+        // ),
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   child: Icon(FontAwesomeIcons.chevronRight),
-      //   onPressed: () {
-      //     setState(() {
-      //       _processIndex = (_processIndex + 1) % _processes.length;
-      //     });
-      //   },
-      //   backgroundColor: inProgressColor,
-      // ),
     );
   }
 }
