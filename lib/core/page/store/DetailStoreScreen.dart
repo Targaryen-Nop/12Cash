@@ -1,5 +1,6 @@
 import 'package:_12sale_app/core/components/Appbar.dart';
 import 'package:_12sale_app/core/components/button/AddStoreButton.dart';
+import 'package:_12sale_app/core/components/button/ShowPhotoButton.dart';
 import 'package:_12sale_app/core/page/store/ProcessTimelineScreen.dart';
 import 'package:_12sale_app/core/styles/gobalStyle.dart';
 import 'package:_12sale_app/core/styles/style.dart';
@@ -21,6 +22,7 @@ class DetailShopScreen extends StatefulWidget {
 }
 
 class _DetailShopScreenState extends State<DetailShopScreen> {
+  bool onEdit = true;
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -59,19 +61,6 @@ class _DetailShopScreenState extends State<DetailShopScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      children: [
-                        const Icon(
-                          Icons.store,
-                          size: 40,
-                        ),
-                        const SizedBox(width: 8),
-                        Text(
-                          "ข้อมูลร้านค้า",
-                          style: Styles.black18(context),
-                        ),
-                      ],
-                    ),
                     SizedBox(height: screenWidth / 80),
                     Expanded(
                       child: Container(
@@ -94,37 +83,125 @@ class _DetailShopScreenState extends State<DetailShopScreen> {
                           padding: const EdgeInsets.all(16.0),
                           child: Column(
                             children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    children: [
+                                      const Icon(
+                                        Icons.store,
+                                        size: 40,
+                                      ),
+                                      const SizedBox(width: 8),
+                                      Text(
+                                        "ข้อมูลร้านค้า",
+                                        style: Styles.black18(context),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(children: [
+                                    GestureDetector(
+                                      onTap: () {
+                                        setState(() {
+                                          onEdit =
+                                              !onEdit; // Toggle the value of onEdit
+                                        });
+                                      },
+                                      child: Container(
+                                        padding: const EdgeInsets.all(8),
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(8),
+                                            color: onEdit
+                                                ? Colors.amber
+                                                : Colors.green),
+                                        child: Row(
+                                          children: [
+                                            Icon(
+                                              onEdit
+                                                  ? Icons.edit
+                                                  : Icons.save_outlined,
+                                              size: 40,
+                                            ),
+                                            const SizedBox(width: 8),
+                                            Text(
+                                              onEdit ? "แก้ไข" : "บันทึก",
+                                              style: Styles.black18(context),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ])
+                                ],
+                              ),
+                              SizedBox(height: screenWidth / 37),
                               _buildCustomFormField('ชื่อร้านค้า',
-                                  widget.customerName, Icons.store),
+                                  widget.customerName, Icons.store,
+                                  readOnly: onEdit),
                               _buildCustomFormField(
-                                  'เลขประจำตัวผู้เสียภาษี',
-                                  '${widget.store.taxId}',
-                                  Icons.person_outline),
+                                'เลขประจำตัวผู้เสียภาษี',
+                                '${widget.store.taxId}',
+                                Icons.person_outline,
+                              ),
                               Row(
                                 children: [
                                   Expanded(
                                     child: _buildCustomFormField('โทรศัพท์',
-                                        '${widget.store.tel}', Icons.phone),
+                                        '${widget.store.tel}', Icons.phone,
+                                        readOnly: onEdit),
                                   ),
                                   const SizedBox(width: 16),
                                   Expanded(
                                     child: _buildCustomFormField(
                                         'เส้นทาง',
                                         '${widget.store.route}',
-                                        Icons.location_on),
+                                        Icons.location_on,
+                                        readOnly: onEdit),
                                   ),
                                 ],
                               ),
                               _buildCustomFormField(
                                   'ไลน์',
                                   '${widget.store.lineId}',
-                                  Icons.alternate_email),
+                                  Icons.alternate_email,
+                                  readOnly: onEdit),
                               _buildCustomFormField(
                                   'ประเภทร้านค้า',
                                   '${widget.store.typeName}',
                                   Icons.store_mall_directory),
                               _buildCustomFormField('หมายเหตุ',
-                                  '${widget.store.note}', Icons.note),
+                                  '${widget.store.note}', Icons.note,
+                                  readOnly: onEdit),
+                              SizedBox(height: screenWidth / 37),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  ShowPhotoButton(
+                                    label: "ร้านค้า",
+                                    icon: Icons.image_not_supported_outlined,
+                                    imagePath: widget.store.imageList.length > 0
+                                        ? widget.store.imageList[0]
+                                        : null,
+                                  ),
+                                  ShowPhotoButton(
+                                    label: "พรก.",
+                                    icon: Icons.image_not_supported_outlined,
+                                    imagePath: widget.store.imageList.length > 1
+                                        ? widget.store.imageList[1]
+                                        : null,
+                                  ),
+                                  ShowPhotoButton(
+                                    label: "สำเนาบัตรปปช.",
+                                    icon: Icons.image_not_supported_outlined,
+                                    imagePath: widget.store.imageList.length > 2
+                                        ? widget.store.imageList[2]
+                                        : null,
+                                  )
+                                ],
+                              )
                             ],
                           ),
                         ),
@@ -196,20 +273,29 @@ class _DetailShopScreenState extends State<DetailShopScreen> {
     );
   }
 
-  Widget _buildCustomFormField(String label, String value, IconData icon) {
+  Widget _buildCustomFormField(String label, String value, IconData icon,
+      {bool readOnly = true}) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16.0),
-      child: TextFormField(
-        initialValue: value,
-        style: GobalStyles.kanit18,
-        readOnly: true, // Makes the TextFormField read-only
-        decoration: InputDecoration(
-          labelText: label,
-          // hintStyle: GobalStyles.kanit18,
-          labelStyle: GobalStyles.kanit18,
-          prefixIcon: Icon(icon),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
+      child: Container(
+        decoration: BoxDecoration(
+          color: readOnly ? Colors.grey[200] : Colors.white,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: TextFormField(
+          initialValue: value,
+          style: Styles.black18(context),
+          readOnly: readOnly, // Makes the TextFormField read-only
+          decoration: InputDecoration(
+            // fillColor: Colors.black,
+
+            labelText: label,
+            // hintStyle: GobalStyles.kanit18,
+            labelStyle: Styles.black18(context),
+            prefixIcon: Icon(icon),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
           ),
         ),
       ),

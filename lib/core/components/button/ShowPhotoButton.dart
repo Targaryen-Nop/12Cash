@@ -38,8 +38,9 @@ class _ShowPhotoButtonState extends State<ShowPhotoButton> {
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
               padding: widget.padding,
-              backgroundColor:
-                  widget.imagePath == null ? Styles.primaryColor : Colors.white,
+              backgroundColor: widget.imagePath == null
+                  ? Colors.grey[400]
+                  : Styles.primaryColor,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(widget.borderRadius),
               ),

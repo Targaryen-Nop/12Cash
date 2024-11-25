@@ -8,6 +8,7 @@ class Customtextinput extends StatefulWidget {
   final String? initialValue;
   final int? max;
   final bool readonly;
+
   VoidCallback? onFieldTap; // Callback for custom actions
   final ValueChanged<String> onChanged;
   final TextInputType? keypadType;
@@ -34,18 +35,35 @@ class Customtextinput extends StatefulWidget {
 }
 
 class _CustomtextinputState extends State<Customtextinput> {
+  late FocusNode _focusNode;
+
+  @override
+  void initState() {
+    super.initState();
+    _focusNode = FocusNode();
+  }
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      focusNode: _focusNode,
       maxLength: widget.max,
       keyboardType: widget.keypadType,
       onChanged: widget.onChanged, // Pass the onChanged callback
+      // onEditingComplete: widget.onChanged,
       onTap: () {
         // Check if onFieldTap is not null before calling it
         if (widget.onFieldTap != null) {
           widget.onFieldTap!();
         }
       },
+
       initialValue: widget.controller != null ? null : 'กรุณากรอกข้อมูล',
       validator: (value) => value!.isEmpty ? 'กรุณากรอกข้อมูล' : null,
       // onFieldSubmitted: widget.onFieldSubmitted,

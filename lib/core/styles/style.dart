@@ -9,6 +9,14 @@ class Styles {
         600; // Assuming 375 is the base screen width
   }
 
+  static TextStyle grey12(BuildContext context) => GoogleFonts.kanit(
+        textStyle: TextStyle(
+          fontSize: getResponsiveFontSize(context, 12),
+          fontWeight: FontWeight.normal,
+          color: Color(0xFF6B7280),
+        ),
+      );
+
   static TextStyle headerBlack18(BuildContext context) => GoogleFonts.kanit(
         textStyle: TextStyle(
           fontSize: getResponsiveFontSize(context, 18),

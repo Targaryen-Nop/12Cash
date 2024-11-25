@@ -15,14 +15,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:collection/collection.dart';
 
 class StoreAddressScreen extends StatefulWidget {
-  Store storeData;
   TextEditingController storeAddressController;
   TextEditingController storePoscodeController;
   Location initialSelectedLocation;
 
   StoreAddressScreen({
     Key? key,
-    required this.storeData,
     required this.storeAddressController,
     required this.storePoscodeController,
     required this.initialSelectedLocation,

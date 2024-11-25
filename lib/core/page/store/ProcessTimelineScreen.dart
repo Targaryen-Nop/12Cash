@@ -49,9 +49,8 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
   RouteStore initialSelectedRoute = RouteStore(route: '');
   ShopType initialSelectedShoptype =
       ShopType(id: '', name: '', descript: '', status: '');
-  // String initialSelectedShoptype = '';
-  // String initialSelectedProvince = '';
-  String initialSelectedAmphoe = '';
+  List<dynamic> imageList = [];
+
   Location initialSelectedLocation = Location(
       id: '',
       amphoe: '',
@@ -60,9 +59,6 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
       districtCode: '',
       province: '',
       provinceCode: '');
-
-  String initialSelectedSubDistrict = '';
-  // Location initialSelectedSubDistrict = '';
 
   @override
   initState() {
@@ -97,18 +93,17 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
         return const PolicyScreen();
       case 1:
         return StoreDataScreen(
-          storeData: _storeData,
-          storeNameController: storeNameController,
-          storeTaxIDController: storeTaxIDController,
-          storeTelController: storeTelController,
-          storeLineController: storeLineController,
-          storeNoteController: storeNoteController,
-          initialSelectedRoute: initialSelectedRoute,
-          initialSelectedShoptype: initialSelectedShoptype,
-        );
+            storeData: _storeData,
+            storeNameController: storeNameController,
+            storeTaxIDController: storeTaxIDController,
+            storeTelController: storeTelController,
+            storeLineController: storeLineController,
+            storeNoteController: storeNoteController,
+            initialSelectedRoute: initialSelectedRoute,
+            initialSelectedShoptype: initialSelectedShoptype,
+            imageList: imageList);
       case 2:
         return StoreAddressScreen(
-          storeData: _storeData,
           storeAddressController: storeAddressController,
           storePoscodeController: storePoscodeController,
           initialSelectedLocation: initialSelectedLocation,
@@ -209,11 +204,22 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
     }
   }
 
+  Future<void> _saveStoreToStorage() async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      // Convert Store object to JSON string
+      String jsonStoreString = json.encode(_storeData.toJson());
+      // Save the JSON string list to SharedPreferences
+      await prefs.setString('add_store', jsonStoreString);
+      print("Data saved to storage successfully.");
+    } catch (e) {
+      print("Error saving to storage: $e");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
-    bool isKeyboardVisible =
-        KeyboardVisibilityProvider.isKeyboardVisible(context);
     return ToastificationConfigProvider(
       config: const ToastificationConfig(
         // alignment: Alignment.center,
@@ -231,156 +237,150 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
-              !isKeyboardVisible
-                  ? Expanded(
-                      flex: 2,
-                      child: Timeline.tileBuilder(
-                        theme: TimelineThemeData(
-                          direction: Axis.horizontal,
-                          connectorTheme: const ConnectorThemeData(
-                            space: 30.0,
-                            thickness: 5.0,
+              Expanded(
+                flex: 2,
+                child: Timeline.tileBuilder(
+                  theme: TimelineThemeData(
+                    direction: Axis.horizontal,
+                    connectorTheme: const ConnectorThemeData(
+                      space: 30.0,
+                      thickness: 5.0,
+                    ),
+                  ),
+                  builder: TimelineTileBuilder.connected(
+                    connectionDirection: ConnectionDirection.before,
+                    itemExtentBuilder: (_, __) =>
+                        MediaQuery.of(context).size.width / 4.4,
+                    oppositeContentsBuilder: (context, index) {
+                      // Define a list of icons for each step
+                      final List<IconData> stepIcons = [
+                        Icons.handshake, // Icon for "Prospect"
+                        Icons.store_mall_directory, // Icon for "Tour"
+                        Icons.map, // Icon for "Offer"
+                        Icons.check_circle_outlined, // Icon for "Contract"
+                      ];
+
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 5.0),
+                        child: GestureDetector(
+                          onTap: () => setState(() => _processIndex = index),
+                          child: Icon(
+                            stepIcons[
+                                index], // Use the icon corresponding to the current step
+                            size: 30.0,
+                            color: getColor(index),
                           ),
                         ),
-                        builder: TimelineTileBuilder.connected(
-                          connectionDirection: ConnectionDirection.before,
-                          itemExtentBuilder: (_, __) =>
-                              MediaQuery.of(context).size.width / 4.4,
-                          oppositeContentsBuilder: (context, index) {
-                            // Define a list of icons for each step
-                            final List<IconData> stepIcons = [
-                              Icons.handshake, // Icon for "Prospect"
-                              Icons.store_mall_directory, // Icon for "Tour"
-                              Icons.map, // Icon for "Offer"
-                              Icons
-                                  .check_circle_outlined, // Icon for "Contract"
-                            ];
-
-                            return Padding(
-                              padding: const EdgeInsets.only(bottom: 5.0),
-                              child: GestureDetector(
-                                onTap: () =>
-                                    setState(() => _processIndex = index),
-                                child: Icon(
-                                  stepIcons[
-                                      index], // Use the icon corresponding to the current step
-                                  size: 30.0,
-                                  color: getColor(index),
-                                ),
-                              ),
-                            );
-                          },
-                          contentsBuilder: (context, index) {
-                            return Padding(
-                              padding: const EdgeInsets.only(top: 5.0),
-                              child: Text(
-                                _processes[index],
-                                style: Styles.black18(context),
-                              ),
-                            );
-                          },
-                          indicatorBuilder: (_, index) {
-                            var color;
-                            var child;
-                            if (index == _processIndex) {
-                              color = inProgressColor;
-                              child = const Padding(
-                                padding: EdgeInsets.all(8.0),
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 3.0,
-                                  valueColor:
-                                      AlwaysStoppedAnimation(Colors.white),
-                                ),
-                              );
-                            } else if (index < _processIndex) {
-                              color = completeColor;
-                              child = GestureDetector(
-                                onTap: () =>
-                                    setState(() => _processIndex = index),
-                                child: const Icon(
-                                  Icons.check,
-                                  color: Colors.white,
-                                  size: 15.0,
-                                ),
-                              );
-                            } else {
-                              color = todoColor;
-                            }
-
-                            if (index <= _processIndex) {
-                              return Stack(
-                                children: [
-                                  CustomPaint(
-                                    size: Size(30.0, 30.0),
-                                    painter: _BezierPainter(
-                                      color: color,
-                                      drawStart: index > 0,
-                                      drawEnd: index < _processIndex,
-                                    ),
-                                  ),
-                                  DotIndicator(
-                                    size: 30.0,
-                                    color: color,
-                                    child: child,
-                                  ),
-                                ],
-                              );
-                            } else {
-                              return Stack(
-                                children: [
-                                  CustomPaint(
-                                    size: const Size(15.0, 15.0),
-                                    painter: _BezierPainter(
-                                      color: color,
-                                      drawEnd: index < _processes.length - 1,
-                                    ),
-                                  ),
-                                  OutlinedDotIndicator(
-                                    borderWidth: 4.0,
-                                    color: color,
-                                  ),
-                                ],
-                              );
-                            }
-                          },
-                          connectorBuilder: (_, index, type) {
-                            if (index > 0) {
-                              if (index == _processIndex) {
-                                final prevColor = getColor(index - 1);
-                                final color = getColor(index);
-                                List<Color> gradientColors;
-                                if (type == ConnectorType.start) {
-                                  gradientColors = [
-                                    Color.lerp(prevColor, color, 0.5)!,
-                                    color
-                                  ];
-                                } else {
-                                  gradientColors = [
-                                    prevColor,
-                                    Color.lerp(prevColor, color, 0.5)!
-                                  ];
-                                }
-                                return DecoratedLineConnector(
-                                  decoration: BoxDecoration(
-                                    gradient: LinearGradient(
-                                      colors: gradientColors,
-                                    ),
-                                  ),
-                                );
-                              } else {
-                                return SolidLineConnector(
-                                  color: getColor(index),
-                                );
-                              }
-                            } else {
-                              return null;
-                            }
-                          },
-                          itemCount: _processes.length,
+                      );
+                    },
+                    contentsBuilder: (context, index) {
+                      return Padding(
+                        padding: const EdgeInsets.only(top: 5.0),
+                        child: Text(
+                          _processes[index],
+                          style: Styles.black18(context),
                         ),
-                      ),
-                    )
-                  : SizedBox(),
+                      );
+                    },
+                    indicatorBuilder: (_, index) {
+                      var color;
+                      var child;
+                      if (index == _processIndex) {
+                        color = inProgressColor;
+                        child = const Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: CircularProgressIndicator(
+                            strokeWidth: 3.0,
+                            valueColor: AlwaysStoppedAnimation(Colors.white),
+                          ),
+                        );
+                      } else if (index < _processIndex) {
+                        color = completeColor;
+                        child = GestureDetector(
+                          onTap: () => setState(() => _processIndex = index),
+                          child: const Icon(
+                            Icons.check,
+                            color: Colors.white,
+                            size: 15.0,
+                          ),
+                        );
+                      } else {
+                        color = todoColor;
+                      }
+
+                      if (index <= _processIndex) {
+                        return Stack(
+                          children: [
+                            CustomPaint(
+                              size: Size(30.0, 30.0),
+                              painter: _BezierPainter(
+                                color: color,
+                                drawStart: index > 0,
+                                drawEnd: index < _processIndex,
+                              ),
+                            ),
+                            DotIndicator(
+                              size: 30.0,
+                              color: color,
+                              child: child,
+                            ),
+                          ],
+                        );
+                      } else {
+                        return Stack(
+                          children: [
+                            CustomPaint(
+                              size: const Size(15.0, 15.0),
+                              painter: _BezierPainter(
+                                color: color,
+                                drawEnd: index < _processes.length - 1,
+                              ),
+                            ),
+                            OutlinedDotIndicator(
+                              borderWidth: 4.0,
+                              color: color,
+                            ),
+                          ],
+                        );
+                      }
+                    },
+                    connectorBuilder: (_, index, type) {
+                      if (index > 0) {
+                        if (index == _processIndex) {
+                          final prevColor = getColor(index - 1);
+                          final color = getColor(index);
+                          List<Color> gradientColors;
+                          if (type == ConnectorType.start) {
+                            gradientColors = [
+                              Color.lerp(prevColor, color, 0.5)!,
+                              color
+                            ];
+                          } else {
+                            gradientColors = [
+                              prevColor,
+                              Color.lerp(prevColor, color, 0.5)!
+                            ];
+                          }
+                          return DecoratedLineConnector(
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: gradientColors,
+                              ),
+                            ),
+                          );
+                        } else {
+                          return SolidLineConnector(
+                            color: getColor(index),
+                          );
+                        }
+                      } else {
+                        return null;
+                      }
+                    },
+                    itemCount: _processes.length,
+                  ),
+                ),
+              ),
               Expanded(
                 flex: 8,
                 child: Container(
@@ -429,7 +429,7 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
                               ),
                             ],
                           ),
-                          width: screenWidth / 2.5,
+                          width: screenWidth / 2.2,
                           child: ElevatedButton(
                             onPressed: () {
                               if (_processIndex == 0) {
@@ -437,65 +437,52 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
                                 switch (_processIndex) {
                                   case 1:
                                     return () {
-                                      if (_storeData.name == "" ||
-                                          _storeData.typeName == "" ||
-                                          _storeData.taxId == "" ||
-                                          _storeData.route == "") {
-                                        showToast(
-                                          context: context,
-                                          message: 'กรุณากรอกข้อมูลให้ครบ',
-                                          type: ToastificationType.error,
-                                          primaryColor: Colors.red,
-                                        );
-                                      }
-
-                                      if (_storeData.name != "" &&
-                                          _storeData.typeName != "" &&
-                                          _storeData.taxId != "" &&
-                                          _storeData.route != "") {
-                                        setState(() {
-                                          _processIndex = (_processIndex - 1) %
-                                              _processes.length;
-                                        });
-                                      }
-                                      setState(() {
-                                        _processIndex = (_processIndex - 1) %
-                                            _processes.length;
-                                      });
+                                      // setState(() {
+                                      //   _processIndex = (_processIndex - 1) %
+                                      //       _processes.length;
+                                      // });
                                     }();
                                   case 2:
                                     return () {
-                                      if (_storeData.address == "" ||
-                                          _storeData.province == "" ||
-                                          _storeData.district == "" ||
-                                          _storeData.subDistrict == "") {
-                                        showToast(
-                                          context: context,
-                                          message: 'กรุณากรอกข้อมูลให้ครบ',
-                                          type: ToastificationType.error,
-                                          primaryColor: Colors.red,
-                                        );
-                                      }
-
-                                      if (_storeData.address != "" &&
-                                          _storeData.province != "" &&
-                                          _storeData.district != "" &&
-                                          _storeData.subDistrict != "") {
+                                      _loadStoreFromStorage().then((_) {
+                                        setState(() {
+                                          initialSelectedRoute = RouteStore(
+                                              route: _storeData.route);
+                                          initialSelectedShoptype = ShopType(
+                                              id: _storeData.type,
+                                              name: _storeData.typeName,
+                                              descript: '',
+                                              status: '');
+                                          imageList = _storeData.imageList;
+                                        });
                                         setState(() {
                                           _processIndex = (_processIndex - 1) %
                                               _processes.length;
                                         });
-                                      }
-                                      setState(() {
-                                        _processIndex = (_processIndex - 1) %
-                                            _processes.length;
                                       });
                                     }();
                                   case 3:
                                     return () {
-                                      setState(() {
-                                        _processIndex = (_processIndex - 1) %
-                                            _processes.length;
+                                      _loadStoreFromStorage().then((_) {
+                                        setState(() {
+                                          storeAddressController =
+                                              TextEditingController(
+                                                  text: _storeData.address);
+
+                                          initialSelectedLocation = Location(
+                                              province: _storeData.province,
+                                              amphoe: _storeData.district,
+                                              districtCode: '',
+                                              zipcode: _storeData.postcode,
+                                              provinceCode: _storeData.postcode
+                                                  .substring(1, 3),
+                                              id: '',
+                                              amphoeCode: '',
+                                              district: _storeData.subDistrict);
+
+                                          _processIndex = (_processIndex - 1) %
+                                              _processes.length;
+                                        });
                                       });
                                     }();
                                   default:
@@ -530,65 +517,65 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
                               ),
                             ],
                           ),
-                          width: screenWidth / 2.5,
+                          width: screenWidth / 2.2,
                           child: ElevatedButton(
                             onPressed: () {
                               if (_processIndex == 3) {
-                                // Alert(
-                                //   context: context,
-                                //   type: AlertType.info,
-                                //   title: "ยืนยันข้อมูล",
-                                //   style: AlertStyle(
-                                //     animationType: AnimationType.grow,
-                                //     isCloseButton: false,
-                                //     isOverlayTapDismiss: false,
-                                //     descStyle: Styles.black18(context),
-                                //     descTextAlign: TextAlign.start,
-                                //     animationDuration:
-                                //         const Duration(milliseconds: 400),
-                                //     alertBorder: RoundedRectangleBorder(
-                                //       borderRadius: BorderRadius.circular(22.0),
-                                //       side: const BorderSide(
-                                //         color: Colors.grey,
-                                //       ),
-                                //     ),
-                                //     titleStyle: Styles.headerBlack32(context),
-                                //     alertAlignment: Alignment.center,
-                                //   ),
-                                //   desc:
-                                //       "กรุณาตรวจเช็คความถูกต้องก่อนกดยืนยันการบันทึกข้อมูล",
-                                //   buttons: [
-                                //     DialogButton(
-                                //       onPressed: () => Navigator.pop(context),
-                                //       color: Styles.failTextColor,
-                                //       child: Text(
-                                //         "ยกเลิก",
-                                //         style: Styles.white18(context),
-                                //       ),
-                                //     ),
-                                //     DialogButton(
-                                //       onPressed: () => Navigator.push(
-                                //         context,
-                                //         MaterialPageRoute(
-                                //             builder: (context) =>
-                                //                 const HomeScreen(index: 2)),
-                                //       ),
-                                //       color: Styles.successButtonColor,
-                                //       child: Text(
-                                //         "ตกลง",
-                                //         style: Styles.white18(context),
-                                //       ),
-                                //     )
-                                //   ],
-                                // ).show();
-                                // toastification.show(
-                                //     context: context,
-                                //     type: ToastificationType.success,
-                                //     style: ToastificationStyle.flatColored,
-                                //     title: Text(
-                                //       "บันทึกข้อมูลสําเร็จ",
-                                //       style: Styles.headerBlack24(context),
-                                //     ));
+                                Alert(
+                                  context: context,
+                                  type: AlertType.info,
+                                  title: "ยืนยันข้อมูล",
+                                  style: AlertStyle(
+                                    animationType: AnimationType.grow,
+                                    isCloseButton: false,
+                                    isOverlayTapDismiss: false,
+                                    descStyle: Styles.black18(context),
+                                    descTextAlign: TextAlign.start,
+                                    animationDuration:
+                                        const Duration(milliseconds: 400),
+                                    alertBorder: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(22.0),
+                                      side: const BorderSide(
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                    titleStyle: Styles.headerBlack32(context),
+                                    alertAlignment: Alignment.center,
+                                  ),
+                                  desc:
+                                      "กรุณาตรวจเช็คความถูกต้องก่อนกดยืนยันการบันทึกข้อมูล",
+                                  buttons: [
+                                    DialogButton(
+                                      onPressed: () => Navigator.pop(context),
+                                      color: Styles.failTextColor,
+                                      child: Text(
+                                        "ยกเลิก",
+                                        style: Styles.white18(context),
+                                      ),
+                                    ),
+                                    DialogButton(
+                                      onPressed: () => Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                const HomeScreen(index: 2)),
+                                      ),
+                                      color: Styles.successButtonColor,
+                                      child: Text(
+                                        "ตกลง",
+                                        style: Styles.white18(context),
+                                      ),
+                                    )
+                                  ],
+                                ).show();
+                                toastification.show(
+                                    context: context,
+                                    type: ToastificationType.success,
+                                    style: ToastificationStyle.flatColored,
+                                    title: Text(
+                                      "บันทึกข้อมูลสําเร็จ",
+                                      style: Styles.headerBlack24(context),
+                                    ));
                                 showToastMenu(
                                   context: context,
                                   icon: Icon(Icons.info_outline),
@@ -617,23 +604,22 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
                                 case 1:
                                   return () {
                                     _loadStoreFromStorage().then((_) {
+                                      // print(_storeData.name);
+                                      // print(_storeData.taxId);
+                                      // print(_storeData.typeName);
+                                      // print(_storeData.route);
+                                      if (_storeData.name == "" ||
+                                          _storeData.typeName == "" ||
+                                          _storeData.taxId == "" ||
+                                          _storeData.route == "") {
+                                        showToast(
+                                          context: context,
+                                          message: 'กรุณากรอกข้อมูลให้ครบ',
+                                          type: ToastificationType.error,
+                                          primaryColor: Colors.red,
+                                        );
+                                      }
                                       setState(() {
-                                        storeNameController =
-                                            TextEditingController(
-                                                text: _storeData.name);
-                                        storeTelController =
-                                            TextEditingController(
-                                                text: _storeData.tel);
-                                        storeTaxIDController =
-                                            TextEditingController(
-                                                text: _storeData.taxId);
-                                        storeLineController =
-                                            TextEditingController(
-                                                text: _storeData.lineId);
-                                        storeNoteController =
-                                            TextEditingController(
-                                                text: _storeData.note);
-
                                         initialSelectedRoute =
                                             RouteStore(route: _storeData.route);
                                         initialSelectedShoptype = ShopType(
@@ -642,27 +628,13 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
                                             descript: '',
                                             status: '');
 
-                                        // if (_storeData.name == "" ||
-                                        //     _storeData.typeName == "" ||
-                                        //     _storeData.taxId == "" ||
-                                        //     _storeData.route == "") {
-                                        //   showToast(
-                                        //     context: context,
-                                        //     message: 'กรุณากรอกข้อมูลให้ครบ',
-                                        //     type: ToastificationType.error,
-                                        //     primaryColor: Colors.red,
-                                        //   );
-                                        // }
-
-                                        // if (_storeData.name != "" &&
-                                        //     _storeData.typeName != "" &&
-                                        //     _storeData.taxId != "" &&
-                                        //     _storeData.route != "") {
-                                        //   _processIndex = (_processIndex + 1) %
-                                        //       _processes.length;
-                                        // }
-                                        _processIndex = (_processIndex + 1) %
-                                            _processes.length;
+                                        if (_storeData.name != "" &&
+                                            _storeData.typeName != "" &&
+                                            _storeData.taxId != "" &&
+                                            _storeData.route != "") {
+                                          _processIndex = (_processIndex + 1) %
+                                              _processes.length;
+                                        }
                                       });
                                     });
                                   }();
@@ -670,12 +642,6 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
                                   return () {
                                     _loadStoreFromStorage().then((_) {
                                       setState(() {
-                                        storeAddressController =
-                                            TextEditingController(
-                                                text: _storeData.address);
-                                        // initialSelectedProvince =
-                                        //     _storeData.province;
-
                                         initialSelectedLocation = Location(
                                             province: _storeData.province,
                                             amphoe: _storeData.district,
@@ -686,11 +652,6 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
                                             id: '',
                                             amphoeCode: '',
                                             district: _storeData.subDistrict);
-
-                                        initialSelectedAmphoe =
-                                            _storeData.district;
-                                        initialSelectedSubDistrict =
-                                            _storeData.subDistrict;
 
                                         if (_storeData.address == "" ||
                                             _storeData.province == "" ||
@@ -704,21 +665,20 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
                                           );
                                         }
 
-                                        // if (_storeData.address != "" &&
-                                        //     _storeData.province != "" &&
-                                        //     _storeData.district != "" &&
-                                        //     _storeData.subDistrict != "") {
-                                        //   _processIndex = (_processIndex + 1) %
-                                        //       _processes.length;
-                                        // }
-                                        _processIndex = (_processIndex + 1) %
-                                            _processes.length;
+                                        if (_storeData.address != "" &&
+                                            _storeData.province != "" &&
+                                            _storeData.district != "" &&
+                                            _storeData.subDistrict != "") {
+                                          _processIndex = (_processIndex + 1) %
+                                              _processes.length;
+                                        }
                                       });
                                     });
                                   }();
                                 case 3:
                                   return () {
-                                    postData();
+                                    _loadStoreFromStorage().then((_) {});
+                                    // postData();
                                   }();
                                 default:
                                   return print('error');

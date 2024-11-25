@@ -65,7 +65,7 @@ class _VerifyStoreScreenState extends State<VerifyStoreScreen> {
               const Icon(Icons.store, size: 40),
               const SizedBox(width: 8),
               Text(
-                " ${_jsonString?['shop_detail'] ?? "Shop Detail"}",
+                "${_jsonString?['shop_detail'] ?? "Shop Detail"}",
                 style: Styles.headerBlack24(context),
               ),
             ],
@@ -75,7 +75,7 @@ class _VerifyStoreScreenState extends State<VerifyStoreScreen> {
             color: Colors.grey.shade300,
           ),
           Text(
-            "ร้าน${widget.storeData.name}",
+            "ชื่อ : ${widget.storeData.copyWith().name}",
             style: Styles.headerBlack24(context),
           ),
           Text.rich(
@@ -84,7 +84,8 @@ class _VerifyStoreScreenState extends State<VerifyStoreScreen> {
               style: Styles.headerBlack18(context),
               children: <TextSpan>[
                 TextSpan(
-                  text: ' : ${widget.storeData.tel}', // Inline bold text
+                  text:
+                      ' : ${widget.storeData.copyWith().tel}', // Inline bold text
                   style: Styles.black18(context),
                 ),
               ],
@@ -169,7 +170,7 @@ class _VerifyStoreScreenState extends State<VerifyStoreScreen> {
               const Icon(Icons.photo, size: 40),
               const SizedBox(width: 8),
               Text(
-                " ภาพถ่าย",
+                "ภาพถ่าย",
                 style: Styles.headerBlack24(context),
               ),
             ],
