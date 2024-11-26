@@ -569,13 +569,14 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
                                   ],
                                 ).show();
                                 toastification.show(
-                                    context: context,
-                                    type: ToastificationType.success,
-                                    style: ToastificationStyle.flatColored,
-                                    title: Text(
-                                      "บันทึกข้อมูลสําเร็จ",
-                                      style: Styles.headerBlack24(context),
-                                    ));
+                                  context: context,
+                                  type: ToastificationType.success,
+                                  style: ToastificationStyle.flatColored,
+                                  title: Text(
+                                    "บันทึกข้อมูลสําเร็จ",
+                                    style: Styles.headerBlack24(context),
+                                  ),
+                                );
                                 showToastMenu(
                                   context: context,
                                   icon: Icon(Icons.info_outline),

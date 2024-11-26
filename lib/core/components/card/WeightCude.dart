@@ -20,7 +20,8 @@ class _WeightCudeCardState extends State<WeightCudeCard> {
     return Expanded(
       child: BoxShadowCustom(
         child: Container(
-          padding: EdgeInsets.all(16),
+          height: screenWidth,
+          padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(8.0),
@@ -45,6 +46,14 @@ class _WeightCudeCardState extends State<WeightCudeCard> {
                 depth: screenWidth / 6,
                 fillPercentage: 0.40,
               ),
+              // Row(
+              //   children: [
+              //     Text(
+              //       "Net Weight",
+              //       style: Styles.black18(context),
+              //     )
+              //   ],
+              // )
               BuildTextRowBetween(
                   text: "Net Weight",
                   text2: "0.94 kg",

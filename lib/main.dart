@@ -39,10 +39,8 @@ void main() async {
   // Get the first camera from the list
   // final firstCamera = cameras.first;
   SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp, // Portrait orientation
+    DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
-    DeviceOrientation.landscapeLeft,
-    DeviceOrientation.landscapeRight,
   ]).then((_) {
     runApp(
       const KeyboardVisibilityProvider(

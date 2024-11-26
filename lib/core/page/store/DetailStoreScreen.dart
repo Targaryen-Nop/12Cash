@@ -1,4 +1,5 @@
 import 'package:_12sale_app/core/components/Appbar.dart';
+import 'package:_12sale_app/core/components/BoxShadowCustom.dart';
 import 'package:_12sale_app/core/components/button/AddStoreButton.dart';
 import 'package:_12sale_app/core/components/button/ShowPhotoButton.dart';
 import 'package:_12sale_app/core/page/store/ProcessTimelineScreen.dart';
@@ -6,6 +7,7 @@ import 'package:_12sale_app/core/styles/gobalStyle.dart';
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:_12sale_app/data/models/Store.dart';
 import 'package:flutter/material.dart';
+import 'package:toastification/toastification.dart';
 
 class DetailShopScreen extends StatefulWidget {
   String customerNo;
@@ -23,6 +25,14 @@ class DetailShopScreen extends StatefulWidget {
 
 class _DetailShopScreenState extends State<DetailShopScreen> {
   bool onEdit = true;
+  late TextEditingController storeNameController;
+
+  @override
+  initState() {
+    super.initState();
+    storeNameController = TextEditingController();
+  }
+
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -107,29 +117,45 @@ class _DetailShopScreenState extends State<DetailShopScreen> {
                                           onEdit =
                                               !onEdit; // Toggle the value of onEdit
                                         });
-                                      },
-                                      child: Container(
-                                        padding: const EdgeInsets.all(8),
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(8),
-                                            color: onEdit
-                                                ? Colors.amber
-                                                : Colors.green),
-                                        child: Row(
-                                          children: [
-                                            Icon(
-                                              onEdit
-                                                  ? Icons.edit
-                                                  : Icons.save_outlined,
-                                              size: 40,
-                                            ),
-                                            const SizedBox(width: 8),
-                                            Text(
-                                              onEdit ? "แก้ไข" : "บันทึก",
+                                        if (onEdit) {
+                                          toastification.show(
+                                            context: context,
+                                            primaryColor: Colors.green,
+                                            type: ToastificationType.success,
+                                            style:
+                                                ToastificationStyle.flatColored,
+                                            title: Text(
+                                              "บันทึกข้อมูลสําเร็จ",
                                               style: Styles.black18(context),
                                             ),
-                                          ],
+                                          );
+                                        }
+                                      },
+                                      child: BoxShadowCustom(
+                                        child: Container(
+                                          padding: const EdgeInsets.all(8),
+                                          decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                              color: onEdit
+                                                  ? Styles.primaryColor
+                                                  : Styles.successButtonColor),
+                                          child: Row(
+                                            children: [
+                                              Icon(
+                                                onEdit
+                                                    ? Icons.edit
+                                                    : Icons.save_outlined,
+                                                size: 40,
+                                                color: Colors.white,
+                                              ),
+                                              const SizedBox(width: 8),
+                                              Text(
+                                                onEdit ? "แก้ไข" : "บันทึก",
+                                                style: Styles.white18(context),
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -164,7 +190,7 @@ class _DetailShopScreenState extends State<DetailShopScreen> {
                               ),
                               _buildCustomFormField(
                                   'ไลน์',
-                                  '${widget.store.lineId}',
+                                  '${widget.store.lineId == "" ? '-' : widget.store.lineId}',
                                   Icons.alternate_email,
                                   readOnly: onEdit),
                               _buildCustomFormField(
@@ -229,35 +255,14 @@ class _DetailShopScreenState extends State<DetailShopScreen> {
                           padding: const EdgeInsets.all(16.0),
                           child: Column(
                             children: [
-                              Text(
-                                "Function in Store",
-                                style: Styles.black18(context),
-                              ),
-                              _buildCustomFormField('ชื่อร้านค้า',
-                                  widget.customerName, Icons.store),
-                              _buildCustomFormField('เลขประจำตัวผู้เสียภาษี',
-                                  '1234567891011', Icons.person_outline),
                               Row(
                                 children: [
-                                  Expanded(
-                                    child: _buildCustomFormField(
-                                        'โทรศัพท์', '089-2463592', Icons.phone),
-                                  ),
-                                  const SizedBox(width: 16),
-                                  Expanded(
-                                    child: _buildCustomFormField(
-                                        'เส้นทาง', 'R01', Icons.location_on),
+                                  Text(
+                                    "Call Card",
+                                    style: Styles.black18(context),
                                   ),
                                 ],
                               ),
-                              _buildCustomFormField(
-                                  'ไลน์', '@testja', Icons.alternate_email),
-                              _buildCustomFormField('ประเภทร้านค้า',
-                                  'แผงตลาดสด', Icons.store_mall_directory),
-                              _buildCustomFormField(
-                                  'หมายเหตุ',
-                                  'ร้านปิดอาทิตย์ รับของ 15.00 - 16.00',
-                                  Icons.note),
                             ],
                           ),
                         ),
@@ -283,6 +288,7 @@ class _DetailShopScreenState extends State<DetailShopScreen> {
           borderRadius: BorderRadius.circular(8),
         ),
         child: TextFormField(
+          enabled: !readOnly,
           initialValue: value,
           style: Styles.black18(context),
           readOnly: readOnly, // Makes the TextFormField read-only

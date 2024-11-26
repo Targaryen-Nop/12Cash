@@ -290,6 +290,9 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
                 ),
                 const SizedBox(height: 16),
                 Customtextinput(
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                  ],
                   max: 13,
                   keypadType: TextInputType.number,
                   controller: widget.storeTaxIDController,
@@ -307,6 +310,9 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
                 ),
                 const SizedBox(height: 16),
                 Customtextinput(
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                  ],
                   max: 10,
                   keypadType: TextInputType.number,
                   controller: widget.storeTelController,

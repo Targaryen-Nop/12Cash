@@ -32,6 +32,7 @@ class _CalendarPickerState extends State<CalendarPicker> {
 
   void _showDatePicker(BuildContext context) async {
     final DateTime? pickedDate = await showDatePicker(
+      // locale: Locale('th', 'TH'),
       context: context,
       initialDate: _selectedDate ?? widget.initialDate,
       firstDate: widget.firstDate,

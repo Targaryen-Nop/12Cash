@@ -8,7 +8,7 @@ class Customtextinput extends StatefulWidget {
   final String? initialValue;
   final int? max;
   final bool readonly;
-
+  final List<TextInputFormatter>? inputFormatters;
   VoidCallback? onFieldTap; // Callback for custom actions
   final ValueChanged<String> onChanged;
   final TextInputType? keypadType;
@@ -24,6 +24,7 @@ class Customtextinput extends StatefulWidget {
     this.max,
     this.readonly = false,
     this.onFieldTap,
+    this.inputFormatters,
     required this.onChanged,
     this.keypadType,
     // required this.onFieldSubmitted,
@@ -52,6 +53,7 @@ class _CustomtextinputState extends State<Customtextinput> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      inputFormatters: widget.inputFormatters,
       focusNode: _focusNode,
       maxLength: widget.max,
       keyboardType: widget.keypadType,
