@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:_12sale_app/core/styles/gobalStyle.dart';
+
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -44,7 +44,7 @@ class _VerifyTable extends State<VerifyTable> {
             // Fixed header
             Container(
               decoration: const BoxDecoration(
-                color: GobalStyles.backgroundTableColor,
+                color: Styles.backgroundTableColor,
                 borderRadius: BorderRadius.vertical(
                     top: Radius.circular(16)), // Rounded corners at the top
               ),
@@ -72,8 +72,8 @@ class _VerifyTable extends State<VerifyTable> {
                         '58.00',
                         '00.00',
                         '1 หีบ',
-                        GobalStyles.successBackgroundColor,
-                        GobalStyles.successTextColor,
+                        Styles.successBackgroundColor,
+                        Styles.successTextColor,
                         0),
                     _buildDataRow(
                         '1011447875',
@@ -81,8 +81,8 @@ class _VerifyTable extends State<VerifyTable> {
                         '58.00',
                         '00.00',
                         '1 หีบ',
-                        GobalStyles.successBackgroundColor,
-                        GobalStyles.successTextColor,
+                        Styles.successBackgroundColor,
+                        Styles.successTextColor,
                         1),
                     _buildDataRow(
                         '1011447875',
@@ -90,8 +90,8 @@ class _VerifyTable extends State<VerifyTable> {
                         '5800.00',
                         '00.00',
                         '1 หีบ',
-                        GobalStyles.failBackgroundColor,
-                        GobalStyles.failTextColor,
+                        Styles.failBackgroundColor,
+                        Styles.failTextColor,
                         2),
                     _buildDataRow(
                         '1011447875',
@@ -99,7 +99,7 @@ class _VerifyTable extends State<VerifyTable> {
                         '58.00',
                         '00.00',
                         '10 ซอง',
-                        GobalStyles.paddingBackgroundColor,
+                        Styles.paddingBackgroundColor,
                         Colors.blue,
                         3),
                     _buildDataRow(
@@ -108,7 +108,7 @@ class _VerifyTable extends State<VerifyTable> {
                         '58.00',
                         '00.00',
                         '10 หีบ',
-                        GobalStyles.paddingBackgroundColor,
+                        Styles.paddingBackgroundColor,
                         Colors.blue,
                         4),
                     _buildDataRow(
@@ -117,8 +117,8 @@ class _VerifyTable extends State<VerifyTable> {
                         '58.00',
                         '00.00',
                         '100 ถุง',
-                        GobalStyles.successBackgroundColor,
-                        GobalStyles.successTextColor,
+                        Styles.successBackgroundColor,
+                        Styles.successTextColor,
                         5),
                   ],
                 ),
@@ -141,7 +141,7 @@ class _VerifyTable extends State<VerifyTable> {
       int index) {
     // Alternate row background color
     Color rowBgColor =
-        (index % 2 == 0) ? Colors.white : GobalStyles.backgroundTableColor;
+        (index % 2 == 0) ? Colors.white : Styles.backgroundTableColor;
 
     return InkWell(
       onTap: () {
@@ -182,7 +182,7 @@ class _VerifyTable extends State<VerifyTable> {
       int index) {
     // Alternate row background color
     Color rowBgColor =
-        (index % 2 == 0) ? Colors.white : GobalStyles.backgroundTableColor;
+        (index % 2 == 0) ? Colors.white : Styles.backgroundTableColor;
 
     return InkWell(
       onTap: () {},
@@ -213,7 +213,7 @@ class _VerifyTable extends State<VerifyTable> {
     return Container(
       alignment: alignment,
       padding: const EdgeInsets.all(8),
-      child: Text(text, style: GobalStyles.kanit18),
+      child: Text(text, style: Styles.black18(context)),
     );
   }
 
@@ -301,7 +301,7 @@ class _VerifyTable extends State<VerifyTable> {
                         // Fixed header
                         Container(
                           decoration: const BoxDecoration(
-                            color: GobalStyles.backgroundTableColor,
+                            color: Styles.backgroundTableColor,
                             borderRadius: BorderRadius.vertical(
                                 top: Radius.circular(
                                     16)), // Rounded corners at the top
@@ -329,8 +329,8 @@ class _VerifyTable extends State<VerifyTable> {
                                     '58.00',
                                     '00.00',
                                     '1 หีบ',
-                                    GobalStyles.successBackgroundColor,
-                                    GobalStyles.successTextColor,
+                                    Styles.successBackgroundColor,
+                                    Styles.successTextColor,
                                     0),
                                 _buildDataRowSheet(
                                     '1011447875',
@@ -338,8 +338,8 @@ class _VerifyTable extends State<VerifyTable> {
                                     '58.00',
                                     '00.00',
                                     '1 หีบ',
-                                    GobalStyles.successBackgroundColor,
-                                    GobalStyles.successTextColor,
+                                    Styles.successBackgroundColor,
+                                    Styles.successTextColor,
                                     1),
                                 _buildDataRowSheet(
                                     '1011447875',
@@ -347,8 +347,8 @@ class _VerifyTable extends State<VerifyTable> {
                                     '5800.00',
                                     '00.00',
                                     '1 หีบ',
-                                    GobalStyles.failBackgroundColor,
-                                    GobalStyles.failTextColor,
+                                    Styles.failBackgroundColor,
+                                    Styles.failTextColor,
                                     2),
                                 _buildDataRowSheet(
                                     '1011447875',
@@ -356,7 +356,7 @@ class _VerifyTable extends State<VerifyTable> {
                                     '58.00',
                                     '00.00',
                                     '10 ซอง',
-                                    GobalStyles.paddingBackgroundColor,
+                                    Styles.paddingBackgroundColor,
                                     Colors.blue,
                                     3),
                                 _buildDataRowSheet(
@@ -365,7 +365,7 @@ class _VerifyTable extends State<VerifyTable> {
                                     '58.00',
                                     '00.00',
                                     '10 หีบ',
-                                    GobalStyles.paddingBackgroundColor,
+                                    Styles.paddingBackgroundColor,
                                     Colors.blue,
                                     4),
                                 _buildDataRowSheet(
@@ -374,8 +374,8 @@ class _VerifyTable extends State<VerifyTable> {
                                     '58.00',
                                     '00.00',
                                     '100 ถุง',
-                                    GobalStyles.successBackgroundColor,
-                                    GobalStyles.successTextColor,
+                                    Styles.successBackgroundColor,
+                                    Styles.successTextColor,
                                     5),
                               ],
                             ),

@@ -5,7 +5,7 @@ import 'package:_12sale_app/core/components/card/CartCard.dart';
 import 'package:_12sale_app/core/components/table/CartSTable.dart';
 import 'package:_12sale_app/core/page/route/OrderScreen.dart';
 import 'package:_12sale_app/core/page/route/PromotionScreen.dart';
-import 'package:_12sale_app/core/styles/gobalStyle.dart';
+
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -118,7 +118,7 @@ class _ShoppingCartScreenState extends State<ShoppingCartScreen> {
                       );
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: GobalStyles.primaryColor,
+                      backgroundColor: Styles.primaryColor,
                       // padding: EdgeInsets.symmetric(
                       //     vertical: screenWidth / 85,
                       //     horizontal: screenWidth / 17),
@@ -146,7 +146,7 @@ class _ShoppingCartScreenState extends State<ShoppingCartScreen> {
                       );
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: GobalStyles.successButtonColor,
+                      backgroundColor: Styles.successButtonColor,
                       // padding: EdgeInsets.symmetric(
                       //     vertical: screenWidth / 80,
                       //     horizontal: screenWidth / 17),

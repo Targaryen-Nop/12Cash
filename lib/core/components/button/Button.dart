@@ -1,6 +1,6 @@
 import 'package:_12sale_app/core/components/QuickAlertGobal.dart';
 import 'package:_12sale_app/core/page/route/RouteScreen.dart';
-import 'package:_12sale_app/core/styles/gobalStyle.dart';
+
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:flutter/material.dart';
 import 'package:quickalert/models/quickalert_type.dart';
@@ -52,8 +52,8 @@ class _CustomButtonState extends State<CustomButton> {
         duration: Duration(milliseconds: 100),
         decoration: BoxDecoration(
           color: _isPressed
-              ? GobalStyles.secondaryColor
-              : GobalStyles.primaryColor, // Darker color when pressed
+              ? Styles.secondaryColor
+              : Styles.primaryColor, // Darker color when pressed
           borderRadius: BorderRadius.circular(30),
           boxShadow: _isPressed
               ? [

@@ -2,9 +2,7 @@ import 'dart:convert';
 
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:_12sale_app/data/models/Customer.dart';
-import 'package:_12sale_app/core/styles/gobalStyle.dart';
 import 'package:_12sale_app/data/repositories/apiService.dart';
-
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 
@@ -112,8 +110,7 @@ class _CustomerDropdownSearch2State extends State<CustomerDropdownSearch2> {
                 return ListTile(
                   title: Text(
                     'ร้าน ${customer.customerName}',
-                    style: TextStyle(
-                        fontSize: 16, color: GobalStyles.primaryColor),
+                    style: TextStyle(fontSize: 16, color: Styles.primaryColor),
                   ),
                   subtitle: Text('รหัสร้าน: ${customer.customerNo}'),
                   onTap: () => _selectCustomer(customer),

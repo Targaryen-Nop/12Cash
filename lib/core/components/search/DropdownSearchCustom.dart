@@ -86,7 +86,7 @@ class _DropdownSearchCustomState<T> extends State<DropdownSearchCustom<T>> {
       },
       popupProps: PopupPropsMultiSelection.modalBottomSheet(
         constraints: BoxConstraints(
-          maxHeight: screenHeight * 0.65,
+          maxHeight: MediaQuery.of(context).size.height * 0.7,
           maxWidth: screenWidth * 0.95, // Set maximum width
         ),
         title: Container(

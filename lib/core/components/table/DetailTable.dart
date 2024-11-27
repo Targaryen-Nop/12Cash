@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:_12sale_app/core/page/route/DetailScreen.dart';
-import 'package:_12sale_app/core/styles/gobalStyle.dart';
+
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:_12sale_app/data/models/Order.dart';
 import 'package:_12sale_app/data/models/SaleRoute.dart';
@@ -98,7 +98,7 @@ class _DetailTableState extends State<DetailTable> {
             // Fixed header
             Container(
               decoration: const BoxDecoration(
-                color: GobalStyles.backgroundTableColor,
+                color: Styles.backgroundTableColor,
                 borderRadius: BorderRadius.vertical(
                     top: Radius.circular(16)), // Rounded corners at the top
               ),
@@ -121,8 +121,8 @@ class _DetailTableState extends State<DetailTable> {
                         order.orderId,
                         order.orderId,
                         order.orderId,
-                        GobalStyles.successBackgroundColor,
-                        GobalStyles.successTextColor,
+                        Styles.successBackgroundColor,
+                        Styles.successTextColor,
                         index);
                   }),
                 ),
@@ -138,7 +138,7 @@ class _DetailTableState extends State<DetailTable> {
       String status, Color? bgColor, Color? textColor, int index) {
     // Alternate row background color
     Color rowBgColor =
-        (index % 2 == 0) ? Colors.white : GobalStyles.backgroundTableColor;
+        (index % 2 == 0) ? Colors.white : Styles.backgroundTableColor;
 
     return InkWell(
       onTap: () {

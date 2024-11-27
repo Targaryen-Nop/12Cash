@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:_12sale_app/core/page/route/OrderDetailScreen.dart';
-import 'package:_12sale_app/core/styles/gobalStyle.dart';
+
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:_12sale_app/data/models/Order.dart';
 import 'package:flutter/material.dart';
@@ -64,7 +64,7 @@ class _CartTableState extends State<CartTable> {
             // Fixed header
             Container(
               decoration: const BoxDecoration(
-                color: GobalStyles.backgroundTableColor,
+                color: Styles.backgroundTableColor,
                 borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
               ),
               child: Row(
@@ -84,12 +84,8 @@ class _CartTableState extends State<CartTable> {
                 child: Column(
                   children: List.generate(_orders.length, (index) {
                     final order = _orders[index];
-                    return _buildDataRow(
-                        order,
-                        GobalStyles.successBackgroundColor,
-                        GobalStyles.successTextColor,
-                        index,
-                        context);
+                    return _buildDataRow(order, Styles.successBackgroundColor,
+                        Styles.successTextColor, index, context);
                   }),
                 ),
               ),
@@ -105,7 +101,7 @@ class _CartTableState extends State<CartTable> {
       BuildContext context) {
     // Alternate row background color
     Color rowBgColor =
-        (index % 2 == 0) ? Colors.white : GobalStyles.backgroundTableColor;
+        (index % 2 == 0) ? Colors.white : Styles.backgroundTableColor;
     double screenWidth = MediaQuery.of(context).size.width;
 
     return InkWell(

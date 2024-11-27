@@ -10,7 +10,7 @@ import 'package:_12sale_app/core/page/Ractangle3D.dart';
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:_12sale_app/data/models/Customer.dart';
 import 'package:_12sale_app/data/models/Shipping.dart';
-import 'package:_12sale_app/core/styles/gobalStyle.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -72,7 +72,7 @@ class _DashboardscreenState extends State<Dashboardscreen> {
         // width: screenWidth / 1.5,
         child: Column(
           children: [
-            // SizedBox(height: screenWidth / 25),
+            SizedBox(height: screenWidth / 25),
             WeightCudeCard(),
             Container(height: 500, width: 400, child: LineChartSample()),
             SizedBox(height: screenWidth / 25),
@@ -361,7 +361,7 @@ class _DashboardHeaderState extends State<DashboardHeader> {
                                     width: screenWidth / 6,
                                     // margin: EdgeInsets.all(4),
                                     decoration: const BoxDecoration(
-                                        color: GobalStyles.secondaryColor,
+                                        color: Styles.secondaryColor,
                                         borderRadius: BorderRadius.horizontal(
                                             right: Radius.circular(50),
                                             left: Radius.circular(50))),
@@ -378,7 +378,7 @@ class _DashboardHeaderState extends State<DashboardHeader> {
                                     margin: const EdgeInsets.symmetric(
                                         horizontal: 4),
                                     decoration: const BoxDecoration(
-                                        color: GobalStyles.secondaryColor,
+                                        color: Styles.secondaryColor,
                                         borderRadius: BorderRadius.horizontal(
                                             right: Radius.circular(50),
                                             left: Radius.circular(50))),

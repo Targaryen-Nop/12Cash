@@ -1,10 +1,10 @@
 import 'package:_12sale_app/core/components/Gird.dart';
+import 'package:_12sale_app/core/page/CustomBottomBar.dart';
 import 'package:_12sale_app/core/page/NotificationScreen.dart';
 import 'package:_12sale_app/core/page/Ractangle3D.dart';
 import 'package:_12sale_app/core/page/Square3D.dart';
 import 'package:_12sale_app/core/page/printer/BluetoothPrinterScreen.dart';
 import 'package:_12sale_app/core/page/printer/PrinterBluetoothScreen.dart';
-import 'package:_12sale_app/core/page/printer/PrinterScreen.dart';
 import 'package:_12sale_app/core/page/printer/TestPrint.dart';
 import 'package:_12sale_app/core/page/printer/TestPrinterScreen.dart';
 import 'package:_12sale_app/core/page/dashboard/DashboardScreen.dart';
@@ -14,6 +14,7 @@ import 'package:_12sale_app/core/page/HomeScreen.dart';
 import 'package:_12sale_app/core/page/dashboard/DashboardScreen.dart';
 import 'package:_12sale_app/core/page/route/TossAddToCartScreen.dart';
 import 'package:_12sale_app/core/page/testOffline.dart';
+import 'package:_12sale_app/data/service/requestPremission.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart'; // For date localization
@@ -30,11 +31,24 @@ final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 
 void main() async {
   // Initialize the locale data for Thai language
+
   await initializeDateFormatting('th', null);
   await dotenv.load(fileName: ".env");
   await ScreenUtil.ensureScreenSize();
   // Ensure the app is always in portrait mode
   WidgetsFlutterBinding.ensureInitialized();
+  // Initialize the background service
+  // final hasPermissions = await FlutterBackground.initialize(
+  //   androidConfig: const FlutterBackgroundAndroidConfig(
+  //     notificationTitle: "Background Service",
+  //     notificationText: "This app is running in the background.",
+  //     notificationImportance: AndroidNotificationImportance.high,
+  //     enableWifiLock: true,
+  //   ),
+  // );
+  // if (!hasPermissions) {
+  //   print("Background permissions not granted");
+  // }
 
   // _cameras = await availableCameras();
   // final cameras = await availableCameras();
@@ -70,10 +84,12 @@ class MyApp extends StatelessWidget {
             primarySwatch: Colors.blue,
             textTheme: Typography.englishLike2018.apply(fontSizeFactor: 1.sp),
           ),
-          // home: const HomeScreen(
-          //   index: 0,
-          // ),
-          home: NotificationScreen(),
+          home: const HomeScreen(
+            index: 0,
+          ),
+          // home: NotificationScreen(),
+          // home: HomeScreen2(),
+          // home: CustomBottomNavBar(),
           // home: BluetoothPrinterScreen4(),
           navigatorObservers: [routeObserver],
           // home: AddToCartAnimationPage(),

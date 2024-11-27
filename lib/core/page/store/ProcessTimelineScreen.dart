@@ -87,7 +87,6 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
   }
 
   Widget _getBodyContent() {
-    // Returns different widgets based on the _processIndex
     switch (_processIndex) {
       case 0:
         return const PolicyScreen();
@@ -201,19 +200,6 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
       }
     } catch (e) {
       print("Error occurred: $e");
-    }
-  }
-
-  Future<void> _saveStoreToStorage() async {
-    try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      // Convert Store object to JSON string
-      String jsonStoreString = json.encode(_storeData.toJson());
-      // Save the JSON string list to SharedPreferences
-      await prefs.setString('add_store', jsonStoreString);
-      print("Data saved to storage successfully.");
-    } catch (e) {
-      print("Error saving to storage: $e");
     }
   }
 

@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:_12sale_app/core/page/route/OrderDetailScreen.dart';
-import 'package:_12sale_app/core/styles/gobalStyle.dart';
+
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -65,7 +65,7 @@ class _OrderTableState extends State<OrderTable> {
             // Fixed header
             Container(
               decoration: const BoxDecoration(
-                color: GobalStyles.backgroundTableColor,
+                color: Styles.backgroundTableColor,
                 borderRadius: BorderRadius.vertical(
                     top: Radius.circular(16)), // Rounded corners at the top
               ),
@@ -88,43 +88,43 @@ class _OrderTableState extends State<OrderTable> {
                         '10010101001',
                         'ผงปรุงรสหมู ฟ้าไทย 10g x12x20',
                         '58',
-                        GobalStyles.successBackgroundColor,
-                        GobalStyles.successTextColor,
+                        Styles.successBackgroundColor,
+                        Styles.successTextColor,
                         0),
                     _buildDataRow(
                         '10010101002',
                         'ผงปรุงรสหมู ฟ้าไทย 10g x24x10 ชนิดแผง',
                         '45',
-                        GobalStyles.successBackgroundColor,
-                        GobalStyles.successTextColor,
+                        Styles.successBackgroundColor,
+                        Styles.successTextColor,
                         1),
                     _buildDataRow(
                         '10010101003',
                         'ผงปรุงรสหมู ฟ้าไทย 30g x20x12',
                         '345',
-                        GobalStyles.failBackgroundColor,
-                        GobalStyles.failTextColor,
+                        Styles.failBackgroundColor,
+                        Styles.failTextColor,
                         2),
                     _buildDataRow(
                         '10010101004',
                         'ผงปรุงรสหมู ฟ้าไทย 30g x24x5 ชนิดแผง',
                         '133',
-                        GobalStyles.paddingBackgroundColor,
+                        Styles.paddingBackgroundColor,
                         Colors.blue,
                         3),
                     _buildDataRow(
                         '10010101005',
                         'ผงปรุงรสหมู ฟ้าไทย 80g x10x8"',
                         '500',
-                        GobalStyles.paddingBackgroundColor,
+                        Styles.paddingBackgroundColor,
                         Colors.blue,
                         4),
                     _buildDataRow(
                         '10010101006',
                         'ผงปรุงรสหมู ฟ้าไทย 80g x10x8 พิเศษ 9 บาท',
                         '8',
-                        GobalStyles.successBackgroundColor,
-                        GobalStyles.successTextColor,
+                        Styles.successBackgroundColor,
+                        Styles.successTextColor,
                         5),
                   ],
                 ),
@@ -140,7 +140,7 @@ class _OrderTableState extends State<OrderTable> {
       Color? bgColor, Color? textColor, int index) {
     // Alternate row background color
     Color rowBgColor =
-        (index % 2 == 0) ? Colors.white : GobalStyles.backgroundTableColor;
+        (index % 2 == 0) ? Colors.white : Styles.backgroundTableColor;
     // Color? badgeColor = int.parse(qty) >= 500
     //     ? Styles.successBackgroundColor
     //     : int.parse(qty) >= 100

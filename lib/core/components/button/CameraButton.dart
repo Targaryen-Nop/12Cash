@@ -1,4 +1,5 @@
-import 'package:_12sale_app/core/styles/gobalStyle.dart';
+import 'package:_12sale_app/core/components/Appbar.dart';
+
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
@@ -126,11 +127,11 @@ class CameraPreviewScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-          title: Text(
-        'ตัวอย่างการถ่ายรูป',
-        style: Styles.black24(context),
-      )),
+      appBar: const PreferredSize(
+        preferredSize: Size.fromHeight(70),
+        child:
+            AppbarCustom(icon: Icons.camera_alt, title: "ตัวอย่างการถ่ายรูป"),
+      ),
       body: FutureBuilder<void>(
         future: cameraController.initialize(),
         builder: (context, snapshot) {

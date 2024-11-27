@@ -51,6 +51,10 @@ class _ShowPhotoButtonState extends State<ShowPhotoButton> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(widget.icon, color: Colors.white, size: 50),
+                      Text(
+                        "ไม่มีรูปภาพ",
+                        style: Styles.white18(context),
+                      )
                     ],
                   )
                 : GestureDetector(

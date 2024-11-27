@@ -9,7 +9,7 @@ import 'package:_12sale_app/core/components/table/ShopTableAll.dart';
 import 'package:_12sale_app/core/components/table/ShopTableNew.dart';
 import 'package:_12sale_app/core/page/store/DetailStoreScreen.dart';
 import 'package:_12sale_app/core/page/store/ProcessTimelineScreen.dart';
-import 'package:_12sale_app/core/styles/gobalStyle.dart';
+
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:_12sale_app/data/models/Store.dart';
 import 'package:flutter/material.dart';
@@ -50,21 +50,21 @@ class _ShopScreenState extends State<ShopScreen> {
       backgroundColor:
           Colors.transparent, // set scaffold background color to transparent
       // Using Scaffold to provide better structure for FloatingActionButton
-      floatingActionButton: SizedBox(
-        width: 100, // Set the width of the button
-        height: screenWidth / 8, // Set the height of the button
-        child: AddStoreButton(
-          icon: Icons.add,
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => ProcessTimelinePage(),
-              ),
-            );
-          },
-        ),
-      ),
+      // floatingActionButton: SizedBox(
+      //   width: 100, // Set the width of the button
+      //   height: screenWidth / 8, // Set the height of the button
+      //   child: AddStoreButton(
+      //     icon: Icons.add,
+      //     onPressed: () {
+      //       Navigator.push(
+      //         context,
+      //         MaterialPageRoute(
+      //           builder: (context) => ProcessTimelinePage(),
+      //         ),
+      //       );
+      //     },
+      //   ),
+      // ),
       body: Container(
         padding: const EdgeInsets.all(16.0),
         margin: const EdgeInsets.all(8.0),

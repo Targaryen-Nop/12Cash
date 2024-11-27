@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:_12sale_app/core/styles/gobalStyle.dart';
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -45,7 +44,7 @@ class _PromotiontableState extends State<Promotiontable> {
             // Fixed header
             Container(
               decoration: const BoxDecoration(
-                color: GobalStyles.backgroundTableColor,
+                color: Styles.backgroundTableColor,
                 borderRadius: BorderRadius.vertical(
                     top: Radius.circular(16)), // Rounded corners at the top
               ),
@@ -69,31 +68,31 @@ class _PromotiontableState extends State<Promotiontable> {
                         '1011447875',
                         'ผงปรุงรสไก่ ฟ้าไทย 75g x10x8',
                         '58.00',
-                        GobalStyles.successBackgroundColor,
-                        GobalStyles.successTextColor,
+                        Styles.successBackgroundColor,
+                        Styles.successTextColor,
                         0,
                         context),
                     _buildDataRow(
                         '1011447875',
                         'ผงปรุงรสไก่ ฟ้าไทย 75g x10x8',
                         '58.00',
-                        GobalStyles.successBackgroundColor,
-                        GobalStyles.successTextColor,
+                        Styles.successBackgroundColor,
+                        Styles.successTextColor,
                         1,
                         context),
                     _buildDataRow(
                         '1011447875',
                         'ผงปรุงรสเห็ดหอม ฟ้าไทย 75g x10x8',
                         '5800.00',
-                        GobalStyles.failBackgroundColor,
-                        GobalStyles.failTextColor,
+                        Styles.failBackgroundColor,
+                        Styles.failTextColor,
                         2,
                         context),
                     _buildDataRow(
                         '1011447875',
                         'ผงปรุงรสไก่ ฟ้าไทย 75g x10x8',
                         '58.00',
-                        GobalStyles.paddingBackgroundColor,
+                        Styles.paddingBackgroundColor,
                         Colors.blue,
                         3,
                         context),
@@ -101,7 +100,7 @@ class _PromotiontableState extends State<Promotiontable> {
                         '1011447875',
                         'ผงปรุงรสไก่ ฟ้าไทย 75g x10x8',
                         '58.00',
-                        GobalStyles.paddingBackgroundColor,
+                        Styles.paddingBackgroundColor,
                         Colors.blue,
                         4,
                         context),
@@ -109,8 +108,8 @@ class _PromotiontableState extends State<Promotiontable> {
                         '1011447875',
                         'ผงปรุงรสไก่ ฟ้าไทย 75g x10x8',
                         '58.00',
-                        GobalStyles.successBackgroundColor,
-                        GobalStyles.successTextColor,
+                        Styles.successBackgroundColor,
+                        Styles.successTextColor,
                         5,
                         context),
                   ],
@@ -127,7 +126,7 @@ class _PromotiontableState extends State<Promotiontable> {
       Color? bgColor, Color? textColor, int index, BuildContext context) {
     // Alternate row background color
     Color rowBgColor =
-        (index % 2 == 0) ? Colors.white : GobalStyles.backgroundTableColor;
+        (index % 2 == 0) ? Colors.white : Styles.backgroundTableColor;
     double screenWidth = MediaQuery.of(context).size.width;
     return InkWell(
       onTap: () {
@@ -274,7 +273,7 @@ class _PromotiontableState extends State<Promotiontable> {
                     children: [
                       Text(
                         '${itemName}',
-                        style: GobalStyles.textbBlack3,
+                        style: Styles.black18(context),
                       ),
                       const SizedBox(height: 8),
 
@@ -284,7 +283,7 @@ class _PromotiontableState extends State<Promotiontable> {
                         children: [
                           Flexible(
                               child: Text('กลุ่ม',
-                                  style: GobalStyles.textbBlack3)),
+                                  style: Styles.black18(context))),
                           Flexible(
                             // fit: FlexFit.tight,
                             flex: 4,
@@ -334,7 +333,7 @@ class _PromotiontableState extends State<Promotiontable> {
                         children: [
                           Flexible(
                               child: Text('น้ำหนัก',
-                                  style: GobalStyles.textbBlack3)),
+                                  style: Styles.black18(context))),
                           Flexible(
                             // fit: FlexFit.tight,
                             flex: 4,
@@ -386,7 +385,7 @@ class _PromotiontableState extends State<Promotiontable> {
                         children: [
                           Flexible(
                               child: Text('ของแถม',
-                                  style: GobalStyles.textbBlack3)),
+                                  style: Styles.black18(context))),
                           Flexible(
                             // fit: FlexFit.tight,
                             flex: 4,
@@ -436,7 +435,7 @@ class _PromotiontableState extends State<Promotiontable> {
                         children: [
                           Flexible(
                               child: Text('จำนวน',
-                                  style: GobalStyles.textbBlack3)),
+                                  style: Styles.black18(context))),
                           Flexible(
                             // fit: FlexFit.tight,
                             flex: 4,
@@ -491,7 +490,7 @@ class _PromotiontableState extends State<Promotiontable> {
                                 .pop(); // Close the bottom sheet
                           },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: GobalStyles.successButtonColor,
+                            backgroundColor: Styles.successButtonColor,
                             padding: const EdgeInsets.symmetric(vertical: 6),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8),

@@ -1,7 +1,7 @@
 // ignore: file_names
 import 'dart:convert';
 import 'package:_12sale_app/core/page/route/ShopRouteScreen.dart';
-import 'package:_12sale_app/core/styles/gobalStyle.dart';
+
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:_12sale_app/data/models/SaleRoute.dart';
 import 'package:_12sale_app/function/SavetoStorage.dart';
@@ -70,7 +70,7 @@ class _RouteTableState extends State<RouteTable> {
             // Fixed header
             Container(
               decoration: const BoxDecoration(
-                color: GobalStyles.backgroundTableColor,
+                color: Styles.backgroundTableColor,
                 borderRadius: BorderRadius.vertical(
                     top: Radius.circular(16)), // Rounded corners at the top
               ),
@@ -121,7 +121,7 @@ class _RouteTableState extends State<RouteTable> {
       Color? textColor, int index) {
     // Alternate row background color
     Color rowBgColor =
-        (index % 2 == 0) ? Colors.white : GobalStyles.backgroundTableColor;
+        (index % 2 == 0) ? Colors.white : Styles.backgroundTableColor;
 
     return InkWell(
       onTap: () {

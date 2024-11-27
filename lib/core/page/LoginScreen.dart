@@ -1,6 +1,6 @@
 import 'package:_12sale_app/core/page/HomeScreen.dart';
+import 'package:_12sale_app/core/styles/style.dart';
 import 'package:flutter/material.dart';
-import 'package:_12sale_app/core/styles/gobalStyle.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -85,7 +85,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(vertical: 15),
-                          backgroundColor: GobalStyles.primaryColor,
+                          backgroundColor: Styles.primaryColor,
                         ),
                         onPressed: () {
                           Navigator.push(

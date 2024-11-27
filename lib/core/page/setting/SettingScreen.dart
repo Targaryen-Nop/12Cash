@@ -1,5 +1,5 @@
 import 'package:_12sale_app/core/components/search/CustomerDropdownSearch.dart';
-import 'package:_12sale_app/core/styles/gobalStyle.dart';
+
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -29,7 +29,7 @@ class _SettingScreenState extends State<SettingScreen> {
                 Container(
                   child: Text(
                     "  ข้อมูลส่วนตัว",
-                    style: GobalStyles.textbBlack3,
+                    style: Styles.black18(context),
                   ),
                 ),
               ],
@@ -45,7 +45,7 @@ class _SettingScreenState extends State<SettingScreen> {
                         SizedBox(width: screenWidth / 10),
                         Text(
                           "ข้อมูลส่วนตัว",
-                          style: GobalStyles.textbBlack3,
+                          style: Styles.black18(context),
                         ),
                       ],
                     ),
@@ -65,7 +65,7 @@ class _SettingScreenState extends State<SettingScreen> {
                         SizedBox(width: screenWidth / 10),
                         Text(
                           "สรุปการทำงาน",
-                          style: GobalStyles.textbBlack3,
+                          style: Styles.black18(context),
                         ),
                       ],
                     ),
@@ -78,7 +78,7 @@ class _SettingScreenState extends State<SettingScreen> {
                 Container(
                   child: Text(
                     "  การตั้งค่า",
-                    style: GobalStyles.textbBlack3,
+                    style: Styles.black18(context),
                   ),
                 ),
               ],
@@ -94,7 +94,7 @@ class _SettingScreenState extends State<SettingScreen> {
                         SizedBox(width: screenWidth / 10),
                         Text(
                           "การตั้งค่า",
-                          style: GobalStyles.textbBlack3,
+                          style: Styles.black18(context),
                         ),
                       ],
                     ),
@@ -107,7 +107,7 @@ class _SettingScreenState extends State<SettingScreen> {
                 Container(
                   child: Text(
                     "  ข้อมูลอื่นๆ",
-                    style: GobalStyles.textbBlack3,
+                    style: Styles.black18(context),
                   ),
                 ),
               ],
@@ -123,7 +123,7 @@ class _SettingScreenState extends State<SettingScreen> {
                         SizedBox(width: screenWidth / 10),
                         Text(
                           "ข่าวประกาศ",
-                          style: GobalStyles.textbBlack3,
+                          style: Styles.black18(context),
                         ),
                       ],
                     ),
@@ -143,7 +143,7 @@ class _SettingScreenState extends State<SettingScreen> {
                         SizedBox(width: screenWidth / 10),
                         Text(
                           "ออกจากระบบ",
-                          style: GobalStyles.textbBlack3,
+                          style: Styles.black18(context),
                         ),
                       ],
                     ),
@@ -163,7 +163,7 @@ class _SettingScreenState extends State<SettingScreen> {
                         SizedBox(width: screenWidth / 10),
                         Text(
                           "เวอร์ชั่นปัจจุบัน : 1.0.0",
-                          style: GobalStyles.textbBlack3,
+                          style: Styles.black18(context),
                         ),
                       ],
                     ),
@@ -270,7 +270,7 @@ class _SettingHeaderState extends State<SettingHeader> {
                                       width: screenWidth / 10,
                                       // margin: EdgeInsets.all(4),
                                       decoration: const BoxDecoration(
-                                          color: GobalStyles.secondaryColor,
+                                          color: Styles.secondaryColor,
                                           borderRadius: BorderRadius.horizontal(
                                               right: Radius.circular(50),
                                               left: Radius.circular(50))),
@@ -278,7 +278,7 @@ class _SettingHeaderState extends State<SettingHeader> {
                                       child: Center(
                                         child: Text(
                                           'SALE',
-                                          style: GobalStyles.headlineblack4,
+                                          style: Styles.headerBlack18(context),
                                         ),
                                       ),
                                     ),
@@ -287,14 +287,14 @@ class _SettingHeaderState extends State<SettingHeader> {
                                       margin:
                                           EdgeInsets.symmetric(horizontal: 4),
                                       decoration: const BoxDecoration(
-                                          color: GobalStyles.secondaryColor,
+                                          color: Styles.secondaryColor,
                                           borderRadius: BorderRadius.horizontal(
                                               right: Radius.circular(50),
                                               left: Radius.circular(50))),
                                       child: Center(
                                         child: Text(
                                           'BE121',
-                                          style: GobalStyles.headlineblack4,
+                                          style: Styles.headerBlack18(context),
                                         ),
                                       ),
                                     ),

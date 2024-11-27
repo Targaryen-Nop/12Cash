@@ -5,12 +5,14 @@ import 'package:flutter/material.dart';
 class StoreCartAll extends StatelessWidget {
   final Store item;
   final VoidCallback onDetailsPressed;
+  String? textDetail;
 
-  const StoreCartAll({
-    Key? key,
-    required this.item,
-    required this.onDetailsPressed,
-  }) : super(key: key);
+  StoreCartAll(
+      {Key? key,
+      required this.item,
+      required this.onDetailsPressed,
+      this.textDetail = "รายละเอียด"})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +76,7 @@ class StoreCartAll extends StatelessWidget {
                     ],
                   ),
                 ),
-                Text('รายละเอียด', style: Styles.grey18(context)),
+                Text('$textDetail', style: Styles.grey18(context)),
               ],
             ),
             Divider(color: Colors.grey.shade300),

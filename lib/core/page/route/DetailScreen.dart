@@ -8,7 +8,7 @@ import 'package:_12sale_app/core/components/table/DetailTable.dart';
 // import 'package:_12sale_app/core/components/table/ShopRouteTable.dart';
 import 'package:_12sale_app/core/components/table/ShopRouteTableMapAPI.dart';
 import 'package:_12sale_app/core/page/route/OrderScreen.dart';
-import 'package:_12sale_app/core/styles/gobalStyle.dart';
+
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:_12sale_app/data/models/SaleRoute.dart';
 import 'package:_12sale_app/function/SavetoStorage.dart';
@@ -92,8 +92,7 @@ class _DetailScreenState extends State<DetailScreen> {
       bottomNavigationBar: Container(
         padding: const EdgeInsets.all(16.0),
         decoration: const BoxDecoration(
-          color:
-              GobalStyles.primaryColor, // Primary color of the navigation bar
+          color: Styles.primaryColor, // Primary color of the navigation bar
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(16),
             topRight: Radius.circular(16),
@@ -298,7 +297,7 @@ class _DetailScreenState extends State<DetailScreen> {
                         Navigator.of(context).pop(); // Close the bottom sheet
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: GobalStyles.successButtonColor,
+                        backgroundColor: Styles.successButtonColor,
                         // padding: EdgeInsets.symmetric(vertical: 12),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
@@ -367,7 +366,7 @@ class _DetailScreenState extends State<DetailScreen> {
                       Navigator.of(context).pop(); // Close the bottom sheet
                     },
                     style: ElevatedButton.styleFrom(
-                        backgroundColor: GobalStyles.successButtonColor,
+                        backgroundColor: Styles.successButtonColor,
                         padding: const EdgeInsets.symmetric(vertical: 12),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),

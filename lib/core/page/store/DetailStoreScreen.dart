@@ -4,7 +4,7 @@ import 'package:_12sale_app/core/components/button/AddStoreButton.dart';
 import 'package:_12sale_app/core/components/button/IconButtonWithLabel.dart';
 import 'package:_12sale_app/core/components/button/ShowPhotoButton.dart';
 import 'package:_12sale_app/core/page/store/ProcessTimelineScreen.dart';
-import 'package:_12sale_app/core/styles/gobalStyle.dart';
+
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:_12sale_app/data/models/Store.dart';
 import 'package:flutter/material.dart';
@@ -355,7 +355,7 @@ class _DetailShopScreenState extends State<DetailShopScreen> {
             // fillColor: Colors.black,
 
             labelText: label,
-            // hintStyle: GobalStyles.kanit18,
+            // hintStyle: Styles.kanit18,
             labelStyle: Styles.black18(context),
             prefixIcon: Icon(icon),
             border: OutlineInputBorder(

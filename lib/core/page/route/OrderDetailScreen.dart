@@ -4,7 +4,7 @@ import 'package:_12sale_app/core/components/Appbar.dart';
 import 'package:_12sale_app/core/components/BoxShadowCustom.dart';
 import 'package:_12sale_app/core/components/TossAnimation.dart';
 import 'package:_12sale_app/core/page/route/OrderScreen.dart';
-import 'package:_12sale_app/core/styles/gobalStyle.dart';
+
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:_12sale_app/core/utils/tost_util.dart';
 import 'package:_12sale_app/data/models/Order.dart';
@@ -277,74 +277,6 @@ class _OrderDetailState extends State<OrderDetail>
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(70),
-        // child: Container(
-        //   decoration: BoxDecoration(
-        //     boxShadow: [
-        //       BoxShadow(
-        //         color:
-        //             Colors.black.withOpacity(0.2), // Shadow color with opacity
-        //         spreadRadius: 3, // Spread radius
-        //         blurRadius: 50, // Blur radius
-        //         offset: const Offset(0, 3),
-        //         // Changes position of the shadow (x, y)
-        //       ),
-        //     ],
-        //   ),
-        //   child: ClipRRect(
-        //     borderRadius: const BorderRadius.vertical(
-        //       // top: Radius.circular(180),
-        //       bottom: Radius.circular(15),
-        //       // top: Radius.circular(50) // Radius at the bottom of the AppBar
-        //     ),
-        //     child: AppBar(
-        //       leading: IconButton(
-        //         icon: Icon(
-        //           Icons.arrow_back,
-        //           size: screenWidth / 12,
-        //           // weight: screenWidth,
-        //         ), // Set the custom size here
-        //         onPressed: () {
-        //           // Navigator.of(context).pushAndRemoveUntil(
-        //           //   MaterialPageRoute(
-        //           //     builder: (context) => Orderscreen(
-        //           //       customerNo: widget.customerNo ?? '',
-        //           //       customerName: widget.customerName ?? '',
-        //           //       status: widget.status ?? '',
-        //           //     ),
-        //           //   ),
-        //           //   ModalRoute.withName(
-        //           //       '/homeScreen'), // Keeps only '/homeScreen' in the stack
-        //           // );
-        //           // Navigator.of(context).push(
-        //           //   MaterialPageRoute(
-        //           //     builder: (context) => Orderscreen(
-        //           //         customerNo: widget.customerNo ?? '',
-        //           //         customerName: widget.customerName ?? '',
-        //           //         status: widget.status ?? ''),
-        //           //   ),
-        //           // ); // Action to go back
-        //         },
-        //       ),
-        //       title: Container(
-        //         // color: Colors.amber,
-        //         child: Row(children: [
-        //           SizedBox(width: screenWidth / 6),
-        //           Icon(
-        //             Icons.inventory_2_outlined,
-        //             size: screenWidth / 15,
-        //           ),
-        //           Text(
-        //             " ${_jsonString?["title"] ?? 'Order Detail'}",
-        //           ),
-        //         ]),
-        //       ),
-        //       centerTitle: true,
-        //       foregroundColor: Colors.white,
-        //       titleTextStyle: Styles.headerWhite32(context),
-        //       backgroundColor: GobalStyles.primaryColor,
-        //     ),
-        //   ),
-        // ),
         child: AppbarCustom(
           title: " ${_jsonString?["title"] ?? 'Order Detail'}",
           icon: Icons.inventory_2_outlined,

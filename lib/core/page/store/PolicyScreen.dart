@@ -4,7 +4,7 @@ import 'package:_12sale_app/core/styles/style.dart';
 import 'package:_12sale_app/data/models/Store.dart';
 import 'package:_12sale_app/data/service/locationService.dart';
 import 'package:flutter/material.dart';
-import 'package:_12sale_app/core/styles/gobalStyle.dart';
+
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -322,7 +322,7 @@ class _PolicyScreenState extends State<PolicyScreen> {
           //           },
           //           child: Text('กลับ', style: Styles.white18(context)),
           //           style: ElevatedButton.styleFrom(
-          //             backgroundColor: GobalStyles.primaryColor,
+          //             backgroundColor: Styles.primaryColor,
           //             padding: EdgeInsets.symmetric(
           //                 vertical: screenWidth / 85,
           //                 horizontal: screenWidth / 17),
@@ -338,7 +338,7 @@ class _PolicyScreenState extends State<PolicyScreen> {
           //           onPressed: () {},
           //           child: Text('ถัดไป', style: Styles.white18(context)),
           //           style: ElevatedButton.styleFrom(
-          //             backgroundColor: GobalStyles.successButtonColor,
+          //             backgroundColor: Styles.successButtonColor,
           //             padding: EdgeInsets.symmetric(
           //                 vertical: screenWidth / 80,
           //                 horizontal: screenWidth / 11),

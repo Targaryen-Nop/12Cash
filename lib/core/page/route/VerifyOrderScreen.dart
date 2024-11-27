@@ -6,7 +6,7 @@ import 'package:_12sale_app/core/components/button/Button.dart';
 import 'package:_12sale_app/core/components/card/CartCard.dart';
 import 'package:_12sale_app/core/components/table/VerifyTable.dart';
 import 'package:_12sale_app/core/page/HomeScreen.dart';
-import 'package:_12sale_app/core/styles/gobalStyle.dart';
+
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -208,7 +208,7 @@ class _VerifyorderscreenState extends State<Verifyorderscreen> {
               child: ButtonFullWidth(
                 text: "${_jsonString?['save'] ?? 'Save'}",
                 textStyle: Styles.headerWhite24(context),
-                blackGroundColor: GobalStyles.successButtonColor,
+                blackGroundColor: Styles.successButtonColor,
                 screen: const HomeScreen(index: 2),
               ),
             ),

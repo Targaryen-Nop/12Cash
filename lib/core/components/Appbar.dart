@@ -1,4 +1,3 @@
-import 'package:_12sale_app/core/styles/gobalStyle.dart';
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:_12sale_app/core/utils/tost_util.dart';
 import 'package:_12sale_app/data/service/connectivityService.dart';
@@ -56,7 +55,7 @@ class _AppbarCustomState extends State<AppbarCustom> {
         child: AppBar(
           leading: IconButton(
             icon: Icon(
-              Icons.arrow_back,
+              Icons.arrow_back_ios_new_outlined,
               size: screenWidth / 12,
             ),
             onPressed: () {
@@ -64,13 +63,13 @@ class _AppbarCustomState extends State<AppbarCustom> {
             },
           ),
           title: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(
                 widget.icon,
                 size: screenWidth / 15,
               ),
-              const SizedBox(width: 8),
+              // const SizedBox(width: 8),
               Text(widget.title),
             ],
           ),
@@ -102,7 +101,7 @@ class _AppbarCustomState extends State<AppbarCustom> {
           centerTitle: true,
           foregroundColor: Colors.white,
           titleTextStyle: Styles.headerWhite32(context),
-          backgroundColor: GobalStyles.primaryColor,
+          backgroundColor: Styles.primaryColor,
         ),
       ),
     );

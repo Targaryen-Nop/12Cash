@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:_12sale_app/core/components/Appbar.dart';
 import 'package:_12sale_app/core/components/table/PromotionTable.dart';
 import 'package:_12sale_app/core/page/route/VerifyOrderScreen.dart';
-import 'package:_12sale_app/core/styles/gobalStyle.dart';
+
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -136,7 +136,7 @@ class _PromotionscreenState extends State<Promotionscreen> {
                   );
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: GobalStyles.successButtonColor,
+                  backgroundColor: Styles.successButtonColor,
                   padding: const EdgeInsets.symmetric(vertical: 6),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),

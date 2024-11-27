@@ -1,7 +1,8 @@
 import 'package:_12sale_app/core/components/Appbar.dart';
 import 'package:_12sale_app/core/components/BuildTextRowDetailShop.dart';
 import 'package:_12sale_app/core/components/table/VerifyTable.dart';
-import 'package:_12sale_app/core/styles/gobalStyle.dart';
+import 'package:_12sale_app/core/styles/style.dart';
+
 import 'package:flutter/material.dart';
 
 class DetailReportScreen extends StatefulWidget {
@@ -102,23 +103,23 @@ class _DetailReportScreenState extends State<DetailReportScreen> {
               BuildTextRowBetweenCurrency(
                   text: "ยอดรวม",
                   price: 800.00,
-                  style: GobalStyles.textbBlack3),
+                  style: Styles.black18(context)),
               BuildTextRowBetweenCurrency(
                   text: "ส่วนลดท้ายบิล",
                   price: 8430.00,
-                  style: GobalStyles.textbBlack3),
+                  style: Styles.black18(context)),
               BuildTextRowBetweenCurrency(
                   text: "ราคาไม่รวมภาษี",
                   price: 00.00,
-                  style: GobalStyles.textbBlack3),
+                  style: Styles.black18(context)),
               BuildTextRowBetweenCurrency(
                   text: "ภาษี 7% (VAT)",
                   price: 7878.50,
-                  style: GobalStyles.textbBlack3),
+                  style: Styles.black18(context)),
               BuildTextRowBetweenCurrency(
                   text: "ยอดชำระสุทธิ",
                   price: 8430.00,
-                  style: GobalStyles.textbBlack3),
+                  style: Styles.black18(context)),
             ],
           ),
         ),

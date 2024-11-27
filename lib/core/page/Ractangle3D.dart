@@ -26,8 +26,19 @@ class WaterFilledRectangle extends StatefulWidget {
   _WaterFilledRectangleState createState() => _WaterFilledRectangleState();
 }
 
-class _WaterFilledRectangleState extends State<WaterFilledRectangle> {
+class _WaterFilledRectangleState extends State<WaterFilledRectangle>
+    with SingleTickerProviderStateMixin {
   double _rotationAngle = 0.0;
+  late AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 5),
+    )..repeat();
+  }
 
   void _rotateRectangle() {
     setState(() {
@@ -36,24 +47,36 @@ class _WaterFilledRectangleState extends State<WaterFilledRectangle> {
   }
 
   @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     return Column(
       children: [
-        CustomPaint(
-          size: Size(widget.width * 2, widget.height * 2),
-          painter: RectanglePainter(
-            width: widget.width,
-            height: widget.height,
-            depth: widget.depth,
-            fillPercentage: widget.fillPercentage,
-            rotationAngle: _rotationAngle,
-            borderColor: widget.borderColor,
-            waterColor: widget.waterColor.withOpacity(0.5),
-            textStyle: widget.textStyle,
-            context: context,
-          ),
-        ),
+        AnimatedBuilder(
+            animation: _controller,
+            builder: (context, child) {
+              return CustomPaint(
+                size: Size(widget.width * 2, widget.height * 2),
+                painter: RectanglePainter(
+                  // angle: _controller.value * 2 * pi,
+                  width: widget.width,
+                  height: widget.height,
+                  depth: widget.depth,
+                  fillPercentage: widget.fillPercentage,
+                  // rotationAngle: _rotationAngle,
+                  rotationAngle: _controller.value * 2 * pi,
+                  borderColor: widget.borderColor,
+                  waterColor: widget.waterColor.withOpacity(0.5),
+                  textStyle: widget.textStyle,
+                  context: context,
+                ),
+              );
+            }),
         SizedBox(
             height: screenWidth /
                 8), // Add spacing between the rectangle and button
@@ -67,6 +90,7 @@ class _WaterFilledRectangleState extends State<WaterFilledRectangle> {
 }
 
 class RectanglePainter extends CustomPainter {
+  // final double angle;
   final double width;
   final double height;
   final double depth;
@@ -78,6 +102,7 @@ class RectanglePainter extends CustomPainter {
   final BuildContext context;
 
   RectanglePainter({
+    // required this.angle,
     required this.width,
     required this.height,
     required this.depth,

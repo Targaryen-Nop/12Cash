@@ -5,7 +5,7 @@
 // import 'package:_12sale_app/data/repositories/apiService.dart';
 // import 'package:flutter/material.dart';
 // import 'package:_12sale_app/core/page/route/DetailScreen.dart';
-// import 'package:_12sale_app/core/styles/gobalStyle.dart';
+// 
 // import 'package:flutter/services.dart';
 // import 'package:google_fonts/google_fonts.dart';
 
@@ -123,7 +123,7 @@
 //                   // Fixed header
 //                   Container(
 //                     decoration: const BoxDecoration(
-//                       color: GobalStyles.backgroundTableColor,
+//                       color: Styles.backgroundTableColor,
 //                       borderRadius:
 //                           BorderRadius.vertical(top: Radius.circular(16)),
 //                     ),
@@ -164,9 +164,9 @@
 //                                   entry.value.customerNo,
 //                                   entry.value.customerName,
 //                                   entry.value.OKECAR,
-//                                   GobalStyles
+//                                   Styles
 //                                       .successBackgroundColor, // Set your colors accordingly
-//                                   GobalStyles.successTextColor,
+//                                   Styles.successTextColor,
 //                                   entry.key, // Row index
 //                                 ),
 //                               )
@@ -184,7 +184,7 @@
 //   Widget _buildDataRow(String customerNo, String customerName, String status,
 //       Color? bgColor, Color? textColor, int index) {
 //     Color rowBgColor =
-//         (index % 2 == 0) ? Colors.white : GobalStyles.backgroundTableColor;
+//         (index % 2 == 0) ? Colors.white : Styles.backgroundTableColor;
 
 //     return InkWell(
 //       onTap: () {

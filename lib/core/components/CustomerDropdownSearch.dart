@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:_12sale_app/data/models/Customer.dart';
-import 'package:_12sale_app/core/styles/gobalStyle.dart';
+
 import 'package:dio/dio.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
@@ -181,7 +181,7 @@ class _CustomerDropdownSearchState extends State<CustomerDropdownSearch> {
                     style: const TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
-                      color: GobalStyles.primaryColor,
+                      color: Styles.primaryColor,
                     ),
                   ),
                   const TextSpan(
