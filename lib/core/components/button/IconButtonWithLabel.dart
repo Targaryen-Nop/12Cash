@@ -107,7 +107,16 @@ class _IconButtonWithLabelState extends State<IconButtonWithLabel> {
               ),
             ),
             child: widget.imagePath == null
-                ? Icon(widget.icon, color: Colors.white, size: 50)
+                ? Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(widget.icon, color: Colors.white, size: 50),
+                      Text(
+                        "กดเพื่อถ่ายรูป",
+                        style: Styles.white18(context),
+                      )
+                    ],
+                  )
                 : ClipRRect(
                     child: Image.file(
                       File(widget.imagePath!),

@@ -27,7 +27,7 @@ void showToast({
   );
 }
 
-void showToastMenu({
+void showToastDuplicateMenu({
   required BuildContext context,
   required String message,
   required String description,
@@ -64,7 +64,7 @@ void showToastMenu({
         GestureDetector(
           onTap: () {
             Navigator.push(context, MaterialPageRoute(builder: (context) {
-              return CheckStoreDuplicateScreen();
+              return const CheckStoreDuplicateScreen();
             }));
           },
           child: Container(
@@ -73,7 +73,7 @@ void showToastMenu({
               color: Styles.failTextColor,
             ),
             width: 150,
-            padding: EdgeInsets.all(8),
+            padding: const EdgeInsets.all(8),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [

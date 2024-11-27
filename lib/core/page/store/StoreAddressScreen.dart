@@ -303,242 +303,244 @@ class _StoreAddressScreenState extends State<StoreAddressScreen> {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(height: screenWidth / 80),
-        Row(
-          children: [
-            const Icon(Icons.location_on_outlined, size: 40),
-            const SizedBox(width: 8),
-            Text(
-              " ${_jsonString?['shop_address'] ?? "Shop Address"}",
-              style: Styles.headerBlack24(context),
-            ),
-          ],
-        ),
-        SizedBox(height: screenWidth / 80),
-        Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+    return SingleChildScrollView(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: screenWidth / 80),
+          Row(
             children: [
-              SizedBox(height: screenWidth / 37),
-              Customtextinput(
-                max: 36,
-                controller: widget.storeAddressController,
-                onChanged: (value) => _onTextChanged(value, 'address'),
-                context,
-                label: 'ที่อยู่ *',
-              ),
-              SizedBox(height: screenWidth / 37),
-              DropdownSearchCustomGroup<Location>(
-                label: "เลือกจังหวัด *",
-                hint: "เลือกจังหวัด",
-                titleText: "เลือกจังหวัด",
-                fetchItems: (filter) async {
-                  // Replace with your district fetching logic
-                  return await _fetchProvince(filter);
-                },
-                groupByKey: (Location location) =>
-                    location.province, // Group by amphoe
-                transformGroup: (String province) => Location(
-                  amphoe: '',
-                  province: province,
-                  district: '',
-                  zipcode: '',
-                  id: '',
-                  amphoeCode: '',
-                  districtCode: '',
-                  provinceCode: '',
-                ), // Transform group key into Location
-                itemAsString: (Location location) =>
-                    location.province, // Display amphoe name
-                itemBuilder: (context, item, isSelected) {
-                  return Column(
-                    children: [
-                      ListTile(
-                        title: Text(
-                          " ${item.province}",
-                          style: Styles.black18(context),
-                        ),
-                        selected: isSelected,
-                      ),
-                      Divider(
-                        color: Colors.grey[200], // Color of the divider line
-                        thickness: 1, // Thickness of the line
-                        indent: 16, // Left padding for the divider line
-                        endIndent: 16, // Right padding for the divider line
-                      ),
-                    ],
-                  );
-                },
-                onChanged: (Location? selected) {
-                  if (selected != null) {
-                    setState(() {
-                      province = selected.province;
-                      widget.initialSelectedLocation.province =
-                          selected.province;
-                      widget.initialSelectedLocation.district = '';
-                      widget.initialSelectedLocation.amphoe = '';
-                      widget.storePoscodeController.text = '';
-                      _storeData = _storeData?.copyWithDynamicField(
-                          'province', selected.province);
-                    });
-                    _saveStoreToStorage();
-                  }
-                },
-                initialSelectedValue:
-                    widget.initialSelectedLocation.province == ''
-                        ? null
-                        : widget.initialSelectedLocation,
-              ),
-              SizedBox(height: screenWidth / 37),
-              DropdownSearchCustomGroup<Location>(
-                key: ValueKey('DistrictSearch-$province'),
-                label: "เลือกอำเภอ/เขต",
-                hint: "เลือกอำเภอ/เขต",
-                titleText: "เลือกอำเภอ/เขต",
-                fetchItems: (filter) async {
-                  // Replace with your district fetching logic
-                  return await _fetchDistricts(filter);
-                },
-                groupByKey: (Location location) =>
-                    location.amphoe, // Group by amphoe
-                transformGroup: (String amphoe) => Location(
-                  amphoe: amphoe,
-                  province: '',
-                  district: '',
-                  zipcode: '',
-                  id: '',
-                  amphoeCode: '',
-                  districtCode: '',
-                  provinceCode: '',
-                ), // Transform group key into Location
-                itemAsString: (Location location) =>
-                    location.amphoe, // Display amphoe name
-                itemBuilder: (context, item, isSelected) {
-                  return Column(
-                    children: [
-                      ListTile(
-                        title: Text(
-                          " ${item.amphoe}",
-                          style: Styles.black18(context),
-                        ),
-                        selected: isSelected,
-                      ),
-                      Divider(
-                        color: Colors.grey[200], // Color of the divider line
-                        thickness: 1, // Thickness of the line
-                        indent: 16, // Left padding for the divider line
-                        endIndent: 16, // Right padding for the divider line
-                      ),
-                    ],
-                  );
-                },
-                onChanged: (Location? selected) {
-                  if (selected != null) {
-                    setState(() {
-                      amphoe = selected.amphoe;
-                      widget.initialSelectedLocation.amphoe = selected.amphoe;
-                      widget.storePoscodeController.text = '';
-                      widget.initialSelectedLocation.district = '';
-                      _storeData = _storeData?.copyWithDynamicField(
-                          'district', selected.amphoe);
-                    });
-
-                    _saveStoreToStorage();
-                  }
-                },
-                initialSelectedValue:
-                    widget.initialSelectedLocation.amphoe == ''
-                        ? null
-                        : widget.initialSelectedLocation,
-              ),
-              SizedBox(height: screenWidth / 37),
-              DropdownSearchCustomGroup<Location>(
-                key: ValueKey('SubDistrictDropdown-$province$amphoe'),
-                label: "เลือกตำบล/เขต",
-                hint: "เลือกตำบล/เขต",
-                titleText: "เลือกตำบล/เขต",
-                fetchItems: (filter) async {
-                  // Replace with your district fetching logic
-                  return await _fetchSubDistricts(filter);
-                },
-                groupByKey: (Location location) =>
-                    location.district, // Group by amphoe
-                transformGroup: (String district) => Location(
-                  amphoe: '',
-                  province: '',
-                  district: district,
-                  zipcode: '',
-                  id: '',
-                  amphoeCode: '',
-                  districtCode: '',
-                  provinceCode: '',
-                ), // Transform group key into Location
-                itemAsString: (Location location) =>
-                    location.district, // Display amphoe name
-                itemBuilder: (context, item, isSelected) {
-                  return Column(
-                    children: [
-                      ListTile(
-                        title: Text(
-                          " ${item.district}",
-                          style: Styles.black18(context),
-                        ),
-                        selected: isSelected,
-                      ),
-                      Divider(
-                        color: Colors.grey[200], // Color of the divider line
-                        thickness: 1, // Thickness of the line
-                        indent: 16, // Left padding for the divider line
-                        endIndent: 16, // Right padding for the divider line
-                      ),
-                    ],
-                  );
-                },
-                onChanged: (Location? selected) {
-                  if (selected != null) {
-                    setState(() {
-                      district = selected.district;
-                      widget.initialSelectedLocation.district =
-                          selected.district;
-                      _storeData = _storeData?.copyWithDynamicField(
-                          'subDistrict', selected.district);
-                      _storeData = _storeData?.copyWithDynamicField(
-                          'postcode', widget.storePoscodeController.text);
-                    });
-                    _loadPoscodeFromJson(
-                        widget.initialSelectedLocation.province,
-                        widget.initialSelectedLocation.amphoe,
-                        widget.initialSelectedLocation.district);
-                    _saveStoreToStorage();
-                  }
-                },
-                initialSelectedValue:
-                    widget.initialSelectedLocation.district == ''
-                        ? null
-                        : widget.initialSelectedLocation,
-              ),
-              SizedBox(height: screenWidth / 37),
-              Customtextinput(
-                key: ValueKey('Postcode-$province'),
-                context,
-                onChanged: (value) => _onTextChanged(value, 'postcode'),
-                readonly: true,
-                controller:
-                    widget.storePoscodeController, // Pass the controller here
-                label: 'รหัสไปรณีย์',
+              const Icon(Icons.location_on_outlined, size: 40),
+              const SizedBox(width: 8),
+              Text(
+                " ${_jsonString?['shop_address'] ?? "Shop Address"}",
+                style: Styles.headerBlack24(context),
               ),
             ],
           ),
-        ),
-        SizedBox(height: screenWidth / 80),
-      ],
+          SizedBox(height: screenWidth / 80),
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: screenWidth / 37),
+                Customtextinput(
+                  max: 36,
+                  controller: widget.storeAddressController,
+                  onChanged: (value) => _onTextChanged(value, 'address'),
+                  context,
+                  label: 'ที่อยู่ *',
+                ),
+                SizedBox(height: screenWidth / 37),
+                DropdownSearchCustomGroup<Location>(
+                  label: "เลือกจังหวัด *",
+                  hint: "เลือกจังหวัด",
+                  titleText: "เลือกจังหวัด",
+                  fetchItems: (filter) async {
+                    // Replace with your district fetching logic
+                    return await _fetchProvince(filter);
+                  },
+                  groupByKey: (Location location) =>
+                      location.province, // Group by amphoe
+                  transformGroup: (String province) => Location(
+                    amphoe: '',
+                    province: province,
+                    district: '',
+                    zipcode: '',
+                    id: '',
+                    amphoeCode: '',
+                    districtCode: '',
+                    provinceCode: '',
+                  ), // Transform group key into Location
+                  itemAsString: (Location location) =>
+                      location.province, // Display amphoe name
+                  itemBuilder: (context, item, isSelected) {
+                    return Column(
+                      children: [
+                        ListTile(
+                          title: Text(
+                            " ${item.province}",
+                            style: Styles.black18(context),
+                          ),
+                          selected: isSelected,
+                        ),
+                        Divider(
+                          color: Colors.grey[200], // Color of the divider line
+                          thickness: 1, // Thickness of the line
+                          indent: 16, // Left padding for the divider line
+                          endIndent: 16, // Right padding for the divider line
+                        ),
+                      ],
+                    );
+                  },
+                  onChanged: (Location? selected) {
+                    if (selected != null) {
+                      setState(() {
+                        province = selected.province;
+                        widget.initialSelectedLocation.province =
+                            selected.province;
+                        widget.initialSelectedLocation.district = '';
+                        widget.initialSelectedLocation.amphoe = '';
+                        widget.storePoscodeController.text = '';
+                        _storeData = _storeData?.copyWithDynamicField(
+                            'province', selected.province);
+                      });
+                      _saveStoreToStorage();
+                    }
+                  },
+                  initialSelectedValue:
+                      widget.initialSelectedLocation.province == ''
+                          ? null
+                          : widget.initialSelectedLocation,
+                ),
+                SizedBox(height: screenWidth / 37),
+                DropdownSearchCustomGroup<Location>(
+                  key: ValueKey('DistrictSearch-$province'),
+                  label: "เลือกอำเภอ/เขต",
+                  hint: "เลือกอำเภอ/เขต",
+                  titleText: "เลือกอำเภอ/เขต",
+                  fetchItems: (filter) async {
+                    // Replace with your district fetching logic
+                    return await _fetchDistricts(filter);
+                  },
+                  groupByKey: (Location location) =>
+                      location.amphoe, // Group by amphoe
+                  transformGroup: (String amphoe) => Location(
+                    amphoe: amphoe,
+                    province: '',
+                    district: '',
+                    zipcode: '',
+                    id: '',
+                    amphoeCode: '',
+                    districtCode: '',
+                    provinceCode: '',
+                  ), // Transform group key into Location
+                  itemAsString: (Location location) =>
+                      location.amphoe, // Display amphoe name
+                  itemBuilder: (context, item, isSelected) {
+                    return Column(
+                      children: [
+                        ListTile(
+                          title: Text(
+                            " ${item.amphoe}",
+                            style: Styles.black18(context),
+                          ),
+                          selected: isSelected,
+                        ),
+                        Divider(
+                          color: Colors.grey[200], // Color of the divider line
+                          thickness: 1, // Thickness of the line
+                          indent: 16, // Left padding for the divider line
+                          endIndent: 16, // Right padding for the divider line
+                        ),
+                      ],
+                    );
+                  },
+                  onChanged: (Location? selected) {
+                    if (selected != null) {
+                      setState(() {
+                        amphoe = selected.amphoe;
+                        widget.initialSelectedLocation.amphoe = selected.amphoe;
+                        widget.storePoscodeController.text = '';
+                        widget.initialSelectedLocation.district = '';
+                        _storeData = _storeData?.copyWithDynamicField(
+                            'district', selected.amphoe);
+                      });
+
+                      _saveStoreToStorage();
+                    }
+                  },
+                  initialSelectedValue:
+                      widget.initialSelectedLocation.amphoe == ''
+                          ? null
+                          : widget.initialSelectedLocation,
+                ),
+                SizedBox(height: screenWidth / 37),
+                DropdownSearchCustomGroup<Location>(
+                  key: ValueKey('SubDistrictDropdown-$province$amphoe'),
+                  label: "เลือกตำบล/เขต",
+                  hint: "เลือกตำบล/เขต",
+                  titleText: "เลือกตำบล/เขต",
+                  fetchItems: (filter) async {
+                    // Replace with your district fetching logic
+                    return await _fetchSubDistricts(filter);
+                  },
+                  groupByKey: (Location location) =>
+                      location.district, // Group by amphoe
+                  transformGroup: (String district) => Location(
+                    amphoe: '',
+                    province: '',
+                    district: district,
+                    zipcode: '',
+                    id: '',
+                    amphoeCode: '',
+                    districtCode: '',
+                    provinceCode: '',
+                  ), // Transform group key into Location
+                  itemAsString: (Location location) =>
+                      location.district, // Display amphoe name
+                  itemBuilder: (context, item, isSelected) {
+                    return Column(
+                      children: [
+                        ListTile(
+                          title: Text(
+                            " ${item.district}",
+                            style: Styles.black18(context),
+                          ),
+                          selected: isSelected,
+                        ),
+                        Divider(
+                          color: Colors.grey[200], // Color of the divider line
+                          thickness: 1, // Thickness of the line
+                          indent: 16, // Left padding for the divider line
+                          endIndent: 16, // Right padding for the divider line
+                        ),
+                      ],
+                    );
+                  },
+                  onChanged: (Location? selected) {
+                    if (selected != null) {
+                      setState(() {
+                        district = selected.district;
+                        widget.initialSelectedLocation.district =
+                            selected.district;
+                        _storeData = _storeData?.copyWithDynamicField(
+                            'subDistrict', selected.district);
+                        _storeData = _storeData?.copyWithDynamicField(
+                            'postcode', widget.storePoscodeController.text);
+                      });
+                      _loadPoscodeFromJson(
+                          widget.initialSelectedLocation.province,
+                          widget.initialSelectedLocation.amphoe,
+                          widget.initialSelectedLocation.district);
+                      _saveStoreToStorage();
+                    }
+                  },
+                  initialSelectedValue:
+                      widget.initialSelectedLocation.district == ''
+                          ? null
+                          : widget.initialSelectedLocation,
+                ),
+                SizedBox(height: screenWidth / 37),
+                Customtextinput(
+                  key: ValueKey('Postcode-$province'),
+                  context,
+                  onChanged: (value) => _onTextChanged(value, 'postcode'),
+                  readonly: true,
+                  controller:
+                      widget.storePoscodeController, // Pass the controller here
+                  label: 'รหัสไปรณีย์',
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: screenWidth / 80),
+        ],
+      ),
     );
   }
 }

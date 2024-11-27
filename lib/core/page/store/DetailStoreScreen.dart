@@ -1,6 +1,7 @@
 import 'package:_12sale_app/core/components/Appbar.dart';
 import 'package:_12sale_app/core/components/BoxShadowCustom.dart';
 import 'package:_12sale_app/core/components/button/AddStoreButton.dart';
+import 'package:_12sale_app/core/components/button/IconButtonWithLabel.dart';
 import 'package:_12sale_app/core/components/button/ShowPhotoButton.dart';
 import 'package:_12sale_app/core/page/store/ProcessTimelineScreen.dart';
 import 'package:_12sale_app/core/styles/gobalStyle.dart';
@@ -106,7 +107,7 @@ class _DetailShopScreenState extends State<DetailShopScreen> {
                                       const SizedBox(width: 8),
                                       Text(
                                         "ข้อมูลร้านค้า",
-                                        style: Styles.black18(context),
+                                        style: Styles.black24(context),
                                       ),
                                     ],
                                   ),
@@ -205,27 +206,85 @@ class _DetailShopScreenState extends State<DetailShopScreen> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceAround,
                                 children: [
-                                  ShowPhotoButton(
-                                    label: "ร้านค้า",
-                                    icon: Icons.image_not_supported_outlined,
-                                    imagePath: widget.store.imageList.length > 0
-                                        ? widget.store.imageList[0]
-                                        : null,
-                                  ),
-                                  ShowPhotoButton(
-                                    label: "พรก.",
-                                    icon: Icons.image_not_supported_outlined,
-                                    imagePath: widget.store.imageList.length > 1
-                                        ? widget.store.imageList[1]
-                                        : null,
-                                  ),
-                                  ShowPhotoButton(
-                                    label: "สำเนาบัตรปปช.",
-                                    icon: Icons.image_not_supported_outlined,
-                                    imagePath: widget.store.imageList.length > 2
-                                        ? widget.store.imageList[2]
-                                        : null,
-                                  )
+                                  onEdit
+                                      ? ShowPhotoButton(
+                                          label: "ร้านค้า",
+                                          icon: Icons
+                                              .image_not_supported_outlined,
+                                          imagePath:
+                                              widget.store.imageList.length > 0
+                                                  ? widget.store.imageList[0]
+                                                  : null,
+                                        )
+                                      : IconButtonWithLabel(
+                                          label: "ร้านค้า",
+                                          icon: Icons.photo_camera,
+                                          imagePath:
+                                              widget.store.imageList.length > 0
+                                                  ? widget.store.imageList[0]
+                                                  : null,
+                                          onImageSelected:
+                                              (String imagePath) async {
+                                            widget.store.imageList
+                                                .add(imagePath);
+                                          },
+                                        ),
+                                  onEdit
+                                      ? ShowPhotoButton(
+                                          label: "พรก.",
+                                          icon: Icons
+                                              .image_not_supported_outlined,
+                                          imagePath:
+                                              widget.store.imageList.length > 1
+                                                  ? widget.store.imageList[1]
+                                                  : null,
+                                        )
+                                      : IconButtonWithLabel(
+                                          label: "พรก.",
+                                          icon: Icons.photo_camera,
+                                          imagePath:
+                                              widget.store.imageList.length > 1
+                                                  ? widget.store.imageList[1]
+                                                  : null,
+                                          onImageSelected:
+                                              (String imagePath) async {
+                                            widget.store.imageList
+                                                .add(imagePath);
+                                            // final updatedImageList =
+                                            //     List<String>.from(
+                                            //         widget.store.imageList);
+                                            // widget.store.imageList
+                                            //     .add(updatedImageList);
+                                          },
+                                        ),
+                                  onEdit
+                                      ? ShowPhotoButton(
+                                          label: "สำเนาบัตรปปช.",
+                                          icon: Icons
+                                              .image_not_supported_outlined,
+                                          imagePath:
+                                              widget.store.imageList.length > 2
+                                                  ? widget.store.imageList[2]
+                                                  : null,
+                                        )
+                                      : IconButtonWithLabel(
+                                          label: "สำเนาบัตรปปช.",
+                                          icon: Icons.photo_camera,
+                                          imagePath:
+                                              widget.store.imageList.length > 2
+                                                  ? widget.store.imageList[2]
+                                                  : null,
+                                          onImageSelected:
+                                              (String imagePath) async {
+                                            widget.store.imageList
+                                                .add(imagePath);
+                                            // final updatedImageList =
+                                            //     List<String>.from(
+                                            //         widget.store.imageList);
+                                            // widget.store.imageList
+                                            //     .add(updatedImageList);
+                                          },
+                                        ),
                                 ],
                               )
                             ],
@@ -244,7 +303,7 @@ class _DetailShopScreenState extends State<DetailShopScreen> {
                                   0.2), // Shadow color with transparency
                               spreadRadius: 2, // Spread of the shadow
                               blurRadius: 8, // Blur radius of the shadow
-                              offset: Offset(0,
+                              offset: const Offset(0,
                                   4), // Offset of the shadow (horizontal, vertical)
                             ),
                           ],

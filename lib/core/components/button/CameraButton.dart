@@ -126,7 +126,11 @@ class CameraPreviewScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('ตัวอย่างการถ่ายรูป')),
+      appBar: AppBar(
+          title: Text(
+        'ตัวอย่างการถ่ายรูป',
+        style: Styles.black24(context),
+      )),
       body: FutureBuilder<void>(
         future: cameraController.initialize(),
         builder: (context, snapshot) {

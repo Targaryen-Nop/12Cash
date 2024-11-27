@@ -554,12 +554,26 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
                                       ),
                                     ),
                                     DialogButton(
-                                      onPressed: () => Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                const HomeScreen(index: 2)),
-                                      ),
+                                      onPressed: () {
+                                        toastification.show(
+                                          autoCloseDuration:
+                                              const Duration(seconds: 5),
+                                          context: context,
+                                          type: ToastificationType.success,
+                                          style:
+                                              ToastificationStyle.flatColored,
+                                          title: Text(
+                                            "บันทึกข้อมูลสําเร็จ",
+                                            style: Styles.black24(context),
+                                          ),
+                                        );
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const HomeScreen(index: 2)),
+                                        );
+                                      },
                                       color: Styles.successButtonColor,
                                       child: Text(
                                         "ตกลง",
@@ -568,18 +582,10 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
                                     )
                                   ],
                                 ).show();
-                                toastification.show(
+
+                                showToastDuplicateMenu(
                                   context: context,
-                                  type: ToastificationType.success,
-                                  style: ToastificationStyle.flatColored,
-                                  title: Text(
-                                    "บันทึกข้อมูลสําเร็จ",
-                                    style: Styles.headerBlack24(context),
-                                  ),
-                                );
-                                showToastMenu(
-                                  context: context,
-                                  icon: Icon(Icons.info_outline),
+                                  icon: const Icon(Icons.info_outline),
                                   type: ToastificationType.error,
                                   primaryColor: Colors.red,
                                   titleStyle: Styles.headerRed24(context),
@@ -642,38 +648,42 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
                                 case 2:
                                   return () {
                                     _loadStoreFromStorage().then((_) {
-                                      setState(() {
-                                        initialSelectedLocation = Location(
-                                            province: _storeData.province,
-                                            amphoe: _storeData.district,
-                                            districtCode: '',
-                                            zipcode: _storeData.postcode,
-                                            provinceCode: _storeData.postcode
-                                                .substring(1, 3),
-                                            id: '',
-                                            amphoeCode: '',
-                                            district: _storeData.subDistrict);
+                                      // setState(() {
+                                      //   initialSelectedLocation = Location(
+                                      //       province: _storeData.province,
+                                      //       amphoe: _storeData.district,
+                                      //       districtCode: '',
+                                      //       zipcode: _storeData.postcode,
+                                      //       provinceCode: _storeData.postcode
+                                      //           .substring(1, 3),
+                                      //       id: '',
+                                      //       amphoeCode: '',
+                                      //       district: _storeData.subDistrict);
+                                      // });
 
-                                        if (_storeData.address == "" ||
-                                            _storeData.province == "" ||
-                                            _storeData.district == "" ||
-                                            _storeData.subDistrict == "") {
-                                          showToast(
-                                            context: context,
-                                            message: 'กรุณากรอกข้อมูลให้ครบ',
-                                            type: ToastificationType.error,
-                                            primaryColor: Colors.red,
-                                          );
-                                        }
+                                      if (_storeData.address == "" ||
+                                          _storeData.province == "" ||
+                                          _storeData.district == "" ||
+                                          _storeData.subDistrict == "") {
+                                        showToast(
+                                          context: context,
+                                          message: 'กรุณากรอกข้อมูลให้ครบ',
+                                          type: ToastificationType.error,
+                                          primaryColor: Colors.red,
+                                        );
+                                      }
+                                      print(_storeData.address);
+                                      print(_storeData.province);
+                                      print(_storeData.district);
+                                      print(_storeData.subDistrict);
 
-                                        if (_storeData.address != "" &&
-                                            _storeData.province != "" &&
-                                            _storeData.district != "" &&
-                                            _storeData.subDistrict != "") {
-                                          _processIndex = (_processIndex + 1) %
-                                              _processes.length;
-                                        }
-                                      });
+                                      if (_storeData.address != "" &&
+                                          _storeData.province != "" &&
+                                          _storeData.district != "" &&
+                                          _storeData.subDistrict != "") {
+                                        _processIndex = (_processIndex + 1) %
+                                            _processes.length;
+                                      }
                                     });
                                   }();
                                 case 3:

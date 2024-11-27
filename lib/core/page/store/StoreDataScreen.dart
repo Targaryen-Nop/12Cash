@@ -408,7 +408,6 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
                               setState(() {
                                 _storeData = _storeData?.copyWithDynamicField(
                                     'route', selected.route);
-
                                 selectedRoute =
                                     RouteStore(route: selected.route);
                                 widget.initialSelectedRoute = selectedRoute;
@@ -491,7 +490,7 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               IconButtonWithLabel(
-                icon: Icons.image_not_supported_outlined,
+                icon: Icons.photo_camera,
                 imagePath: imageList.isNotEmpty ? imageList[0] : null,
                 label: "ร้านค้า",
                 onImageSelected: (String imagePath) async {
@@ -505,7 +504,7 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
                 },
               ),
               IconButtonWithLabel(
-                icon: Icons.image_not_supported_outlined,
+                icon: Icons.photo_camera,
                 imagePath: imageList.length > 1 ? imageList[1] : null,
                 label: "พรก.",
                 onImageSelected: (String imagePath) async {
@@ -527,9 +526,9 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
                 },
               ),
               IconButtonWithLabel(
-                icon: Icons.image_not_supported_outlined,
+                icon: Icons.photo_camera,
                 imagePath: imageList.length > 2 ? imageList[2] : null,
-                label: "บัตรปปช.",
+                label: "สำเนาบัตรปปช.",
                 onImageSelected: (String imagePath) async {
                   // Create a new imageList and add the imagePath
                   final updatedImageList =

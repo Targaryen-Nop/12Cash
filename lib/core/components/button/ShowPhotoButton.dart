@@ -47,7 +47,12 @@ class _ShowPhotoButtonState extends State<ShowPhotoButton> {
             ),
             onPressed: () {},
             child: widget.imagePath == null
-                ? Icon(widget.icon, color: Colors.white, size: 50)
+                ? Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(widget.icon, color: Colors.white, size: 50),
+                    ],
+                  )
                 : GestureDetector(
                     onTap: () async {
                       await showDialog(
