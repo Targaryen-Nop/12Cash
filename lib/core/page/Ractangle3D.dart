@@ -28,7 +28,7 @@ class WaterFilledRectangle extends StatefulWidget {
 
 class _WaterFilledRectangleState extends State<WaterFilledRectangle>
     with SingleTickerProviderStateMixin {
-  double _rotationAngle = 0.0;
+  double _rotationAngle = 10.0;
   late AnimationController _controller;
 
   @override
@@ -68,8 +68,8 @@ class _WaterFilledRectangleState extends State<WaterFilledRectangle>
                   height: widget.height,
                   depth: widget.depth,
                   fillPercentage: widget.fillPercentage,
-                  // rotationAngle: _rotationAngle,
-                  rotationAngle: _controller.value * 2 * pi,
+                  rotationAngle: _rotationAngle,
+                  // rotationAngle: _controller.value * 2 * pi,
                   borderColor: widget.borderColor,
                   waterColor: widget.waterColor.withOpacity(0.5),
                   textStyle: widget.textStyle,
@@ -80,10 +80,10 @@ class _WaterFilledRectangleState extends State<WaterFilledRectangle>
         SizedBox(
             height: screenWidth /
                 8), // Add spacing between the rectangle and button
-        ElevatedButton(
-          onPressed: _rotateRectangle,
-          child: const Text("Rotate Rectangle"),
-        ),
+        // ElevatedButton(
+        //   onPressed: _rotateRectangle,
+        //   child: const Text("Rotate Rectangle"),
+        // ),
       ],
     );
   }

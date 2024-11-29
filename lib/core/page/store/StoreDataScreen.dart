@@ -89,30 +89,6 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
     }
   }
 
-  // Future<void> _loadStoreFromStorage() async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-
-  //   // Get the JSON string list from SharedPreferences
-  //   String? jsonStore = prefs.getString("add_store");
-
-  //   if (jsonStore != null) {
-  //     setState(() {
-  //       _storeData =
-  //           (jsonStore == null ? null : Store.fromJson(jsonDecode(jsonStore)))!;
-  //     });
-  //     // province = _storeData.province!;
-  //   }
-  //   if (mounted) {
-  //     setState(() {
-  //       widget.initialSelectedShoptype = ShopType(
-  //           id: _storeData!.type,
-  //           name: _storeData!.typeName,
-  //           descript: '',
-  //           status: '');
-  //     });
-  //   }
-  // }
-
   Future<void> _loadJson() async {
     String jsonString = await rootBundle.loadString('lang/main-th.json');
     setState(() {
@@ -126,17 +102,6 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
     });
 
     _saveStoreToStorage();
-
-    // setState(() {
-    //   widget.storeData = widget.storeData.copyWithDynamicField(field, text);
-    // });
-    // _saveStoreToStorage();
-
-    // setState(() {
-    //   widget.storeData = widget.storeData.copyWithDynamicField(field, text);
-    // });
-    // _saveStoreToStorage();
-    // print(text);
   }
 
   Future<void> _saveStoreToStorage() async {
@@ -178,47 +143,21 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
 
   Future<List<ShopType>> getShoptype(String filter) async {
     try {
-      var response = await Dio().get(
-        "https://8ac75a59-0e87-42a5-aad0-de57475b1f4e.mock.pstmn.io/cash/shoptype",
-        queryParameters: {"filter": filter},
-      );
+      // Load the JSON file for districts
+      final String response = await rootBundle.loadString('data/shoptype.json');
+      final data = json.decode(response);
 
-      final data = jsonDecode(response.data);
+      // Filter and map JSON data to District model based on selected province and filter
+      final List<ShopType> route =
+          (data as List).map((json) => ShopType.fromJson(json)).toList();
 
-      return ShopType.fromJsonList(data);
+      // Group districts by amphoe
+      return route;
     } catch (e) {
       print("Error occurred: $e");
       return [];
     }
   }
-
-  // Future<void> _fetchShopTypes() async {
-  //   try {
-  //     final response = await http.get(Uri.parse(
-  //         'https://8ac75a59-0e87-42a5-aad0-de57475b1f4e.mock.pstmn.io/cash/shoptype'));
-
-  //     if (response.statusCode == 200) {
-  //       final List<dynamic> data = json.decode(response.body);
-  //       if (mounted) {
-  //         setState(() {
-  //           items = data.map((json) => ShopType.fromJson(json)).toList();
-
-  //           if (items.isNotEmpty && widget.initialSelectedValue != '') {
-  //             selectedValue = items.firstWhere(
-  //               (item) => item.name == widget.initialSelectedValue,
-  //             );
-  //           }
-  //         });
-  //       }
-  //     } else {
-  //       // Handle other response status codes
-  //       print('Failed to load shop types: ${response.statusCode}');
-  //     }
-  //   } catch (e) {
-  //     print('Error fetching data: $e');
-  //     // Display a message to the user or retry logic
-  //   }
-  // }
 
   Future<List<RouteStore>> getRoutes(String filter) async {
     try {
