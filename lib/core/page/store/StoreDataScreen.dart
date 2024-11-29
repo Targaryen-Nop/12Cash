@@ -304,7 +304,7 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
                     });
                   },
                   context,
-                  label: '${_jsonString?['shop_tax'] ?? "Tax ID"} *',
+                  label: '${_jsonString?['shop_tax'] ?? "Tax ID"}',
                   hint:
                       '${_jsonString?['shop_tax_hint'] ?? "Max 13 Characters"}',
                 ),
@@ -314,6 +314,7 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
                     FilteringTextInputFormatter.digitsOnly,
                   ],
                   max: 10,
+                  hint: "ไม่เกิน 10 ตัวอักษร",
                   keypadType: TextInputType.number,
                   controller: widget.storeTelController,
                   onChanged: (value) => _onTextChanged(value, 'tel'),
@@ -324,7 +325,7 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
                     });
                   },
                   context,
-                  label: 'โทรศัพท์',
+                  label: 'โทรศัพท์ *',
                 ),
                 const SizedBox(height: 16),
                 Row(
@@ -506,7 +507,7 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
               IconButtonWithLabel(
                 icon: Icons.photo_camera,
                 imagePath: imageList.length > 1 ? imageList[1] : null,
-                label: "พรก.",
+                label: "ภ.พ.20",
                 onImageSelected: (String imagePath) async {
                   // Create a new imageList and add the imagePath
                   final updatedImageList =

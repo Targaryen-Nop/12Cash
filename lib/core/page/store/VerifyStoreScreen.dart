@@ -97,7 +97,8 @@ class _VerifyStoreScreenState extends State<VerifyStoreScreen> {
               style: Styles.headerBlack18(context),
               children: <TextSpan>[
                 TextSpan(
-                  text: " : ${widget.storeData.taxId}",
+                  text:
+                      " : ${widget.storeData.taxId != '' ? widget.storeData.taxId : '-'}",
                   style: Styles.black18(context),
                 ),
               ],
@@ -133,7 +134,8 @@ class _VerifyStoreScreenState extends State<VerifyStoreScreen> {
               style: Styles.headerBlack18(context),
               children: <TextSpan>[
                 TextSpan(
-                  text: ' : ${widget.storeData.lineId}', // Inline bold text
+                  text:
+                      ' : ${widget.storeData.lineId != '' ? widget.storeData.lineId : '-'}', // Inline bold text
                   style: Styles.black18(context),
                 ),
               ],
@@ -145,7 +147,8 @@ class _VerifyStoreScreenState extends State<VerifyStoreScreen> {
               style: Styles.headerBlack18(context),
               children: <TextSpan>[
                 TextSpan(
-                  text: ' : ${widget.storeData.note}', // Inline bold text
+                  text:
+                      ' : ${widget.storeData.note != '' ? widget.storeData.note : '-'}', // Inline bold text
                   style: Styles.black18(context),
                 ),
               ],
@@ -191,7 +194,7 @@ class _VerifyStoreScreenState extends State<VerifyStoreScreen> {
                     : null,
               ),
               ShowPhotoButton(
-                label: "พรก.",
+                label: "ภ.พ.20",
                 icon: Icons.image_not_supported_outlined,
                 imagePath: widget.storeData.imageList.length > 1
                     ? widget.storeData.imageList[1]

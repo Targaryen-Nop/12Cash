@@ -231,7 +231,7 @@ class _DetailShopScreenState extends State<DetailShopScreen> {
                                         ),
                                   onEdit
                                       ? ShowPhotoButton(
-                                          label: "พรก.",
+                                          label: "ภ.พ.20",
                                           icon: Icons
                                               .image_not_supported_outlined,
                                           imagePath:
@@ -240,7 +240,7 @@ class _DetailShopScreenState extends State<DetailShopScreen> {
                                                   : null,
                                         )
                                       : IconButtonWithLabel(
-                                          label: "พรก.",
+                                          label: "ภ.พ.20",
                                           icon: Icons.photo_camera,
                                           imagePath:
                                               widget.store.imageList.length > 1

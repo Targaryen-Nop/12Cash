@@ -1,4 +1,7 @@
 import 'package:_12sale_app/core/page/store/CheckStoreDuplicateScreen.dart';
+import 'package:_12sale_app/data/models/DuplicateStore.dart';
+import 'package:_12sale_app/data/models/Store.dart';
+
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:toastification/toastification.dart'; // Ensure this package is imported
@@ -31,6 +34,7 @@ void showToastDuplicateMenu({
   required BuildContext context,
   required String message,
   required String description,
+  required List<DuplicateStore> stores,
   Icon? icon,
   ToastificationType type = ToastificationType.success,
   ToastificationStyle style = ToastificationStyle.flatColored,
@@ -64,7 +68,9 @@ void showToastDuplicateMenu({
         GestureDetector(
           onTap: () {
             Navigator.push(context, MaterialPageRoute(builder: (context) {
-              return const CheckStoreDuplicateScreen();
+              return CheckStoreDuplicateScreen(
+                stores: stores,
+              );
             }));
           },
           child: Container(
@@ -72,17 +78,17 @@ void showToastDuplicateMenu({
               borderRadius: BorderRadius.circular(8),
               color: Styles.failTextColor,
             ),
-            width: 150,
+            width: 110,
             padding: const EdgeInsets.all(8),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 const Icon(
                   Icons.visibility,
                   color: Colors.white,
                 ),
                 Text(
-                  "View",
+                  "ดูร้านค้า",
                   style: Styles.white18(
                       context), // Adjust your style method as necessary
                 ),

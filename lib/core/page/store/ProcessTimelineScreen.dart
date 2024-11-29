@@ -9,6 +9,7 @@ import 'package:_12sale_app/core/page/store/StoreDataScreen.dart';
 import 'package:_12sale_app/core/page/store/VerifyStoreScreen.dart';
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:_12sale_app/core/utils/tost_util.dart';
+import 'package:_12sale_app/data/models/DuplicateStore.dart';
 import 'package:_12sale_app/data/models/Location.dart';
 import 'package:_12sale_app/data/models/Route.dart';
 import 'package:_12sale_app/data/models/Shoptype.dart';
@@ -50,6 +51,54 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
   ShopType initialSelectedShoptype =
       ShopType(id: '', name: '', descript: '', status: '');
   List<dynamic> imageList = [];
+  List<DuplicateStore> duplicateStores = [];
+
+  String responseBody = '''
+{
+    "status": "error",
+    "message": "similar store",
+    "data": [
+        {
+            "store": {
+                "storeId": "1",
+                "name": "Store A",
+                "taxId": "123456",
+                "tel": "987654321",
+                "route": "R01",
+                "type": "Retail",
+                "typeName": "Small Retail Store",
+                "address": "123 Market Street",
+                "district": "Central",
+                "subDistrict": "Downtown",
+                "province": "Cityville",
+                "provinceCode": "001",
+                "postcode": "54321",
+                "zone": "North",
+                "area": "Area 51",
+                "latitude": "40.7128",
+                "longtitude": "-74.0060",
+                "lineId": "line123",
+                "note": "Popular store",
+                "approve": {
+                    "dateSend": "2024-01-01",
+                    "dateAction": "2024-01-02"
+                },
+                "policyConsent": [
+                    {
+                        "status": "Agree",
+                        "date": "2024-01-01"
+                    }
+                ],
+                "imageList": [],
+                "shippingAddress": [],
+                "createdDate": "2024-01-01",
+                "updatedDate": "2024-01-02"
+            },
+            "similarity": "95.5"
+        }
+    ]
+}
+''';
 
   Location initialSelectedLocation = Location(
       id: '',
@@ -149,13 +198,59 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
     }
   }
 
+  void parseResponseData(String responseBody) {
+    try {
+      // Parse the response JSON
+      final Map<String, dynamic> jsonResponse = json.decode(responseBody);
+
+      if (jsonResponse.containsKey('data') && jsonResponse['data'] is List) {
+        final List<dynamic> data = jsonResponse['data'];
+
+        // Map the response to a list of MapEntry<Store, String>
+        final List<MapEntry<Store, String>> storeList = data.map((entry) {
+          // Extract the 'store' and 'similarity' fields
+          final storeJson = entry['store'] as Map<String, dynamic>;
+          final similarity =
+              entry['similarity'].toString(); // Ensure similarity is a String
+
+          // Parse the store object and create a MapEntry
+          return MapEntry(Store.fromJson(storeJson), similarity);
+        }).toList();
+
+        // Debugging output
+        for (var entry in storeList) {
+          print('Store Name: ${entry.key.name}');
+          print('Similarity: ${entry.value}');
+        }
+
+        // Use the storeList as needed
+      } else {
+        print("No valid 'data' key found in the response.");
+      }
+    } catch (e) {
+      print("Error occurred while parsing: $e");
+    }
+  }
+
+  // Example function to map `provinceCode` to `province`
+  String determineProvince(String provinceCode) {
+    // Define your province mapping logic here
+    Map<String, String> provinceMap = {
+      '10': 'Bangkok',
+      '20': 'Chonburi',
+      // Add other province codes and names as needed
+    };
+
+    return provinceMap[provinceCode] ?? 'Unknown Province';
+  }
+
   Future<void> postData() async {
     // Initialize Dio
     Dio dio = Dio();
 
     // Replace with your API endpoint
     const String apiUrl =
-        "https://d46e-147-50-183-98.ngrok-free.app/api/cash/store/addStore";
+        "https://80d8-171-103-242-50.ngrok-free.app/api/cash/store/addStore";
 
     // JSON data
     Map<String, dynamic> jsonData = {
@@ -194,12 +289,88 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        print("Data posted successfully: ${response.data}");
+        final List<dynamic> data = response.data['data'];
+        setState(() {
+          duplicateStores = data
+              .map((item) => DuplicateStore.fromJson(
+                  item['store'] as Map<String, dynamic>))
+              .toList();
+        });
+        // print("Duplicate Store ${duplicateStores[0].name}");
+
+        showToastDuplicateMenu(
+          stores: duplicateStores,
+          context: context,
+          icon: const Icon(Icons.info_outline),
+          type: ToastificationType.error,
+          primaryColor: Colors.red,
+          titleStyle: Styles.headerRed24(context),
+          descriptionStyle: Styles.red12(context),
+          message: "พบร้านค้าที่คล้ายกัน",
+          description:
+              "พบร้านค้าที่คล้ายกันในระบบ สามารถเปิดขายจากร้านที่คล้ายกัน",
+        );
+        if (response.data['message'] == 'similar store') {
+        } else {
+          print("Data posted successfully: ${response.data}");
+          toastification.show(
+            autoCloseDuration: const Duration(seconds: 5),
+            context: context,
+            type: ToastificationType.success,
+            style: ToastificationStyle.flatColored,
+            title: Text(
+              "บันทึกข้อมูลสําเร็จ",
+              style: Styles.black18(context),
+            ),
+          );
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const HomeScreen(index: 2)),
+          );
+        }
       } else {
+        if (response.statusCode == 404) {
+          toastification.show(
+            autoCloseDuration: const Duration(seconds: 5),
+            context: context,
+            primaryColor: Colors.red,
+            icon: const Icon(Icons.info_outline),
+            type: ToastificationType.error,
+            style: ToastificationStyle.flatColored,
+            title: Text(
+              "บันทึกไม่สำเร็จเนื่องจาก ${response.statusCode}\n ไม่พบ Path API",
+              style: Styles.black18(context),
+            ),
+          );
+        }
+        toastification.show(
+          autoCloseDuration: const Duration(seconds: 5),
+          context: context,
+          primaryColor: Colors.red,
+          icon: const Icon(Icons.info_outline),
+          type: ToastificationType.error,
+          style: ToastificationStyle.flatColored,
+          title: Text(
+            "บันทึกไม่สำเร็จเนื่องจาก ${response.statusCode}\n ${response.data}",
+            style: Styles.black18(context),
+          ),
+        );
         print("Failed to post data: ${response.statusCode}, ${response.data}");
       }
     } catch (e) {
-      print("Error occurred: $e");
+      toastification.show(
+        autoCloseDuration: const Duration(seconds: 5),
+        context: context,
+        primaryColor: Colors.red,
+        icon: const Icon(Icons.info_outline),
+        type: ToastificationType.error,
+        style: ToastificationStyle.flatColored,
+        title: Text(
+          "บันทึกไม่สำเร็จเนื่องจาก ${e.toString()}",
+          style: Styles.black18(context),
+        ),
+      );
+      print("Error daw: ${e}");
     }
   }
 
@@ -541,24 +712,7 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
                                     ),
                                     DialogButton(
                                       onPressed: () {
-                                        toastification.show(
-                                          autoCloseDuration:
-                                              const Duration(seconds: 5),
-                                          context: context,
-                                          type: ToastificationType.success,
-                                          style:
-                                              ToastificationStyle.flatColored,
-                                          title: Text(
-                                            "บันทึกข้อมูลสําเร็จ",
-                                            style: Styles.black24(context),
-                                          ),
-                                        );
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const HomeScreen(index: 2)),
-                                        );
+                                        postData();
                                       },
                                       color: Styles.successButtonColor,
                                       child: Text(
@@ -568,18 +722,6 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
                                     )
                                   ],
                                 ).show();
-
-                                showToastDuplicateMenu(
-                                  context: context,
-                                  icon: const Icon(Icons.info_outline),
-                                  type: ToastificationType.error,
-                                  primaryColor: Colors.red,
-                                  titleStyle: Styles.headerRed24(context),
-                                  descriptionStyle: Styles.red12(context),
-                                  message: "พบร้านค้าที่คล้ายกัน",
-                                  description:
-                                      "พบร้านค้าที่คล้ายกันในระบบ สามารถเปิดขายจากร้านที่คล้ายกัน",
-                                );
                               } else {}
 
                               switch (_processIndex) {
@@ -601,17 +743,42 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
                                       // print(_storeData.taxId);
                                       // print(_storeData.typeName);
                                       // print(_storeData.route);
-                                      if (_storeData.name == "" ||
-                                          _storeData.typeName == "" ||
-                                          _storeData.taxId == "" ||
-                                          _storeData.route == "") {
+                                      // Create a list to hold missing fields
+                                      List<String> missingFields = [];
+
+                                      // Check for missing fields
+                                      if (_storeData.name.isEmpty) {
+                                        missingFields.add('ชื่อร้าน');
+                                      }
+                                      if (_storeData.tel.isEmpty) {
+                                        missingFields.add('เบอร์โทร');
+                                      }
+                                      if (_storeData.typeName.isEmpty) {
+                                        missingFields.add('ประเภทร้าน');
+                                      }
+                                      if (_storeData.route.isEmpty) {
+                                        missingFields.add('เส้นทาง');
+                                      }
+
+                                      // If there are missing fields, show the toast
+                                      if (missingFields.isNotEmpty) {
                                         showToast(
                                           context: context,
-                                          message: 'กรุณากรอกข้อมูลให้ครบ',
+                                          message:
+                                              'กรุณากรอก ${missingFields.join(', ')}',
                                           type: ToastificationType.error,
                                           primaryColor: Colors.red,
                                         );
                                       }
+                                      if (_storeData.imageList.isEmpty) {
+                                        showToast(
+                                          context: context,
+                                          message: 'กรุณาอัพรูปหน้าร้านค้า',
+                                          type: ToastificationType.error,
+                                          primaryColor: Colors.red,
+                                        );
+                                      }
+
                                       setState(() {
                                         initialSelectedRoute =
                                             RouteStore(route: _storeData.route);
@@ -623,8 +790,9 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
 
                                         if (_storeData.name != "" &&
                                             _storeData.typeName != "" &&
-                                            _storeData.taxId != "" &&
-                                            _storeData.route != "") {
+                                            _storeData.tel != "" &&
+                                            _storeData.route != "" &&
+                                            _storeData.imageList.isNotEmpty) {
                                           _processIndex = (_processIndex + 1) %
                                               _processes.length;
                                         }
@@ -634,34 +802,36 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
                                 case 2:
                                   return () {
                                     _loadStoreFromStorage().then((_) {
-                                      // setState(() {
-                                      //   initialSelectedLocation = Location(
-                                      //       province: _storeData.province,
-                                      //       amphoe: _storeData.district,
-                                      //       districtCode: '',
-                                      //       zipcode: _storeData.postcode,
-                                      //       provinceCode: _storeData.postcode
-                                      //           .substring(1, 3),
-                                      //       id: '',
-                                      //       amphoeCode: '',
-                                      //       district: _storeData.subDistrict);
-                                      // });
+                                      List<String> missingFields = [];
 
-                                      if (_storeData.address == "" ||
-                                          _storeData.province == "" ||
-                                          _storeData.district == "" ||
-                                          _storeData.subDistrict == "") {
+                                      // Check for missing fields
+                                      if (_storeData.address.isEmpty) {
+                                        missingFields.add('ที่อยู่');
+                                      }
+                                      if (_storeData.province.isEmpty) {
+                                        missingFields.add('จังหวัด');
+                                      }
+                                      if (_storeData.district.isEmpty) {
+                                        missingFields.add('อำเภท/เขต');
+                                      }
+                                      if (_storeData.subDistrict.isEmpty) {
+                                        missingFields.add('ตำบล/แขวง');
+                                      }
+
+                                      // If there are missing fields, show the toast
+                                      if (missingFields.isNotEmpty) {
                                         showToast(
                                           context: context,
-                                          message: 'กรุณากรอกข้อมูลให้ครบ',
+                                          message:
+                                              'กรุณาเลือก ${missingFields.join(', ')}',
                                           type: ToastificationType.error,
                                           primaryColor: Colors.red,
                                         );
                                       }
-                                      print(_storeData.address);
-                                      print(_storeData.province);
-                                      print(_storeData.district);
-                                      print(_storeData.subDistrict);
+                                      // print(_storeData.address);
+                                      // print(_storeData.province);
+                                      // print(_storeData.district);
+                                      // print(_storeData.subDistrict);
 
                                       if (_storeData.address != "" &&
                                           _storeData.province != "" &&

@@ -462,9 +462,9 @@ class _StoreAddressScreenState extends State<StoreAddressScreen> {
                 SizedBox(height: screenWidth / 37),
                 DropdownSearchCustomGroup<Location>(
                   key: ValueKey('SubDistrictDropdown-$province$amphoe'),
-                  label: "เลือกตำบล/เขต",
-                  hint: "เลือกตำบล/เขต",
-                  titleText: "เลือกตำบล/เขต",
+                  label: "เลือกตำบล/แขวง",
+                  hint: "เลือกตำบล/แขวง",
+                  titleText: "เลือกตำบล/แขวง",
                   fetchItems: (filter) async {
                     // Replace with your district fetching logic
                     return await _fetchSubDistricts(filter);
@@ -533,7 +533,7 @@ class _StoreAddressScreenState extends State<StoreAddressScreen> {
                   readonly: true,
                   controller:
                       widget.storePoscodeController, // Pass the controller here
-                  label: 'รหัสไปรณีย์',
+                  label: 'รหัสไปรษณีย์',
                 ),
               ],
             ),

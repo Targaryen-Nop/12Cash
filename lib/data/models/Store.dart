@@ -168,39 +168,75 @@ class Store {
     );
   }
 
-  // Factory constructor to create a Store instance from JSON
   factory Store.fromJson(Map<String, dynamic> json) {
     return Store(
-      storeId: json['storeId'],
-      name: json['name'],
-      taxId: json['taxId'],
-      tel: json['tel'],
-      route: json['route'],
-      type: json['type'],
-      typeName: json['typeName'],
-      address: json['address'],
-      district: json['district'],
-      subDistrict: json['subDistrict'],
-      province: json['province'],
-      provinceCode: json['provinceCode'],
-      postcode: json['postcode'],
-      zone: json['zone'],
-      area: json['area'],
-      latitude: json['latitude'],
-      longitude: json['longtitude'],
-      lineId: json['lineId'],
-      note: json['note'],
-      approve: Approve.fromJson(json['approve']),
-      status: json['status'],
-      policyConsent: (json['policyConsent'] as List)
-          .map((e) => PolicyConsent.fromJson(e))
-          .toList(),
-      imageList: json['imageList'],
-      shippingAddress: json['shippingAddress'],
-      createdDate: json['createdDate'],
-      updatedDate: json['updatedDate'],
+      storeId: json['storeId'] ?? '',
+      name: json['name'] ?? '',
+      taxId: json['taxId'] ?? '',
+      tel: json['tel'] ?? '',
+      route: json['route'] ?? '',
+      type: json['type'] ?? '',
+      typeName: json['typeName'] ?? '',
+      address: json['address'] ?? '',
+      district: json['district'] ?? '',
+      subDistrict: json['subDistrict'] ?? '',
+      province: json['province'] ?? '',
+      provinceCode: json['provinceCode'] ?? '',
+      postcode: json['postcode'] ?? '',
+      zone: json['zone'] ?? '',
+      area: json['area'] ?? '',
+      latitude: json['latitude'] ?? '',
+      longitude: json['longtitude'] ?? '',
+      lineId: json['lineId'] ?? '',
+      note: json['note'] ?? '',
+      approve: json['approve'] != null
+          ? Approve.fromJson(json['approve'])
+          : Approve(dateSend: '', dateAction: '', appPerson: ''),
+      status: json['status'] ?? '',
+      policyConsent: (json['policyConsent'] as List?)
+              ?.map((e) => PolicyConsent.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          [],
+      imageList: json['imageList'] ?? [],
+      shippingAddress: json['shippingAddress'] ?? [],
+      createdDate: json['createdDate'] ?? '',
+      updatedDate: json['updatedDate'] ?? '',
     );
   }
+
+  // Factory constructor to create a Store instance from JSON
+  // factory Store.fromJson(Map<String, dynamic> json) {
+  //   return Store(
+  //     storeId: json['storeId'],
+  //     name: json['name'],
+  //     taxId: json['taxId'],
+  //     tel: json['tel'],
+  //     route: json['route'],
+  //     type: json['type'],
+  //     typeName: json['typeName'],
+  //     address: json['address'],
+  //     district: json['district'],
+  //     subDistrict: json['subDistrict'],
+  //     province: json['province'],
+  //     provinceCode: json['provinceCode'],
+  //     postcode: json['postcode'],
+  //     zone: json['zone'],
+  //     area: json['area'],
+  //     latitude: json['latitude'],
+  //     longitude: json['longtitude'],
+  //     lineId: json['lineId'],
+  //     note: json['note'],
+  //     approve: Approve.fromJson(json['approve']),
+  //     status: json['status'],
+  //     policyConsent: (json['policyConsent'] as List)
+  //         .map((e) => PolicyConsent.fromJson(e))
+  //         .toList(),
+  //     imageList: json['imageList'],
+  //     shippingAddress: json['shippingAddress'],
+  //     createdDate: json['createdDate'],
+  //     updatedDate: json['updatedDate'],
+  //   );
+  // }
 
   // Method to convert Store instance to JSON (optional)
   Map<String, dynamic> toJson() {
@@ -233,6 +269,8 @@ class Store {
       'updatedDate': updatedDate,
     };
   }
+
+  toList() {}
 }
 
 class Approve {
