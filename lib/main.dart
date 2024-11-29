@@ -27,7 +27,6 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 late List<CameraDescription> _cameras;
-final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 
 void main() async {
   // Initialize the locale data for Thai language
@@ -67,6 +66,8 @@ void main() async {
   });
 }
 
+final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -79,6 +80,7 @@ class MyApp extends StatelessWidget {
       splitScreenMode: true,
       builder: (context, child) {
         return MaterialApp(
+          navigatorObservers: [routeObserver], // Register RouteObserver here
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
             primarySwatch: Colors.blue,
@@ -91,7 +93,6 @@ class MyApp extends StatelessWidget {
           // home: HomeScreen2(),
           // home: CustomBottomNavBar(),
           // home: BluetoothPrinterScreen4(),
-          navigatorObservers: [routeObserver],
           // home: AddToCartAnimationPage(),
         );
       },

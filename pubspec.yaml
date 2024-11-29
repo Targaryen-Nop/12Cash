@@ -107,6 +107,7 @@ flutter:
     - data/sale_route.json
     - data/product_group.json
     - data/location.json
+    - data/shoptype.json
     
    
 

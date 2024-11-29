@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:_12sale_app/core/components/BoxShadowCustom.dart';
+import 'package:_12sale_app/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -28,12 +29,13 @@ class Orderscreen extends StatefulWidget {
   State<Orderscreen> createState() => _OrderscreenState();
 }
 
-class _OrderscreenState extends State<Orderscreen> {
+class _OrderscreenState extends State<Orderscreen> with RouteAware {
   ProductType? productData;
   String dropdownValue = 'แบรนด์'; // Default value
   int cartItemCount = 0;
   List<Order> _orders = [];
 
+  Map<String, dynamic>? _jsonString;
   @override
   void initState() {
     super.initState();
@@ -62,7 +64,7 @@ class _OrderscreenState extends State<Orderscreen> {
   Future<void> _loadOrdersFromStorage() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     List<String>? jsonOrders = prefs.getStringList('orders');
-
+    print("Oreder loading...");
     setState(() {
       if (jsonOrders != null) {
         _orders = jsonOrders
@@ -73,7 +75,35 @@ class _OrderscreenState extends State<Orderscreen> {
     });
   }
 
-  Map<String, dynamic>? _jsonString;
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Register this screen as a route-aware widget
+    final ModalRoute? route = ModalRoute.of(context);
+    if (route is PageRoute) {
+      // Only subscribe if the route is a P ageRoute
+      routeObserver.subscribe(this, route);
+    }
+  }
+
+  @override
+  void didPopNext() {
+    // Called when the screen is popped back to
+    _loadOrdersFromStorage();
+  }
+
+  @override
+  void dispose() {
+    // Unsubscribe when the widget is disposed
+    routeObserver.unsubscribe(this);
+    super.dispose();
+  }
+  // @override
+  // void didUpdateWidget(covariant Orderscreen oldWidget) {
+  //   // TODO: implement didUpdateWidget
+  //   super.didUpdateWidget(oldWidget);
+  //   _loadOrdersFromStorage();
+  // }
 
   @override
   Widget build(BuildContext context) {

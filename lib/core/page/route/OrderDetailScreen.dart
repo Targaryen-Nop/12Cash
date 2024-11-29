@@ -64,8 +64,6 @@ class _OrderDetailState extends State<OrderDetail>
   final GlobalKey _cartKey2 = GlobalKey();
   final GlobalKey _buttonKey = GlobalKey();
 
-  final RouteObserver<ModalRoute> routeObserver = RouteObserver<ModalRoute>();
-
   late AnimationController _buttonAnimationController;
   late Animation<double> _buttonScaleAnimation;
 
@@ -256,7 +254,7 @@ class _OrderDetailState extends State<OrderDetail>
   @override
   void dispose() {
     _controller.dispose();
-    routeObserver.unsubscribe(this);
+
     _buttonAnimationController.dispose();
     // _controller2.dispose();
     _animatedListController.dispose();
@@ -267,7 +265,6 @@ class _OrderDetailState extends State<OrderDetail>
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    routeObserver.subscribe(this, ModalRoute.of(context)!);
   }
 
   @override
