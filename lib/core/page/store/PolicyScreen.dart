@@ -1,9 +1,11 @@
 import 'dart:convert';
 
 import 'package:_12sale_app/core/styles/style.dart';
+import 'package:_12sale_app/data/models/PrivacyPolicy.dart';
 import 'package:_12sale_app/data/models/Store.dart';
 import 'package:_12sale_app/data/service/locationService.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -25,14 +27,65 @@ class _PolicyScreenState extends State<PolicyScreen> {
   Store? _storeData;
   String latitude = '';
   String longitude = '';
+  PrivacyPolicy? policy; // Use a nullable type
+
+  List<Map<String, dynamic>> bodyPolicy = [];
   final LocationService locationService = LocationService();
+  bool isLoading = true; // Track loading state
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     fetchLocation();
+    _loadPrivacyPolicy();
     _scrollController.addListener(_onScroll);
+  }
+
+  Future<void> _loadPrivacyPolicy() async {
+    try {
+      final String response = await rootBundle.loadString('data/policy.json');
+      final Map<String, dynamic> data = json.decode(response);
+      setState(() {
+        policy = PrivacyPolicy.fromJson(data);
+        isLoading = false;
+      });
+
+      for (var body in policy!.body) {
+        // Add main section number and title as bold
+        bodyPolicy.add({
+          "text": "${body.number}. ${body.title}",
+          "isBold": true,
+        });
+        // Add main section text with indentation
+        bodyPolicy.add({
+          "text": "    ${body.text}",
+          "isBold": false,
+        });
+
+        for (var list in body.list) {
+          bodyPolicy.add({
+            "text": "    ${list.number} ${list.text}",
+            "isBold": false,
+          });
+          for (var bullet in list.bullet) {
+            bodyPolicy.add({
+              "text": "          ${bullet}",
+              "isBold": false,
+            });
+          }
+        }
+      }
+      bodyPolicy.add({
+        "text": "    ${policy?.footer}",
+        "isBold": false,
+      });
+    } catch (e) {
+      print("Error loading privacy policy: $e");
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 
   Future<void> fetchLocation() async {
@@ -60,56 +113,8 @@ class _PolicyScreenState extends State<PolicyScreen> {
     }
   }
 
-  final TextEditingController _controller = TextEditingController(
-    text: "ข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้า"
-        "ข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้า"
-        "ข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้า"
-        "ข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้า"
-        "ข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้า"
-        "ข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้า"
-        "ข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้า"
-        "ข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้า"
-        "ข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้า"
-        "dawd55555555555555555555555555555555555555555"
-        "ข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้า"
-        "ข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้า"
-        "ข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้า"
-        "ข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้า"
-        "ข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้า"
-        "ข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้า"
-        "dawd55555555555555555555555555555555555555555"
-        "ข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้า"
-        "ข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้า"
-        "ข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้า"
-        "ข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้า"
-        "ข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้า"
-        "ข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้า"
-        "dawd55555555555555555555555555555555555555555"
-        "ข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้า"
-        "ข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้า"
-        "ข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้า"
-        "ข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้า"
-        "ข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้า"
-        "ข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้า"
-        "dawd55555555555555555555555555555555555555555"
-        "dawd55555555555555555555555555555555555555555"
-        "ข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้า"
-        "ข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้า"
-        "ข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้า"
-        "ข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้า"
-        "ข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้า"
-        "ข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้า"
-        "dawd55555555555555555555555555555555555555555"
-        "dawd55555555555555555555555555555555555555555"
-        "ข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้า"
-        "ข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้า"
-        "ข้อมูลร้านอมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้า"
-        "ข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้า"
-        "ข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้า"
-        "ข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้า"
-        "dawd55555555555555555555555555555555555555555"
-        "ข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้า", // Long text for testing
-  );
+  late final TextEditingController _controller = TextEditingController(
+      text: "${bodyPolicy.join("\n")} \n    ${policy?.footer}");
   @override
   void dispose() {
     // Remove the listener when the widget is disposed
@@ -141,6 +146,14 @@ class _PolicyScreenState extends State<PolicyScreen> {
 
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
+    if (isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    if (policy == null) {
+      return const Center(child: Text("Failed to load policy."));
+    }
+
     return Container(
       padding: EdgeInsets.only(
         left: 16.0,
@@ -156,7 +169,7 @@ class _PolicyScreenState extends State<PolicyScreen> {
           Text('ขอความยินยอม', style: Styles.headerBlack24(context)),
           SizedBox(height: 8),
           Text(
-            'ข้อมูลร้านค้า ข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้าข้อมูลร้านค้า',
+            '${policy?.header}',
             style: Styles.black18(context),
           ),
           SizedBox(height: 16),
@@ -176,18 +189,37 @@ class _PolicyScreenState extends State<PolicyScreen> {
                 controller: _scrollController, // Controller for scrolling
                 child: SingleChildScrollView(
                   controller: _scrollController,
-                  child: TextField(
-                    readOnly: true,
-                    controller: _controller,
-                    style: Styles.black18(context),
-                    maxLines:
-                        null, // Allows the text field to expand vertically
-                    keyboardType: TextInputType.multiline,
-                    decoration: const InputDecoration(
-                      border: InputBorder.none,
-                      contentPadding: EdgeInsets.all(16),
-                    ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: bodyPolicy.map((line) {
+                      return Padding(
+                        padding: const EdgeInsets.only(
+                            bottom: 8.0,
+                            left: 8,
+                            right: 8), // Add space between lines
+                        child: Text(
+                          line["text"],
+                          style: line["isBold"]
+                              ? Styles.black18(context)
+                                  .copyWith(fontWeight: FontWeight.bold)
+                              : Styles.black18(context),
+                        ),
+                      );
+                    }).toList(),
                   ),
+
+                  // TextField(
+                  //   readOnly: true,
+                  //   controller: _controller,
+                  //   style: Styles.black18(context),
+                  //   maxLines:
+                  //       null, // Allows the text field to expand vertically
+                  //   keyboardType: TextInputType.multiline,
+                  //   decoration: const InputDecoration(
+                  //     border: InputBorder.none,
+                  //     contentPadding: EdgeInsets.all(16),
+                  //   ),
+                  // ),
                 ),
               ),
             ),
@@ -199,9 +231,9 @@ class _PolicyScreenState extends State<PolicyScreen> {
                 value: _isCheckboxChecked,
                 onChanged: _isCheckboxEnabled
                     ? (value) {
+                        // print("${DateTime.now()}");
                         setState(() {
                           _isCheckboxChecked = value ?? false;
-
                           _storeData ??= Store(
                             storeId: "",
                             name: "",
@@ -245,48 +277,10 @@ class _PolicyScreenState extends State<PolicyScreen> {
                             ],
                           );
                           print(" Save ${latitude}, ${longitude}");
-
-                          // print(_storeData?.policyConsent[0].status);
-                          // _storeData = Store(
-                          //     storeId: "storeId",
-                          //     name: "name",
-                          //     taxId: "taxId",
-                          //     tel: "tel",
-                          //     route: "route",
-                          //     type: "type",
-                          //     typeName: "typeName",
-                          //     address: "address",
-                          //     district: "district",
-                          //     subDistrict: "subDistrict",
-                          //     province: "province",
-                          //     provinceCode: "provinceCode",
-                          //     zone: "zone",
-                          //     area: "area",
-                          //     latitude: "latitude",
-                          //     longitude: "longitude",
-                          //     lineId: "lineId",
-                          //     note: "note",
-                          //     approve: Approve(
-                          //         dateSend: "dateSend",
-                          //         dateAction: "dateAction",
-                          //         appPerson: "appPerson"),
-                          //     status: "status",
-                          //     policyConsent: [
-                          //       PolicyConsent(
-                          //           status: 'Agree',
-                          //           date: DateTime.now().toString()),
-                          //     ],
-                          //     imageList: [],
-                          //     shippingAddress: [],
-                          //     createdDate: "createdDate",
-                          //     updatedDate: "updatedDate");
                         });
-                        // final policyConsent = _store.policyConsent[0].status = "Agree";
-                        // _store.policyConsent[0].status = 'Agree';
-
                         _saveStoreToStorage();
                       }
-                    : null, // Disable checkbox until scrolled to bottom
+                    : null,
               ),
               Text(
                 'ฉันยินยอมให้เก็บข้อมูล',

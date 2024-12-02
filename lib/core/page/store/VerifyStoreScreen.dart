@@ -10,10 +10,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class VerifyStoreScreen extends StatefulWidget {
   final Store storeData;
+  Map<String, dynamic>? staticData;
 
-  const VerifyStoreScreen({
+  VerifyStoreScreen({
     Key? key,
     required this.storeData,
+    required this.staticData,
   }) : super(key: key);
 
   @override
@@ -21,22 +23,21 @@ class VerifyStoreScreen extends StatefulWidget {
 }
 
 class _VerifyStoreScreenState extends State<VerifyStoreScreen> {
-  Map<String, dynamic>? _jsonString;
   // Store? _storeData;
 
   @override
   void initState() {
     super.initState();
-    _loadJson();
+    // _loadJson();
     // _loadStoreFromStorage();
   }
 
-  Future<void> _loadJson() async {
-    String jsonString = await rootBundle.loadString('lang/main-th.json');
-    setState(() {
-      _jsonString = jsonDecode(jsonString)['shop']["add_shop_screen"];
-    });
-  }
+  // Future<void> _loadJson() async {
+  //   String jsonString = await rootBundle.loadString('lang/main-th.json');
+  //   setState(() {
+  //     _jsonString = jsonDecode(jsonString)['shop']["add_shop_screen"];
+  //   });
+  // }
 
   // Future<void> _loadStoreFromStorage() async {
   //   SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -65,7 +66,7 @@ class _VerifyStoreScreenState extends State<VerifyStoreScreen> {
               const Icon(Icons.store, size: 40),
               const SizedBox(width: 8),
               Text(
-                "${_jsonString?['shop_detail'] ?? "Shop Detail"}",
+                "${widget.staticData?['title'] ?? "Shop Detail"}",
                 style: Styles.headerBlack24(context),
               ),
             ],
@@ -74,13 +75,28 @@ class _VerifyStoreScreenState extends State<VerifyStoreScreen> {
             thickness: 1,
             color: Colors.grey.shade300,
           ),
-          Text(
-            "ชื่อ : ${widget.storeData.copyWith().name}",
-            style: Styles.headerBlack24(context),
-          ),
           Text.rich(
             TextSpan(
-              text: 'โทรศัพท์', // This is the main text style
+              text:
+                  '${widget.staticData?['name'] ?? "Name"}', // This is the main text style
+              style: Styles.headerBlack24(context),
+              children: <TextSpan>[
+                TextSpan(
+                  text:
+                      ' : ${widget.storeData.copyWith().name}', // Inline bold text
+                  style: Styles.black18(context),
+                ),
+              ],
+            ),
+          ),
+          // Text(
+          //   "${widget.staticData?['name'] ?? "Name"} : ${widget.storeData.copyWith().name}",
+          //   style: Styles.headerBlack24(context),
+          // ),
+          Text.rich(
+            TextSpan(
+              text:
+                  '${widget.staticData?['tel'] ?? "Phone"}', // This is the main text style
               style: Styles.headerBlack18(context),
               children: <TextSpan>[
                 TextSpan(
@@ -93,7 +109,8 @@ class _VerifyStoreScreenState extends State<VerifyStoreScreen> {
           ),
           Text.rich(
             TextSpan(
-              text: 'เลขผู้เสียภาษี', // This is the main text style
+              text:
+                  '${widget.staticData?['taxId'] ?? "Tax ID"}', // This is the main text style
               style: Styles.headerBlack18(context),
               children: <TextSpan>[
                 TextSpan(
@@ -106,7 +123,8 @@ class _VerifyStoreScreenState extends State<VerifyStoreScreen> {
           ),
           Text.rich(
             TextSpan(
-              text: 'เส้นทาง', // This is the main text style
+              text:
+                  '${widget.staticData?['route'] ?? "Route"}', // This is the main text style
               style: Styles.headerBlack18(context),
               children: <TextSpan>[
                 TextSpan(
@@ -118,7 +136,8 @@ class _VerifyStoreScreenState extends State<VerifyStoreScreen> {
           ),
           Text.rich(
             TextSpan(
-              text: 'ประเภทร้านค้า', // This is the main text style
+              text:
+                  '${widget.staticData?['shopType'] ?? "Shop Type"}', // This is the main text style
               style: Styles.headerBlack18(context),
               children: <TextSpan>[
                 TextSpan(
@@ -130,7 +149,8 @@ class _VerifyStoreScreenState extends State<VerifyStoreScreen> {
           ),
           Text.rich(
             TextSpan(
-              text: 'Line ID', // This is the main text style
+              text:
+                  '${widget.staticData?['lineId'] ?? "Line ID"}', // This is the main text style
               style: Styles.headerBlack18(context),
               children: <TextSpan>[
                 TextSpan(
@@ -143,7 +163,8 @@ class _VerifyStoreScreenState extends State<VerifyStoreScreen> {
           ),
           Text.rich(
             TextSpan(
-              text: 'หมายเหตุ', // This is the main text style
+              text:
+                  '${widget.staticData?['note'] ?? "Note"}', // This is the main text style
               style: Styles.headerBlack18(context),
               children: <TextSpan>[
                 TextSpan(
@@ -156,7 +177,8 @@ class _VerifyStoreScreenState extends State<VerifyStoreScreen> {
           ),
           Text.rich(
             TextSpan(
-              text: 'ที่อยู่', // This is the main text style
+              text:
+                  '${widget.staticData?['address'] ?? "Address"}', // This is the main text style
               style: Styles.headerBlack18(context),
               children: <TextSpan>[
                 TextSpan(
@@ -173,7 +195,7 @@ class _VerifyStoreScreenState extends State<VerifyStoreScreen> {
               const Icon(Icons.photo, size: 40),
               const SizedBox(width: 8),
               Text(
-                "ภาพถ่าย",
+                "${widget.staticData?['title_image'] ?? "Image"}",
                 style: Styles.headerBlack24(context),
               ),
             ],
@@ -187,21 +209,22 @@ class _VerifyStoreScreenState extends State<VerifyStoreScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               ShowPhotoButton(
-                label: "ร้านค้า",
+                label: "${widget.staticData?['image_store'] ?? "Store"}",
                 icon: Icons.image_not_supported_outlined,
                 imagePath: widget.storeData.imageList.length > 0
                     ? widget.storeData.imageList[0]
                     : null,
               ),
               ShowPhotoButton(
-                label: "ภ.พ.20",
+                label: "${widget.staticData?['image_taxId'] ?? "Tax ID"}",
                 icon: Icons.image_not_supported_outlined,
                 imagePath: widget.storeData.imageList.length > 1
                     ? widget.storeData.imageList[1]
                     : null,
               ),
               ShowPhotoButton(
-                label: "สำเนาบัตรปปช.",
+                label:
+                    "${widget.staticData?['image_identify'] ?? "Personal Identify"}",
                 icon: Icons.image_not_supported_outlined,
                 imagePath: widget.storeData.imageList.length > 2
                     ? widget.storeData.imageList[2]

@@ -70,6 +70,7 @@ class _CustomtextinputState extends State<Customtextinput> {
       validator: (value) => value!.isEmpty ? 'กรุณากรอกข้อมูล' : null,
       // onFieldSubmitted: widget.onFieldSubmitted,
       readOnly: widget.readonly,
+      enabled: !widget.readonly,
       style: Styles.black18(context),
       controller: widget.controller, // Use controller if provided
       decoration: InputDecoration(

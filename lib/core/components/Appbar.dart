@@ -56,7 +56,7 @@ class _AppbarCustomState extends State<AppbarCustom> {
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios_new_outlined,
-              size: screenWidth / 12,
+              size: screenWidth / 20,
             ),
             onPressed: () {
               Navigator.of(context).pop();

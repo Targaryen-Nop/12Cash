@@ -14,6 +14,7 @@ import 'package:_12sale_app/core/page/HomeScreen.dart';
 import 'package:_12sale_app/core/page/dashboard/DashboardScreen.dart';
 import 'package:_12sale_app/core/page/route/TossAddToCartScreen.dart';
 import 'package:_12sale_app/core/page/testOffline.dart';
+import 'package:_12sale_app/data/service/localNotification.dart';
 import 'package:_12sale_app/data/service/requestPremission.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -31,11 +32,16 @@ late List<CameraDescription> _cameras;
 void main() async {
   // Initialize the locale data for Thai language
 
+  // Ensure the app is always in portrait mode
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize the notifications
+  await initializeNotifications();
+
+  await requestAllPermissions();
   await initializeDateFormatting('th', null);
   await dotenv.load(fileName: ".env");
   await ScreenUtil.ensureScreenSize();
-  // Ensure the app is always in portrait mode
-  WidgetsFlutterBinding.ensureInitialized();
   // Initialize the background service
   // final hasPermissions = await FlutterBackground.initialize(
   //   androidConfig: const FlutterBackgroundAndroidConfig(

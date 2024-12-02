@@ -73,8 +73,9 @@ class _DashboardscreenState extends State<Dashboardscreen> {
         child: Column(
           children: [
             SizedBox(height: screenWidth / 25),
-            WeightCudeCard(),
-            Container(height: 500, width: 400, child: LineChartSample()),
+            const WeightCudeCard(),
+            SizedBox(height: screenWidth / 25),
+            SizedBox(height: 500, width: 400, child: LineChartSample()),
             SizedBox(height: screenWidth / 25),
             CalendarPicker(
               label: "Select Date",

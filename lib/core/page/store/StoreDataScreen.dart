@@ -28,6 +28,7 @@ class StoreDataScreen extends StatefulWidget {
   TextEditingController storeNoteController;
   RouteStore initialSelectedRoute;
   ShopType initialSelectedShoptype;
+  Map<String, dynamic>? staticData;
 
   StoreDataScreen({
     Key? key,
@@ -40,6 +41,7 @@ class StoreDataScreen extends StatefulWidget {
     required this.initialSelectedRoute,
     required this.initialSelectedShoptype,
     required this.imageList,
+    required this.staticData,
   }) : super(key: key);
 
   @override
@@ -49,7 +51,7 @@ class StoreDataScreen extends StatefulWidget {
 class _StoreDataScreenState extends State<StoreDataScreen> {
   Timer? _debounce;
   Store? _storeData;
-  Map<String, dynamic>? _jsonString;
+
   List<String> imageList = [];
   bool storeInput = true;
   bool taxInput = true;
@@ -65,7 +67,7 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
 
   void initState() {
     super.initState();
-    _loadJson();
+    // _loadJson();
     _loadStoreFromStorage();
     // _loadStoreFromStorage();
   }
@@ -89,12 +91,12 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
     }
   }
 
-  Future<void> _loadJson() async {
-    String jsonString = await rootBundle.loadString('lang/main-th.json');
-    setState(() {
-      _jsonString = jsonDecode(jsonString)['shop']["add_shop_screen"];
-    });
-  }
+  // Future<void> _loadJson() async {
+  //   String jsonString = await rootBundle.loadString('lang/main-th.json');
+  //   setState(() {
+  //     _jsonString = jsonDecode(jsonString)['shop']["add_shop_screen"];
+  //   });
+  // }
 
   Future<void> _onTextChanged(String text, String field) async {
     setState(() {
@@ -199,7 +201,7 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
               const Icon(Icons.store, size: 40),
               const SizedBox(width: 8),
               Text(
-                " ${_jsonString?['shop_detail'] ?? "Shop Detail"}",
+                widget.staticData?['title'] ?? 'Store Detail',
                 style: Styles.headerBlack24(context),
               ),
             ],
@@ -223,9 +225,10 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
                     });
                   },
                   context,
-                  label: '${_jsonString?['shop_name'] ?? "Shop Name"} *',
+                  label:
+                      '${widget.staticData?['input_name']['name'] ?? "Shop Name"} *',
                   hint:
-                      '${_jsonString?['shop_name_hint'] ?? "Max 36 Characters"}',
+                      '${widget.staticData?['input_name']['hint'] ?? "Max 36 Characters"}',
                 ),
                 const SizedBox(height: 16),
                 Customtextinput(
@@ -243,9 +246,10 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
                     });
                   },
                   context,
-                  label: '${_jsonString?['shop_tax'] ?? "Tax ID"}',
+                  label:
+                      '${widget.staticData?['input_taxId']['name'] ?? "Tax ID"}',
                   hint:
-                      '${_jsonString?['shop_tax_hint'] ?? "Max 13 Characters"}',
+                      '${widget.staticData?['input_taxId']['hint'] ?? "Max 13 Characters"}',
                 ),
                 const SizedBox(height: 16),
                 Customtextinput(
@@ -253,7 +257,10 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
                     FilteringTextInputFormatter.digitsOnly,
                   ],
                   max: 10,
-                  hint: "ไม่เกิน 10 ตัวอักษร",
+                  label:
+                      '${widget.staticData?['input_tel']['name'] ?? "Phone"} *',
+                  hint:
+                      "${widget.staticData?['input_tel']['hint'] ?? "Max 10 Characters"}",
                   keypadType: TextInputType.number,
                   controller: widget.storeTelController,
                   onChanged: (value) => _onTextChanged(value, 'tel'),
@@ -264,7 +271,6 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
                     });
                   },
                   context,
-                  label: 'โทรศัพท์ *',
                 ),
                 const SizedBox(height: 16),
                 Row(
@@ -278,8 +284,10 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
                                 widget.initialSelectedShoptype.name == ''
                                     ? null
                                     : widget.initialSelectedShoptype,
-                            label: "เลือกร้านค้า *",
-                            titleText: "เลือกร้านค้า",
+                            label:
+                                '${widget.staticData?['input_shoptype']['name'] ?? "Shop Type"} *',
+                            titleText:
+                                "${widget.staticData?['input_shoptype']['name'] ?? "Shop Type"}",
                             fetchItems: (filter) => getShoptype(filter),
                             onChanged: (ShopType? selected) async {
                               if (selected != null) {
@@ -340,8 +348,10 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
                               widget.initialSelectedRoute.route == ''
                                   ? null
                                   : widget.initialSelectedRoute,
-                          label: "เลือกรูท *",
-                          titleText: "เลือกรูท",
+                          label:
+                              "${widget.staticData?['input_route']['name'] ?? "Route"} *",
+                          titleText:
+                              "${widget.staticData?['input_route']['name'] ?? "Route"}",
                           fetchItems: (filter) => getRoutes(filter),
                           onChanged: (RouteStore? selected) async {
                             if (selected != null) {
@@ -397,7 +407,8 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
                     });
                   },
                   context,
-                  label: 'Line ID',
+                  label:
+                      '${widget.staticData?['input_lineId']['name'] ?? "Line ID"}',
                 ),
                 const SizedBox(height: 16),
                 Customtextinput(
@@ -410,7 +421,8 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
                     });
                   },
                   context,
-                  label: 'หมายเหตุ',
+                  label:
+                      '${widget.staticData?['input_note']['name'] ?? "Note"}',
                 ),
               ],
             ),
@@ -421,7 +433,7 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
               const Icon(Icons.photo, size: 40),
               const SizedBox(width: 8),
               Text(
-                " ภาพถ่าย",
+                " ${widget.staticData?['title_image'] ?? "Image"}",
                 style: Styles.headerBlack24(context),
               ),
             ],
@@ -432,7 +444,7 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
               IconButtonWithLabel(
                 icon: Icons.photo_camera,
                 imagePath: imageList.isNotEmpty ? imageList[0] : null,
-                label: "ร้านค้า",
+                label: "${widget.staticData?['image_store'] ?? "Store"}",
                 onImageSelected: (String imagePath) async {
                   imageList.add(imagePath);
                   widget.imageList.add(imagePath);
@@ -446,7 +458,7 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
               IconButtonWithLabel(
                 icon: Icons.photo_camera,
                 imagePath: imageList.length > 1 ? imageList[1] : null,
-                label: "ภ.พ.20",
+                label: "${widget.staticData?['image_taxId'] ?? "Tax ID"}",
                 onImageSelected: (String imagePath) async {
                   // Create a new imageList and add the imagePath
                   final updatedImageList =
@@ -468,7 +480,8 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
               IconButtonWithLabel(
                 icon: Icons.photo_camera,
                 imagePath: imageList.length > 2 ? imageList[2] : null,
-                label: "สำเนาบัตรปปช.",
+                label:
+                    "${widget.staticData?['image_identify'] ?? "Persona Identify"}",
                 onImageSelected: (String imagePath) async {
                   // Create a new imageList and add the imagePath
                   final updatedImageList =

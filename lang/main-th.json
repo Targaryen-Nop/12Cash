@@ -127,20 +127,82 @@
             "save": "บันทึกรายการ"
         }
     },
-    "shop": {
-        "add_shop_screen": {
-            "title": "เพิ่มร้านค้า",
-            "shop_detail": "ข้อมูลร้านค้า",
-            "shop_code": "รหัสร้านค้า",
-            "shop_name": "ชื่อร้านค้า",
-            "shop_name_hint": "ไม่เกิน 36 ตัวอักษร",
-            "shop_address": "ที่อยู่",
-            "shop_phone": "เบอร์ร้านค้า",
-            "shop_tax": "เลขประจำตัวผู้เสียภาษี",
-            "shop_tax_hint": "ไม่เกิน 13 ตัวอักษร",
-            "shop_route": "เส้นทาง"
+    "store": {
+        "processtimeline_screen": {
+            "back_button": "กลับ",
+            "next_button": "ถัดไป",
+            "submit_button": "ยืนยัน",
+            "verify_process": "ความยินยอม",
+            "data_process": "ข้อมูลร้าน",
+            "address_process": "ที่อยู่",
+            "submit_process": "ยืนยัน"
         },
-        "detail_screen": {},
-        "detail_screen": {}
+        "store_data_screen": {
+            "title": "ข้อมูลร้านค้า",
+            "title_image": "ภาพถ่าย",
+            "image_store": "หน้าร้านค้า",
+            "image_taxId": "ภ.พ.20",
+            "image_identify": "สำเนาบัตรปปช.",
+            "input_name": {
+                "name": "ชื่อร้านค้า",
+                "hint": "ไม่เกิน 36 ตัวอักษร"
+            },
+            "input_taxId": {
+                "name": "เลขประจำตัวผู้เสียภาษี",
+                "hint": "ไม่เกิน 13 ตัวอักษร"
+            },
+            "input_tel": {
+                "name": "โทรศัพท์",
+                "hint": "ไม่เกิน 10 ตัวอักษร"
+            },
+            "input_shoptype": {
+                "name": "เลือกร้านค้า"
+            },
+            "input_route": {
+                "name": "เลือกรูท"
+            },
+            "input_lineId": {
+                "name": "ไลน์ไอดี",
+                "hint": "ไม่เกิน 36 ตัวอักษร"
+            },
+            "input_note": {
+                "name": "หมายเหตุ",
+                "hint": "ไม่เกิน 36 ตัวอักษร"
+            }
+        },
+        "store_address_screen": {
+            "title": "ที่อยู่",
+            "input_address": {
+                "name": "ที่อยู่",
+                "hint": "ไม่เกิน 36 ตัวอักษร"
+            },
+            "input_province": {
+                "name": "เลือกจังหวัด"
+            },
+            "input_district": {
+                "name": "เลือกอำเภอ/เขต"
+            },
+            "input_subdistrict": {
+                "name": "เลือกตำบล/แขวง"
+            },
+            "input_poscode": {
+                "name": "รหัสไปรษณีย์"
+            }
+        },
+        "store_verify_screen": {
+            "title": "ข้อมูลร้านค้า",
+            "title_image": "ภาพถ่าย",
+            "name": "ชื่อ",
+            "tel": "เบอร์โทรศัพท์",
+            "route": "เส้นทาง",
+            "shopType": "ประเภทร้านค้า",
+            "taxId": "เลขผู้เสียภาษี",
+            "lineId": "ไลน์ไอดี",
+            "note": "หมายเหตุ",
+            "address": "ที่อยู่",
+            "image_store": "หน้าร้านค้า",
+            "image_taxId": "ภ.พ.20",
+            "image_identify": "สำเนาบัตรปปช."
+        }
     }
 }

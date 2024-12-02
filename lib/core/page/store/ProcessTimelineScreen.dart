@@ -31,9 +31,11 @@ const inProgressColor = Styles.primaryColor;
 const todoColor = Color(0xffd1d2d7);
 
 class ProcessTimelinePage extends StatefulWidget {
+  Map<String, dynamic>? staticData;
+  ProcessTimelinePage({required this.staticData, super.key});
+
   @override
-  // ignore: library_private_types_in_public_api
-  _ProcessTimelinePageState createState() => _ProcessTimelinePageState();
+  State<ProcessTimelinePage> createState() => _ProcessTimelinePageState();
 }
 
 class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
@@ -52,53 +54,6 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
       ShopType(id: '', name: '', descript: '', status: '');
   List<dynamic> imageList = [];
   List<DuplicateStore> duplicateStores = [];
-
-  String responseBody = '''
-{
-    "status": "error",
-    "message": "similar store",
-    "data": [
-        {
-            "store": {
-                "storeId": "1",
-                "name": "Store A",
-                "taxId": "123456",
-                "tel": "987654321",
-                "route": "R01",
-                "type": "Retail",
-                "typeName": "Small Retail Store",
-                "address": "123 Market Street",
-                "district": "Central",
-                "subDistrict": "Downtown",
-                "province": "Cityville",
-                "provinceCode": "001",
-                "postcode": "54321",
-                "zone": "North",
-                "area": "Area 51",
-                "latitude": "40.7128",
-                "longtitude": "-74.0060",
-                "lineId": "line123",
-                "note": "Popular store",
-                "approve": {
-                    "dateSend": "2024-01-01",
-                    "dateAction": "2024-01-02"
-                },
-                "policyConsent": [
-                    {
-                        "status": "Agree",
-                        "date": "2024-01-01"
-                    }
-                ],
-                "imageList": [],
-                "shippingAddress": [],
-                "createdDate": "2024-01-01",
-                "updatedDate": "2024-01-02"
-            },
-            "similarity": "95.5"
-        }
-    ]
-}
-''';
 
   Location initialSelectedLocation = Location(
       id: '',
@@ -141,17 +96,20 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
         return const PolicyScreen();
       case 1:
         return StoreDataScreen(
-            storeData: _storeData,
-            storeNameController: storeNameController,
-            storeTaxIDController: storeTaxIDController,
-            storeTelController: storeTelController,
-            storeLineController: storeLineController,
-            storeNoteController: storeNoteController,
-            initialSelectedRoute: initialSelectedRoute,
-            initialSelectedShoptype: initialSelectedShoptype,
-            imageList: imageList);
+          storeData: _storeData,
+          storeNameController: storeNameController,
+          storeTaxIDController: storeTaxIDController,
+          storeTelController: storeTelController,
+          storeLineController: storeLineController,
+          storeNoteController: storeNoteController,
+          initialSelectedRoute: initialSelectedRoute,
+          initialSelectedShoptype: initialSelectedShoptype,
+          imageList: imageList,
+          staticData: widget.staticData!['store_data_screen'],
+        );
       case 2:
         return StoreAddressScreen(
+          staticData: widget.staticData!['store_address_screen'],
           storeAddressController: storeAddressController,
           storePoscodeController: storePoscodeController,
           initialSelectedLocation: initialSelectedLocation,
@@ -159,6 +117,7 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
       case 3:
         return VerifyStoreScreen(
           storeData: _storeData,
+          staticData: widget.staticData!['store_verify_screen'],
         );
       default:
         return Center(child: Text("Unknown step"));
@@ -639,7 +598,11 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
                                 borderRadius: BorderRadius.circular(8),
                               ),
                             ),
-                            child: Text('กลับ', style: Styles.white18(context)),
+                            child: Text(
+                                widget.staticData?['processtimeline_screen']
+                                        ['back_button'] ??
+                                    'Back',
+                                style: Styles.white18(context)),
                           ),
                         ),
                         Container(
@@ -843,7 +806,13 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
                                 borderRadius: BorderRadius.circular(8),
                               ),
                             ),
-                            child: Text(_processIndex == 3 ? 'ยืนยัน' : 'ถัดไป',
+                            child: Text(
+                                _processIndex == 3
+                                    ? 'ยืนยัน'
+                                    : widget.staticData?[
+                                                'processtimeline_screen']
+                                            ['next_button'] ??
+                                        'Next',
                                 style: Styles.white18(context)),
                           ),
                         ),

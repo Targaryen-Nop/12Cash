@@ -38,21 +38,21 @@ class _DetailShopScreenState extends State<DetailShopScreen> {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
-      floatingActionButton: SizedBox(
-        width: 100, // Set the width of the button
-        height: screenWidth / 8, // Set the height of the button
-        child: AddStoreButton(
-          icon: Icons.add,
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => ProcessTimelinePage(),
-              ),
-            );
-          },
-        ),
-      ),
+      // floatingActionButton: SizedBox(
+      //   width: 100, // Set the width of the button
+      //   height: screenWidth / 8, // Set the height of the button
+      //   child: AddStoreButton(
+      //     icon: Icons.add,
+      //     onPressed: () {
+      //       Navigator.push(
+      //         context,
+      //         MaterialPageRoute(
+      //           builder: (context) => ProcessTimelinePage(),
+      //         ),
+      //       );
+      //     },
+      //   ),
+      // ),
       appBar: const PreferredSize(
         preferredSize: Size.fromHeight(70),
         child: AppbarCustom(

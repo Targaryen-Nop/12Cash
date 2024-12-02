@@ -77,3 +77,29 @@ Future<void> requestPhotoPermission() async {
     print("Notification permission already granted.");
   }
 }
+
+Future<void> requestAllPermissions() async {
+  // List of permissions to request
+  final permissions = [
+    Permission.notification,
+    Permission.bluetoothConnect,
+    Permission.camera,
+    Permission.nearbyWifiDevices,
+    Permission.location,
+    Permission.photos,
+  ];
+
+  for (var permission in permissions) {
+    // Check if the permission is denied
+    if (await permission.isDenied) {
+      final status = await permission.request();
+      if (status.isGranted) {
+        print("${permission.toString()} permission granted!");
+      } else {
+        print("${permission.toString()} permission denied!");
+      }
+    } else if (await permission.isGranted) {
+      print("${permission.toString()} permission already granted.");
+    }
+  }
+}

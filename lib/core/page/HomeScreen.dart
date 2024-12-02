@@ -17,6 +17,7 @@ import 'package:_12sale_app/core/styles/style.dart';
 import 'package:_12sale_app/data/models/Order.dart';
 import 'package:_12sale_app/data/models/Route.dart';
 import 'package:_12sale_app/data/models/Store.dart';
+import 'package:_12sale_app/data/models/User.dart';
 import 'package:_12sale_app/data/service/requestPremission.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
@@ -38,10 +39,11 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
-  Map<String, dynamic>? _jsonString;
+  Map<String, dynamic>? staticData;
   List<Store> storeItem = [];
 
   List<Store> allStores = [];
+  late User _userData;
 
   List<String> filteredItems = [];
   TextEditingController searchController = TextEditingController();
@@ -54,6 +56,19 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       allStores = data.map((json) => Store.fromJson(json)).toList();
     });
+  }
+
+  Future<void> _loadUserData() async {
+    try {
+      // Load JSON data from the file
+      final String response = await rootBundle.loadString('data/user.json');
+      final Map<String, dynamic> data = json.decode(response);
+      setState(() {
+        _userData = User.fromJson(data);
+      });
+    } catch (e) {
+      print("Error loading user data: $e");
+    }
   }
 
   static const List<Widget> _widgetOptions = <Widget>[
@@ -83,7 +98,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> _loadJson() async {
     String jsonString = await rootBundle.loadString('lang/main-th.json');
     setState(() {
-      _jsonString = jsonDecode(jsonString)["menu"];
+      staticData = jsonDecode(jsonString);
     });
   }
 
@@ -103,7 +118,7 @@ class _HomeScreenState extends State<HomeScreen> {
     // TODO: implement initState
     super.initState();
     _loadStoreData();
-    requestLocationPermission();
+    _loadUserData();
     _selectedIndex = widget.index; //_selectedIndex
     _loadJson();
     _clearOrders();
@@ -113,16 +128,18 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _filterItems(String query) {
-    setState(() {
-      if (query.isEmpty) {
-        storeItem = allStores; // Reset to the original full list
-      } else {
-        storeItem = allStores
-            .where((item) => item.name.toLowerCase().contains(
-                query.toLowerCase())) // Assuming `name` is the field to filter
-            .toList();
-      }
-    });
+    setState(
+      () {
+        if (query.isEmpty) {
+          storeItem = allStores; // Reset to the original full list
+        } else {
+          storeItem = allStores
+              .where((item) => item.name.toLowerCase().contains(query
+                  .toLowerCase())) // Assuming `name` is the field to filter
+              .toList();
+        }
+      },
+    );
   }
 
   void _getFuction() {
@@ -138,7 +155,9 @@ class _HomeScreenState extends State<HomeScreen> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => ProcessTimelinePage(),
+              builder: (context) => ProcessTimelinePage(
+                staticData: staticData!['store'],
+              ),
             ),
           );
         }();
@@ -298,6 +317,8 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: Container(
+        width: screenWidth / 9,
+        height: screenWidth / 9,
         padding: const EdgeInsets.all(8.0),
         decoration: BoxDecoration(
           color: Styles.secondaryColor,
@@ -357,37 +378,37 @@ class _HomeScreenState extends State<HomeScreen> {
                 icon: const Icon(
                   Icons.home,
                 ),
-                label: _jsonString?['home'] ?? 'Home',
+                label: staticData?['menu']['home'] ?? 'Home',
               ),
               BottomNavigationBarItem(
                 icon: const Icon(
                   Icons.route_rounded,
                 ),
-                label: _jsonString?['route'] ?? 'Route',
+                label: staticData?['menu']['route'] ?? 'Route',
               ),
               BottomNavigationBarItem(
                 icon: const Icon(
                   Icons.store,
                 ),
-                label: _jsonString?['shop'] ?? 'Shop',
+                label: staticData?['menu']['shop'] ?? 'Shop',
               ),
               BottomNavigationBarItem(
                 icon: const Icon(
                   Icons.inventory_rounded,
                 ),
-                label: _jsonString?['report'] ?? 'Report',
+                label: staticData?['menu']['report'] ?? 'Report',
               ),
               // BottomNavigationBarItem(
               //   icon: const Icon(
               //     Icons.inventory,
               //   ),
-              //   label: _jsonString?['manage'] ?? 'Manage',
+              //   label: staticData?['manage'] ?? 'Manage',
               // ),
               // BottomNavigationBarItem(
               //   icon: const Icon(
               //     Icons.more_horiz,
               //   ),
-              //   label: _jsonString?['more'] ?? 'More',
+              //   label: staticData?['more'] ?? 'More',
               // ),
             ],
             selectedLabelStyle: Styles.white18(context),

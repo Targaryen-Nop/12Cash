@@ -20,7 +20,7 @@ class _WeightCudeCardState extends State<WeightCudeCard> {
     return Expanded(
       child: BoxShadowCustom(
         child: Container(
-          height: screenWidth,
+          height: screenWidth / 1.4,
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             color: Colors.white,
@@ -42,7 +42,7 @@ class _WeightCudeCardState extends State<WeightCudeCard> {
               ),
               WaterFilledRectangle(
                 width: screenWidth / 3.5,
-                height: screenWidth / 5,
+                height: screenWidth / 9,
                 depth: screenWidth / 6,
                 fillPercentage: 0.40,
               ),
@@ -66,6 +66,9 @@ class _WeightCudeCardState extends State<WeightCudeCard> {
                   text: "Utilized Weight",
                   text2: "0.94 t",
                   style: Styles.black24(context)),
+              // SizedBox(
+              //   height: screenWidth / 15,
+              // ),
             ],
           ),
         ),

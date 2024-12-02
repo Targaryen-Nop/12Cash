@@ -18,12 +18,14 @@ class StoreAddressScreen extends StatefulWidget {
   TextEditingController storeAddressController;
   TextEditingController storePoscodeController;
   Location initialSelectedLocation;
+  Map<String, dynamic>? staticData;
 
   StoreAddressScreen({
     Key? key,
     required this.storeAddressController,
     required this.storePoscodeController,
     required this.initialSelectedLocation,
+    required this.staticData,
   }) : super(key: key);
 
   @override
@@ -31,7 +33,6 @@ class StoreAddressScreen extends StatefulWidget {
 }
 
 class _StoreAddressScreenState extends State<StoreAddressScreen> {
-  Map<String, dynamic>? _jsonString;
   String province = "";
   String amphoe = "";
   String district = "";
@@ -40,14 +41,12 @@ class _StoreAddressScreenState extends State<StoreAddressScreen> {
   List<Location> poscode = []; // Filtered list of districts
   Location? selectedDistrict;
   Location? selectedsubDistricts;
-
   Store? _storeData;
   Timer? _throttle;
 
   @override
   void initState() {
     super.initState();
-    _loadJson();
     _loadStoreFromStorage();
     _loadDistrictsFromJson(widget.initialSelectedLocation.province);
     _loadSubDistrictsFromJson(widget.initialSelectedLocation.province,
@@ -179,13 +178,6 @@ class _StoreAddressScreenState extends State<StoreAddressScreen> {
     }
   }
 
-  Future<void> _loadJson() async {
-    String jsonString = await rootBundle.loadString('lang/main-th.json');
-    setState(() {
-      _jsonString = jsonDecode(jsonString)['shop']["add_shop_screen"];
-    });
-  }
-
   Future<void> _loadDistrictsFromJson(String province) async {
     // Load the JSON file for districts
     final String response = await rootBundle.loadString('data/location.json');
@@ -314,7 +306,7 @@ class _StoreAddressScreenState extends State<StoreAddressScreen> {
               const Icon(Icons.location_on_outlined, size: 40),
               const SizedBox(width: 8),
               Text(
-                " ${_jsonString?['shop_address'] ?? "Shop Address"}",
+                " ${widget.staticData?['title'] ?? "Shop Address"}",
                 style: Styles.headerBlack24(context),
               ),
             ],
@@ -333,13 +325,19 @@ class _StoreAddressScreenState extends State<StoreAddressScreen> {
                   controller: widget.storeAddressController,
                   onChanged: (value) => _onTextChanged(value, 'address'),
                   context,
-                  label: 'ที่อยู่ *',
+                  label:
+                      '${widget.staticData?['input_address']['name'] ?? "Shop Address"} *',
+                  hint:
+                      '${widget.staticData?['input_address']['hint'] ?? "Max 36 Characteres"} *',
                 ),
                 SizedBox(height: screenWidth / 37),
                 DropdownSearchCustomGroup<Location>(
-                  label: "เลือกจังหวัด *",
-                  hint: "เลือกจังหวัด",
-                  titleText: "เลือกจังหวัด",
+                  label:
+                      '${widget.staticData?['input_province']['name'] ?? "Province"} *',
+                  hint:
+                      "${widget.staticData?['input_province']['name'] ?? "Province"}",
+                  titleText:
+                      "${widget.staticData?['input_province']['name'] ?? "Province"}",
                   fetchItems: (filter) async {
                     // Replace with your district fetching logic
                     return await _fetchProvince(filter);
@@ -400,9 +398,10 @@ class _StoreAddressScreenState extends State<StoreAddressScreen> {
                 SizedBox(height: screenWidth / 37),
                 DropdownSearchCustomGroup<Location>(
                   key: ValueKey('DistrictSearch-$province'),
-                  label: "เลือกอำเภอ/เขต",
-                  hint: "เลือกอำเภอ/เขต",
-                  titleText: "เลือกอำเภอ/เขต",
+                  label:
+                      "${widget.staticData?['input_district']['name'] ?? "Amphoe"}",
+                  titleText:
+                      "${widget.staticData?['input_district']['name'] ?? "Amphoe"}",
                   fetchItems: (filter) async {
                     // Replace with your district fetching logic
                     return await _fetchDistricts(filter);
@@ -462,9 +461,10 @@ class _StoreAddressScreenState extends State<StoreAddressScreen> {
                 SizedBox(height: screenWidth / 37),
                 DropdownSearchCustomGroup<Location>(
                   key: ValueKey('SubDistrictDropdown-$province$amphoe'),
-                  label: "เลือกตำบล/แขวง",
-                  hint: "เลือกตำบล/แขวง",
-                  titleText: "เลือกตำบล/แขวง",
+                  label:
+                      "${widget.staticData?['input_subdistrict']['name'] ?? "Sub District"}",
+                  titleText:
+                      "${widget.staticData?['input_subdistrict']['name'] ?? "Sub District"}",
                   fetchItems: (filter) async {
                     // Replace with your district fetching logic
                     return await _fetchSubDistricts(filter);
@@ -527,13 +527,15 @@ class _StoreAddressScreenState extends State<StoreAddressScreen> {
                 ),
                 SizedBox(height: screenWidth / 37),
                 Customtextinput(
+                  readonly: true,
                   key: ValueKey('Postcode-$province'),
                   context,
                   onChanged: (value) => _onTextChanged(value, 'postcode'),
-                  readonly: true,
+                  // readonly: true,
                   controller:
                       widget.storePoscodeController, // Pass the controller here
-                  label: 'รหัสไปรษณีย์',
+                  label:
+                      "${widget.staticData?['input_poscode']['name'] ?? "Poscode"}",
                 ),
               ],
             ),
