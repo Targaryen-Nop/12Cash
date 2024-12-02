@@ -1,5 +1,6 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
+// ignore: camel_case_types
 class erpAPI {
   // Get the base URL from .env
   static String apiUrl = dotenv.env['API_URL'] ?? 'https://localhost:8000';

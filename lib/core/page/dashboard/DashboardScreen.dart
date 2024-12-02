@@ -10,6 +10,7 @@ import 'package:_12sale_app/core/page/Ractangle3D.dart';
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:_12sale_app/data/models/Customer.dart';
 import 'package:_12sale_app/data/models/Shipping.dart';
+import 'package:_12sale_app/data/models/User.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -19,6 +20,7 @@ import 'package:geolocator/geolocator.dart';
 import 'dart:async';
 import 'package:_12sale_app/core/utils/json_loader.dart';
 import 'package:path/path.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Dashboardscreen extends StatefulWidget {
   const Dashboardscreen({super.key});
@@ -29,11 +31,11 @@ class Dashboardscreen extends StatefulWidget {
 
 class _DashboardscreenState extends State<Dashboardscreen> {
   Timer? _locationTimer;
+
   @override
   void initState() {
     super.initState();
     LocationService().initialize();
-
     // startLocationUpdates();
   }
 
@@ -60,8 +62,6 @@ class _DashboardscreenState extends State<Dashboardscreen> {
 
   List<CustomerModel> customerList = [];
   List<ShippingModel> shuppingList = [];
-  CustomerModel? _selectedCustomer;
-  ShippingModel? _selectedShipping;
 
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -265,21 +265,43 @@ class DashboardHeader extends StatefulWidget {
 }
 
 class _DashboardHeaderState extends State<DashboardHeader> {
-  Map<String, dynamic> _jsonString = {}; // Store the JSON data here
+  late User _userData = User(
+      saleCode: "",
+      salePayer: "",
+      userName: "",
+      firstName: "",
+      surName: "",
+      passWord: "",
+      tel: "",
+      zone: "",
+      area: "",
+      warehouse: "",
+      role: "",
+      status: "");
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    _loadJson();
+    _loadStoreFromStorage();
   }
 
-  Future<void> _loadJson() async {
-    String jsonString = await rootBundle.loadString('lang/main-th.json');
-    setState(() {
-      _jsonString = jsonDecode(jsonString)['asset'];
-    });
-  }
+  Future<void> _loadStoreFromStorage() async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? jsonStore = prefs.getString("user");
 
+      if (jsonStore != null) {
+        setState(() {
+          _userData = (jsonStore == null
+              ? null
+              : User.fromJson(jsonDecode(jsonStore)))!;
+        });
+        // province = _storeData.province!;
+      }
+    } catch (e) {
+      print("Error loading from storage: $e");
+    }
+  }
   // Function to load JSON using the reusable global function
 
   @override
@@ -304,7 +326,6 @@ class _DashboardHeaderState extends State<DashboardHeader> {
                     decoration: const BoxDecoration(
                       image: DecorationImage(
                         image: AssetImage('assets/images/12TradingLogo.png'),
-                        // fit: BoxFit.fitWidth,
                       ),
                     ),
                   ),
@@ -329,7 +350,7 @@ class _DashboardHeaderState extends State<DashboardHeader> {
                               Row(
                                 children: [
                                   Text(
-                                    'จรัญมนู ศรีอมรเพทนคร',
+                                    '${_userData.firstName} ${_userData.surName}',
                                     style: Styles.headerWhite24(context),
                                     textAlign: TextAlign.start,
                                   ),
@@ -346,7 +367,7 @@ class _DashboardHeaderState extends State<DashboardHeader> {
                                         const Duration(seconds: 1)),
                                     builder: (context, snapshot) {
                                       return Text(
-                                          DateFormat(' hh:mm:ss a')
+                                          DateFormat(' HH:mm:ss')
                                               .format(DateTime.now()),
                                           style: Styles.white18(context));
                                     },
@@ -369,7 +390,7 @@ class _DashboardHeaderState extends State<DashboardHeader> {
 
                                     child: Center(
                                       child: Text(
-                                        'SALE',
+                                        '${_userData.role.toUpperCase()}',
                                         style: Styles.headerBlack18(context),
                                       ),
                                     ),
@@ -385,7 +406,7 @@ class _DashboardHeaderState extends State<DashboardHeader> {
                                             left: Radius.circular(50))),
                                     child: Center(
                                       child: Text(
-                                        'BE121',
+                                        '${_userData.area}',
                                         style: Styles.headerBlack18(context),
                                       ),
                                     ),

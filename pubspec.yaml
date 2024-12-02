@@ -94,6 +94,7 @@ flutter:
   assets:
     - assets/images/
     - assets/images/logo12.png
+    - assets/images/12TradingLogo.png
     - lang/main-th.json
     - .env
     - data/store.json

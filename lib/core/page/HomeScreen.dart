@@ -66,8 +66,21 @@ class _HomeScreenState extends State<HomeScreen> {
       setState(() {
         _userData = User.fromJson(data);
       });
+      // await prefs.setString("user", data);
     } catch (e) {
       print("Error loading user data: $e");
+    }
+  }
+
+  Future<void> _saveStoreToStorage() async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      // Convert Store object to JSON string
+      String jsonStoreString = json.encode(_userData.toJson());
+      await prefs.setString('user', jsonStoreString);
+      print("Data saved to storage successfully.");
+    } catch (e) {
+      print("Error saving to storage: $e");
     }
   }
 
@@ -122,6 +135,7 @@ class _HomeScreenState extends State<HomeScreen> {
     _selectedIndex = widget.index; //_selectedIndex
     _loadJson();
     _clearOrders();
+    _saveStoreToStorage();
     searchController.addListener(() {
       _filterItems(searchController.text);
     });
@@ -229,7 +243,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 alignment: Alignment.center,
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 child:
-                    Text("เลือกร้านค้า", style: Styles.headerWhite32(context)),
+                    Text("เลือกร้านค้า ", style: Styles.headerWhite32(context)),
               ),
               Padding(
                 padding:
@@ -316,6 +330,7 @@ class _HomeScreenState extends State<HomeScreen> {
         leading2: _widgetOptionsHeader.elementAt(_selectedIndex),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      resizeToAvoidBottomInset: false,
       floatingActionButton: Container(
         width: screenWidth / 9,
         height: screenWidth / 9,

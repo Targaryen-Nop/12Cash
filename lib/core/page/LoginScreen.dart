@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:_12sale_app/core/page/HomeScreen.dart';
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:flutter/material.dart';
@@ -37,48 +39,49 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Container(
-                  width: 200,
-                  decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(16),
-                      topRight: Radius.circular(16),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 4),
+                      width: screenWidth / 2,
+                      height: screenWidth / 4,
+                      // color: Colors.red,
+                      child: Container(
+                        decoration: const BoxDecoration(
+                          image: DecorationImage(
+                            image:
+                                AssetImage('assets/images/12TradingLogo.png'),
+                          ),
+                        ),
+                      ),
                     ),
-                    image: DecorationImage(
-                      image: AssetImage('assets/images/12TradingLogo.png'),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
+                  ],
                 ),
                 Padding(
                   padding: const EdgeInsets.all(20),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      // const Text(
-                      //   'Login',
-                      //   style: TextStyle(
-                      //     fontSize: 28,
-                      //     fontWeight: FontWeight.bold,
-                      //     color: Colors.blue,
-                      //   ),
-                      //   textAlign: TextAlign.center,
-                      // ),
                       SizedBox(height: screenWidth / 25),
-                      const TextField(
+                      TextField(
+                        style: Styles.black18(context),
                         decoration: InputDecoration(
-                          labelText: 'ชื่อผู้ใช้งา่น',
+                          labelText: 'ชื่อผู้ใช้งาน',
+                          labelStyle: Styles.black24(context),
                           border: OutlineInputBorder(),
                           prefixIcon: Icon(Icons.person),
                         ),
                       ),
                       SizedBox(height: screenWidth / 25),
-                      const TextField(
+                      TextField(
+                        style: Styles.black18(context),
                         obscureText: true,
                         decoration: InputDecoration(
                           labelText: 'รหัสผ่าน',
-                          border: OutlineInputBorder(),
-                          prefixIcon: Icon(Icons.lock),
+                          labelStyle: Styles.black24(context),
+                          border: const OutlineInputBorder(),
+                          prefixIcon: const Icon(Icons.lock),
                         ),
                       ),
                       SizedBox(height: screenWidth / 25),
@@ -95,9 +98,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                         index: 0,
                                       )));
                         },
-                        child: const Text(
+                        child: Text(
                           'เข้าสู่ระบบ',
-                          style: TextStyle(color: Colors.white),
+                          style: Styles.white24(context),
                         ),
                       ),
                     ],

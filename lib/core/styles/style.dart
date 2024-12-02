@@ -13,7 +13,7 @@ class Styles {
         textStyle: TextStyle(
           fontSize: getResponsiveFontSize(context, 12),
           fontWeight: FontWeight.normal,
-          color: Color(0xFF6B7280),
+          color: const Color(0xFF6B7280),
         ),
       );
 
@@ -70,7 +70,7 @@ class Styles {
         textStyle: TextStyle(
           fontSize: getResponsiveFontSize(context, 12),
           fontWeight: FontWeight.normal,
-          color: Color(0xFF9B1C1C),
+          color: const Color(0xFF9B1C1C),
         ),
       );
   static TextStyle headerBlack24(BuildContext context) => GoogleFonts.kanit(
@@ -85,7 +85,7 @@ class Styles {
         textStyle: TextStyle(
           fontSize: getResponsiveFontSize(context, 24),
           fontWeight: FontWeight.w600,
-          color: Color(0xFF9B1C1C),
+          color: const Color(0xFF9B1C1C),
         ),
       );
   static TextStyle strikeBlack24(BuildContext context) => GoogleFonts.kanit(
@@ -131,7 +131,7 @@ class Styles {
         textStyle: TextStyle(
           fontSize: getResponsiveFontSize(context, 18),
           fontWeight: FontWeight.w600,
-          color: Color(0xFF6B7280),
+          color: const Color(0xFF6B7280),
         ),
       );
   static TextStyle strikeGrey18(BuildContext context) => GoogleFonts.kanit(
@@ -140,21 +140,21 @@ class Styles {
           decorationThickness: 2.0,
           fontSize: getResponsiveFontSize(context, 18),
           fontWeight: FontWeight.normal,
-          color: Color(0xFF6B7280),
+          color: const Color(0xFF6B7280),
         ),
       );
   static TextStyle grey18(BuildContext context) => GoogleFonts.kanit(
         textStyle: TextStyle(
           fontSize: getResponsiveFontSize(context, 18),
           fontWeight: FontWeight.normal,
-          color: Color(0xFF6B7280),
+          color: const Color(0xFF6B7280),
         ),
       );
   static TextStyle headergrey24(BuildContext context) => GoogleFonts.kanit(
         textStyle: TextStyle(
           fontSize: getResponsiveFontSize(context, 24),
           fontWeight: FontWeight.w600,
-          color: Color(0xFF6B7280),
+          color: const Color(0xFF6B7280),
         ),
       );
   static TextStyle strikeGrey24(BuildContext context) => GoogleFonts.kanit(
@@ -163,21 +163,21 @@ class Styles {
           decorationThickness: 2.0,
           fontSize: getResponsiveFontSize(context, 24),
           fontWeight: FontWeight.normal,
-          color: Color(0xFF6B7280),
+          color: const Color(0xFF6B7280),
         ),
       );
   static TextStyle grey24(BuildContext context) => GoogleFonts.kanit(
         textStyle: TextStyle(
           fontSize: getResponsiveFontSize(context, 24),
           fontWeight: FontWeight.w600,
-          color: Color(0xFF6B7280),
+          color: const Color(0xFF6B7280),
         ),
       );
   static TextStyle headergrey32(BuildContext context) => GoogleFonts.kanit(
         textStyle: TextStyle(
           fontSize: getResponsiveFontSize(context, 32),
           fontWeight: FontWeight.w600,
-          color: Color(0xFF6B7280),
+          color: const Color(0xFF6B7280),
         ),
       );
   static TextStyle strikeGrey32(BuildContext context) => GoogleFonts.kanit(
@@ -186,7 +186,7 @@ class Styles {
           decorationThickness: 2.0,
           fontSize: getResponsiveFontSize(context, 32),
           fontWeight: FontWeight.normal,
-          color: Color(0xFF6B7280),
+          color: const Color(0xFF6B7280),
         ),
       );
   static TextStyle grey32(BuildContext context) => GoogleFonts.kanit(
@@ -209,7 +209,7 @@ class Styles {
           decorationThickness: 2.0,
           fontSize: getResponsiveFontSize(context, 18),
           fontWeight: FontWeight.normal,
-          color: Color(0xFF6B7280),
+          color: const Color(0xFF6B7280),
         ),
       );
   static TextStyle white18(BuildContext context) => GoogleFonts.kanit(
@@ -233,7 +233,7 @@ class Styles {
           decorationThickness: 2.0,
           fontSize: getResponsiveFontSize(context, 24),
           fontWeight: FontWeight.normal,
-          color: Color(0xFF6B7280),
+          color: const Color(0xFF6B7280),
         ),
       );
 

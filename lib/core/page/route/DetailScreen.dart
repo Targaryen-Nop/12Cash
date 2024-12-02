@@ -55,7 +55,7 @@ class _DetailScreenState extends State<DetailScreen> {
     });
   }
 
-  // Future<void> _loadStoreDetail() async {
+  // Future<void> StoreDetail() async {
   //   List<SaleRoute> routesData =
   //       await loadFromStorage('saleRoutes', (json) => SaleRoute.fromJson(json));
 

@@ -82,12 +82,14 @@ class _CustomerDropdownSearchState extends State<CustomerDropdownSearch> {
         _selectedCustomer = data;
       }),
       selectedItem: _selectedCustomer,
+
       // popupProps: const PopupProps.menu(
       //   showSearchBox: false,
       //   fit: FlexFit.loose,
       //   constraints: BoxConstraints(),
       // ),
       popupProps: PopupProps.menu(
+        searchFieldProps: TextFieldProps(style: Styles.black18(context)),
         showSearchBox: true, // Disable the popup search box
         itemBuilder: _customCustomer, // Custom item builder for dropdown items
         // constraints: const BoxConstraints(),
