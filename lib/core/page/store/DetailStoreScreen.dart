@@ -27,12 +27,17 @@ class DetailShopScreen extends StatefulWidget {
 class _DetailShopScreenState extends State<DetailShopScreen> {
   bool onEdit = true;
   late TextEditingController storeNameController;
+  String storeImagePath = "";
+  String taxIdImagePath = "";
+  String personalImagePath = "";
 
   @override
   initState() {
     super.initState();
     storeNameController = TextEditingController();
   }
+
+  Future<void> _loadImage() async {}
 
   @override
   Widget build(BuildContext context) {
@@ -211,22 +216,44 @@ class _DetailShopScreenState extends State<DetailShopScreen> {
                                           label: "ร้านค้า",
                                           icon: Icons
                                               .image_not_supported_outlined,
-                                          imagePath:
-                                              widget.store.imageList.length > 0
-                                                  ? widget.store.imageList[0]
-                                                  : null,
+                                          imagePath: widget
+                                                  .store.imageList.isNotEmpty
+                                              ? (widget.store.imageList
+                                                      .where((image) =>
+                                                          image.type == "store")
+                                                      .isNotEmpty
+                                                  ? widget.store.imageList
+                                                      .where((image) =>
+                                                          image.type == "store")
+                                                      .last
+                                                      .name
+                                                  : null)
+                                              : null,
                                         )
                                       : IconButtonWithLabel(
                                           label: "ร้านค้า",
                                           icon: Icons.photo_camera,
-                                          imagePath:
-                                              widget.store.imageList.length > 0
-                                                  ? widget.store.imageList[0]
-                                                  : null,
+                                          imagePath: widget
+                                                  .store.imageList.isNotEmpty
+                                              ? (widget.store.imageList
+                                                      .where((image) =>
+                                                          image.type == "store")
+                                                      .isNotEmpty
+                                                  ? widget.store.imageList
+                                                      .where((image) =>
+                                                          image.type == "store")
+                                                      .last
+                                                      .name
+                                                  : null)
+                                              : null,
                                           onImageSelected:
                                               (String imagePath) async {
+                                            final newImage = ImageItem(
+                                                name: imagePath,
+                                                path: imagePath,
+                                                type: "store");
                                             widget.store.imageList
-                                                .add(imagePath);
+                                                .add(newImage);
                                           },
                                         ),
                                   onEdit
@@ -234,27 +261,45 @@ class _DetailShopScreenState extends State<DetailShopScreen> {
                                           label: "ภ.พ.20",
                                           icon: Icons
                                               .image_not_supported_outlined,
-                                          imagePath:
-                                              widget.store.imageList.length > 1
-                                                  ? widget.store.imageList[1]
-                                                  : null,
+                                          imagePath: widget
+                                                  .store.imageList.isNotEmpty
+                                              ? (widget.store.imageList
+                                                      .where((image) =>
+                                                          image.type == "tax")
+                                                      .isNotEmpty
+                                                  ? widget.store.imageList
+                                                      .where((image) =>
+                                                          image.type == "tax")
+                                                      .last
+                                                      .name
+                                                  : null)
+                                              : null,
                                         )
                                       : IconButtonWithLabel(
                                           label: "ภ.พ.20",
                                           icon: Icons.photo_camera,
-                                          imagePath:
-                                              widget.store.imageList.length > 1
-                                                  ? widget.store.imageList[1]
-                                                  : null,
+                                          imagePath: widget
+                                                  .store.imageList.isNotEmpty
+                                              ? (widget.store.imageList
+                                                      .where((image) =>
+                                                          image.type == "tax")
+                                                      .isNotEmpty
+                                                  ? widget.store.imageList
+                                                      .where((image) =>
+                                                          image.type == "tax")
+                                                      .last
+                                                      .name
+                                                  : null)
+                                              : null,
                                           onImageSelected:
                                               (String imagePath) async {
+                                            final newImage = ImageItem(
+                                                name: imagePath,
+                                                path: imagePath,
+                                                type: "tax");
+
                                             widget.store.imageList
-                                                .add(imagePath);
-                                            // final updatedImageList =
-                                            //     List<String>.from(
-                                            //         widget.store.imageList);
-                                            // widget.store.imageList
-                                            //     .add(updatedImageList);
+                                                .add(newImage);
                                           },
                                         ),
                                   onEdit
@@ -263,26 +308,47 @@ class _DetailShopScreenState extends State<DetailShopScreen> {
                                           icon: Icons
                                               .image_not_supported_outlined,
                                           imagePath:
-                                              widget.store.imageList.length > 2
-                                                  ? widget.store.imageList[2]
+                                              widget.store.imageList.isNotEmpty
+                                                  ? (widget.store.imageList
+                                                          .where((image) =>
+                                                              image.type ==
+                                                              "person")
+                                                          .isNotEmpty
+                                                      ? widget.store.imageList
+                                                          .where((image) =>
+                                                              image.type ==
+                                                              "person")
+                                                          .last
+                                                          .name
+                                                      : null)
                                                   : null,
                                         )
                                       : IconButtonWithLabel(
                                           label: "สำเนาบัตรปปช.",
                                           icon: Icons.photo_camera,
                                           imagePath:
-                                              widget.store.imageList.length > 2
-                                                  ? widget.store.imageList[2]
+                                              widget.store.imageList.isNotEmpty
+                                                  ? (widget.store.imageList
+                                                          .where((image) =>
+                                                              image.type ==
+                                                              "person")
+                                                          .isNotEmpty
+                                                      ? widget.store.imageList
+                                                          .where((image) =>
+                                                              image.type ==
+                                                              "person")
+                                                          .last
+                                                          .name
+                                                      : null)
                                                   : null,
                                           onImageSelected:
                                               (String imagePath) async {
+                                            final newImage = ImageItem(
+                                                name: imagePath,
+                                                path: imagePath,
+                                                type: "person");
                                             widget.store.imageList
-                                                .add(imagePath);
-                                            // final updatedImageList =
-                                            //     List<String>.from(
-                                            //         widget.store.imageList);
-                                            // widget.store.imageList
-                                            //     .add(updatedImageList);
+                                                .add(newImage);
                                           },
                                         ),
                                 ],

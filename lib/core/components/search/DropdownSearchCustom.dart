@@ -45,8 +45,6 @@ class _DropdownSearchCustomState<T> extends State<DropdownSearchCustom<T>> {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
-
     return DropdownSearch<T>(
       dropdownButtonProps: DropdownButtonProps(
         icon: Padding(

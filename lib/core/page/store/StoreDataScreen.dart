@@ -52,7 +52,10 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
   Timer? _debounce;
   Store? _storeData;
 
-  List<String> imageList = [];
+  List<ImageItem> imageList = [];
+  String storeImagePath = "";
+  String taxIdImagePath = "";
+  String personalImagePath = "";
   bool storeInput = true;
   bool taxInput = true;
   bool phoneInput = true;
@@ -69,7 +72,6 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
     super.initState();
     // _loadJson();
     _loadStoreFromStorage();
-    // _loadStoreFromStorage();
   }
 
   Future<void> _loadStoreFromStorage() async {
@@ -82,7 +84,22 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
           _storeData = (jsonStore == null
               ? null
               : Store.fromJson(jsonDecode(jsonStore)))!;
-          imageList = List<String>.from(widget.imageList);
+          imageList = List<ImageItem>.from(widget.imageList);
+          for (var value in imageList.reversed) {
+            if (value.type == "store") {
+              setState(() {
+                storeImagePath = value.path;
+              });
+            } else if (value.type == 'tax') {
+              setState(() {
+                taxIdImagePath = value.path;
+              });
+            } else {
+              setState(() {
+                personalImagePath = value.path;
+              });
+            }
+          }
         });
         // province = _storeData.province!;
       }
@@ -443,53 +460,54 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
             children: [
               IconButtonWithLabel(
                 icon: Icons.photo_camera,
-                imagePath: imageList.isNotEmpty ? imageList[0] : null,
+                imagePath: storeImagePath != "" ? storeImagePath : null,
                 label: "${widget.staticData?['image_store'] ?? "Store"}",
                 onImageSelected: (String imagePath) async {
-                  imageList.add(imagePath);
-                  widget.imageList.add(imagePath);
+                  final newImage = ImageItem(
+                      name: imagePath, path: imagePath, type: "store");
+                  imageList.insert(0, newImage);
                   setState(() {
+                    storeImagePath = imagePath;
                     _storeData = _storeData?.copyWithDynamicField(
-                        'imageList', "", imageList);
+                        'imageList', '', imageList);
                   });
                   _saveStoreToStorage();
                 },
               ),
               IconButtonWithLabel(
                 icon: Icons.photo_camera,
-                imagePath: imageList.length > 1 ? imageList[1] : null,
+                imagePath: taxIdImagePath != "" ? taxIdImagePath : null,
                 label: "${widget.staticData?['image_taxId'] ?? "Tax ID"}",
                 onImageSelected: (String imagePath) async {
-                  // Create a new imageList and add the imagePath
                   final updatedImageList =
-                      List<String>.from(_storeData!.imageList);
-
-                  updatedImageList.add(imagePath);
-
-                  imageList.add(imagePath);
-                  widget.imageList.add(updatedImageList);
+                      List<ImageItem>.from(_storeData!.imageList);
+                  final newImage =
+                      ImageItem(name: imagePath, path: imagePath, type: "tax");
+                  updatedImageList.add(newImage);
                   setState(() {
+                    taxIdImagePath = imagePath;
                     _storeData = _storeData?.copyWithDynamicField(
-                        'imageList', "", updatedImageList);
+                        'imageList', '', updatedImageList);
                   });
-
-                  // Save the updated storeData to storage
                   _saveStoreToStorage();
                 },
               ),
               IconButtonWithLabel(
                 icon: Icons.photo_camera,
-                imagePath: imageList.length > 2 ? imageList[2] : null,
+                imagePath: personalImagePath != "" ? personalImagePath : null,
                 label:
                     "${widget.staticData?['image_identify'] ?? "Persona Identify"}",
                 onImageSelected: (String imagePath) async {
                   // Create a new imageList and add the imagePath
                   final updatedImageList =
-                      List<String>.from(_storeData!.imageList);
-                  updatedImageList.add(imagePath);
-                  imageList.add(imagePath);
-                  widget.imageList.add(updatedImageList);
+                      List<ImageItem>.from(_storeData!.imageList);
+                  final newImage = ImageItem(
+                      name: imagePath, path: imagePath, type: "person");
+
+                  updatedImageList.add(newImage);
+
                   setState(() {
+                    personalImagePath = imagePath;
                     _storeData = _storeData?.copyWithDynamicField(
                         'imageList', "", updatedImageList);
                   });

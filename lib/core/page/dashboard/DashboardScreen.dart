@@ -2,11 +2,14 @@ import 'dart:convert';
 
 import 'package:_12sale_app/core/components/CalendarPicker.dart';
 import 'package:_12sale_app/core/components/button/CameraButton.dart';
+import 'package:_12sale_app/core/components/button/MenuButton.dart';
 import 'package:_12sale_app/core/components/card/WeightCude.dart';
 import 'package:_12sale_app/core/components/chart/BarChart.dart';
 import 'package:_12sale_app/core/components/chart/LineChart.dart';
 import 'package:_12sale_app/core/components/chart/TrendingMusicChart.dart';
+import 'package:_12sale_app/core/page/NotificationScreen.dart';
 import 'package:_12sale_app/core/page/Ractangle3D.dart';
+import 'package:_12sale_app/core/page/printer/PrinterScreen.dart';
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:_12sale_app/data/models/Customer.dart';
 import 'package:_12sale_app/data/models/Shipping.dart';
@@ -72,10 +75,37 @@ class _DashboardscreenState extends State<Dashboardscreen> {
         // width: screenWidth / 1.5,
         child: Column(
           children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                MenuButton(
+                  color: Styles.successButtonColor,
+                  icon: Icons.notifications_active_outlined,
+                  label: "Local Noti",
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                          builder: (context) => NotificationScreen()),
+                    );
+                  },
+                ),
+                MenuButton(
+                  color: Colors.black,
+                  icon: Icons.print,
+                  label: "BL Printer",
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                          builder: (context) => BluetoothPrinterScreen4()),
+                    );
+                  },
+                ),
+              ],
+            ),
             SizedBox(height: screenWidth / 25),
             const WeightCudeCard(),
-            SizedBox(height: screenWidth / 25),
-            SizedBox(height: 500, width: 400, child: LineChartSample()),
+            // SizedBox(height: screenWidth / 25),
+            // SizedBox(height: 500, width: 400, child: LineChartSample()),
             SizedBox(height: screenWidth / 25),
             CalendarPicker(
               label: "Select Date",
@@ -90,7 +120,7 @@ class _DashboardscreenState extends State<Dashboardscreen> {
             SizedBox(height: screenWidth / 25),
 
             Container(height: 500, width: 400, child: LineChartSample()),
-            Container(height: 500, width: 400, child: LineChartSample()),
+            // Container(height: 500, width: 400, child: LineChartSample()),
             Expanded(
                 child: Container(
                     height: 500, width: 500, child: TrendingMusicChart())),

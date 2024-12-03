@@ -24,12 +24,14 @@ class VerifyStoreScreen extends StatefulWidget {
 
 class _VerifyStoreScreenState extends State<VerifyStoreScreen> {
   // Store? _storeData;
-
+  String storeImagePath = "";
+  String taxIdImagePath = "";
+  String personalImagePath = "";
   @override
   void initState() {
     super.initState();
     // _loadJson();
-    // _loadStoreFromStorage();
+    _loadStoreFromStorage();
   }
 
   // Future<void> _loadJson() async {
@@ -39,19 +41,29 @@ class _VerifyStoreScreenState extends State<VerifyStoreScreen> {
   //   });
   // }
 
-  // Future<void> _loadStoreFromStorage() async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   // Get the JSON string list from SharedPreferences
-  //   String? jsonStore = prefs.getString("add_store");
+  Future<void> _loadStoreFromStorage() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    // Get the JSON string list from SharedPreferences
+    String? jsonStore = prefs.getString("add_store");
 
-  //   if (jsonStore != null) {
-  //     setState(() {
-  //       _storeData =
-  //           // ignore: unnecessary_null_comparison
-  //           jsonStore == null ? null : Store.fromJson(jsonDecode(jsonStore));
-  //     });
-  //   }
-  // }
+    if (jsonStore != null) {
+      for (var value in widget.storeData.imageList.reversed) {
+        if (value.type == "store") {
+          setState(() {
+            storeImagePath = value.path;
+          });
+        } else if (value.type == 'tax') {
+          setState(() {
+            taxIdImagePath = value.path;
+          });
+        } else {
+          setState(() {
+            personalImagePath = value.path;
+          });
+        }
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -211,24 +223,18 @@ class _VerifyStoreScreenState extends State<VerifyStoreScreen> {
               ShowPhotoButton(
                 label: "${widget.staticData?['image_store'] ?? "Store"}",
                 icon: Icons.image_not_supported_outlined,
-                imagePath: widget.storeData.imageList.length > 0
-                    ? widget.storeData.imageList[0]
-                    : null,
+                imagePath: storeImagePath != "" ? storeImagePath : null,
               ),
               ShowPhotoButton(
                 label: "${widget.staticData?['image_taxId'] ?? "Tax ID"}",
                 icon: Icons.image_not_supported_outlined,
-                imagePath: widget.storeData.imageList.length > 1
-                    ? widget.storeData.imageList[1]
-                    : null,
+                imagePath: taxIdImagePath != "" ? taxIdImagePath : null,
               ),
               ShowPhotoButton(
                 label:
                     "${widget.staticData?['image_identify'] ?? "Personal Identify"}",
                 icon: Icons.image_not_supported_outlined,
-                imagePath: widget.storeData.imageList.length > 2
-                    ? widget.storeData.imageList[2]
-                    : null,
+                imagePath: personalImagePath != "" ? personalImagePath : null,
               )
             ],
           )

@@ -68,7 +68,7 @@ class StoreCartAll extends StatelessWidget {
                     children: <TextSpan>[
                       TextSpan(
                         text: item.address.length > 25
-                            ? '${item.address.substring(0, 30)}. . .' // Limit to 22 characters + ellipsis
+                            ? '${item.address.substring(0, 30)}...' // Limit to 22 characters + ellipsis
                             : item
                                 .address, // Show full address if within 25 characters
                         style: Styles.black18(context),

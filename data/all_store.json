@@ -25,14 +25,28 @@
             "appPerson": "system"
         },
         "status": "20",
-        "policyConsent": [
+        "policyConsent": {
+            "status": "Agree",
+            "date": "2024-10-08T01:43:59"
+        },
+        "imageList": [
             {
-                "status": "Agree",
-                "date": "2024-10-08T01:43:59"
+                "name": "",
+                "type": "",
+                "path": ""
             }
         ],
-        "imageList": [],
-        "shippingAddress": [],
+        "shippingAddress": [
+            {
+                "address": "",
+                "district": "",
+                "subDistrict": "",
+                "province": "",
+                "provinceCode": "",
+                "postCode": "",
+                "default": ""
+            }
+        ],
         "createdDate": "2024-10-08T01:43:59",
         "updatedDate": "2024-10-08T01:43:59",
         "__v": 0
@@ -63,14 +77,28 @@
             "appPerson": "system"
         },
         "status": "20",
-        "policyConsent": [
+        "policyConsent": {
+            "status": "Reject",
+            "date": "2024-10-08T01:43:59"
+        },
+        "imageList": [
             {
-                "status": "Reject",
-                "date": "2024-10-08T01:43:59"
+                "name": "",
+                "type": "",
+                "path": ""
             }
         ],
-        "imageList": [],
-        "shippingAddress": [],
+        "shippingAddress": [
+            {
+                "address": "",
+                "district": "",
+                "subDistrict": "",
+                "province": "",
+                "provinceCode": "",
+                "postCode": "",
+                "default": ""
+            }
+        ],
         "createdDate": "2024-10-08T01:43:59",
         "updatedDate": "2024-10-08T01:43:59",
         "__v": 0
@@ -83,7 +111,7 @@
         "route": "R03",
         "type": "011",
         "typeName": "แผง,ร้านค้าในตลาดสดและรอบตลาดสด",
-        "address": "ตลาดเทเวศร์",
+        "address": "ตลาดเทเวศร์qweqqqqqqqqqqqqqqqqqqqqqqqqqqqqq",
         "district": "ดุสิต",
         "subDistrict": "ดุสิต",
         "province": "จ.กรุงเทพมหานคร",
@@ -101,89 +129,28 @@
             "appPerson": "system"
         },
         "status": "20",
-        "policyConsent": [
-            {
-                "status": "Waiting",
-                "date": "2024-10-08T01:43:59"
-            }
-        ],
-        "imageList": [],
-        "shippingAddress": [],
-        "createdDate": "2024-10-08T01:43:59",
-        "updatedDate": "2024-10-08T01:43:59",
-        "__v": 0
-    },
-    {
-        "storeId": "MBE2400002",
-        "name": "ร้านพี่น้อย ตลาดเทเวศร์",
-        "taxId": "",
-        "tel": "0844690789",
-        "route": "R03",
-        "type": "011",
-        "typeName": "แผง,ร้านค้าในตลาดสดและรอบตลาดสด",
-        "address": "ตลาดเทเวศร์",
-        "district": "ดุสิต",
-        "subDistrict": "ดุสิต",
-        "province": "จ.กรุงเทพมหานคร",
-        "provinceCode": "10",
-        "postcode": "101100",
-        "zone": "BE",
-        "area": "BE811",
-        "latitude": "13.760493",
-        "longtitude": "100.474507",
-        "lineId": "",
-        "note": "",
-        "approve": {
-            "dateSend": "2024-10-08T01:43:59",
-            "dateAction": "2024-10-08T01:43:59",
-            "appPerson": "system"
+        "policyConsent": {
+            "status": "Waiting",
+            "date": "2024-10-08T01:43:59"
         },
-        "status": "20",
-        "policyConsent": [
+        "imageList": [
             {
-                "status": "Waiting",
-                "date": "2024-10-08T01:43:59"
+                "name": "",
+                "type": "",
+                "path": ""
             }
         ],
-        "imageList": [],
-        "shippingAddress": [],
-        "createdDate": "2024-10-08T01:43:59",
-        "updatedDate": "2024-10-08T01:43:59",
-        "__v": 0
-    }, {
-        "storeId": "MBE2400002",
-        "name": "ร้านพี่น้อย ตลาดเทเวศร์",
-        "taxId": "",
-        "tel": "0844690789",
-        "route": "R03",
-        "type": "011",
-        "typeName": "แผง,ร้านค้าในตลาดสดและรอบตลาดสด",
-        "address": "ตลาดเทเวศร์",
-        "district": "ดุสิต",
-        "subDistrict": "ดุสิต",
-        "province": "จ.กรุงเทพมหานคร",
-        "provinceCode": "10",
-        "postcode": "101100",
-        "zone": "BE",
-        "area": "BE811",
-        "latitude": "13.760493",
-        "longtitude": "100.474507",
-        "lineId": "",
-        "note": "",
-        "approve": {
-            "dateSend": "2024-10-08T01:43:59",
-            "dateAction": "2024-10-08T01:43:59",
-            "appPerson": "system"
-        },
-        "status": "20",
-        "policyConsent": [
+        "shippingAddress": [
             {
-                "status": "Waiting",
-                "date": "2024-10-08T01:43:59"
+                "address": "",
+                "district": "",
+                "subDistrict": "",
+                "province": "",
+                "provinceCode": "",
+                "postCode": "",
+                "default": ""
             }
         ],
-        "imageList": [],
-        "shippingAddress": [],
         "createdDate": "2024-10-08T01:43:59",
         "updatedDate": "2024-10-08T01:43:59",
         "__v": 0

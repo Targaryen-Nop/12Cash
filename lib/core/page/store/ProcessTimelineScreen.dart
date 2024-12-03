@@ -14,6 +14,7 @@ import 'package:_12sale_app/data/models/Location.dart';
 import 'package:_12sale_app/data/models/Route.dart';
 import 'package:_12sale_app/data/models/Shoptype.dart';
 import 'package:_12sale_app/data/models/Store.dart';
+import 'package:_12sale_app/data/models/User.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
@@ -32,7 +33,9 @@ const todoColor = Color(0xffd1d2d7);
 
 class ProcessTimelinePage extends StatefulWidget {
   Map<String, dynamic>? staticData;
-  ProcessTimelinePage({required this.staticData, super.key});
+  User? userData;
+  ProcessTimelinePage(
+      {required this.staticData, required this.userData, super.key});
 
   @override
   State<ProcessTimelinePage> createState() => _ProcessTimelinePageState();
@@ -54,6 +57,7 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
       ShopType(id: '', name: '', descript: '', status: '');
   List<dynamic> imageList = [];
   List<DuplicateStore> duplicateStores = [];
+  List<Store> duplicateStores2 = [];
 
   Location initialSelectedLocation = Location(
       id: '',
@@ -151,7 +155,7 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
             // ignore: unnecessary_null_comparison
             (jsonStore == null ? null : Store.fromJson(jsonDecode(jsonStore)))!;
       });
-      if (_storeData.policyConsent[0].status == 'Agree') {
+      if (_storeData.policyConsent.status == 'Agree') {
         isPolicy = true;
       }
     }
@@ -163,7 +167,7 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
 
     // Replace with your API endpoint
     const String apiUrl =
-        "https://80d8-171-103-242-50.ngrok-free.app/api/cash/store/addStore";
+        "https://f8c3-171-103-242-50.ngrok-free.app/api/cash/store/addStore";
 
     // JSON data
     Map<String, dynamic> jsonData = {
@@ -180,12 +184,12 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
       "provinceCode": _storeData.postcode.substring(1, 3),
       "postCode": _storeData.postcode,
       "note": _storeData.note,
-      "zone": "BE",
-      "area": "BE214",
+      "zone": widget.userData?.zone,
+      "area": widget.userData?.area,
       "latitude": _storeData.latitude,
       "longtitude": _storeData.longitude,
       "lineId": _storeData.lineId,
-      "policyConsent": {"status": _storeData.policyConsent[0].status},
+      "policyConsent": {"status": _storeData.policyConsent.status},
       "imageList": _storeData.imageList,
     };
 
@@ -204,8 +208,36 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
       // print(response.statusCode);
       if (response.statusCode == 200 || response.statusCode == 201) {
         if (response.data['message'] == 'similar store') {
-          showToastDuplicateMenu(
-            stores: duplicateStores,
+          final List<dynamic> data = response.data['data'];
+          setState(() {
+            duplicateStores = data
+                .map((item) => DuplicateStore.fromJson(
+                    item['store'] as Map<String, dynamic>))
+                .toList();
+          });
+
+          setState(() {
+            duplicateStores2 = data
+                .map((item) =>
+                    Store.fromJson(item['store'] as Map<String, dynamic>))
+                .toList();
+          });
+
+          // showToastDuplicateMenu(
+          //   stores: duplicateStores,
+          //   context: context,
+          //   icon: const Icon(Icons.info_outline),
+          //   type: ToastificationType.error,
+          //   primaryColor: Colors.red,
+          //   titleStyle: Styles.headerRed24(context),
+          //   descriptionStyle: Styles.red12(context),
+          //   message: "พบร้านค้าที่คล้ายกัน",
+          //   description:
+          //       "พบร้านค้าที่คล้ายกันในระบบ สามารถเปิดขายจากร้านที่คล้ายกัน",
+          // );
+
+          showToastDuplicateMenu2(
+            stores: duplicateStores2,
             context: context,
             icon: const Icon(Icons.info_outline),
             type: ToastificationType.error,
@@ -688,7 +720,7 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
                                       // print(_storeData.name);
                                       // print(_storeData.taxId);
                                       // print(_storeData.typeName);
-                                      // print(_storeData.route);
+                                      print(_storeData.imageList);
                                       // Create a list to hold missing fields
                                       List<String> missingFields = [];
 

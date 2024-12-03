@@ -104,7 +104,7 @@ class _CustomerDropdownSearchState extends State<CustomerDropdownSearch> {
 
       var response = await apiService.request(
         endpoint:
-            'erp/customer/', // You only need to pass the endpoint, the base URL is handled
+            'erp/customer/top100', // You only need to pass the endpoint, the base URL is handled
         method: 'POST',
         body: {
           "customerNo": "VB20700031",
@@ -143,61 +143,24 @@ class _CustomerDropdownSearchState extends State<CustomerDropdownSearch> {
               TextSpan(
                 children: [
                   TextSpan(
-                    text: 'ร้าน ${item.customerName}\n',
-                    style: const TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Styles.primaryColor,
-                    ),
+                    text: '${item.customerName}\n',
+                    style: Styles.kanit(context).copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: Styles.primaryColor,
+                        fontSize: 24),
                   ),
-                  const TextSpan(
-                    text: 'รหัสร้าน : ',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                  ),
+                  TextSpan(text: 'รหัสร้าน : ', style: Styles.black18(context)),
                   TextSpan(
-                    text: '${item.customerNo} \n',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.normal,
-                      color: Colors.grey[600],
-                    ),
-                  ),
-                  const TextSpan(
-                    text: 'เลขที่ : ',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                  ),
+                      text: '${item.customerNo} \n',
+                      style: Styles.black18(context)),
+                  TextSpan(text: 'เลขที่ : ', style: Styles.black18(context)),
                   TextSpan(
-                    text: '${item.customerNo} \n',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.normal,
-                      color: Colors.grey[600],
-                    ),
-                  ),
-                  const TextSpan(
-                    text: 'ที่อยู่ : ',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                  ),
+                      text: '${item.customerNo} \n',
+                      style: Styles.black18(context)),
+                  TextSpan(text: 'ที่อยู่ : ', style: Styles.black18(context)),
                   TextSpan(
-                    text: '${item.customerAddress1} ${item.customerPoscode}',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.normal,
-                      color: Colors.grey[600],
-                    ),
-                  ),
+                      text: '${item.customerAddress1} ${item.customerPoscode}',
+                      style: Styles.black18(context)),
                 ],
               ),
             ),

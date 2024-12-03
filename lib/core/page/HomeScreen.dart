@@ -43,7 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
   List<Store> storeItem = [];
 
   List<Store> allStores = [];
-  late User _userData;
+  late User userData;
 
   List<String> filteredItems = [];
   TextEditingController searchController = TextEditingController();
@@ -64,7 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
       final String response = await rootBundle.loadString('data/user.json');
       final Map<String, dynamic> data = json.decode(response);
       setState(() {
-        _userData = User.fromJson(data);
+        userData = User.fromJson(data);
       });
       // await prefs.setString("user", data);
     } catch (e) {
@@ -76,7 +76,7 @@ class _HomeScreenState extends State<HomeScreen> {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       // Convert Store object to JSON string
-      String jsonStoreString = json.encode(_userData.toJson());
+      String jsonStoreString = json.encode(userData.toJson());
       await prefs.setString('user', jsonStoreString);
       print("Data saved to storage successfully.");
     } catch (e) {
@@ -161,23 +161,20 @@ class _HomeScreenState extends State<HomeScreen> {
       case 0:
         return () {}();
       case 1:
-        return () {
-          _showSearchModal();
-        }();
+        return () {}();
       case 2:
         return () {
           Navigator.push(
             context,
             MaterialPageRoute(
               builder: (context) => ProcessTimelinePage(
-                staticData: staticData!['store'],
-              ),
+                  staticData: staticData!['store'], userData: userData),
             ),
           );
         }();
       case 3:
         return () {
-          print("4");
+          _showSearchModal();
         }();
       default:
         return () {}();

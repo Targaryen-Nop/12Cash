@@ -12,8 +12,10 @@ import 'package:_12sale_app/core/page/store/ProcessTimelineScreen.dart';
 
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:_12sale_app/data/models/Store.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:intl/intl.dart';
 
 class ShopScreen extends StatefulWidget {
@@ -26,10 +28,68 @@ class ShopScreen extends StatefulWidget {
 class _ShopScreenState extends State<ShopScreen> {
   bool _isSelected = false;
   List<Store> storeItems = [];
+  static const _pageSize = 3;
+  final PagingController<int, Store> _pagingController =
+      PagingController(firstPageKey: 0);
+
+  // final PagingController<int, BeerSummary> _pagingController =
+  //     PagingController(firstPageKey: 0);
+
   @override
   void initState() {
     super.initState();
     _loadStoreData();
+    _pagingController.addPageRequestListener((pageKey) {
+      _fetchPage(pageKey);
+    });
+  }
+
+  Future<void> _fetchPage(int pageKey) async {
+    try {
+      final newItems = await getBeerList(pageKey, _pageSize);
+
+      final isLastPage = newItems.length < _pageSize;
+
+      if (isLastPage) {
+        _pagingController.appendLastPage(newItems);
+      } else {
+        final nextPageKey = pageKey + newItems.length;
+        _pagingController.appendPage(newItems, nextPageKey);
+      }
+    } catch (error) {
+      _pagingController.error = error;
+    }
+  }
+
+  Future<List<Store>> getBeerList(int pageKey, int pageSize) async {
+    Dio dio = Dio();
+    String apiUrl =
+        "https://f8c3-171-103-242-50.ngrok-free.app/api/cash/store/addStore?pageKey=$pageKey&pageSize=$pageSize";
+
+    try {
+      final response = await dio.get(
+        apiUrl,
+        options: Options(
+          headers: {
+            "Content-Type": "application/json",
+          },
+        ),
+      );
+      if (response.statusCode == 200) {
+        final List<dynamic> data = response.data['data'];
+        setState(() {
+          storeItems = data
+              .map((item) =>
+                  Store.fromJson(item['store'] as Map<String, dynamic>))
+              .toList();
+        });
+        return storeItems;
+      } else {
+        throw [];
+      }
+    } catch (e) {
+      return [];
+    }
   }
 
   Future<void> _loadStoreData() async {
@@ -47,26 +107,9 @@ class _ShopScreenState extends State<ShopScreen> {
     return Scaffold(
       backgroundColor:
           Colors.transparent, // set scaffold background color to transparent
-      // Using Scaffold to provide better structure for FloatingActionButton
-      // floatingActionButton: SizedBox(
-      //   width: 100, // Set the width of the button
-      //   height: screenWidth / 8, // Set the height of the button
-      //   child: AddStoreButton(
-      //     icon: Icons.add,
-      //     onPressed: () {
-      //       Navigator.push(
-      //         context,
-      //         MaterialPageRoute(
-      //           builder: (context) => ProcessTimelinePage(),
-      //         ),
-      //       );
-      //     },
-      //   ),
-      // ),
       body: Container(
         padding: const EdgeInsets.all(16.0),
         margin: const EdgeInsets.all(8.0),
-
         // color: Colors.amber,
         child: Column(
           children: [

@@ -41,7 +41,7 @@ class _WeightCudeCardState extends State<WeightCudeCard> {
                 height: screenWidth / 15,
               ),
               WaterFilledRectangle(
-                width: screenWidth / 3.5,
+                width: screenWidth / 6,
                 height: screenWidth / 9,
                 depth: screenWidth / 6,
                 fillPercentage: 0.40,

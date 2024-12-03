@@ -41,17 +41,17 @@ class StoreCartNew extends StatelessWidget {
                   padding: EdgeInsets.all(4),
                   // height: screenWidth / ,
                   decoration: BoxDecoration(
-                    color: item.policyConsent.last.status == 'Agree'
+                    color: item.policyConsent.status == 'Agree'
                         ? Styles.successTextColor
-                        : item.policyConsent.last.status == 'Reject'
+                        : item.policyConsent.status == 'Reject'
                             ? Styles.failTextColor
                             : Styles.warningTextColor,
                     borderRadius: BorderRadius.circular(8.0),
                   ),
                   child: Text(
-                    item.policyConsent.last.status == 'Agree'
+                    item.policyConsent.status == 'Agree'
                         ? 'อนุมัติ'
-                        : item.policyConsent.last.status == 'Reject'
+                        : item.policyConsent.status == 'Reject'
                             ? 'ไม่อนุมัติ'
                             : 'รออนุมัติ',
                     style: Styles.white18(context),
@@ -95,7 +95,7 @@ class StoreCartNew extends StatelessWidget {
                     children: <TextSpan>[
                       TextSpan(
                         text: item.address.length > 25
-                            ? '${item.address.substring(0, 30)}. . .' // Limit to 22 characters + ellipsis
+                            ? '${item.address.substring(0, 30)}...' // Limit to 22 characters + ellipsis
                             : item
                                 .address, // Show full address if within 25 characters
                         style: Styles.black18(context),

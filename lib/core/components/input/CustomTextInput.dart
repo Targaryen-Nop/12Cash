@@ -74,6 +74,7 @@ class _CustomtextinputState extends State<Customtextinput> {
       style: Styles.black18(context),
       controller: widget.controller, // Use controller if provided
       decoration: InputDecoration(
+        fillColor: widget.readonly ? Colors.grey[200] : Colors.white,
         counterText: '',
         labelText: widget.label,
         labelStyle: Styles.grey18(context),

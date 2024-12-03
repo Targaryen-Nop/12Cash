@@ -41,17 +41,17 @@ class PromotionCard extends StatelessWidget {
                   padding: EdgeInsets.all(4),
                   // height: screenWidth / ,
                   decoration: BoxDecoration(
-                    color: item.policyConsent.last.status == 'Agree'
+                    color: item.policyConsent.status == 'Agree'
                         ? Styles.successTextColor
-                        : item.policyConsent.last.status == 'Reject'
+                        : item.policyConsent.status == 'Reject'
                             ? Styles.failTextColor
                             : Styles.warningTextColor,
                     borderRadius: BorderRadius.circular(8.0),
                   ),
                   child: Text(
-                    item.policyConsent.last.status == 'Agree'
+                    item.policyConsent.status == 'Agree'
                         ? 'อนุมัติ'
-                        : item.policyConsent.last.status == 'Reject'
+                        : item.policyConsent.status == 'Reject'
                             ? 'ไม่อนุมัติ'
                             : 'รออนุมัติ',
                     style: Styles.white18(context),

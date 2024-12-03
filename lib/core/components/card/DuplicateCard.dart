@@ -48,6 +48,30 @@ class DuplicateCardStore extends StatelessWidget {
             ),
             Text.rich(
               TextSpan(
+                text: 'Zone : ', // This is the main text style
+                style: Styles.headerBlack18(context),
+                children: <TextSpan>[
+                  TextSpan(
+                    text: item.zone, // Inline bold text
+                    style: Styles.black18(context),
+                  ),
+                ],
+              ),
+            ),
+            Text.rich(
+              TextSpan(
+                text: 'Area : ', // This is the main text style
+                style: Styles.headerBlack18(context),
+                children: <TextSpan>[
+                  TextSpan(
+                    text: item.area, // Inline bold text
+                    style: Styles.black18(context),
+                  ),
+                ],
+              ),
+            ),
+            Text.rich(
+              TextSpan(
                 text: 'เส้นทาง : ', // This is the main text style
                 style: Styles.headerBlack18(context),
                 children: <TextSpan>[

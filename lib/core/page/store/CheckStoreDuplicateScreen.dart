@@ -27,30 +27,19 @@ class _CheckStoreDuplicateScreenState extends State<CheckStoreDuplicateScreen> {
   @override
   void initState() {
     super.initState();
-    // _loadStoreData();
   }
-
-  // Future<void> _loadStoreData() async {
-  //   // Load JSON data from a file or a string
-  //   final String response = await rootBundle.loadString('data/all_store.json');
-  //   final List<dynamic> data = json.decode(response);
-
-  //   setState(() {
-  //     storeItems = data.map((json) => DuplicateStore.fromJson(json)).toList();
-  //   });
-  // }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
+      appBar: const PreferredSize(
         preferredSize: Size.fromHeight(70),
         child: AppbarCustom(
             title: " ร้านค้าที่คล้ายกัน",
             icon: Icons.store_mall_directory_rounded),
       ),
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
             Expanded(
@@ -65,15 +54,63 @@ class _CheckStoreDuplicateScreenState extends State<CheckStoreDuplicateScreen> {
                           return DuplicateCardStore(
                             item: widget.stores[index],
                             onDetailsPressed: () {
-                              // Navigator.push(
-                              //   context,
-                              //   MaterialPageRoute(
-                              //     builder: (context) => DetailShopScreen(
-                              //         store: storeItems[index],
-                              //         customerNo: storeItems[index].storeId,
-                              //         customerName: storeItems[index].name),
-                              //   ),
-                              // );
+                              print('Details for ${widget.stores[index].name}');
+                            },
+                          );
+                        },
+                      ),
+                    ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class CheckStoreDuplicateScreen2 extends StatefulWidget {
+  List<Store> stores;
+  CheckStoreDuplicateScreen2({required this.stores, super.key});
+
+  @override
+  State<CheckStoreDuplicateScreen2> createState() =>
+      _CheckStoreDuplicateScreen2State();
+}
+
+class _CheckStoreDuplicateScreen2State
+    extends State<CheckStoreDuplicateScreen2> {
+  List<Store> storeItems = [];
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: const PreferredSize(
+        preferredSize: Size.fromHeight(70),
+        child: AppbarCustom(
+            title: " ร้านค้าที่คล้ายกัน",
+            icon: Icons.store_mall_directory_rounded),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            Expanded(
+              child: widget.stores.isEmpty
+                  ? const Center(
+                      child:
+                          CircularProgressIndicator()) // Show loading spinner if data isn't loaded
+                  : BoxShadowCustom(
+                      child: ListView.builder(
+                        itemCount: widget.stores.length,
+                        itemBuilder: (context, index) {
+                          return StoreCartAll(
+                            item: widget.stores[index],
+                            onDetailsPressed: () {
                               print('Details for ${widget.stores[index].name}');
                             },
                           );

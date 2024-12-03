@@ -260,7 +260,7 @@ class _PolicyScreenState extends State<PolicyScreen> {
                               appPerson: "",
                             ),
                             status: "",
-                            policyConsent: [],
+                            policyConsent: PolicyConsent(status: "", date: ""),
                             imageList: [],
                             shippingAddress: [],
                             createdDate: "",
@@ -269,12 +269,10 @@ class _PolicyScreenState extends State<PolicyScreen> {
 
                           // Update only the policyConsent field using copyWith
                           _storeData = _storeData?.copyWith(
-                            policyConsent: [
-                              PolicyConsent(
-                                status: 'Agree',
-                                date: DateTime.now().toString(),
-                              ),
-                            ],
+                            policyConsent: PolicyConsent(
+                              status: 'Agree',
+                              date: DateTime.now().toString(),
+                            ),
                           );
                           print(" Save ${latitude}, ${longitude}");
                         });

@@ -63,7 +63,7 @@ class _AppbarCustomState extends State<AppbarCustom> {
             },
           ),
           title: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Icon(
                 widget.icon,
@@ -73,31 +73,31 @@ class _AppbarCustomState extends State<AppbarCustom> {
               Text(widget.title),
             ],
           ),
-          actions: [
-            Container(
-              margin: const EdgeInsets.only(right: 30),
-              height: screenWidth / 20,
-              width: screenWidth / 20,
-              decoration: BoxDecoration(
-                color: isConnected ? Colors.green : Colors.red,
-                border: Border.all(
-                  width: 4,
-                  color: isConnected
-                      ? Styles.successButtonColor
-                      : Styles.failTextColor,
-                ),
-                borderRadius: const BorderRadius.all(Radius.circular(360)),
-                boxShadow: const [
-                  BoxShadow(
-                    color: Colors.black26,
-                    blurRadius: 10,
-                    spreadRadius: 2,
-                    offset: Offset(0, -3),
-                  ),
-                ],
-              ),
-            ),
-          ],
+          // actions: [
+          //   Container(
+          //     margin: const EdgeInsets.only(right: 30),
+          //     height: screenWidth / 20,
+          //     width: screenWidth / 20,
+          //     decoration: BoxDecoration(
+          //       color: isConnected ? Colors.green : Colors.red,
+          //       border: Border.all(
+          //         width: 4,
+          //         color: isConnected
+          //             ? Styles.successButtonColor
+          //             : Styles.failTextColor,
+          //       ),
+          //       borderRadius: const BorderRadius.all(Radius.circular(360)),
+          //       boxShadow: const [
+          //         BoxShadow(
+          //           color: Colors.black26,
+          //           blurRadius: 10,
+          //           spreadRadius: 2,
+          //           offset: Offset(0, -3),
+          //         ),
+          //       ],
+          //     ),
+          //   ),
+          // ],
           centerTitle: true,
           foregroundColor: Colors.white,
           titleTextStyle: Styles.headerWhite32(context),

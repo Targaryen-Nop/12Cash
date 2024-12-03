@@ -10,11 +10,17 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
+    <!-- Adapt to the foreground service type(s) desired, these are just examples -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+
 
     <application
         android:label="_12sale_app"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+
+       
 
         <receiver
             android:name="com.dexterous.flutterlocalnotifications.receivers.NotificationBroadcastReceiver"
