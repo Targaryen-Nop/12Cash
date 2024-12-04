@@ -26,6 +26,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 late List<CameraDescription> _cameras;
 
@@ -90,6 +91,9 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
             primarySwatch: Colors.blue,
+            extensions: const [
+              SkeletonizerConfigData.dark(),
+            ],
             textTheme: Typography.englishLike2018.apply(fontSizeFactor: 1.sp),
           ),
           // home: const LoginScreen(),

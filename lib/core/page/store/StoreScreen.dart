@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:_12sale_app/core/components/BoxShadowCustom.dart';
@@ -9,6 +10,9 @@ import 'package:_12sale_app/core/components/table/ShopTableAll.dart';
 import 'package:_12sale_app/core/components/table/ShopTableNew.dart';
 import 'package:_12sale_app/core/page/store/DetailStoreScreen.dart';
 import 'package:_12sale_app/core/page/store/ProcessTimelineScreen.dart';
+import 'package:_12sale_app/data/models/Route.dart';
+import 'package:_12sale_app/main.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:_12sale_app/data/models/Store.dart';
@@ -18,16 +22,20 @@ import 'package:flutter/services.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:intl/intl.dart';
 
-class ShopScreen extends StatefulWidget {
-  const ShopScreen({super.key});
+class StoreScreen extends StatefulWidget {
+  const StoreScreen({super.key});
 
   @override
-  State<ShopScreen> createState() => _ShopScreenState();
+  State<StoreScreen> createState() => _StoreScreenState();
 }
 
-class _ShopScreenState extends State<ShopScreen> {
+class _StoreScreenState extends State<StoreScreen> with RouteAware {
+  bool _loadingAllStore = true;
+  bool _loadingNewStore = true;
   bool _isSelected = false;
-  List<Store> storeItems = [];
+  List<Store> storeAll = [];
+  List<Store> storeNew = [];
+
   static const _pageSize = 3;
   final PagingController<int, Store> _pagingController =
       PagingController(firstPageKey: 0);
@@ -38,33 +46,94 @@ class _ShopScreenState extends State<ShopScreen> {
   @override
   void initState() {
     super.initState();
-    _loadStoreData();
-    _pagingController.addPageRequestListener((pageKey) {
-      _fetchPage(pageKey);
-    });
+    // _loadStoreData();
+    _getStoreDataAll();
+    // _pagingController.addPageRequestListener((pageKey) {
+    //   _fetchPage(pageKey);
+    // });
   }
 
-  Future<void> _fetchPage(int pageKey) async {
-    try {
-      final newItems = await getBeerList(pageKey, _pageSize);
-
-      final isLastPage = newItems.length < _pageSize;
-
-      if (isLastPage) {
-        _pagingController.appendLastPage(newItems);
-      } else {
-        final nextPageKey = pageKey + newItems.length;
-        _pagingController.appendPage(newItems, nextPageKey);
-      }
-    } catch (error) {
-      _pagingController.error = error;
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Register this screen as a route-aware widget
+    final ModalRoute? route = ModalRoute.of(context);
+    if (route is PageRoute) {
+      // Only subscribe if the route is a P ageRoute
+      routeObserver.subscribe(this, route);
     }
   }
 
-  Future<List<Store>> getBeerList(int pageKey, int pageSize) async {
+  @override
+  void didPopNext() {
+    setState(() {
+      _loadingAllStore = true;
+    });
+    // Called when the screen is popped back to
+    _getStoreDataAll();
+  }
+
+  @override
+  void dispose() {
+    // Unsubscribe when the widget is disposed
+    routeObserver.unsubscribe(this);
+    super.dispose();
+  }
+
+  // Future<void> _fetchPage(int pageKey) async {
+  //   try {
+  //     final newItems = await getBeerList(pageKey, _pageSize);
+
+  //     final isLastPage = newItems.length < _pageSize;
+
+  //     if (isLastPage) {
+  //       _pagingController.appendLastPage(newItems);
+  //     } else {
+  //       final nextPageKey = pageKey + newItems.length;
+  //       _pagingController.appendPage(newItems, nextPageKey);
+  //     }
+  //   } catch (error) {
+  //     _pagingController.error = error;
+  //   }
+  // }
+
+  // Future<List<Store>> getBeerList(int pageKey, int pageSize) async {
+  //   Dio dio = Dio();
+  //   String apiUrl =
+  //       "https://f8c3-171-103-242-50.ngrok-free.app/api/cash/store/addStore?pageKey=$pageKey&pageSize=$pageSize";
+
+  //   try {
+  //     final response = await dio.get(
+  //       apiUrl,
+  //       options: Options(
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //       ),
+  //     );
+  //     if (response.statusCode == 200) {
+  //       final List<dynamic> data = response.data['data'];
+  //       setState(() {
+  //         storeAll = data
+  //             .map((item) =>
+  //                 Store.fromJson(item['store'] as Map<String, dynamic>))
+  //             .toList();
+  //       });
+  //       return storeAll;
+  //     } else {
+  //       throw [];
+  //     }
+  //   } catch (e) {
+  //     return [];
+  //   }
+  // }
+  Future<void> _getStoreDataNew() async {
+    // Initialize Dio
     Dio dio = Dio();
-    String apiUrl =
-        "https://f8c3-171-103-242-50.ngrok-free.app/api/cash/store/addStore?pageKey=$pageKey&pageSize=$pageSize";
+
+    // Replace with your API endpoint
+    const String apiUrl =
+        "https://f8c3-171-103-242-50.ngrok-free.app/api/cash/store/getStore?area=BE214&type=new";
 
     try {
       final response = await dio.get(
@@ -75,32 +144,68 @@ class _ShopScreenState extends State<ShopScreen> {
           },
         ),
       );
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 || response.statusCode == 201) {
         final List<dynamic> data = response.data['data'];
+        // print(response.data['data']);
         setState(() {
-          storeItems = data
-              .map((item) =>
-                  Store.fromJson(item['store'] as Map<String, dynamic>))
-              .toList();
+          storeNew = data.map((item) => Store.fromJson(item)).toList();
         });
-        return storeItems;
-      } else {
-        throw [];
+        Timer(Duration(milliseconds: 500), () {
+          setState(() {
+            _loadingNewStore = false;
+          });
+          // Perform your desired action here
+        });
       }
     } catch (e) {
-      return [];
+      print(e);
     }
   }
 
-  Future<void> _loadStoreData() async {
-    // Load JSON data from a file or a string
-    final String response = await rootBundle.loadString('data/all_store.json');
-    final List<dynamic> data = json.decode(response);
+  Future<void> _getStoreDataAll() async {
+    // Initialize Dio
+    Dio dio = Dio();
 
-    setState(() {
-      storeItems = data.map((json) => Store.fromJson(json)).toList();
-    });
+    // Replace with your API endpoint
+    const String apiUrl =
+        "https://f8c3-171-103-242-50.ngrok-free.app/api/cash/store/getStore?area=BE214&type=all";
+
+    try {
+      final response = await dio.get(
+        apiUrl,
+        options: Options(
+          headers: {
+            "Content-Type": "application/json",
+          },
+        ),
+      );
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final List<dynamic> data = response.data['data'];
+        print(response.data['data']);
+        setState(() {
+          storeAll = data.map((item) => Store.fromJson(item)).toList();
+        });
+        Timer(Duration(milliseconds: 500), () {
+          setState(() {
+            _loadingAllStore = false;
+          });
+          // Perform your desired action here
+        });
+      }
+    } catch (e) {
+      print(e);
+    }
   }
+
+  // Future<void> _loadStoreData() async {
+  //   // Load JSON data from a file or a string
+  //   final String response = await rootBundle.loadString('data/all_store.json');
+  //   final List<dynamic> data = json.decode(response);
+
+  //   setState(() {
+  //     storeAll = data.map((json) => Store.fromJson(json)).toList();
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -148,6 +253,7 @@ class _ShopScreenState extends State<ShopScreen> {
                       setState(() {
                         _isSelected = !_isSelected;
                       });
+                      _getStoreDataNew();
                     },
                     style: ElevatedButton.styleFrom(
                       elevation: 16,
@@ -172,64 +278,71 @@ class _ShopScreenState extends State<ShopScreen> {
             const SizedBox(height: 16), // Add spacing between buttons and list
             _isSelected
                 ? Expanded(
-                    child: storeItems.isEmpty
-                        ? const Center(
-                            child:
-                                CircularProgressIndicator()) // Show loading spinner if data isn't loaded
-                        : BoxShadowCustom(
-                            child: ListView.builder(
-                              itemCount: storeItems.length,
-                              itemBuilder: (context, index) {
-                                return StoreCartNew(
-                                  item: storeItems[index],
-                                  onDetailsPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => DetailShopScreen(
-                                            store: storeItems[index],
-                                            customerNo:
-                                                storeItems[index].storeId,
-                                            customerName:
-                                                storeItems[index].name),
-                                      ),
-                                    );
-                                    print(
-                                        'Details for ${storeItems[index].name}');
-                                  },
+                    child: Skeletonizer(
+                      effect: const PulseEffect(
+                          from: Colors.grey,
+                          to: Color.fromARGB(255, 211, 211, 211),
+                          duration: Duration(seconds: 1)),
+                      enabled: _loadingNewStore,
+                      // enableSwitchAnimation: true,
+                      child: BoxShadowCustom(
+                        child: ListView.builder(
+                          itemCount: storeNew.length,
+                          itemBuilder: (context, index) {
+                            return StoreCartNew(
+                              item: storeNew[index],
+                              onDetailsPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => DetailStoreScreen(
+                                        initialSelectedRoute: RouteStore(
+                                            route: storeNew[index].route),
+                                        store: storeNew[index],
+                                        customerNo: storeNew[index].storeId,
+                                        customerName: storeNew[index].name),
+                                  ),
                                 );
+                                print('Details for ${storeNew[index].name}');
                               },
-                            ),
-                          ),
+                            );
+                          },
+                        ),
+                      ),
+                    ),
                   )
                 : Expanded(
-                    child: storeItems.isEmpty
-                        ? const Center(
-                            child:
-                                CircularProgressIndicator()) // Show loading spinner if data isn't loaded
-                        : BoxShadowCustom(
-                            child: ListView.builder(
-                              itemCount: storeItems.length,
-                              itemBuilder: (context, index) {
-                                return StoreCartAll(
-                                  item: storeItems[index],
-                                  onDetailsPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => DetailShopScreen(
-                                            store: storeItems[index],
-                                            customerNo:
-                                                storeItems[index].storeId,
-                                            customerName:
-                                                storeItems[index].name),
-                                      ),
-                                    );
-                                  },
+                    child: Skeletonizer(
+                      effect: const PulseEffect(
+                          from: Colors.grey,
+                          to: Color.fromARGB(255, 211, 211, 211),
+                          duration: Duration(seconds: 1)),
+                      enabled: _loadingAllStore,
+                      enableSwitchAnimation: true,
+                      child: BoxShadowCustom(
+                        child: ListView.builder(
+                          itemCount: storeAll.length,
+                          itemBuilder: (context, index) {
+                            return StoreCartAll(
+                              item: storeAll[index],
+                              onDetailsPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => DetailStoreScreen(
+                                        initialSelectedRoute: RouteStore(
+                                            route: storeAll[index].route),
+                                        store: storeAll[index],
+                                        customerNo: storeAll[index].storeId,
+                                        customerName: storeAll[index].name),
+                                  ),
                                 );
                               },
-                            ),
-                          ),
+                            );
+                          },
+                        ),
+                      ),
+                    ),
                   ),
           ],
         ),
@@ -238,14 +351,14 @@ class _ShopScreenState extends State<ShopScreen> {
   }
 }
 
-class ShopHeader extends StatefulWidget {
-  const ShopHeader({super.key});
+class StoreHeader extends StatefulWidget {
+  const StoreHeader({super.key});
 
   @override
-  State<ShopHeader> createState() => _ShopHeaderState();
+  State<StoreHeader> createState() => _StoreHeaderState();
 }
 
-class _ShopHeaderState extends State<ShopHeader> {
+class _StoreHeaderState extends State<StoreHeader> {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;

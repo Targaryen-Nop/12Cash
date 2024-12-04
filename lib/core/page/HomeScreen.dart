@@ -87,7 +87,7 @@ class _HomeScreenState extends State<HomeScreen> {
   static const List<Widget> _widgetOptions = <Widget>[
     Dashboardscreen(),
     Routescreen(),
-    ShopScreen(),
+    StoreScreen(),
     ReportScreen(),
     ManageScreen(),
     SettingScreen(),
@@ -96,7 +96,7 @@ class _HomeScreenState extends State<HomeScreen> {
   static const List<Widget> _widgetOptionsHeader = <Widget>[
     DashboardHeader(),
     RouteHeader(),
-    ShopHeader(),
+    StoreHeader(),
     ReportHeader(),
     ManageHeader(),
     SettingHeader(),

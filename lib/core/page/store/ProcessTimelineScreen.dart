@@ -185,7 +185,7 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
       "postCode": _storeData.postcode,
       "note": _storeData.note,
       "zone": widget.userData?.zone,
-      "area": widget.userData?.area,
+      "area": "BE214",
       "latitude": _storeData.latitude,
       "longtitude": _storeData.longitude,
       "lineId": _storeData.lineId,
@@ -204,17 +204,15 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
           },
         ),
       );
-      // print(response.data);
-      // print(response.statusCode);
       if (response.statusCode == 200 || response.statusCode == 201) {
         if (response.data['message'] == 'similar store') {
           final List<dynamic> data = response.data['data'];
-          setState(() {
-            duplicateStores = data
-                .map((item) => DuplicateStore.fromJson(
-                    item['store'] as Map<String, dynamic>))
-                .toList();
-          });
+          // setState(() {
+          //   duplicateStores = data
+          //       .map((item) => DuplicateStore.fromJson(
+          //           item['store'] as Map<String, dynamic>))
+          //       .toList();
+          // });
 
           setState(() {
             duplicateStores2 = data

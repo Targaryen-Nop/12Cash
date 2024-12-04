@@ -14,6 +14,7 @@ class DropdownSearchCustom<T> extends StatefulWidget {
       itemAsString; // Converts item to a displayable string
   final Widget Function(BuildContext, T, bool) itemBuilder; // Custom item UI
   final bool showSearchBox;
+  final bool enabled;
 
   const DropdownSearchCustom({
     Key? key,
@@ -26,6 +27,7 @@ class DropdownSearchCustom<T> extends StatefulWidget {
     required this.itemBuilder,
     this.initialSelectedValue,
     this.showSearchBox = true,
+    this.enabled = false,
   }) : super(key: key);
 
   @override
@@ -46,6 +48,7 @@ class _DropdownSearchCustomState<T> extends State<DropdownSearchCustom<T>> {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     return DropdownSearch<T>(
+      enabled: !widget.enabled,
       dropdownButtonProps: DropdownButtonProps(
         icon: Padding(
           padding: const EdgeInsets.only(right: 8.0),
@@ -59,6 +62,7 @@ class _DropdownSearchCustomState<T> extends State<DropdownSearchCustom<T>> {
       dropdownDecoratorProps: DropDownDecoratorProps(
         baseStyle: Styles.black18(context),
         dropdownSearchDecoration: InputDecoration(
+          // fillColor: widget.enabled ? Colors.grey[200] : Colors.white,
           labelText: widget.label,
           labelStyle: Styles.grey18(context),
           hintText: widget.hint,

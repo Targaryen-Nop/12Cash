@@ -8,6 +8,7 @@ import 'package:_12sale_app/core/components/card/StoreCardNew.dart';
 import 'package:_12sale_app/core/page/store/DetailStoreScreen.dart';
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:_12sale_app/data/models/DuplicateStore.dart';
+import 'package:_12sale_app/data/models/Route.dart';
 import 'package:_12sale_app/data/models/Store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -111,6 +112,17 @@ class _CheckStoreDuplicateScreen2State
                           return StoreCartAll(
                             item: widget.stores[index],
                             onDetailsPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => DetailStoreScreen(
+                                      initialSelectedRoute: RouteStore(
+                                          route: storeItems[index].route),
+                                      store: widget.stores[index],
+                                      customerNo: widget.stores[index].storeId,
+                                      customerName: widget.stores[index].name),
+                                ),
+                              );
                               print('Details for ${widget.stores[index].name}');
                             },
                           );

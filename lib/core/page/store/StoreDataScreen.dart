@@ -134,31 +134,6 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
       print("Error saving to storage: $e");
     }
   }
-  // Cancel any existing timer to reset the delay
-  // if (_throttle?.isActive ?? false) {
-  //   _throttle!.cancel();
-  // }
-  // // Set a new timer for 3 milliseconds
-  // _throttle = Timer(const Duration(milliseconds: 3000), () {
-  //   print(
-  //       'Throttled text: $text'); // This will print the text with throttling
-  //   setState(() {
-  //     widget.storeData = widget.storeData.copyWithDynamicField(field, text);
-  //   });
-  //   _saveStoreToStorage();
-  //   // Cancel any existing timer to reset the delay
-  //   if (_throttle?.isActive ?? false) {
-  //     _throttle!.cancel();
-  //   }
-  // });
-
-  // void _onTextChangedNote(String text, String field) {
-  //   setState(() {https://myaccount.google.com/personal-info?gar=WzJd
-  //     widget.storeData = widget.storeData.copyWithDynamicField(field, text);
-  //   });
-  //   _saveStoreToStorage();
-  //   // Cancel any existing timer to reset the delay
-  // }
 
   Future<List<ShopType>> getShoptype(String filter) async {
     try {

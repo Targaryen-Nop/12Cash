@@ -1,43 +1,186 @@
+import 'dart:convert';
+
 import 'package:_12sale_app/core/components/Appbar.dart';
 import 'package:_12sale_app/core/components/BoxShadowCustom.dart';
 import 'package:_12sale_app/core/components/button/AddStoreButton.dart';
 import 'package:_12sale_app/core/components/button/IconButtonWithLabel.dart';
 import 'package:_12sale_app/core/components/button/ShowPhotoButton.dart';
+import 'package:_12sale_app/core/components/search/DropdownSearchCustom.dart';
 import 'package:_12sale_app/core/page/store/ProcessTimelineScreen.dart';
 
 import 'package:_12sale_app/core/styles/style.dart';
+import 'package:_12sale_app/data/models/Route.dart';
 import 'package:_12sale_app/data/models/Store.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:toastification/toastification.dart';
 
-class DetailShopScreen extends StatefulWidget {
+class DetailStoreScreen extends StatefulWidget {
   String customerNo;
   String customerName;
   Store store;
-  DetailShopScreen(
-      {super.key,
-      required this.customerNo,
-      required this.customerName,
-      required this.store});
+  RouteStore initialSelectedRoute;
+
+  DetailStoreScreen({
+    super.key,
+    required this.customerNo,
+    required this.customerName,
+    required this.store,
+    required this.initialSelectedRoute,
+  });
 
   @override
-  State<DetailShopScreen> createState() => _DetailShopScreenState();
+  State<DetailStoreScreen> createState() => _DetailStoreScreenState();
 }
 
-class _DetailShopScreenState extends State<DetailShopScreen> {
+class _DetailStoreScreenState extends State<DetailStoreScreen> {
   bool onEdit = true;
   late TextEditingController storeNameController;
-  String storeImagePath = "";
-  String taxIdImagePath = "";
-  String personalImagePath = "";
+  late TextEditingController storePhoneController;
+  late TextEditingController storeLineIdController;
+  late TextEditingController storeNoteController;
+  late TextEditingController storeTaxConroller;
+  late TextEditingController storeShoptypeController;
+
+  String selectedRoute = "";
 
   @override
   initState() {
     super.initState();
     storeNameController = TextEditingController();
+    storePhoneController = TextEditingController();
+    storeLineIdController = TextEditingController();
+    storeShoptypeController = TextEditingController();
+    storeTaxConroller = TextEditingController();
+    storeNoteController = TextEditingController();
+    _setStoreName();
+  }
+
+  Future<void> _setStoreName() async {
+    setState(() {
+      storeNameController.text = widget.store.name;
+      storePhoneController.text = widget.store.tel;
+      storeLineIdController.text = widget.store.lineId;
+      storeNoteController.text = widget.store.note;
+    });
+  }
+
+  Future<void> _editStore() async {
+    Dio dio = Dio();
+    final String apiUrl = Uri.https(
+      'f8c3-171-103-242-50.ngrok-free.app',
+      '/api/cash/store/editStore/${widget.store.storeId}',
+    ).toString();
+
+    Map<String, dynamic> jsonData = {
+      "name": "${storeNameController.text}",
+      "taxId": "",
+      "tel": "${storePhoneController.text}",
+      "route": "${selectedRoute}",
+      "type": "",
+      "typeName": "",
+      "address": "",
+      "district": "",
+      "subDistrict": "",
+      "province": "",
+      "provinceCode": "",
+      "postCode": "",
+      "note": "${storeNoteController.text}",
+      "zone": "",
+      "area": "",
+      "latitude": "",
+      "longtitude": "",
+      "lineId": "${storeLineIdController.text}"
+    };
+
+    try {
+      final response = await dio.patch(
+        apiUrl,
+        data: jsonData,
+        options: Options(
+          headers: {
+            "Content-Type": "application/json",
+          },
+        ),
+      );
+      if (response.statusCode == 200) {
+        // print(response.data['message']);
+
+        toastification.show(
+          autoCloseDuration: Duration(seconds: 3),
+          context: context,
+          primaryColor: Colors.green,
+          type: ToastificationType.success,
+          style: ToastificationStyle.flatColored,
+          title: Text(
+            "แก้ไขข้อมูลเรียบร้อย",
+            style: Styles.black18(context),
+          ),
+        );
+        // setState(() {
+        //   widget.store.name = storeNameController.text;
+        // });
+      } else {
+        toastification.show(
+          autoCloseDuration: Duration(seconds: 3),
+          context: context,
+          primaryColor: Colors.red,
+          type: ToastificationType.error,
+          style: ToastificationStyle.flatColored,
+          title: Text(
+            "เกิดข้อผิดพลาด",
+            style: Styles.black18(context),
+          ),
+        );
+      }
+      print(response);
+    } catch (e) {
+      print(e);
+      toastification.show(
+        autoCloseDuration: Duration(seconds: 3),
+        context: context,
+        primaryColor: Colors.red,
+        type: ToastificationType.error,
+        style: ToastificationStyle.flatColored,
+        title: Text(
+          "เกิดข้อผิดพลาด",
+          style: Styles.black18(context),
+        ),
+      );
+    }
+  }
+
+  Future<List<RouteStore>> getRoutes(String filter) async {
+    try {
+      // Load the JSON file for districts
+      final String response = await rootBundle.loadString('data/route.json');
+      final data = json.decode(response);
+
+      // Filter and map JSON data to District model based on selected province and filter
+      final List<RouteStore> route =
+          (data as List).map((json) => RouteStore.fromJson(json)).toList();
+
+      // Group districts by amphoe
+      return route;
+    } catch (e) {
+      print("Error occurred: $e");
+      return [];
+    }
   }
 
   Future<void> _loadImage() async {}
+
+  @override
+  void dispose() {
+    storeNameController.dispose();
+    storePhoneController.dispose();
+    storeLineIdController.dispose();
+    storeNoteController.dispose();
+    storeTaxConroller.dispose();
+    storeShoptypeController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -124,17 +267,7 @@ class _DetailShopScreenState extends State<DetailShopScreen> {
                                               !onEdit; // Toggle the value of onEdit
                                         });
                                         if (onEdit) {
-                                          toastification.show(
-                                            context: context,
-                                            primaryColor: Colors.green,
-                                            type: ToastificationType.success,
-                                            style:
-                                                ToastificationStyle.flatColored,
-                                            title: Text(
-                                              "บันทึกข้อมูลสําเร็จ",
-                                              style: Styles.black18(context),
-                                            ),
-                                          );
+                                          _editStore();
                                         }
                                       },
                                       child: BoxShadowCustom(
@@ -169,42 +302,115 @@ class _DetailShopScreenState extends State<DetailShopScreen> {
                                 ],
                               ),
                               SizedBox(height: screenWidth / 37),
-                              _buildCustomFormField('ชื่อร้านค้า',
-                                  widget.customerName, Icons.store,
+                              _buildCustomFormField(
+                                  'ชื่อร้านค้า',
+                                  storeNameController.text,
+                                  Icons.store,
+                                  storeNameController,
                                   readOnly: onEdit),
                               _buildCustomFormField(
-                                'เลขประจำตัวผู้เสียภาษี',
-                                '${widget.store.taxId}',
-                                Icons.person_outline,
-                              ),
+                                  'เลขประจำตัวผู้เสียภาษี',
+                                  '${widget.store.taxId}',
+                                  Icons.person_outline,
+                                  storeTaxConroller),
                               Row(
                                 children: [
                                   Expanded(
-                                    child: _buildCustomFormField('โทรศัพท์',
-                                        '${widget.store.tel}', Icons.phone,
+                                    child: _buildCustomFormField(
+                                        max: 10,
+                                        'โทรศัพท์',
+                                        '${storePhoneController.text}',
+                                        Icons.phone,
+                                        storePhoneController,
+                                        keypadType: TextInputType.number,
                                         readOnly: onEdit),
                                   ),
                                   const SizedBox(width: 16),
                                   Expanded(
-                                    child: _buildCustomFormField(
-                                        'เส้นทาง',
-                                        '${widget.store.route}',
-                                        Icons.location_on,
-                                        readOnly: onEdit),
+                                    child: Padding(
+                                      padding:
+                                          const EdgeInsets.only(bottom: 16.0),
+                                      child: Container(
+                                        color: onEdit
+                                            ? Colors.grey[200]
+                                            : Colors.white,
+                                        child: DropdownSearchCustom<RouteStore>(
+                                          enabled: onEdit,
+                                          initialSelectedValue: widget
+                                                      .initialSelectedRoute
+                                                      .route ==
+                                                  ''
+                                              ? null
+                                              : widget.initialSelectedRoute,
+                                          // label:
+                                          //     "${widget.staticData?['input_route']['name'] ?? "Route"} *",
+                                          // titleText:
+                                          //     "${widget.staticData?['input_route']['name'] ?? "Route"}",
+
+                                          label: "รูท",
+                                          titleText: "รูท",
+                                          fetchItems: (filter) =>
+                                              getRoutes(filter),
+                                          onChanged:
+                                              (RouteStore? selected) async {
+                                            if (selected != null) {
+                                              setState(() {
+                                                widget.initialSelectedRoute =
+                                                    RouteStore(
+                                                        route: selected.route);
+                                                selectedRoute = selected.route;
+                                              });
+                                            }
+                                          },
+                                          itemAsString: (RouteStore data) =>
+                                              data.route,
+                                          itemBuilder:
+                                              (context, item, isSelected) {
+                                            return Column(
+                                              children: [
+                                                ListTile(
+                                                  title: Text(
+                                                    " ${item.route}",
+                                                    style:
+                                                        Styles.black18(context),
+                                                  ),
+                                                  selected: isSelected,
+                                                ),
+                                                Divider(
+                                                  color: Colors.grey[
+                                                      200], // Color of the divider line
+                                                  thickness:
+                                                      1, // Thickness of the line
+                                                  indent:
+                                                      16, // Left padding for the divider line
+                                                  endIndent:
+                                                      16, // Right padding for the divider line
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                    ),
                                   ),
                                 ],
                               ),
                               _buildCustomFormField(
                                   'ไลน์',
-                                  '${widget.store.lineId == "" ? '-' : widget.store.lineId}',
+                                  storeLineIdController.text,
                                   Icons.alternate_email,
+                                  storeLineIdController,
                                   readOnly: onEdit),
                               _buildCustomFormField(
                                   'ประเภทร้านค้า',
                                   '${widget.store.typeName}',
-                                  Icons.store_mall_directory),
-                              _buildCustomFormField('หมายเหตุ',
-                                  '${widget.store.note}', Icons.note,
+                                  Icons.store_mall_directory,
+                                  storeShoptypeController),
+                              _buildCustomFormField(
+                                  'หมายเหตุ',
+                                  storeNoteController.text,
+                                  Icons.note,
+                                  storeNoteController,
                                   readOnly: onEdit),
                               SizedBox(height: screenWidth / 37),
                               Row(
@@ -404,7 +610,13 @@ class _DetailShopScreenState extends State<DetailShopScreen> {
   }
 
   Widget _buildCustomFormField(String label, String value, IconData icon,
-      {bool readOnly = true}) {
+      TextEditingController? controller,
+      {bool readOnly = true,
+      TextInputType? keypadType = TextInputType.text,
+      int? max = 36}) {
+    if (controller != null) {
+      controller.text = value; // Set initial value to the controller
+    }
     return Padding(
       padding: const EdgeInsets.only(bottom: 16.0),
       child: Container(
@@ -413,13 +625,18 @@ class _DetailShopScreenState extends State<DetailShopScreen> {
           borderRadius: BorderRadius.circular(8),
         ),
         child: TextFormField(
+          // focusNode: _focusNode,
+          // maxLines: ,
+          maxLength: max,
+          keyboardType: keypadType,
+          controller: controller,
           enabled: !readOnly,
-          initialValue: value,
+          initialValue: controller != null ? null : '',
           style: Styles.black18(context),
           readOnly: readOnly, // Makes the TextFormField read-only
           decoration: InputDecoration(
             // fillColor: Colors.black,
-
+            counterText: '',
             labelText: label,
             // hintStyle: Styles.kanit18,
             labelStyle: Styles.black18(context),

@@ -1,6 +1,6 @@
 class Store {
   final String storeId;
-  final String name;
+  late final String name;
   final String taxId;
   final String tel;
   final String route;

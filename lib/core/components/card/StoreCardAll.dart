@@ -1,6 +1,7 @@
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:_12sale_app/data/models/Store.dart';
 import 'package:flutter/material.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class StoreCartAll extends StatelessWidget {
   final Store item;
@@ -76,7 +77,8 @@ class StoreCartAll extends StatelessWidget {
                     ],
                   ),
                 ),
-                Text('$textDetail', style: Styles.grey18(context)),
+                Skeleton.ignore(
+                    child: Text('$textDetail', style: Styles.grey18(context))),
               ],
             ),
             Divider(color: Colors.grey.shade300),

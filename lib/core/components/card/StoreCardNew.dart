@@ -2,6 +2,7 @@ import 'package:_12sale_app/core/styles/style.dart';
 import 'package:_12sale_app/data/models/Store.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class StoreCartNew extends StatelessWidget {
   final Store item;
@@ -36,26 +37,28 @@ class StoreCartNew extends StatelessWidget {
                   item.name,
                   style: Styles.headerBlack24(context),
                 ),
-                Container(
-                  width: screenWidth / 6,
-                  padding: EdgeInsets.all(4),
-                  // height: screenWidth / ,
-                  decoration: BoxDecoration(
-                    color: item.policyConsent.status == 'Agree'
-                        ? Styles.successTextColor
-                        : item.policyConsent.status == 'Reject'
-                            ? Styles.failTextColor
-                            : Styles.warningTextColor,
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  child: Text(
-                    item.policyConsent.status == 'Agree'
-                        ? 'อนุมัติ'
-                        : item.policyConsent.status == 'Reject'
-                            ? 'ไม่อนุมัติ'
-                            : 'รออนุมัติ',
-                    style: Styles.white18(context),
-                    textAlign: TextAlign.center,
+                Skeleton.ignore(
+                  child: Container(
+                    width: screenWidth / 6,
+                    padding: EdgeInsets.all(4),
+                    // height: screenWidth / ,
+                    decoration: BoxDecoration(
+                      color: item.policyConsent.status == 'Agree'
+                          ? Styles.successTextColor
+                          : item.policyConsent.status == 'Reject'
+                              ? Styles.failTextColor
+                              : Styles.warningTextColor,
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    child: Text(
+                      item.policyConsent.status == 'Agree'
+                          ? 'อนุมัติ'
+                          : item.policyConsent.status == 'Reject'
+                              ? 'ไม่อนุมัติ'
+                              : 'รออนุมัติ',
+                      style: Styles.white18(context),
+                      textAlign: TextAlign.center,
+                    ),
                   ),
                 ),
               ],
@@ -103,7 +106,8 @@ class StoreCartNew extends StatelessWidget {
                     ],
                   ),
                 ),
-                Text('รายละเอียด', style: Styles.grey18(context)),
+                Skeleton.ignore(
+                    child: Text('รายละเอียด', style: Styles.grey18(context))),
               ],
             ),
             Divider(color: Colors.grey.shade300),
