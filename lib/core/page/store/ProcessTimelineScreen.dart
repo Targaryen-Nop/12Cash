@@ -236,6 +236,7 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
 
           showToastDuplicateMenu2(
             stores: duplicateStores2,
+            staticData: widget.staticData!['store_card_all'],
             context: context,
             icon: const Icon(Icons.info_outline),
             type: ToastificationType.error,

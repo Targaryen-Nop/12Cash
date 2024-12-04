@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:_12sale_app/core/components/button/Button.dart';
 import 'package:_12sale_app/core/components/button/IconButtonWithLabel.dart';
@@ -17,6 +18,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:path/path.dart';
+import 'package:mime/mime.dart';
 
 class StoreDataScreen extends StatefulWidget {
   Store storeData;
@@ -74,6 +77,82 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
     _loadStoreFromStorage();
   }
 
+  // Future<void> uploadFormData(
+  //     String url, Map<String, String> fields, File file) async {
+  //   try {
+  //     // Determine MIME type of the file
+  //     final mimeType = lookupMimeType(file.path);
+
+  //     // Create a Multipart Request
+  //     var request = http.MultipartRequest('POST', Uri.parse(url));
+
+  //     // Add fields to the request
+  //     fields.forEach((key, value) {
+  //       request.fields[key] = value;
+  //     });
+
+  //     // Add the file
+  //     request.files.add(
+  //       http.MultipartFile.fromBytes(
+  //         'file', // Key for the file
+  //         await file.readAsBytes(),
+  //         filename: basename(file.path),
+  //         contentType: mimeType != null ? MediaType.parse(mimeType) : null,
+  //       ),
+  //     );
+
+  //     // Send the request
+  //     var response = await request.send();
+
+  //     if (response.statusCode == 200) {
+  //       print("Upload successful");
+  //       final responseBody = await response.stream.bytesToString();
+  //       print("Response: $responseBody");
+  //     } else {
+  //       print("Failed to upload. Status code: ${response.statusCode}");
+  //     }
+  //   } catch (e) {
+  //     print("Error uploading file: $e");
+  //   }
+  // }
+
+  // Future<void> adw(
+  //     String url, Map<String, String> fields, File file) async {
+  //   try {
+  //     // Create Dio instance
+  //     Dio dio = Dio();
+
+  //     // Create a MultipartFile
+  //     String fileName = file.path.split('/').last;
+  //     FormData formData = FormData.fromMap({
+  //       ...fields, // Add fields to FormData
+  //       'file': await MultipartFile.fromFile(
+  //         file.path,
+  //         filename: fileName,
+  //       ),
+  //     });
+
+  //     // Send POST request
+  //     Response response = await dio.post(
+  //       url,
+  //       data: formData,
+  //       options: Options(
+  //         headers: {
+  //           "Content-Type": "multipart/form-data",
+  //         },
+  //       ),
+  //     );
+
+  //     if (response.statusCode == 200) {
+  //       print("Upload successful: ${response.data}");
+  //     } else {
+  //       print("Failed to upload. Status code: ${response.statusCode}");
+  //     }
+  //   } catch (e) {
+  //     print("Error uploading file: $e");
+  //   }
+  // }
+
   Future<void> _loadStoreFromStorage() async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -108,12 +187,29 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
     }
   }
 
-  // Future<void> _loadJson() async {
-  //   String jsonString = await rootBundle.loadString('lang/main-th.json');
-  //   setState(() {
-  //     _jsonString = jsonDecode(jsonString)['shop']["add_shop_screen"];
-  //   });
-  // }
+  Future<void> uploadFormDataWithDio(String imagePath) async {
+    try {
+      final dio = Dio();
+      var formData = FormData.fromMap({
+        'storeImage': await MultipartFile.fromFile(imagePath),
+        'area': "BE211",
+      });
+      var response = await dio.post(
+        'https://f8c3-171-103-242-50.ngrok-free.app/api/upload',
+        data: formData,
+        options: Options(
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        ),
+      );
+      if (response.statusCode == 201) {
+        print("Image uploaded successfully ${response.data}");
+      } else {}
+    } catch (e) {
+      print('Unexpected error: $e');
+    }
+  }
 
   Future<void> _onTextChanged(String text, String field) async {
     setState(() {
@@ -438,6 +534,7 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
                 imagePath: storeImagePath != "" ? storeImagePath : null,
                 label: "${widget.staticData?['image_store'] ?? "Store"}",
                 onImageSelected: (String imagePath) async {
+                  await uploadFormDataWithDio(imagePath);
                   final newImage = ImageItem(
                       name: imagePath, path: imagePath, type: "store");
                   imageList.insert(0, newImage);
@@ -454,6 +551,7 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
                 imagePath: taxIdImagePath != "" ? taxIdImagePath : null,
                 label: "${widget.staticData?['image_taxId'] ?? "Tax ID"}",
                 onImageSelected: (String imagePath) async {
+                  await uploadFormDataWithDio(imagePath);
                   final updatedImageList =
                       List<ImageItem>.from(_storeData!.imageList);
                   final newImage =
@@ -473,6 +571,7 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
                 label:
                     "${widget.staticData?['image_identify'] ?? "Persona Identify"}",
                 onImageSelected: (String imagePath) async {
+                  await uploadFormDataWithDio(imagePath);
                   // Create a new imageList and add the imagePath
                   final updatedImageList =
                       List<ImageItem>.from(_storeData!.imageList);

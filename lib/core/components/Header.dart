@@ -59,60 +59,73 @@ class _HeaderState extends State<Header> {
                   }
                   return Container(
                     color: Styles.primaryColor,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Container(
-                          margin: const EdgeInsets.only(right: 30, top: 30),
-                          height: screenWidth / 20,
-                          width: screenWidth / 20,
-                          decoration: BoxDecoration(
-                            color: isConnected ? Colors.green : Colors.red,
-                            border: Border.all(
-                              width: screenWidth / 200,
-                              color: isConnected
-                                  ? Styles.successButtonColor
-                                  : Styles.failTextColor,
-                            ),
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(360)),
-                            boxShadow: const [
-                              BoxShadow(
-                                color: Colors.black26,
-                                blurRadius: 10,
-                                spreadRadius: 2,
-                                offset: Offset(0, -3),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          height: screenWidth / 4,
-                          padding: const EdgeInsets.symmetric(horizontal: 25),
-                          child: widget.leading2,
-                        ),
-                        Flexible(
-                          flex: 4,
-                          fit: FlexFit.loose,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              boxShadow: const [
-                                BoxShadow(
-                                  color: Colors.black26,
-                                  offset: Offset(0, 5),
-                                  blurRadius: 100,
-                                  spreadRadius: 10,
+                    child: Padding(
+                      padding: EdgeInsets.only(top: 40),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Container(
+                            // color: Colors.amber,
+                            height: screenWidth / 4,
+                            padding: const EdgeInsets.symmetric(horizontal: 25),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                SizedBox(
+                                    width: screenWidth / 1.3, // Specify a width
+                                    height: screenWidth / 4, // Specify a height
+                                    child: widget.leading2),
+                                Container(
+                                  height: screenWidth / 20,
+                                  width: screenWidth / 20,
+                                  decoration: BoxDecoration(
+                                    color:
+                                        isConnected ? Colors.green : Colors.red,
+                                    border: Border.all(
+                                      width: screenWidth / 200,
+                                      color: isConnected
+                                          ? Styles.successButtonColor
+                                          : Styles.failTextColor,
+                                    ),
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(360)),
+                                    boxShadow: const [
+                                      BoxShadow(
+                                        color: Colors.black26,
+                                        blurRadius: 10,
+                                        spreadRadius: 2,
+                                        offset: Offset(0, -3),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ],
-                              color: Colors.grey[100],
-                              borderRadius: const BorderRadius.vertical(
-                                top: Radius.circular(46),
-                              ),
                             ),
-                            child: widget.leading!,
                           ),
-                        ),
-                      ],
+                          Flexible(
+                            flex: 4,
+                            fit: FlexFit.loose,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                boxShadow: const [
+                                  BoxShadow(
+                                    color: Colors.black26,
+                                    offset: Offset(0, 5),
+                                    blurRadius: 100,
+                                    spreadRadius: 10,
+                                  ),
+                                ],
+                                color: Colors.grey[100],
+                                borderRadius: const BorderRadius.vertical(
+                                  top: Radius.circular(46),
+                                ),
+                              ),
+                              child: widget.leading!,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   );
                 },

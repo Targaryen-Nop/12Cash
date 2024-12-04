@@ -6,12 +6,14 @@ import 'package:skeletonizer/skeletonizer.dart';
 class StoreCartAll extends StatelessWidget {
   final Store item;
   final VoidCallback onDetailsPressed;
+  Map<String, dynamic>? staticData;
   String? textDetail;
 
   StoreCartAll(
       {Key? key,
       required this.item,
       required this.onDetailsPressed,
+      required this.staticData,
       this.textDetail = "รายละเอียด"})
       : super(key: key);
 
@@ -36,7 +38,8 @@ class StoreCartAll extends StatelessWidget {
             ),
             Text.rich(
               TextSpan(
-                text: 'รหัสร้าน : ', // This is the main text style
+                text:
+                    '${staticData?['storeId'] ?? 'Store ID'} : ', // This is the main text style
                 style: Styles.headerBlack18(context),
                 children: <TextSpan>[
                   TextSpan(
@@ -48,7 +51,8 @@ class StoreCartAll extends StatelessWidget {
             ),
             Text.rich(
               TextSpan(
-                text: 'เส้นทาง : ', // This is the main text style
+                text:
+                    '${staticData?['route'] ?? 'Route'} : ', // This is the main text style
                 style: Styles.headerBlack18(context),
                 children: <TextSpan>[
                   TextSpan(
@@ -64,14 +68,17 @@ class StoreCartAll extends StatelessWidget {
               children: [
                 Text.rich(
                   TextSpan(
-                    text: 'ที่อยู่ : ', // This is the main text style
+                    text: '${staticData?['address'] ?? 'Address'} : ',
                     style: Styles.headerBlack18(context),
                     children: <TextSpan>[
                       TextSpan(
-                        text: item.address.length > 25
-                            ? '${item.address.substring(0, 30)}...' // Limit to 22 characters + ellipsis
-                            : item
-                                .address, // Show full address if within 25 characters
+                        text: (item.address.length +
+                                    item.subDistrict.length +
+                                    item.district.length +
+                                    item.province.length) >
+                                28
+                            ? '${item.address} ${item.province != 'กรุงเทพมหานคร' ? 'ต.' : 'แขวง'}${item.subDistrict} ${item.province != 'กรุงเทพมหานคร' ? 'อ.' : 'เขต'}${item.district}...' // Limit to 22 characters + ellipsis
+                            : "${item.address} ${item.province != 'กรุงเทพมหานคร' ? 'ต.' : 'แขวง'}${item.subDistrict} ${item.province != 'กรุงเทพมหานคร' ? 'อ.' : 'เขต'}${item.district}  ${item.province != 'กรุงเทพมหานคร' ? 'จ.' : ''}${item.province} ${item.postcode}",
                         style: Styles.black18(context),
                       ),
                     ],

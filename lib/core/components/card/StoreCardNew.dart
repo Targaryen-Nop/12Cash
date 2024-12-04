@@ -97,10 +97,13 @@ class StoreCartNew extends StatelessWidget {
                     style: Styles.headerBlack18(context),
                     children: <TextSpan>[
                       TextSpan(
-                        text: item.address.length > 25
-                            ? '${item.address.substring(0, 30)}...' // Limit to 22 characters + ellipsis
-                            : item
-                                .address, // Show full address if within 25 characters
+                        text: (item.address.length +
+                                    item.subDistrict.length +
+                                    item.district.length +
+                                    item.province.length) >
+                                28
+                            ? '${item.address} ${item.province != 'กรุงเทพมหานคร' ? 'ต.' : 'แขวง'}${item.subDistrict} ${item.province != 'กรุงเทพมหานคร' ? 'อ.' : 'เขต'}${item.district}...' // Limit to 22 characters + ellipsis
+                            : "${item.address} ${item.province != 'กรุงเทพมหานคร' ? 'ต.' : 'แขวง'}${item.subDistrict} ${item.province != 'กรุงเทพมหานคร' ? 'อ.' : 'เขต'}${item.district}  ${item.province != 'กรุงเทพมหานคร' ? 'จ.' : ''}${item.province} ${item.postcode}",
                         style: Styles.black18(context),
                       ),
                     ],

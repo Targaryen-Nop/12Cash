@@ -106,6 +106,7 @@ void showToastDuplicateMenu2({
   required String message,
   required String description,
   required List<Store> stores,
+  required Map<String, dynamic> staticData,
   Icon? icon,
   ToastificationType type = ToastificationType.success,
   ToastificationStyle style = ToastificationStyle.flatColored,
@@ -141,6 +142,7 @@ void showToastDuplicateMenu2({
             Navigator.push(context, MaterialPageRoute(builder: (context) {
               return CheckStoreDuplicateScreen2(
                 stores: stores,
+                staticData: staticData,
               );
             }));
           },

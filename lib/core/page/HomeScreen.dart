@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:_12sale_app/core/components/card/StoreCardAll.dart';
@@ -19,9 +20,11 @@ import 'package:_12sale_app/data/models/Route.dart';
 import 'package:_12sale_app/data/models/Store.dart';
 import 'package:_12sale_app/data/models/User.dart';
 import 'package:_12sale_app/data/service/requestPremission.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class HomeScreen extends StatefulWidget {
   final int index;
@@ -39,6 +42,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
+  bool _loading = true;
   Map<String, dynamic>? staticData;
   List<Store> storeItem = [];
 
@@ -48,15 +52,15 @@ class _HomeScreenState extends State<HomeScreen> {
   List<String> filteredItems = [];
   TextEditingController searchController = TextEditingController();
 
-  Future<void> _loadStoreData() async {
-    // Load JSON data from a file or a string
-    final String response = await rootBundle.loadString('data/all_store.json');
-    final List<dynamic> data = json.decode(response);
+  // Future<void> _loadStoreData() async {
+  //   // Load JSON data from a file or a string
+  //   final String response = await rootBundle.loadString('data/all_store.json');
+  //   final List<dynamic> data = json.decode(response);
 
-    setState(() {
-      allStores = data.map((json) => Store.fromJson(json)).toList();
-    });
-  }
+  //   setState(() {
+  //     allStores = data.map((json) => Store.fromJson(json)).toList();
+  //   });
+  // }
 
   Future<void> _loadUserData() async {
     try {
@@ -84,14 +88,16 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  static const List<Widget> _widgetOptions = <Widget>[
-    Dashboardscreen(),
-    Routescreen(),
-    StoreScreen(),
-    ReportScreen(),
-    ManageScreen(),
-    SettingScreen(),
-  ];
+  // List<Widget> _widgetOptions = <Widget>[
+  //   Dashboardscreen(),
+  //   Routescreen(),
+  //   StoreScreen(
+  //     staticData: staticData,
+  //   ),
+  //   ReportScreen(),
+  //   ManageScreen(),
+  //   SettingScreen(),
+  // ];
 
   static const List<Widget> _widgetOptionsHeader = <Widget>[
     DashboardHeader(),
@@ -126,11 +132,47 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  Future<void> _getStoreAll() async {
+    // Initialize Dio
+    Dio dio = Dio();
+
+    // Replace with your API endpoint
+    const String apiUrl =
+        "https://f8c3-171-103-242-50.ngrok-free.app/api/cash/store/getStore?area=BE214&type=all";
+
+    try {
+      final response = await dio.get(
+        apiUrl,
+        options: Options(
+          headers: {
+            "Content-Type": "application/json",
+          },
+        ),
+      );
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final List<dynamic> data = response.data['data'];
+        // print(response.data['data']);
+        setState(() {
+          storeItem = data.map((item) => Store.fromJson(item)).toList();
+        });
+        Timer(const Duration(milliseconds: 500), () {
+          if (mounted) {
+            setState(() {
+              _loading = false;
+            });
+          }
+        });
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _loadStoreData();
+    // _loadStoreData();
     _loadUserData();
     _selectedIndex = widget.index; //_selectedIndex
     _loadJson();
@@ -213,6 +255,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _showSearchModal() {
+    _getStoreAll();
     showModalBottomSheet(
       context: context,
       isScrollControlled: true, // Make modal take full screen if needed
@@ -271,35 +314,36 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       const SizedBox(height: 16),
                       Expanded(
-                        child: storeItem.isEmpty
-                            ? Center(
-                                child: Text(
-                                  'No results found',
-                                  style: Styles.grey18(context),
-                                ),
-                              )
-                            : ListView.builder(
-                                itemCount: storeItem.length,
-                                itemBuilder: (context, index) {
-                                  return StoreCartAll(
-                                    textDetail: 'ขายสินค้า',
-                                    item: storeItem[index],
-                                    onDetailsPressed: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => Orderscreen(
-                                              customerNo:
-                                                  storeItem[index].storeId,
-                                              customerName:
-                                                  storeItem[index].name,
-                                              status: storeItem[index].status),
-                                        ),
-                                      );
-                                    },
+                        child: Skeletonizer(
+                          effect: const PulseEffect(
+                              from: Colors.grey,
+                              to: Color.fromARGB(255, 211, 211, 211),
+                              duration: Duration(seconds: 1)),
+                          enabled: _loading,
+                          enableSwitchAnimation: true,
+                          child: ListView.builder(
+                            itemCount: storeItem.length,
+                            itemBuilder: (context, index) {
+                              return StoreCartAll(
+                                staticData: staticData!['store']
+                                    ['store_card_all'],
+                                textDetail: 'ขายสินค้า',
+                                item: storeItem[index],
+                                onDetailsPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => Orderscreen(
+                                          customerNo: storeItem[index].storeId,
+                                          customerName: storeItem[index].name,
+                                          status: storeItem[index].status),
+                                    ),
                                   );
                                 },
-                              ),
+                              );
+                            },
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -320,11 +364,20 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    List<Widget> _widgetOptions = <Widget>[
+      Dashboardscreen(),
+      Routescreen(),
+      StoreScreen(staticData: staticData?['store']),
+      ReportScreen(),
+      ManageScreen(),
+      SettingScreen(),
+    ];
     double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       body: Header(
         leading: Center(child: _widgetOptions.elementAt(_selectedIndex)),
-        leading2: _widgetOptionsHeader.elementAt(_selectedIndex),
+        leading2:
+            Container(child: _widgetOptionsHeader.elementAt(_selectedIndex)),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       resizeToAvoidBottomInset: false,

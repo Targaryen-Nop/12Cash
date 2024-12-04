@@ -42,6 +42,7 @@ class _DetailStoreScreenState extends State<DetailStoreScreen> {
   late TextEditingController storeNoteController;
   late TextEditingController storeTaxConroller;
   late TextEditingController storeShoptypeController;
+  late TextEditingController storeAddressController;
 
   String selectedRoute = "";
 
@@ -54,6 +55,7 @@ class _DetailStoreScreenState extends State<DetailStoreScreen> {
     storeShoptypeController = TextEditingController();
     storeTaxConroller = TextEditingController();
     storeNoteController = TextEditingController();
+    storeAddressController = TextEditingController();
     _setStoreName();
   }
 
@@ -179,6 +181,7 @@ class _DetailStoreScreenState extends State<DetailStoreScreen> {
     storeNoteController.dispose();
     storeTaxConroller.dispose();
     storeShoptypeController.dispose();
+    storeAddressController.dispose();
     super.dispose();
   }
 
@@ -349,6 +352,7 @@ class _DetailStoreScreenState extends State<DetailStoreScreen> {
 
                                           label: "รูท",
                                           titleText: "รูท",
+                                          icon: Icon(Icons.route_outlined),
                                           fetchItems: (filter) =>
                                               getRoutes(filter),
                                           onChanged:
@@ -412,7 +416,12 @@ class _DetailStoreScreenState extends State<DetailStoreScreen> {
                                   Icons.note,
                                   storeNoteController,
                                   readOnly: onEdit),
-                              SizedBox(height: screenWidth / 37),
+                              // SizedBox(height: screenWidth / 37),
+                              _buildCustomFormField(
+                                  'ที่อยู่',
+                                  '${widget.store.address} ${widget.store.province != 'กรุงเทพมหานคร' ? 'ต.' : 'แขวง'}${widget.store.subDistrict} ${widget.store.province != 'กรุงเทพมหานคร' ? 'อ.' : 'เขต'}${widget.store.district} ${widget.store.province != 'กรุงเทพมหานคร' ? 'จ.' : ''}${widget.store.province} ${widget.store.postcode}',
+                                  Icons.location_on_rounded,
+                                  storeAddressController),
                               Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceAround,
@@ -565,40 +574,40 @@ class _DetailStoreScreenState extends State<DetailStoreScreen> {
                       ),
                     ),
                     SizedBox(height: screenWidth / 37),
-                    Expanded(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(
-                                  0.2), // Shadow color with transparency
-                              spreadRadius: 2, // Spread of the shadow
-                              blurRadius: 8, // Blur radius of the shadow
-                              offset: const Offset(0,
-                                  4), // Offset of the shadow (horizontal, vertical)
-                            ),
-                          ],
-                          // border: Border.all(color: Colors.grey),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Column(
-                            children: [
-                              Row(
-                                children: [
-                                  Text(
-                                    "Call Card",
-                                    style: Styles.black18(context),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
+                    // Expanded(
+                    //   child: Container(
+                    //     decoration: BoxDecoration(
+                    //       color: Colors.white,
+                    //       boxShadow: [
+                    //         BoxShadow(
+                    //           color: Colors.black.withOpacity(
+                    //               0.2), // Shadow color with transparency
+                    //           spreadRadius: 2, // Spread of the shadow
+                    //           blurRadius: 8, // Blur radius of the shadow
+                    //           offset: const Offset(0,
+                    //               4), // Offset of the shadow (horizontal, vertical)
+                    //         ),
+                    //       ],
+                    //       // border: Border.all(color: Colors.grey),
+                    //       borderRadius: BorderRadius.circular(10),
+                    //     ),
+                    //     child: Padding(
+                    //       padding: const EdgeInsets.all(16.0),
+                    //       child: Column(
+                    //         children: [
+                    //           Row(
+                    //             children: [
+                    //               Text(
+                    //                 "Call Card",
+                    //                 style: Styles.black18(context),
+                    //               ),
+                    //             ],
+                    //           ),
+                    //         ],
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
                   ],
                 ),
               ),

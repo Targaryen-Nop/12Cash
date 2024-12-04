@@ -71,7 +71,9 @@ class _CheckStoreDuplicateScreenState extends State<CheckStoreDuplicateScreen> {
 
 class CheckStoreDuplicateScreen2 extends StatefulWidget {
   List<Store> stores;
-  CheckStoreDuplicateScreen2({required this.stores, super.key});
+  Map<String, dynamic> staticData;
+  CheckStoreDuplicateScreen2(
+      {required this.stores, required this.staticData, super.key});
 
   @override
   State<CheckStoreDuplicateScreen2> createState() =>
@@ -110,6 +112,7 @@ class _CheckStoreDuplicateScreen2State
                         itemCount: widget.stores.length,
                         itemBuilder: (context, index) {
                           return StoreCartAll(
+                            staticData: widget.staticData,
                             item: widget.stores[index],
                             onDetailsPressed: () {
                               Navigator.push(

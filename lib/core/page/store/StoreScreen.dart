@@ -23,7 +23,8 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:intl/intl.dart';
 
 class StoreScreen extends StatefulWidget {
-  const StoreScreen({super.key});
+  Map<String, dynamic>? staticData;
+  StoreScreen({required this.staticData, super.key});
 
   @override
   State<StoreScreen> createState() => _StoreScreenState();
@@ -68,9 +69,11 @@ class _StoreScreenState extends State<StoreScreen> with RouteAware {
   void didPopNext() {
     setState(() {
       _loadingAllStore = true;
+      _loadingNewStore = true;
     });
     // Called when the screen is popped back to
     _getStoreDataAll();
+    _getStoreDataNew();
   }
 
   @override
@@ -150,11 +153,12 @@ class _StoreScreenState extends State<StoreScreen> with RouteAware {
         setState(() {
           storeNew = data.map((item) => Store.fromJson(item)).toList();
         });
-        Timer(Duration(milliseconds: 500), () {
-          setState(() {
-            _loadingNewStore = false;
-          });
-          // Perform your desired action here
+        Timer(const Duration(milliseconds: 500), () {
+          if (mounted) {
+            setState(() {
+              _loadingNewStore = false;
+            });
+          }
         });
       }
     } catch (e) {
@@ -185,27 +189,18 @@ class _StoreScreenState extends State<StoreScreen> with RouteAware {
         setState(() {
           storeAll = data.map((item) => Store.fromJson(item)).toList();
         });
-        Timer(Duration(milliseconds: 500), () {
-          setState(() {
-            _loadingAllStore = false;
-          });
-          // Perform your desired action here
+        Timer(const Duration(milliseconds: 500), () {
+          if (mounted) {
+            setState(() {
+              _loadingAllStore = false;
+            });
+          }
         });
       }
     } catch (e) {
       print(e);
     }
   }
-
-  // Future<void> _loadStoreData() async {
-  //   // Load JSON data from a file or a string
-  //   final String response = await rootBundle.loadString('data/all_store.json');
-  //   final List<dynamic> data = json.decode(response);
-
-  //   setState(() {
-  //     storeAll = data.map((json) => Store.fromJson(json)).toList();
-  //   });
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -227,6 +222,7 @@ class _StoreScreenState extends State<StoreScreen> with RouteAware {
                       setState(() {
                         _isSelected = !_isSelected;
                       });
+                      _getStoreDataAll();
                     },
                     style: ElevatedButton.styleFrom(
                       elevation: 16, // Add elevation for shadow
@@ -284,7 +280,7 @@ class _StoreScreenState extends State<StoreScreen> with RouteAware {
                           to: Color.fromARGB(255, 211, 211, 211),
                           duration: Duration(seconds: 1)),
                       enabled: _loadingNewStore,
-                      // enableSwitchAnimation: true,
+                      enableSwitchAnimation: true,
                       child: BoxShadowCustom(
                         child: ListView.builder(
                           itemCount: storeNew.length,
@@ -324,6 +320,7 @@ class _StoreScreenState extends State<StoreScreen> with RouteAware {
                           itemCount: storeAll.length,
                           itemBuilder: (context, index) {
                             return StoreCartAll(
+                              staticData: widget.staticData!['store_card_all'],
                               item: storeAll[index],
                               onDetailsPressed: () {
                                 Navigator.push(

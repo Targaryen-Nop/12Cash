@@ -15,6 +15,7 @@ class DropdownSearchCustom<T> extends StatefulWidget {
   final Widget Function(BuildContext, T, bool) itemBuilder; // Custom item UI
   final bool showSearchBox;
   final bool enabled;
+  final Icon? icon;
 
   const DropdownSearchCustom({
     Key? key,
@@ -28,6 +29,7 @@ class DropdownSearchCustom<T> extends StatefulWidget {
     this.initialSelectedValue,
     this.showSearchBox = true,
     this.enabled = false,
+    this.icon,
   }) : super(key: key);
 
   @override
@@ -62,6 +64,7 @@ class _DropdownSearchCustomState<T> extends State<DropdownSearchCustom<T>> {
       dropdownDecoratorProps: DropDownDecoratorProps(
         baseStyle: Styles.black18(context),
         dropdownSearchDecoration: InputDecoration(
+          prefixIcon: widget.icon,
           // fillColor: widget.enabled ? Colors.grey[200] : Colors.white,
           labelText: widget.label,
           labelStyle: Styles.grey18(context),
