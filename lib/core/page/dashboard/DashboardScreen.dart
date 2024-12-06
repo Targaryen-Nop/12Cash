@@ -7,9 +7,11 @@ import 'package:_12sale_app/core/components/card/WeightCude.dart';
 import 'package:_12sale_app/core/components/chart/BarChart.dart';
 import 'package:_12sale_app/core/components/chart/LineChart.dart';
 import 'package:_12sale_app/core/components/chart/TrendingMusicChart.dart';
+import 'package:_12sale_app/core/page/HomeScreen.dart';
 import 'package:_12sale_app/core/page/NotificationScreen.dart';
 import 'package:_12sale_app/core/page/Ractangle3D.dart';
 import 'package:_12sale_app/core/page/printer/PrinterScreen.dart';
+import 'package:_12sale_app/core/page/setting/SettingScreen.dart';
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:_12sale_app/data/models/Customer.dart';
 import 'package:_12sale_app/data/models/Shipping.dart';
@@ -337,124 +339,136 @@ class _DashboardHeaderState extends State<DashboardHeader> {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Flexible(
-          fit: FlexFit.loose,
-          child: Row(
-            children: [
-              Flexible(
-                flex: 1,
-                fit: FlexFit.tight,
-                child: Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 4),
-
-                  // color: Colors.red,
+    return GestureDetector(
+      onTap: () {
+        // Navigator.push(
+        //   context,
+        //   MaterialPageRoute(
+        //       builder: (context) => const HomeScreen(
+        //             index: 4,
+        //           )),
+        // );
+      },
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Flexible(
+            fit: FlexFit.loose,
+            child: Row(
+              children: [
+                Flexible(
+                  flex: 1,
+                  fit: FlexFit.tight,
                   child: Container(
-                    decoration: const BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage('assets/images/12TradingLogo.png'),
+                    margin: const EdgeInsets.symmetric(horizontal: 4),
+
+                    // color: Colors.red,
+                    child: Container(
+                      decoration: const BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage('assets/images/12TradingLogo.png'),
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-              Flexible(
-                flex: 2,
-                fit: FlexFit.loose,
-                child: Center(
-                  // margin: EdgeInsets.only(top: 10),
-                  child: Column(
-                    // mainAxisSize: MainAxisSize.,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        child: Container(
-                          margin: const EdgeInsets.symmetric(horizontal: 4),
-                          // color: Colors.blue,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Row(
-                                children: [
-                                  Text(
-                                    '${_userData.firstName} ${_userData.surName}',
-                                    style: Styles.headerWhite24(context),
-                                    textAlign: TextAlign.start,
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  Text(
-                                      DateFormat(' d MMMM yyyy').format(DateTime
-                                          .now()), // Current date and time
-                                      style: Styles.white18(context)),
-                                  StreamBuilder(
-                                    stream: Stream.periodic(
-                                        const Duration(seconds: 1)),
-                                    builder: (context, snapshot) {
-                                      return Text(
-                                          DateFormat(' HH:mm:ss')
-                                              .format(DateTime.now()),
-                                          style: Styles.white18(context));
-                                    },
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                // mainAxisAlignment:
-                                //     MainAxisAlignment.spaceAround,
-                                children: [
-                                  Container(
-                                    width: screenWidth / 6,
-                                    // margin: EdgeInsets.all(4),
-                                    decoration: const BoxDecoration(
-                                        color: Styles.secondaryColor,
-                                        borderRadius: BorderRadius.horizontal(
-                                            right: Radius.circular(50),
-                                            left: Radius.circular(50))),
+                Flexible(
+                  flex: 2,
+                  fit: FlexFit.loose,
+                  child: Center(
+                    // margin: EdgeInsets.only(top: 10),
+                    child: Column(
+                      // mainAxisSize: MainAxisSize.,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 4),
+                            // color: Colors.blue,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Row(
+                                  children: [
+                                    Text(
+                                      '${_userData.firstName} ${_userData.surName}',
+                                      style: Styles.headerWhite24(context),
+                                      textAlign: TextAlign.start,
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Text(
+                                        DateFormat(' d MMMM yyyy').format(
+                                            DateTime
+                                                .now()), // Current date and time
+                                        style: Styles.white18(context)),
+                                    StreamBuilder(
+                                      stream: Stream.periodic(
+                                          const Duration(seconds: 1)),
+                                      builder: (context, snapshot) {
+                                        return Text(
+                                            DateFormat(' HH:mm:ss')
+                                                .format(DateTime.now()),
+                                            style: Styles.white18(context));
+                                      },
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  // mainAxisAlignment:
+                                  //     MainAxisAlignment.spaceAround,
+                                  children: [
+                                    Container(
+                                      width: screenWidth / 6,
+                                      // margin: EdgeInsets.all(4),
+                                      decoration: const BoxDecoration(
+                                          color: Styles.secondaryColor,
+                                          borderRadius: BorderRadius.horizontal(
+                                              right: Radius.circular(50),
+                                              left: Radius.circular(50))),
 
-                                    child: Center(
-                                      child: Text(
-                                        '${_userData.role.toUpperCase()}',
-                                        style: Styles.headerBlack18(context),
+                                      child: Center(
+                                        child: Text(
+                                          '${_userData.role.toUpperCase()}',
+                                          style: Styles.headerBlack18(context),
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  Container(
-                                    width: screenWidth / 6,
-                                    margin: const EdgeInsets.symmetric(
-                                        horizontal: 4),
-                                    decoration: const BoxDecoration(
-                                        color: Styles.secondaryColor,
-                                        borderRadius: BorderRadius.horizontal(
-                                            right: Radius.circular(50),
-                                            left: Radius.circular(50))),
-                                    child: Center(
-                                      child: Text(
-                                        '${_userData.area}',
-                                        style: Styles.headerBlack18(context),
+                                    Container(
+                                      width: screenWidth / 6,
+                                      margin: const EdgeInsets.symmetric(
+                                          horizontal: 4),
+                                      decoration: const BoxDecoration(
+                                          color: Styles.secondaryColor,
+                                          borderRadius: BorderRadius.horizontal(
+                                              right: Radius.circular(50),
+                                              left: Radius.circular(50))),
+                                      child: Center(
+                                        child: Text(
+                                          '${_userData.area}',
+                                          style: Styles.headerBlack18(context),
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                            ],
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

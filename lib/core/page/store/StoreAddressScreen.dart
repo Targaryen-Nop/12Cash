@@ -1,16 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:_12sale_app/core/components/input/CustomTextInput.dart';
-import 'package:_12sale_app/core/components/search/DistrictSearch.dart';
-import 'package:_12sale_app/core/components/search/DropdownSearchCustom.dart';
 import 'package:_12sale_app/core/components/search/DropdownSearchGroup.dart';
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:_12sale_app/data/models/Location.dart';
-import 'package:_12sale_app/data/models/Poscode.dart';
 import 'package:_12sale_app/data/models/Store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:path/path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:collection/collection.dart';
 

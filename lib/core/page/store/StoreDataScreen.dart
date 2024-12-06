@@ -1,11 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:_12sale_app/core/components/button/Button.dart';
 import 'package:_12sale_app/core/components/button/IconButtonWithLabel.dart';
-import 'package:_12sale_app/core/components/dropdown/RouteDropdown.dart';
-import 'package:_12sale_app/core/components/dropdown/ShopTypeDropdown.dart';
 import 'package:_12sale_app/core/components/input/CustomTextInput.dart';
 import 'package:_12sale_app/core/components/search/DropdownSearchCustom.dart';
 import 'package:_12sale_app/core/styles/style.dart';
@@ -491,24 +488,6 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
               ),
             ],
           ),
-          // GestureDetector(
-          //   onTap: () {
-          //     print(widget.storeData.imageList);
-          //   },
-          //   child: Text(
-          //     "Data",
-          //     style: Styles.black18(context),
-          //   ),
-          // ),
-          // GestureDetector(
-          //   onTap: () {
-          //     imageList.clear();
-          //   },
-          //   child: Text(
-          //     "Delete",
-          //     style: Styles.black18(context),
-          //   ),
-          // )
         ],
       ),
     );

@@ -114,6 +114,5 @@ class CustomerModel {
   // }
 
   @override
-  String toString() =>
-      '$customerNo $customerName $customerChannel CO-Order Type $customerChannel';
+  String toString() => '$customerNo $customerName CO Channal: $customerChannel';
 }

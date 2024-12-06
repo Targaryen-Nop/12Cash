@@ -23,8 +23,7 @@ class LineChartSample extends StatelessWidget {
               bottomTitles: AxisTitles(
                   sideTitles: SideTitles(
                 getTitlesWidget: (value, meta) {
-                  return Text('${value.toString()}',
-                      style: Styles.black18(context));
+                  return Text(value.toString(), style: Styles.black18(context));
                 },
                 showTitles: true,
               )),

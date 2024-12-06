@@ -255,13 +255,13 @@ class Styles {
         ),
       );
 
-// --------------------- Primary Color----------------------
+// --------------------- Primary Color ---------------------------------
   static const Color primaryColor = Color(0xFF00569D);
   static const Color secondaryColor = Color(0xFF94d3f2);
   static const Color grey = Colors.grey;
   static const Color white = Colors.white;
 
-  // --------------------- Common Color----------------------
+  // --------------------- Common Color --------------------------------
   static const Color backgroundTableColor = Color(0xFFF9FAFB);
   static const Color successBackgroundColor = Color(0xFFDEF7EC);
   static const Color successTextColor = Color(0xFF03543F);
@@ -277,6 +277,6 @@ class Styles {
 
   static const Color accentColor = Colors.orange;
 
-  // --------------------- Button Color---------------------
+  // --------------------- Button Color --------------------------------
   static const Color successButtonColor = Color(0xFF198754);
 }

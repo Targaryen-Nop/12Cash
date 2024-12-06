@@ -96,10 +96,10 @@ class MyApp extends StatelessWidget {
             ],
             textTheme: Typography.englishLike2018.apply(fontSizeFactor: 1.sp),
           ),
-          // home: const LoginScreen(),
-          home: const HomeScreen(
-            index: 0,
-          ),
+          home: const LoginScreen(),
+          // home: const HomeScreen(
+          //   index: 0,
+          // ),
           // home: NotificationScreen(),
           // home: HomeScreen2(),
           // home: CustomBottomNavBar(),

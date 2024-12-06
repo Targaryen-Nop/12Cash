@@ -16,7 +16,7 @@
 
 
     <application
-        android:label="_12sale_app"
+        android:label="12Cash APP"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
 

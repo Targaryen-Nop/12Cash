@@ -2,7 +2,7 @@ import 'package:_12sale_app/core/styles/style.dart';
 import 'package:_12sale_app/core/utils/tost_util.dart';
 import 'package:_12sale_app/data/service/connectivityService.dart';
 import 'package:flutter/material.dart';
-import 'package:path/path.dart';
+
 import 'package:toastification/toastification.dart';
 
 class Header extends StatefulWidget {
