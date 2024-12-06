@@ -77,82 +77,6 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
     _loadStoreFromStorage();
   }
 
-  // Future<void> uploadFormData(
-  //     String url, Map<String, String> fields, File file) async {
-  //   try {
-  //     // Determine MIME type of the file
-  //     final mimeType = lookupMimeType(file.path);
-
-  //     // Create a Multipart Request
-  //     var request = http.MultipartRequest('POST', Uri.parse(url));
-
-  //     // Add fields to the request
-  //     fields.forEach((key, value) {
-  //       request.fields[key] = value;
-  //     });
-
-  //     // Add the file
-  //     request.files.add(
-  //       http.MultipartFile.fromBytes(
-  //         'file', // Key for the file
-  //         await file.readAsBytes(),
-  //         filename: basename(file.path),
-  //         contentType: mimeType != null ? MediaType.parse(mimeType) : null,
-  //       ),
-  //     );
-
-  //     // Send the request
-  //     var response = await request.send();
-
-  //     if (response.statusCode == 200) {
-  //       print("Upload successful");
-  //       final responseBody = await response.stream.bytesToString();
-  //       print("Response: $responseBody");
-  //     } else {
-  //       print("Failed to upload. Status code: ${response.statusCode}");
-  //     }
-  //   } catch (e) {
-  //     print("Error uploading file: $e");
-  //   }
-  // }
-
-  // Future<void> adw(
-  //     String url, Map<String, String> fields, File file) async {
-  //   try {
-  //     // Create Dio instance
-  //     Dio dio = Dio();
-
-  //     // Create a MultipartFile
-  //     String fileName = file.path.split('/').last;
-  //     FormData formData = FormData.fromMap({
-  //       ...fields, // Add fields to FormData
-  //       'file': await MultipartFile.fromFile(
-  //         file.path,
-  //         filename: fileName,
-  //       ),
-  //     });
-
-  //     // Send POST request
-  //     Response response = await dio.post(
-  //       url,
-  //       data: formData,
-  //       options: Options(
-  //         headers: {
-  //           "Content-Type": "multipart/form-data",
-  //         },
-  //       ),
-  //     );
-
-  //     if (response.statusCode == 200) {
-  //       print("Upload successful: ${response.data}");
-  //     } else {
-  //       print("Failed to upload. Status code: ${response.statusCode}");
-  //     }
-  //   } catch (e) {
-  //     print("Error uploading file: $e");
-  //   }
-  // }
-
   Future<void> _loadStoreFromStorage() async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -187,7 +111,7 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
     }
   }
 
-  Future<void> uploadFormDataWithDio(String imagePath) async {
+  Future<void> uploadFormDataWithDio(String imagePath, String typeImage) async {
     try {
       final dio = Dio();
       var formData = FormData.fromMap({
@@ -205,6 +129,17 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
       );
       if (response.statusCode == 201) {
         print("Image uploaded successfully ${response.data}");
+        final newImage = ImageItem(
+            name: response.data['data']['ImageName'],
+            path: response.data['data']['path'],
+            type: typeImage);
+        imageList.insert(0, newImage);
+        setState(() {
+          storeImagePath = imagePath;
+          _storeData =
+              _storeData?.copyWithDynamicField('imageList', '', imageList);
+        });
+        _saveStoreToStorage();
       } else {}
     } catch (e) {
       print('Unexpected error: $e');
@@ -534,16 +469,7 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
                 imagePath: storeImagePath != "" ? storeImagePath : null,
                 label: "${widget.staticData?['image_store'] ?? "Store"}",
                 onImageSelected: (String imagePath) async {
-                  await uploadFormDataWithDio(imagePath);
-                  final newImage = ImageItem(
-                      name: imagePath, path: imagePath, type: "store");
-                  imageList.insert(0, newImage);
-                  setState(() {
-                    storeImagePath = imagePath;
-                    _storeData = _storeData?.copyWithDynamicField(
-                        'imageList', '', imageList);
-                  });
-                  _saveStoreToStorage();
+                  await uploadFormDataWithDio(imagePath, 'store');
                 },
               ),
               IconButtonWithLabel(
@@ -551,18 +477,7 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
                 imagePath: taxIdImagePath != "" ? taxIdImagePath : null,
                 label: "${widget.staticData?['image_taxId'] ?? "Tax ID"}",
                 onImageSelected: (String imagePath) async {
-                  await uploadFormDataWithDio(imagePath);
-                  final updatedImageList =
-                      List<ImageItem>.from(_storeData!.imageList);
-                  final newImage =
-                      ImageItem(name: imagePath, path: imagePath, type: "tax");
-                  updatedImageList.add(newImage);
-                  setState(() {
-                    taxIdImagePath = imagePath;
-                    _storeData = _storeData?.copyWithDynamicField(
-                        'imageList', '', updatedImageList);
-                  });
-                  _saveStoreToStorage();
+                  await uploadFormDataWithDio(imagePath, 'tax');
                 },
               ),
               IconButtonWithLabel(
@@ -571,23 +486,7 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
                 label:
                     "${widget.staticData?['image_identify'] ?? "Persona Identify"}",
                 onImageSelected: (String imagePath) async {
-                  await uploadFormDataWithDio(imagePath);
-                  // Create a new imageList and add the imagePath
-                  final updatedImageList =
-                      List<ImageItem>.from(_storeData!.imageList);
-                  final newImage = ImageItem(
-                      name: imagePath, path: imagePath, type: "person");
-
-                  updatedImageList.add(newImage);
-
-                  setState(() {
-                    personalImagePath = imagePath;
-                    _storeData = _storeData?.copyWithDynamicField(
-                        'imageList', "", updatedImageList);
-                  });
-
-                  // Save the updated storeData to storage
-                  _saveStoreToStorage();
+                  await uploadFormDataWithDio(imagePath, 'person');
                 },
               ),
             ],

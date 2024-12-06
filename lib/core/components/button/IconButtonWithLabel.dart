@@ -73,7 +73,9 @@ class _IconButtonWithLabelState extends State<IconButtonWithLabel> {
       MaterialPageRoute(
         builder: (context) => CameraPreviewScreen(
           cameraController: _cameraController,
-          onImageCaptured: (String imagePath) {
+          onImageCaptured: (
+            String imagePath,
+          ) {
             setState(() {
               widget.imagePath = imagePath;
             });
