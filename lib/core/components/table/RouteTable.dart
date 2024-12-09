@@ -1,10 +1,12 @@
 // ignore: file_names
 import 'dart:convert';
+import 'package:_12sale_app/core/page/HomeScreen.dart';
 import 'package:_12sale_app/core/page/route/ShopRouteScreen.dart';
 
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:_12sale_app/data/models/SaleRoute.dart';
 import 'package:_12sale_app/function/SavetoStorage.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -17,20 +19,11 @@ class RouteTable extends StatefulWidget {
 }
 
 class _RouteTableState extends State<RouteTable> {
-  Map<String, dynamic>? _jsonString;
   List<SaleRoute> routes = [];
   @override
   void initState() {
     super.initState();
-    _loadJson();
     _loadSaleRoute();
-  }
-
-  Future<void> _loadJson() async {
-    String jsonString = await rootBundle.loadString('lang/main-th.json');
-    setState(() {
-      _jsonString = jsonDecode(jsonString)["route_table"];
-    });
   }
 
   Future<void> _loadSaleRoute() async {
@@ -43,7 +36,6 @@ class _RouteTableState extends State<RouteTable> {
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
     return Center(
       child: Container(
         // height: screenWidth / 2.5,
@@ -76,9 +68,9 @@ class _RouteTableState extends State<RouteTable> {
               ),
               child: Row(
                 children: [
-                  _buildHeaderCell(_jsonString?['date'] ?? 'Date'),
-                  _buildHeaderCell(_jsonString?['route'] ?? 'Route'),
-                  _buildHeaderCell(_jsonString?['status'] ?? 'Status'),
+                  _buildHeaderCell("route.route_table.date".tr()),
+                  _buildHeaderCell("route.route_table.route".tr()),
+                  _buildHeaderCell("route.route_table.status".tr()),
                   // _buildHeaderCell('สถานะ'),
                 ],
               ),
@@ -92,7 +84,7 @@ class _RouteTableState extends State<RouteTable> {
                     ...List.generate(routes.length, (index) {
                       final route = routes[index];
                       return _buildDataRow(
-                          'วันที่ ${route.day}',
+                          '${"route.route_table.date".tr()} ${route.day}',
                           '${int.tryParse(route.day)}',
                           '${route.storeTotal}/${route.storeAll}',
                           route.storeTotal == route.storeAll
@@ -129,7 +121,7 @@ class _RouteTableState extends State<RouteTable> {
           context,
           MaterialPageRoute(
             builder: (context) =>
-                Shoproutescreen(day: day, route: route, status: status),
+                ShopRouteScreen(day: day, route: route, status: status),
           ),
         );
       },

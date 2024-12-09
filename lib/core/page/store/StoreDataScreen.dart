@@ -5,18 +5,19 @@ import 'package:_12sale_app/core/components/button/Button.dart';
 import 'package:_12sale_app/core/components/button/IconButtonWithLabel.dart';
 import 'package:_12sale_app/core/components/input/CustomTextInput.dart';
 import 'package:_12sale_app/core/components/search/DropdownSearchCustom.dart';
+import 'package:_12sale_app/core/page/dashboard/DashboardScreen.dart';
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:_12sale_app/data/models/Route.dart';
 import 'package:_12sale_app/data/models/Shoptype.dart';
 import 'package:_12sale_app/data/models/Store.dart';
 import 'package:_12sale_app/function/SavetoStorage.dart';
 import 'package:dio/dio.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:path/path.dart';
-import 'package:mime/mime.dart';
 
 class StoreDataScreen extends StatefulWidget {
   Store storeData;
@@ -28,7 +29,6 @@ class StoreDataScreen extends StatefulWidget {
   TextEditingController storeNoteController;
   RouteStore initialSelectedRoute;
   ShopType initialSelectedShoptype;
-  Map<String, dynamic>? staticData;
 
   StoreDataScreen({
     Key? key,
@@ -41,7 +41,6 @@ class StoreDataScreen extends StatefulWidget {
     required this.initialSelectedRoute,
     required this.initialSelectedShoptype,
     required this.imageList,
-    required this.staticData,
   }) : super(key: key);
 
   @override
@@ -221,7 +220,7 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
               const Icon(Icons.store, size: 40),
               const SizedBox(width: 8),
               Text(
-                widget.staticData?['title'] ?? 'Store Detail',
+                "store.store_data_screen.title".tr(),
                 style: Styles.headerBlack24(context),
               ),
             ],
@@ -245,10 +244,8 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
                     });
                   },
                   context,
-                  label:
-                      '${widget.staticData?['input_name']['name'] ?? "Shop Name"} *',
-                  hint:
-                      '${widget.staticData?['input_name']['hint'] ?? "Max 36 Characters"}',
+                  label: '${"store.store_data_screen.input_name.name".tr()} *',
+                  hint: "store.store_data_screen.input_name.hint".tr(),
                 ),
                 const SizedBox(height: 16),
                 Customtextinput(
@@ -266,10 +263,8 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
                     });
                   },
                   context,
-                  label:
-                      '${widget.staticData?['input_taxId']['name'] ?? "Tax ID"}',
-                  hint:
-                      '${widget.staticData?['input_taxId']['hint'] ?? "Max 13 Characters"}',
+                  label: '${"store.store_data_screen.input_taxId.name".tr()} ',
+                  hint: '${"store.store_data_screen.input_taxId.hint".tr()}',
                 ),
                 const SizedBox(height: 16),
                 Customtextinput(
@@ -277,10 +272,8 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
                     FilteringTextInputFormatter.digitsOnly,
                   ],
                   max: 10,
-                  label:
-                      '${widget.staticData?['input_tel']['name'] ?? "Phone"} *',
-                  hint:
-                      "${widget.staticData?['input_tel']['hint'] ?? "Max 10 Characters"}",
+                  label: '${"store.store_data_screen.input_tel.name".tr()} *',
+                  hint: "${"store.store_data_screen.input_tel.hint".tr()}",
                   keypadType: TextInputType.number,
                   controller: widget.storeTelController,
                   onChanged: (value) => _onTextChanged(value, 'tel'),
@@ -305,9 +298,9 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
                                     ? null
                                     : widget.initialSelectedShoptype,
                             label:
-                                '${widget.staticData?['input_shoptype']['name'] ?? "Shop Type"} *',
+                                '${"store.store_data_screen.input_shoptype.name".tr()} *',
                             titleText:
-                                "${widget.staticData?['input_shoptype']['name'] ?? "Shop Type"}",
+                                "${"store.store_data_screen.input_shoptype.name".tr()}",
                             fetchItems: (filter) => getShoptype(filter),
                             onChanged: (ShopType? selected) async {
                               if (selected != null) {
@@ -369,9 +362,9 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
                                   ? null
                                   : widget.initialSelectedRoute,
                           label:
-                              "${widget.staticData?['input_route']['name'] ?? "Route"} *",
+                              "${"store.store_data_screen.input_route.name".tr()} *",
                           titleText:
-                              "${widget.staticData?['input_route']['name'] ?? "Route"}",
+                              "${"store.store_data_screen.input_route.name".tr()}",
                           fetchItems: (filter) => getRoutes(filter),
                           onChanged: (RouteStore? selected) async {
                             if (selected != null) {
@@ -427,8 +420,8 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
                     });
                   },
                   context,
-                  label:
-                      '${widget.staticData?['input_lineId']['name'] ?? "Line ID"}',
+                  hint: '${"store.store_data_screen.input_lineId.hint".tr()}',
+                  label: '${"store.store_data_screen.input_lineId.name".tr()}',
                 ),
                 const SizedBox(height: 16),
                 Customtextinput(
@@ -441,8 +434,8 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
                     });
                   },
                   context,
-                  label:
-                      '${widget.staticData?['input_note']['name'] ?? "Note"}',
+                  hint: "store.store_data_screen.input_note.hint".tr(),
+                  label: '${"store.store_data_screen.input_note.name".tr()}',
                 ),
               ],
             ),
@@ -453,7 +446,7 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
               const Icon(Icons.photo, size: 40),
               const SizedBox(width: 8),
               Text(
-                " ${widget.staticData?['title_image'] ?? "Image"}",
+                "store.store_data_screen.title_image".tr(),
                 style: Styles.headerBlack24(context),
               ),
             ],
@@ -464,7 +457,7 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
               IconButtonWithLabel(
                 icon: Icons.photo_camera,
                 imagePath: storeImagePath != "" ? storeImagePath : null,
-                label: "${widget.staticData?['image_store'] ?? "Store"}",
+                label: "store.store_data_screen.image_store".tr(),
                 onImageSelected: (String imagePath) async {
                   await uploadFormDataWithDio(imagePath, 'store');
                 },
@@ -472,7 +465,7 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
               IconButtonWithLabel(
                 icon: Icons.photo_camera,
                 imagePath: taxIdImagePath != "" ? taxIdImagePath : null,
-                label: "${widget.staticData?['image_taxId'] ?? "Tax ID"}",
+                label: "store.store_data_screen.image_taxId".tr(),
                 onImageSelected: (String imagePath) async {
                   await uploadFormDataWithDio(imagePath, 'tax');
                 },
@@ -480,8 +473,7 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
               IconButtonWithLabel(
                 icon: Icons.photo_camera,
                 imagePath: personalImagePath != "" ? personalImagePath : null,
-                label:
-                    "${widget.staticData?['image_identify'] ?? "Persona Identify"}",
+                label: "store.store_data_screen.image_identify".tr(),
                 onImageSelected: (String imagePath) async {
                   await uploadFormDataWithDio(imagePath, 'person');
                 },

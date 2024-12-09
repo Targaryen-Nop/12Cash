@@ -2,10 +2,11 @@ import 'dart:convert';
 import 'package:_12sale_app/core/components/search/CustomerDropdownSearch.dart';
 import 'package:_12sale_app/core/components/search/TestDropdown.dart';
 import 'package:_12sale_app/core/components/table/RouteTable.dart';
-
+import 'package:_12sale_app/core/page/HomeScreen.dart';
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:_12sale_app/data/models/SaleRoute.dart';
 import 'package:_12sale_app/function/SavetoStorage.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -88,18 +89,9 @@ class RouteHeader extends StatefulWidget {
 }
 
 class _RouteHeaderState extends State<RouteHeader> {
-  Map<String, dynamic>? _jsonString;
   @override
   void initState() {
     super.initState();
-    _loadJson();
-  }
-
-  Future<void> _loadJson() async {
-    String jsonString = await rootBundle.loadString('lang/main-th.json');
-    setState(() {
-      _jsonString = jsonDecode(jsonString)["route"]["route_screen"];
-    });
   }
 
   @override
@@ -150,7 +142,7 @@ class _RouteHeaderState extends State<RouteHeader> {
                                   const Icon(Icons.event,
                                       size: 25, color: Colors.white),
                                   Text(
-                                    ' ${_jsonString?['title'] ?? 'Route'}',
+                                    "route.title".tr(),
                                     style: Styles.headerWhite24(context),
                                     textAlign: TextAlign.start,
                                   ),
@@ -170,7 +162,7 @@ class _RouteHeaderState extends State<RouteHeader> {
                       ),
                       Flexible(
                         child: Text(
-                          ' เดือน ${DateFormat('MMMM', 'th').format(DateTime.now())} ${DateTime.now().year + 543}',
+                          ' ${"route.month".tr()} ${DateFormat('MMMM', 'th').format(DateTime.now())} ${DateTime.now().year + 543}',
                           style: Styles.headerWhite24(context),
                         ),
                       ),

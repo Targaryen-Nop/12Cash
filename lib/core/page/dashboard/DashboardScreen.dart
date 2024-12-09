@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:_12sale_app/core/components/CalendarPicker.dart';
 import 'package:_12sale_app/core/components/button/CameraButton.dart';
@@ -16,6 +17,7 @@ import 'package:_12sale_app/core/styles/style.dart';
 import 'package:_12sale_app/data/models/Customer.dart';
 import 'package:_12sale_app/data/models/Shipping.dart';
 import 'package:_12sale_app/data/models/User.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -36,12 +38,30 @@ class Dashboardscreen extends StatefulWidget {
 
 class _DashboardscreenState extends State<Dashboardscreen> {
   Timer? _locationTimer;
+  // Language
+  late Map<String, String> languages = {};
+  String? selectedLanguageCode;
 
   @override
   void initState() {
     super.initState();
     LocationService().initialize();
+    _loadData();
     // startLocationUpdates();
+  }
+
+  Future<void> _loadData() async {
+    final String jsonString =
+        await rootBundle.loadString('assets/locales/languages.json');
+    final Map<String, dynamic> jsonData = json.decode(jsonString);
+    // languages = Map<String, String>.from(jsonData);
+    setState(() {
+      languages = Map<String, String>.from(jsonData);
+    });
+  }
+
+  void _reload() {
+    setState(() {});
   }
 
   @override
@@ -69,8 +89,8 @@ class _DashboardscreenState extends State<Dashboardscreen> {
   List<ShippingModel> shuppingList = [];
 
   Widget build(BuildContext context) {
+    selectedLanguageCode = context.locale.toString().split("_")[0];
     double screenWidth = MediaQuery.of(context).size.width;
-    // someFunction();
     return Container(
         padding: const EdgeInsets.all(10.0),
         // height: screenWidth / 2.5,
@@ -88,6 +108,62 @@ class _DashboardscreenState extends State<Dashboardscreen> {
                     Navigator.of(context).push(
                       MaterialPageRoute(
                           builder: (context) => NotificationScreen()),
+                    );
+                  },
+                ),
+                DropdownButton<String>(
+                  icon: const Icon(
+                    Icons.chevron_left,
+                  ),
+                  // isExpanded: true,
+                  value: selectedLanguageCode,
+                  hint: Text(
+                    'เลือกภาษา',
+                    style: Styles.black18(context),
+                  ),
+                  items: languages.entries
+                      .map(
+                        (entry) => DropdownMenuItem<String>(
+                          value: entry.key,
+                          child: Text(
+                            entry.value,
+                            style: Styles.black18(context),
+                          ),
+                          // Display language name
+                        ),
+                      )
+                      .toList(),
+                  onChanged: (value) async {
+                    switch (value) {
+                      case "en":
+                        await context.setLocale(const Locale('en', 'US'));
+                        break;
+                      case "th":
+                        await context.setLocale(const Locale('th', 'TH'));
+                        break;
+                      default:
+                    }
+                    //  log(locale.toString(), name: toString());
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const HomeScreen(
+                                index: 0,
+                              )),
+                    );
+                    print(context.locale.toString().split("_")[0]);
+                    setState(() {
+                      selectedLanguageCode = value;
+                    });
+                  },
+                ),
+                MenuButton(
+                  color: Styles.successButtonColor,
+                  icon: Icons.settings,
+                  label: "Setting",
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => SettingScreen()),
                     );
                   },
                 ),

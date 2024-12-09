@@ -8,6 +8,7 @@ import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 
 import 'package:path/path.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class CustomerDropdownSearch extends StatefulWidget {
   // final List<CustomerModel> customerModel;
@@ -26,6 +27,7 @@ class CustomerDropdownSearch extends StatefulWidget {
 class _CustomerDropdownSearchState extends State<CustomerDropdownSearch> {
   CustomerModel? _selectedCustomer;
   List<CustomerModel> customerList = [];
+  bool _loading = true;
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -114,6 +116,9 @@ class _CustomerDropdownSearchState extends State<CustomerDropdownSearch> {
 
       // // Checking if data is not null and returning the list of CustomerModel
       if (response != null) {
+        setState(() {
+          _loading = false;
+        });
         return CustomerModel.fromJsonList(response);
       }
       return [];
@@ -125,54 +130,65 @@ class _CustomerDropdownSearchState extends State<CustomerDropdownSearch> {
 
   Widget _customCustomer(
       BuildContext context, CustomerModel item, bool isSelected) {
-    return Column(
-      children: [
-        Container(
-          margin: const EdgeInsets.symmetric(horizontal: 0),
-          padding: const EdgeInsets.symmetric(vertical: 0),
-          decoration: !isSelected
-              ? null
-              : BoxDecoration(
-                  border: Border.all(color: Theme.of(context).primaryColor),
-                  borderRadius: BorderRadius.circular(5),
-                  color: Colors.white,
-                ),
-          child: ListTile(
-            selected: isSelected,
-            title: Text.rich(
-              TextSpan(
-                children: [
-                  TextSpan(
-                    text: '${item.customerName}\n',
-                    style: Styles.kanit(context).copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: Styles.primaryColor,
-                        fontSize: 24),
+    return Skeletonizer(
+      effect: const PulseEffect(
+          from: Colors.grey,
+          to: Color.fromARGB(255, 211, 211, 211),
+          duration: Duration(seconds: 1)),
+      enableSwitchAnimation: true,
+      enabled: _loading,
+      child: Column(
+        children: [
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 0),
+            padding: const EdgeInsets.symmetric(vertical: 0),
+            decoration: !isSelected
+                ? null
+                : BoxDecoration(
+                    border: Border.all(color: Theme.of(context).primaryColor),
+                    borderRadius: BorderRadius.circular(5),
+                    color: Colors.white,
                   ),
-                  TextSpan(text: 'รหัสร้าน : ', style: Styles.black18(context)),
-                  TextSpan(
-                      text: '${item.customerNo} \n',
-                      style: Styles.black18(context)),
-                  TextSpan(text: 'เลขที่ : ', style: Styles.black18(context)),
-                  TextSpan(
-                      text: '${item.customerNo} \n',
-                      style: Styles.black18(context)),
-                  TextSpan(text: 'ที่อยู่ : ', style: Styles.black18(context)),
-                  TextSpan(
-                      text: '${item.customerAddress1} ${item.customerPoscode}',
-                      style: Styles.black18(context)),
-                ],
+            child: ListTile(
+              selected: isSelected,
+              title: Text.rich(
+                TextSpan(
+                  children: [
+                    TextSpan(
+                      text: '${item.customerName}\n',
+                      style: Styles.kanit(context).copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: Styles.primaryColor,
+                          fontSize: 24),
+                    ),
+                    TextSpan(
+                        text: 'รหัสร้าน : ', style: Styles.black18(context)),
+                    TextSpan(
+                        text: '${item.customerNo} \n',
+                        style: Styles.black18(context)),
+                    TextSpan(text: 'เลขที่ : ', style: Styles.black18(context)),
+                    TextSpan(
+                        text: '${item.customerNo} \n',
+                        style: Styles.black18(context)),
+                    TextSpan(
+                        text: 'ที่อยู่ : ', style: Styles.black18(context)),
+                    TextSpan(
+                        text:
+                            '${item.customerAddress1} ${item.customerPoscode}',
+                        style: Styles.black18(context)),
+                  ],
+                ),
               ),
             ),
           ),
-        ),
-        const Divider(
-          color: Colors.grey, // Color of the divider line
-          thickness: 1, // Thickness of the line
-          indent: 16, // Left padding for the divider line
-          endIndent: 16, // Right padding for the divider line
-        ),
-      ],
+          const Divider(
+            color: Colors.grey, // Color of the divider line
+            thickness: 1, // Thickness of the line
+            indent: 16, // Left padding for the divider line
+            endIndent: 16, // Right padding for the divider line
+          ),
+        ],
+      ),
     );
   }
 }

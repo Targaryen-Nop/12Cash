@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:_12sale_app/core/components/Appbar.dart';
 import 'package:_12sale_app/core/components/sheet/PolicyAddNewShop.dart';
 import 'package:_12sale_app/core/page/HomeScreen.dart';
+import 'package:_12sale_app/core/page/dashboard/DashboardScreen.dart';
 import 'package:_12sale_app/core/page/store/PolicyScreen.dart';
 import 'package:_12sale_app/core/page/store/StoreAddressScreen.dart';
 import 'package:_12sale_app/core/page/store/StoreDataScreen.dart';
@@ -16,6 +17,7 @@ import 'package:_12sale_app/data/models/Shoptype.dart';
 import 'package:_12sale_app/data/models/Store.dart';
 import 'package:_12sale_app/data/models/User.dart';
 import 'package:dio/dio.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -56,8 +58,7 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
   ShopType initialSelectedShoptype =
       ShopType(id: '', name: '', descript: '', status: '');
   List<dynamic> imageList = [];
-  List<DuplicateStore> duplicateStores = [];
-  List<Store> duplicateStores2 = [];
+  List<Store> duplicateStores = [];
 
   Location initialSelectedLocation = Location(
       id: '',
@@ -109,11 +110,9 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
           initialSelectedRoute: initialSelectedRoute,
           initialSelectedShoptype: initialSelectedShoptype,
           imageList: imageList,
-          staticData: widget.staticData!['store_data_screen'],
         );
       case 2:
         return StoreAddressScreen(
-          staticData: widget.staticData!['store_address_screen'],
           storeAddressController: storeAddressController,
           storePoscodeController: storePoscodeController,
           initialSelectedLocation: initialSelectedLocation,
@@ -121,7 +120,6 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
       case 3:
         return VerifyStoreScreen(
           storeData: _storeData,
-          staticData: widget.staticData!['store_verify_screen'],
         );
       default:
         return Center(child: Text("Unknown step"));
@@ -207,45 +205,23 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
       if (response.statusCode == 200 || response.statusCode == 201) {
         if (response.data['message'] == 'similar store') {
           final List<dynamic> data = response.data['data'];
-          // setState(() {
-          //   duplicateStores = data
-          //       .map((item) => DuplicateStore.fromJson(
-          //           item['store'] as Map<String, dynamic>))
-          //       .toList();
-          // });
-
           setState(() {
-            duplicateStores2 = data
+            duplicateStores = data
                 .map((item) =>
                     Store.fromJson(item['store'] as Map<String, dynamic>))
                 .toList();
           });
-
-          // showToastDuplicateMenu(
-          //   stores: duplicateStores,
-          //   context: context,
-          //   icon: const Icon(Icons.info_outline),
-          //   type: ToastificationType.error,
-          //   primaryColor: Colors.red,
-          //   titleStyle: Styles.headerRed24(context),
-          //   descriptionStyle: Styles.red12(context),
-          //   message: "พบร้านค้าที่คล้ายกัน",
-          //   description:
-          //       "พบร้านค้าที่คล้ายกันในระบบ สามารถเปิดขายจากร้านที่คล้ายกัน",
-          // );
-
-          showToastDuplicateMenu2(
-            stores: duplicateStores2,
-            staticData: widget.staticData!['store_card_all'],
+          showToastDuplicateMenu(
+            stores: duplicateStores,
             context: context,
             icon: const Icon(Icons.info_outline),
             type: ToastificationType.error,
             primaryColor: Colors.red,
             titleStyle: Styles.headerRed24(context),
             descriptionStyle: Styles.red12(context),
-            message: "พบร้านค้าที่คล้ายกัน",
+            message: "store.processtimeline_screen.processtimeline_screen".tr(),
             description:
-                "พบร้านค้าที่คล้ายกันในระบบ สามารถเปิดขายจากร้านที่คล้ายกัน",
+                "store.processtimeline_screen.toasting_similar_des".tr(),
           );
         } else if (response.data['message'] == 'Success') {
           // print("TEST 2");
@@ -255,7 +231,7 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
             type: ToastificationType.success,
             style: ToastificationStyle.flatColored,
             title: Text(
-              "บันทึกข้อมูลสําเร็จ",
+              "store.processtimeline_screen.toasting_success".tr(),
               style: Styles.black18(context),
             ),
           );
@@ -265,90 +241,30 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
           );
         }
       }
-
-      // if (response.statusCode == 200 || response.statusCode == 201) {
-      //   if (response.data['message'] == 'similar store') {
-      //     final List<dynamic> data = response.data['data'];
-      //     // print(response.data['data']);
-      //     // for (var item in data) {
-      //     //   print("---------------------------------");
-      //     //   print(item);
-      //     //   // print("---------------------------------");
-      //     // }
-      //     setState(() {
-      //       duplicateStores = data
-      //           .map((item) => DuplicateStore.fromJson(
-      //               item['store'] as Map<String, dynamic>))
-      //           .toList();
-      //     });
-      //     // print("Duplicate Store ${duplicateStores[0].name}");
-      //     showToastDuplicateMenu(
-      //       stores: duplicateStores,
-      //       context: context,
-      //       icon: const Icon(Icons.info_outline),
-      //       type: ToastificationType.error,
-      //       primaryColor: Colors.red,
-      //       titleStyle: Styles.headerRed24(context),
-      //       descriptionStyle: Styles.red12(context),
-      //       message: "พบร้านค้าที่คล้ายกัน",
-      //       description:
-      //           "พบร้านค้าที่คล้ายกันในระบบ สามารถเปิดขายจากร้านที่คล้ายกัน",
-      //     );
-      //   } else {
-      //     // print("Data posted successfully: ${response.data}");
-      //     // toastification.show(
-      //     //   autoCloseDuration: const Duration(seconds: 5),
-      //     //   context: context,
-      //     //   type: ToastificationType.success,
-      //     //   style: ToastificationStyle.flatColored,
-      //     //   title: Text(
-      //     //     "บันทึกข้อมูลสําเร็จ",
-      //     //     style: Styles.black18(context),
-      //     //   ),
-      //     // );
-      //     // Navigator.push(
-      //     //   context,
-      //     //   MaterialPageRoute(builder: (context) => const HomeScreen(index: 2)),
-      //     // );
-      //   }
-      // } else {
-      //   if (response.statusCode == 404) {
-      //     // toastification.show(
-      //     //   autoCloseDuration: const Duration(seconds: 5),
-      //     //   context: context,
-      //     //   primaryColor: Colors.red,
-      //     //   icon: const Icon(Icons.info_outline),
-      //     //   type: ToastificationType.error,
-      //     //   style: ToastificationStyle.flatColored,
-      //     //   title: Text(
-      //     //     "บันทึกไม่สำเร็จเนื่องจาก ${response.statusCode}\n ไม่พบ Path API",
-      //     //     style: Styles.black18(context),
-      //     //   ),
-      //     // );
-      //   } else {
-      //     // toastification.show(
-      //     //   autoCloseDuration: const Duration(seconds: 5),
-      //     //   context: context,
-      //     //   primaryColor: Colors.red,
-      //     //   icon: const Icon(Icons.info_outline),
-      //     //   type: ToastificationType.error,
-      //     //   style: ToastificationStyle.flatColored,
-      //     //   title: Text(
-      //     //     "บันทึกไม่สำเร็จเนื่องจาก ${response.statusCode}\n ${response.data}",
-      //     //     style: Styles.black18(context),
-      //     //   ),
-      //     // );
-      //     // print(
-      //     //     "Failed to post data: ${response.statusCode}, ${response.data}");
-      //   }
-      // }
     } catch (e) {
+      toastification.show(
+        autoCloseDuration: const Duration(seconds: 5),
+        context: context,
+        type: ToastificationType.error,
+        style: ToastificationStyle.flatColored,
+        title: Text(
+          "store.processtimeline_screen.toasting_error".tr(),
+          style: Styles.black18(context),
+        ),
+      );
       print("Error: ${e}");
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final _processes = [
+      'store.processtimeline_screen.step1'.tr(),
+      'store.processtimeline_screen.step2'.tr(),
+      'store.processtimeline_screen.step3'.tr(),
+      'store.processtimeline_screen.step4'.tr()
+    ];
+
     double screenWidth = MediaQuery.of(context).size.width;
     return ToastificationConfigProvider(
       config: const ToastificationConfig(
@@ -358,10 +274,11 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
       ),
       child: Scaffold(
         backgroundColor: Colors.white,
-        appBar: const PreferredSize(
+        appBar: PreferredSize(
           preferredSize: Size.fromHeight(70),
           child: AppbarCustom(
-              title: " เพิ่มร้านค้า", icon: Icons.store_mall_directory_rounded),
+              title: " ${"store.processtimeline_screen.appbar".tr()}",
+              icon: Icons.store_mall_directory_rounded),
         ),
         body: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -389,7 +306,6 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
                         Icons.map, // Icon for "Offer"
                         Icons.check_circle_outlined, // Icon for "Contract"
                       ];
-
                       return Padding(
                         padding: const EdgeInsets.only(bottom: 5.0),
                         child: GestureDetector(
@@ -630,9 +546,7 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
                               ),
                             ),
                             child: Text(
-                                widget.staticData?['processtimeline_screen']
-                                        ['back_button'] ??
-                                    'Back',
+                                "store.processtimeline_screen.back_button".tr(),
                                 style: Styles.white18(context)),
                           ),
                         ),
@@ -655,10 +569,16 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
                           child: ElevatedButton(
                             onPressed: () {
                               if (_processIndex == 3) {
+                                print(
+                                  "store.processtimeline_screen.alert.title"
+                                      .tr(),
+                                );
                                 Alert(
                                   context: context,
                                   type: AlertType.info,
-                                  title: "ยืนยันข้อมูล",
+                                  title:
+                                      "store.processtimeline_screen.alert.title"
+                                          .tr(),
                                   style: AlertStyle(
                                     animationType: AnimationType.grow,
                                     isCloseButton: false,
@@ -677,13 +597,15 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
                                     alertAlignment: Alignment.center,
                                   ),
                                   desc:
-                                      "กรุณาตรวจเช็คความถูกต้องก่อนกดยืนยันการบันทึกข้อมูล",
+                                      "store.processtimeline_screen.alert.desc"
+                                          .tr(),
                                   buttons: [
                                     DialogButton(
                                       onPressed: () => Navigator.pop(context),
                                       color: Styles.failTextColor,
                                       child: Text(
-                                        "ยกเลิก",
+                                        "store.processtimeline_screen.alert.cancel"
+                                            .tr(),
                                         style: Styles.white18(context),
                                       ),
                                     ),
@@ -693,7 +615,8 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
                                       },
                                       color: Styles.successButtonColor,
                                       child: Text(
-                                        "ตกลง",
+                                        "store.processtimeline_screen.alert.submit"
+                                            .tr(),
                                         style: Styles.white18(context),
                                       ),
                                     )
@@ -725,16 +648,24 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
 
                                       // Check for missing fields
                                       if (_storeData.name.isEmpty) {
-                                        missingFields.add('ชื่อร้าน');
+                                        missingFields.add(
+                                            "store.processtimeline_screen.toasting.name"
+                                                .tr());
                                       }
                                       if (_storeData.tel.isEmpty) {
-                                        missingFields.add('เบอร์โทร');
+                                        missingFields.add(
+                                            "store.processtimeline_screen.toasting.phone"
+                                                .tr());
                                       }
                                       if (_storeData.typeName.isEmpty) {
-                                        missingFields.add('ประเภทร้าน');
+                                        missingFields.add(
+                                            "store.processtimeline_screen.toasting.store_type"
+                                                .tr());
                                       }
                                       if (_storeData.route.isEmpty) {
-                                        missingFields.add('เส้นทาง');
+                                        missingFields.add(
+                                            "store.processtimeline_screen.toasting.route"
+                                                .tr());
                                       }
 
                                       // If there are missing fields, show the toast
@@ -742,7 +673,7 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
                                         showToast(
                                           context: context,
                                           message:
-                                              'กรุณากรอก ${missingFields.join(', ')}',
+                                              '${"store.processtimeline_screen.toasting.message".tr()} ${missingFields.join(', ')}',
                                           type: ToastificationType.error,
                                           primaryColor: Colors.red,
                                         );
@@ -750,11 +681,15 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
                                       if (_storeData.imageList.isEmpty) {
                                         showToast(
                                           context: context,
-                                          message: 'กรุณาอัพรูปหน้าร้านค้า',
+                                          message:
+                                              "${"store.processtimeline_screen.toasting.image".tr()}",
                                           type: ToastificationType.error,
                                           primaryColor: Colors.red,
                                         );
                                       }
+
+                                      _processIndex = (_processIndex + 1) %
+                                          _processes.length;
 
                                       setState(() {
                                         initialSelectedRoute =
@@ -783,16 +718,24 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
 
                                       // Check for missing fields
                                       if (_storeData.address.isEmpty) {
-                                        missingFields.add('ที่อยู่');
+                                        missingFields.add(
+                                            "store.processtimeline_screen.toasting.address"
+                                                .tr());
                                       }
                                       if (_storeData.province.isEmpty) {
-                                        missingFields.add('จังหวัด');
+                                        missingFields.add(
+                                            "store.processtimeline_screen.toasting.province"
+                                                .tr());
                                       }
                                       if (_storeData.district.isEmpty) {
-                                        missingFields.add('อำเภท/เขต');
+                                        missingFields.add(
+                                            "store.processtimeline_screen.toasting.district"
+                                                .tr());
                                       }
                                       if (_storeData.subDistrict.isEmpty) {
-                                        missingFields.add('ตำบล/แขวง');
+                                        missingFields.add(
+                                            "store.processtimeline_screen.toasting.sub_district"
+                                                .tr());
                                       }
 
                                       // If there are missing fields, show the toast
@@ -800,7 +743,7 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
                                         showToast(
                                           context: context,
                                           message:
-                                              'กรุณาเลือก ${missingFields.join(', ')}',
+                                              '${"store.processtimeline_screen.toasting.message_selected".tr()} ${missingFields.join(', ')}',
                                           type: ToastificationType.error,
                                           primaryColor: Colors.red,
                                         );
@@ -839,11 +782,10 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
                             ),
                             child: Text(
                                 _processIndex == 3
-                                    ? 'ยืนยัน'
-                                    : widget.staticData?[
-                                                'processtimeline_screen']
-                                            ['next_button'] ??
-                                        'Next',
+                                    ? "store.processtimeline_screen.submit_button"
+                                        .tr()
+                                    : "store.processtimeline_screen.next_button"
+                                        .tr(),
                                 style: Styles.white18(context)),
                           ),
                         ),
@@ -855,15 +797,6 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
             ],
           ),
         ),
-        // floatingActionButton: FloatingActionButton(
-        //   child: Icon(FontAwesomeIcons.chevronRight),
-        //   onPressed: () {
-        //     setState(() {
-        //       _processIndex = (_processIndex + 1) % _processes.length;
-        //     });
-        //   },
-        //   backgroundColor: inProgressColor,
-        // ),
       ),
     );
   }
@@ -939,5 +872,3 @@ class _BezierPainter extends CustomPainter {
         oldDelegate.drawEnd != drawEnd;
   }
 }
-
-final _processes = ['ความยินยอม', 'ข้อมูลร้าน', 'ที่อยู่', 'ยืนยัน'];

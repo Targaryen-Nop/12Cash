@@ -5,6 +5,7 @@ import 'package:_12sale_app/core/components/table/PromotionTable.dart';
 import 'package:_12sale_app/core/page/route/VerifyOrderScreen.dart';
 
 import 'package:_12sale_app/core/styles/style.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -24,29 +25,13 @@ class Promotionscreen extends StatefulWidget {
 }
 
 class _PromotionscreenState extends State<Promotionscreen> {
-  Map<String, dynamic>? _jsonString;
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    _loadJson();
-  }
-
-  Future<void> _loadJson() async {
-    String jsonString = await rootBundle.loadString('lang/main-th.json');
-    setState(() {
-      _jsonString = jsonDecode(jsonString)['route']["promotion_screen"];
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(70),
         child: AppbarCustom(
-            title: " ${_jsonString?['title'] ?? 'Promotion&Discount'}",
+            title: " ${"route.promotion_screen.title".tr()}",
             icon: Icons.campaign_rounded),
       ),
       body: Container(
@@ -55,7 +40,7 @@ class _PromotionscreenState extends State<Promotionscreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("${_jsonString?['giveaway'] ?? 'Giveaway'}",
+            Text("route.promotion_screen.giveaway".tr(),
                 style: Styles.headerBlack24(context)),
             Expanded(
               flex: 5,
@@ -87,7 +72,7 @@ class _PromotionscreenState extends State<Promotionscreen> {
                 ],
               ),
             ),
-            Text("${_jsonString?['discount'] ?? 'Discount'}",
+            Text("route.promotion_screen.discount".tr(),
                 style: Styles.headerBlack24(context)),
             Expanded(
               flex: 2,
@@ -142,7 +127,7 @@ class _PromotionscreenState extends State<Promotionscreen> {
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),
-                child: Text('${_jsonString?['next_button'] ?? 'Next'}',
+                child: Text("route.promotion_screen.next_button".tr(),
                     style: Styles.white18(context)),
               ),
             ),

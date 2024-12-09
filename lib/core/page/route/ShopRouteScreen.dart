@@ -3,28 +3,30 @@ import 'package:_12sale_app/core/components/Appbar.dart';
 import 'package:_12sale_app/core/components/CustomerDropdownSearch.dart';
 import 'package:_12sale_app/core/components/badge/CustomBadge.dart';
 import 'package:_12sale_app/core/components/table/ShopRouteTable.dart';
+import 'package:_12sale_app/core/page/HomeScreen.dart';
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:_12sale_app/data/models/SaleRoute.dart';
 import 'package:_12sale_app/function/SavetoStorage.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class Shoproutescreen extends StatefulWidget {
+class ShopRouteScreen extends StatefulWidget {
   final String day;
   final String route;
   final String status;
 
-  const Shoproutescreen(
+  const ShopRouteScreen(
       {super.key,
       required this.day,
       required this.route,
       required this.status});
 
   @override
-  State<Shoproutescreen> createState() => _ShoproutescreenState();
+  State<ShopRouteScreen> createState() => _ShopRouteScreenState();
 }
 
-class _ShoproutescreenState extends State<Shoproutescreen> {
+class _ShopRouteScreenState extends State<ShopRouteScreen> {
   Map<String, dynamic>? _jsonString;
   SaleRoute? routes;
 
@@ -61,7 +63,7 @@ class _ShoproutescreenState extends State<Shoproutescreen> {
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(70),
         child: AppbarCustom(
-            title: ' ${_jsonString?['title'] ?? 'Visiting'} ${widget.day}',
+            title: ' ${"route.store_screen.title".tr()} ${widget.day}',
             icon: Icons.event),
       ),
       body: Padding(
@@ -78,13 +80,13 @@ class _ShoproutescreenState extends State<Shoproutescreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   CustomBadge(
-                    label: 'เช็คอิน',
+                    label: "route.store_screen.checkin".tr(),
                     count: '${routes?.storeCheckin ?? '0'}',
                     backgroundColor: Styles.successTextColor,
                     countBackgroundColor: Colors.white,
                   ),
                   CustomBadge(
-                    label: 'ขายแล้ว',
+                    label: "route.store_screen.order".tr(),
                     count: '${routes?.storeBuy ?? '0'}',
                     backgroundColor: Styles.paddingTextColor,
                     countBackgroundColor: Colors.white,
@@ -101,13 +103,13 @@ class _ShoproutescreenState extends State<Shoproutescreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   CustomBadge(
-                    label: 'ขายไม่ได้',
+                    label: "route.store_screen.cancel".tr(),
                     count: '${routes?.storeNotBuy ?? '0'}',
                     backgroundColor: Styles.failTextColor,
                     countBackgroundColor: Colors.white,
                   ),
                   CustomBadge(
-                    label: 'ทั้งหมด',
+                    label: "route.store_screen.all".tr(),
                     count: '${routes?.storeAll ?? '0'}',
                     backgroundColor: Colors.grey,
                     countBackgroundColor: Colors.white,

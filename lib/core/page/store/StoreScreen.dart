@@ -12,6 +12,7 @@ import 'package:_12sale_app/core/page/store/DetailStoreScreen.dart';
 import 'package:_12sale_app/core/page/store/ProcessTimelineScreen.dart';
 import 'package:_12sale_app/data/models/Route.dart';
 import 'package:_12sale_app/main.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 import 'package:_12sale_app/core/styles/style.dart';
@@ -23,8 +24,7 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:intl/intl.dart';
 
 class StoreScreen extends StatefulWidget {
-  Map<String, dynamic>? staticData;
-  StoreScreen({required this.staticData, super.key});
+  StoreScreen({super.key});
 
   @override
   State<StoreScreen> createState() => _StoreScreenState();
@@ -238,7 +238,7 @@ class _StoreScreenState extends State<StoreScreen> with RouteAware {
                       ),
                     ),
                     child: Text(
-                      'ทั้งหมด',
+                      "store.store_all".tr(),
                       style: Styles.headerBlack32(context),
                     ),
                   ),
@@ -264,7 +264,7 @@ class _StoreScreenState extends State<StoreScreen> with RouteAware {
                       ),
                     ),
                     child: Text(
-                      'ใหม่',
+                      "store.store_new".tr(),
                       style: Styles.headerBlack32(context),
                     ),
                   ),
@@ -320,7 +320,6 @@ class _StoreScreenState extends State<StoreScreen> with RouteAware {
                           itemCount: storeAll.length,
                           itemBuilder: (context, index) {
                             return StoreCartAll(
-                              staticData: widget.staticData!['store_card_all'],
                               item: storeAll[index],
                               onDetailsPressed: () {
                                 Navigator.push(
@@ -409,7 +408,7 @@ class _StoreHeaderState extends State<StoreHeader> {
                                         color: Colors.white),
                                   ),
                                   Text(
-                                    ' ร้านค้า',
+                                    ' ${"store.title".tr()}',
                                     style: Styles.headerWhite32(context),
                                     textAlign: TextAlign.start,
                                   ),

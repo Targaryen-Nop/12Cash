@@ -8,6 +8,7 @@ import 'package:_12sale_app/core/page/route/OrderScreen.dart';
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:_12sale_app/core/utils/tost_util.dart';
 import 'package:_12sale_app/data/models/Order.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -275,7 +276,7 @@ class _OrderDetailState extends State<OrderDetail>
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(70),
         child: AppbarCustom(
-          title: " ${_jsonString?["title"] ?? 'Order Detail'}",
+          title: " ${"route.order_detail_screen.title".tr()}",
           icon: Icons.inventory_2_outlined,
         ),
       ),
@@ -309,13 +310,17 @@ class _OrderDetailState extends State<OrderDetail>
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text("รหัสสินค้า ${widget.itemCode}",
+                            Text(
+                                "${"route.order_detail_screen.title".tr()} ${widget.itemCode}",
                                 style: Styles.black18(context)),
                             Text(widget.itemName,
                                 style: Styles.black18(context)),
-                            Text("จำนวนทั้งหมด $qty",
+                            Text(
+                                "${"route.order_detail_screen.item_qty".tr()} $qty",
                                 style: Styles.black18(context)),
-                            Text("ราคา $price", style: Styles.black18(context)),
+                            Text(
+                                "${"route.order_detail_screen.item_price".tr()} $price",
+                                style: Styles.black18(context)),
                           ],
                         ),
                       ),
@@ -344,7 +349,7 @@ class _OrderDetailState extends State<OrderDetail>
                           children: [
                             Row(
                               children: [
-                                Text("โปรโมทชั่น",
+                                Text("route.order_detail_screen.promotion".tr(),
                                     style: Styles.black18(context)),
 
                                 // Text("ราคา", style: Styles.black18(context)),
@@ -352,8 +357,10 @@ class _OrderDetailState extends State<OrderDetail>
                             ),
                             Row(
                               children: [
-                                Text("จํานวน", style: Styles.black18(context)),
-                                Text("ราคา", style: Styles.black18(context)),
+                                Text("route.order_detail_screen.qty".tr(),
+                                    style: Styles.black18(context)),
+                                Text("route.order_detail_screen.price".tr(),
+                                    style: Styles.black18(context)),
                               ],
                             ),
                             Row(
@@ -556,7 +563,8 @@ class _OrderDetailState extends State<OrderDetail>
 
                                 showToast(
                                   context: context,
-                                  message: 'เพิ่มรายการสำเร็จ!',
+                                  message:
+                                      '${"route.order_detail_screen.toasting_success".tr()}!',
                                   type: ToastificationType.success,
                                   primaryColor: Colors.green,
                                 );
@@ -566,7 +574,7 @@ class _OrderDetailState extends State<OrderDetail>
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    "เพิ่ม",
+                                    "route.order_detail_screen.add_button".tr(),
                                     style: Styles.headerWhite24(context),
                                   ),
                                   Text(

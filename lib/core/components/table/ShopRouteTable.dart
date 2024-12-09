@@ -1,11 +1,13 @@
 import 'dart:convert';
 
+import 'package:_12sale_app/core/page/HomeScreen.dart';
 import 'package:_12sale_app/core/page/route/DetailScreen.dart';
 
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:_12sale_app/data/models/Order.dart';
 import 'package:_12sale_app/data/models/SaleRoute.dart';
 import 'package:_12sale_app/function/SavetoStorage.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -23,21 +25,12 @@ class ShopRouteTable extends StatefulWidget {
 }
 
 class _ShopRouteTableState extends State<ShopRouteTable> {
-  Map<String, dynamic>? _jsonString;
   List<Store> stores = [];
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _loadJson();
     _loadStoreDetail();
-  }
-
-  Future<void> _loadJson() async {
-    String jsonString = await rootBundle.loadString('lang/main-th.json');
-    setState(() {
-      _jsonString = jsonDecode(jsonString)["shop_route_table"];
-    });
   }
 
   Future<void> _loadStoreDetail() async {
@@ -54,8 +47,6 @@ class _ShopRouteTableState extends State<ShopRouteTable> {
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
-
     return Center(
       child: Container(
         // height: screenHeight / 1.5,
@@ -89,11 +80,9 @@ class _ShopRouteTableState extends State<ShopRouteTable> {
               ),
               child: Row(
                 children: [
-                  _buildHeaderCell(
-                      _jsonString?['customer_no'] ?? 'Customer No'),
-                  _buildHeaderCell(
-                      _jsonString?['customer_name'] ?? 'Customer Name'),
-                  _buildHeaderCell(_jsonString?['status'] ?? 'Status'),
+                  _buildHeaderCell("route.shop_route_table.customer_no".tr()),
+                  _buildHeaderCell("route.shop_route_table.customer_name".tr()),
+                  _buildHeaderCell("route.shop_route_table.status".tr()),
                 ],
               ),
             ),

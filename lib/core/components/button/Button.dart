@@ -2,9 +2,11 @@ import 'package:_12sale_app/core/components/QuickAlertGobal.dart';
 import 'package:_12sale_app/core/page/route/RouteScreen.dart';
 
 import 'package:_12sale_app/core/styles/style.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 class CustomButton extends StatefulWidget {
   final String title;
@@ -110,14 +112,59 @@ class _ButtonFullWidthState extends State<ButtonFullWidth> {
       child: ElevatedButton(
         onPressed: () {
           if (widget.screen != null) {
-            ConfirmationAlert(
+            Alert(
               context: context,
-              onConfirm: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => widget.screen!),
-                );
-              },
+              type: AlertType.info,
+              title: "store.processtimeline_screen.alert.title".tr(),
+              style: AlertStyle(
+                animationType: AnimationType.grow,
+                isCloseButton: false,
+                isOverlayTapDismiss: false,
+                descStyle: Styles.black18(context),
+                descTextAlign: TextAlign.start,
+                animationDuration: const Duration(milliseconds: 400),
+                alertBorder: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(22.0),
+                  side: const BorderSide(
+                    color: Colors.grey,
+                  ),
+                ),
+                titleStyle: Styles.headerBlack32(context),
+                alertAlignment: Alignment.center,
+              ),
+              desc: "store.processtimeline_screen.alert.desc".tr(),
+              buttons: [
+                DialogButton(
+                  onPressed: () => Navigator.pop(context),
+                  color: Styles.failTextColor,
+                  child: Text(
+                    "store.processtimeline_screen.alert.cancel".tr(),
+                    style: Styles.white18(context),
+                  ),
+                ),
+                DialogButton(
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => widget.screen!),
+                    );
+                    // postData();
+                  },
+                  color: Styles.successButtonColor,
+                  child: Text(
+                    "store.processtimeline_screen.alert.submit".tr(),
+                    style: Styles.white18(context),
+                  ),
+                )
+              ],
             ).show();
+            // ConfirmationAlert(
+            //   context: context,
+            //   onConfirm: () {
+            //     Navigator.of(context).push(
+            //       MaterialPageRoute(builder: (context) => widget.screen!),
+            //     );
+            //   },
+            // ).show();
           }
           if (widget.onPressed != null) {
             widget.onPressed!();

@@ -574,40 +574,6 @@ class _DetailStoreScreenState extends State<DetailStoreScreen> {
                       ),
                     ),
                     SizedBox(height: screenWidth / 37),
-                    // Expanded(
-                    //   child: Container(
-                    //     decoration: BoxDecoration(
-                    //       color: Colors.white,
-                    //       boxShadow: [
-                    //         BoxShadow(
-                    //           color: Colors.black.withOpacity(
-                    //               0.2), // Shadow color with transparency
-                    //           spreadRadius: 2, // Spread of the shadow
-                    //           blurRadius: 8, // Blur radius of the shadow
-                    //           offset: const Offset(0,
-                    //               4), // Offset of the shadow (horizontal, vertical)
-                    //         ),
-                    //       ],
-                    //       // border: Border.all(color: Colors.grey),
-                    //       borderRadius: BorderRadius.circular(10),
-                    //     ),
-                    //     child: Padding(
-                    //       padding: const EdgeInsets.all(16.0),
-                    //       child: Column(
-                    //         children: [
-                    //           Row(
-                    //             children: [
-                    //               Text(
-                    //                 "Call Card",
-                    //                 style: Styles.black18(context),
-                    //               ),
-                    //             ],
-                    //           ),
-                    //         ],
-                    //       ),
-                    //     ),
-                    //   ),
-                    // ),
                   ],
                 ),
               ),

@@ -8,6 +8,7 @@ import 'package:_12sale_app/core/components/table/VerifyTable.dart';
 import 'package:_12sale_app/core/page/HomeScreen.dart';
 
 import 'package:_12sale_app/core/styles/style.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -49,7 +50,7 @@ class _VerifyorderscreenState extends State<Verifyorderscreen> {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(70),
         child: AppbarCustom(
-            title: " ${_jsonString?['title'] ?? 'Verify Order'}",
+            title: " ${"route.verify_screen.title".tr()}",
             icon: Icons.receipt_long),
       ),
       body: Container(
@@ -78,37 +79,37 @@ class _VerifyorderscreenState extends State<Verifyorderscreen> {
               child: Column(
                 children: [
                   BuildTextRowDetailShop(
-                    text: "${_jsonString?['sale_name'] ?? 'Sale Name'}",
+                    text: "route.verify_screen.sale_name".tr(),
                     value: "จิตรีน เชียงเหิน",
                     left: 3,
                     right: 7,
                   ),
                   BuildTextRowDetailShop(
-                    text: "${_jsonString?['customer_no'] ?? 'Customer No'}",
+                    text: "route.verify_screen.customer_no".tr(),
                     value: widget.customerNo,
                     left: 3,
                     right: 7,
                   ),
                   BuildTextRowDetailShop(
-                    text: "${_jsonString?['customer_name'] ?? 'Customer Name'}",
+                    text: "route.verify_screen.customer_name".tr(),
                     value: widget.customerName,
                     left: 3,
                     right: 7,
                   ),
                   BuildTextRowDetailShop(
-                    text: "${_jsonString?['address'] ?? 'Address'}",
+                    text: "route.verify_screen.address".tr(),
                     value: "99/9 ถ.ย่ายชื่อ ต.บางบา อ.พานทอง จ.ชลบุรี",
                     left: 3,
                     right: 7,
                   ),
                   BuildTextRowDetailShop(
-                    text: "${_jsonString?['customer_phone'] ?? 'Phone'}",
+                    text: "route.verify_screen.customer_phone".tr(),
                     value: "0831157890",
                     left: 3,
                     right: 7,
                   ),
                   BuildTextRowDetailShop(
-                    text: "${_jsonString?['tax_no'] ?? 'Tax'}",
+                    text: "route.verify_screen.tax_no".tr(),
                     value: "-",
                     left: 3,
                     right: 7,
@@ -167,23 +168,23 @@ class _VerifyorderscreenState extends State<Verifyorderscreen> {
               child: Column(
                 children: [
                   BuildTextRowBetweenCurrency(
-                      text: "${_jsonString?['total'] ?? 'Total'}",
+                      text: "route.verify_screen.total".tr(),
                       price: 800.00,
                       style: Styles.black24(context)),
                   BuildTextRowBetweenCurrency(
-                      text: "${_jsonString?['discount'] ?? 'Discount'}",
+                      text: "route.verify_screen.discount".tr(),
                       price: 8430.00,
                       style: Styles.black24(context)),
                   BuildTextRowBetweenCurrency(
-                      text: "${_jsonString?['net_price'] ?? 'Net Price'}",
+                      text: "route.verify_screen.net_price".tr(),
                       price: 00.00,
                       style: Styles.black24(context)),
                   BuildTextRowBetweenCurrency(
-                      text: "${_jsonString?['vat'] ?? 'VAT (7%)'}",
+                      text: "route.verify_screen.vat".tr(),
                       price: 7878.50,
                       style: Styles.black24(context)),
                   BuildTextRowBetweenCurrency(
-                      text: "${_jsonString?['amount'] ?? 'Amount'}",
+                      text: "route.verify_screen.amount".tr(),
                       price: 8430.00,
                       style: Styles.headerBlack24(context)),
                 ],
@@ -206,7 +207,7 @@ class _VerifyorderscreenState extends State<Verifyorderscreen> {
                 ],
               ),
               child: ButtonFullWidth(
-                text: "${_jsonString?['save'] ?? 'Save'}",
+                text: "route.verify_screen.save".tr(),
                 textStyle: Styles.headerWhite24(context),
                 blackGroundColor: Styles.successButtonColor,
                 screen: const HomeScreen(index: 2),

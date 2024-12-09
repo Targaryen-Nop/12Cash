@@ -7,11 +7,13 @@ import 'package:_12sale_app/core/components/dropdown/DropDownStandarad.dart';
 import 'package:_12sale_app/core/components/table/DetailTable.dart';
 // import 'package:_12sale_app/core/components/table/ShopRouteTable.dart';
 import 'package:_12sale_app/core/components/table/ShopRouteTableMapAPI.dart';
+import 'package:_12sale_app/core/page/HomeScreen.dart';
 import 'package:_12sale_app/core/page/route/OrderScreen.dart';
 
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:_12sale_app/data/models/SaleRoute.dart';
 import 'package:_12sale_app/function/SavetoStorage.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -36,24 +38,10 @@ class DetailScreen extends StatefulWidget {
 }
 
 class _DetailScreenState extends State<DetailScreen> {
-  Map<String, dynamic>? _jsonString;
   String? imagePath; // Path to store the captured image
   String selectedCause = 'เลือกเหตุผล';
   Store? store;
   @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    _loadJson();
-    // _loadStoreDetail();
-  }
-
-  Future<void> _loadJson() async {
-    String jsonString = await rootBundle.loadString('lang/main-th.json');
-    setState(() {
-      _jsonString = jsonDecode(jsonString)['route']["detail_screen"];
-    });
-  }
 
   // Future<void> StoreDetail() async {
   //   List<SaleRoute> routesData =
@@ -86,7 +74,7 @@ class _DetailScreenState extends State<DetailScreen> {
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(70),
         child: AppbarCustom(
-            title: ' ${_jsonString?['title'] ?? 'Visiting'} ${widget.day}',
+            title: ' ${"route.detail_screen.title".tr()} ${widget.day}',
             icon: Icons.event),
       ),
       bottomNavigationBar: Container(
@@ -112,7 +100,7 @@ class _DetailScreenState extends State<DetailScreen> {
             children: [
               MenuButton(
                 icon: Icons.cancel_rounded,
-                label: _jsonString?['cancel_order_button'] ?? 'Cancel Order',
+                label: "route.detail_screen.cancel.title".tr(),
                 color: Colors.red,
                 onPressed: () {
                   _showBottomSheet(context);
@@ -120,7 +108,7 @@ class _DetailScreenState extends State<DetailScreen> {
               ),
               MenuButton(
                 icon: Icons.add_shopping_cart_rounded,
-                label: _jsonString?['order_button'] ?? 'Order',
+                label: "route.detail_screen.order_button".tr(),
                 color: Colors.teal,
                 onPressed: () {
                   Navigator.push(
@@ -136,7 +124,7 @@ class _DetailScreenState extends State<DetailScreen> {
               ),
               MenuButton(
                 icon: Icons.add_a_photo,
-                label: _jsonString?['camera_button'] ?? 'Camera',
+                label: "route.detail_screen.camera.title".tr(),
                 color: Colors.blue,
                 onPressed: () {
                   _showBottomCamera(context);
@@ -144,7 +132,7 @@ class _DetailScreenState extends State<DetailScreen> {
               ),
               MenuButton(
                 icon: Icons.transfer_within_a_station_sharp,
-                label: _jsonString?['credit_note_button'] ?? 'CN',
+                label: "route.detail_screen.credit_note_button".tr(),
                 color: const Color.fromARGB(255, 234, 175, 0),
                 onPressed: () {
                   Navigator.push(
@@ -169,11 +157,14 @@ class _DetailScreenState extends State<DetailScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('รหัสร้าน ${widget.customerNo}',
+              Text(
+                  '${'route.detail_screen.store_id'.tr()} ${widget.customerNo}',
                   style: Styles.headerBlack24(context)),
-              Text("ร้าน ${widget.customerName}",
+              Text(
+                  "${'route.detail_screen.store_name'.tr()} ${widget.customerName}",
                   style: Styles.headerBlack24(context)),
-              Text("ที่อยู่ ${widget.address}",
+              Text(
+                  "${'route.detail_screen.store_address'.tr()} ${widget.address}",
                   style: Styles.headerBlack24(context)),
               const SizedBox(height: 10),
               SizedBox(
@@ -229,7 +220,7 @@ class _DetailScreenState extends State<DetailScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'ระบุสาเหตุที่ร้านค้าไม่ซื้อ',
+                        'route.detail_screen.cancel.case'.tr(),
                         style: Styles.headerBlack32(context),
                         textAlign: TextAlign.center,
                       ),
@@ -244,11 +235,11 @@ class _DetailScreenState extends State<DetailScreen> {
                   const SizedBox(height: 8),
                   // Store Information
                   Text(
-                    'รหัสร้าน 10334587',
+                    '${'route.detail_screen.cancel.store_id'.tr()} 10334587',
                     style: Styles.black24(context),
                   ),
                   Text(
-                    'ร้าน เจริญพรค้าขาย',
+                    '${'route.detail_screen.cancel.store_name'.tr()}  เจริญพรค้าขาย',
                     style: Styles.black24(context),
                   ),
                   const SizedBox(height: 16),
@@ -260,7 +251,8 @@ class _DetailScreenState extends State<DetailScreen> {
                       'เหตุผล 2',
                       'อื่นๆ'
                     ],
-                    hintText: 'เลือกเหตุผล', // Default hint text
+                    hintText: 'route.detail_screen.cancel.hint'
+                        .tr(), // Default hint text
                     onChanged: (String? newValue) {
                       setModalState(() {
                         selectedCause = newValue!;
@@ -303,8 +295,8 @@ class _DetailScreenState extends State<DetailScreen> {
                           borderRadius: BorderRadius.circular(8),
                         ),
                       ),
-                      child:
-                          Text('บันทึก', style: Styles.headerWhite32(context)),
+                      child: Text('route.detail_screen.cancel.submit'.tr(),
+                          style: Styles.headerWhite32(context)),
                     ),
                   ),
                 ],
@@ -350,7 +342,8 @@ class _DetailScreenState extends State<DetailScreen> {
                         Navigator.of(context).pop(); // Close bottom sheet
                       },
                     ),
-                    Text('จัดเก็บรูปภาพ', style: Styles.headerBlack32(context)),
+                    Text('route.detail_screen.camera.hint'.tr(),
+                        style: Styles.headerBlack32(context)),
                   ],
                 ),
                 const SizedBox(height: 8),
@@ -371,7 +364,7 @@ class _DetailScreenState extends State<DetailScreen> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
                         )),
-                    child: Text('บันทึกรูปภาพ',
+                    child: Text('route.detail_screen.camera.submit'.tr(),
                         style: Styles.headerWhite24(context)),
                   ),
                 ),

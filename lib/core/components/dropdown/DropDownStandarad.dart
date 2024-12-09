@@ -22,7 +22,7 @@ class DropDownStandard extends StatelessWidget {
       icon: const Icon(
         Icons.chevron_left,
       ),
-      isExpanded: true,
+
       alignment: Alignment.center,
       decoration: InputDecoration(
         filled: true,

@@ -34,79 +34,7 @@ void showToastDuplicateMenu({
   required BuildContext context,
   required String message,
   required String description,
-  required List<DuplicateStore> stores,
-  Icon? icon,
-  ToastificationType type = ToastificationType.success,
-  ToastificationStyle style = ToastificationStyle.flatColored,
-  Color primaryColor = Colors.green,
-  TextStyle? titleStyle,
-  TextStyle? descriptionStyle,
-}) {
-  toastification.show(
-    icon: const Icon(
-      Icons.info_outline,
-      color: Styles.failTextColor,
-      size: 50,
-    ),
-    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
-    margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-    context: context,
-    primaryColor: Colors.red,
-    type: type,
-    style: style,
-    title: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          message,
-          style: titleStyle, // Adjust your style method as necessary
-        ),
-        Text(
-          description,
-          style: descriptionStyle, // Adjust your style method as necessary
-        ),
-        GestureDetector(
-          onTap: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) {
-              return CheckStoreDuplicateScreen(
-                stores: stores,
-              );
-            }));
-          },
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8),
-              color: Styles.failTextColor,
-            ),
-            width: 110,
-            padding: const EdgeInsets.all(8),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                const Icon(
-                  Icons.visibility,
-                  color: Colors.white,
-                ),
-                Text(
-                  "ดูร้านค้า",
-                  style: Styles.white18(
-                      context), // Adjust your style method as necessary
-                ),
-              ],
-            ),
-          ),
-        )
-      ],
-    ),
-  );
-}
-
-void showToastDuplicateMenu2({
-  required BuildContext context,
-  required String message,
-  required String description,
   required List<Store> stores,
-  required Map<String, dynamic> staticData,
   Icon? icon,
   ToastificationType type = ToastificationType.success,
   ToastificationStyle style = ToastificationStyle.flatColored,
@@ -142,7 +70,6 @@ void showToastDuplicateMenu2({
             Navigator.push(context, MaterialPageRoute(builder: (context) {
               return CheckStoreDuplicateScreen2(
                 stores: stores,
-                staticData: staticData,
               );
             }));
           },

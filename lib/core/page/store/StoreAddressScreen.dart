@@ -2,9 +2,11 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:_12sale_app/core/components/input/CustomTextInput.dart';
 import 'package:_12sale_app/core/components/search/DropdownSearchGroup.dart';
+import 'package:_12sale_app/core/page/dashboard/DashboardScreen.dart';
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:_12sale_app/data/models/Location.dart';
 import 'package:_12sale_app/data/models/Store.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -14,14 +16,12 @@ class StoreAddressScreen extends StatefulWidget {
   TextEditingController storeAddressController;
   TextEditingController storePoscodeController;
   Location initialSelectedLocation;
-  Map<String, dynamic>? staticData;
 
   StoreAddressScreen({
     Key? key,
     required this.storeAddressController,
     required this.storePoscodeController,
     required this.initialSelectedLocation,
-    required this.staticData,
   }) : super(key: key);
 
   @override
@@ -302,7 +302,7 @@ class _StoreAddressScreenState extends State<StoreAddressScreen> {
               const Icon(Icons.location_on_outlined, size: 40),
               const SizedBox(width: 8),
               Text(
-                " ${widget.staticData?['title'] ?? "Shop Address"}",
+                " ${"store.store_address_screen.title".tr()}",
                 style: Styles.headerBlack24(context),
               ),
             ],
@@ -322,18 +322,16 @@ class _StoreAddressScreenState extends State<StoreAddressScreen> {
                   onChanged: (value) => _onTextChanged(value, 'address'),
                   context,
                   label:
-                      '${widget.staticData?['input_address']['name'] ?? "Shop Address"} *',
+                      '${"store.store_address_screen.input_address.name".tr()} *',
                   hint:
-                      '${widget.staticData?['input_address']['hint'] ?? "Max 36 Characteres"} *',
+                      '${"store.store_address_screen.input_address.hint".tr()}',
                 ),
                 SizedBox(height: screenWidth / 37),
                 DropdownSearchCustomGroup<Location>(
                   label:
-                      '${widget.staticData?['input_province']['name'] ?? "Province"} *',
-                  hint:
-                      "${widget.staticData?['input_province']['name'] ?? "Province"}",
+                      '${"store.store_address_screen.input_province.name".tr()} *',
                   titleText:
-                      "${widget.staticData?['input_province']['name'] ?? "Province"}",
+                      "${"store.store_address_screen.input_province.name".tr()}",
                   fetchItems: (filter) async {
                     // Replace with your district fetching logic
                     return await _fetchProvince(filter);
@@ -395,9 +393,9 @@ class _StoreAddressScreenState extends State<StoreAddressScreen> {
                 DropdownSearchCustomGroup<Location>(
                   key: ValueKey('DistrictSearch-$province'),
                   label:
-                      "${widget.staticData?['input_district']['name'] ?? "Amphoe"}",
+                      "${"store.store_address_screen.input_district.name".tr()}",
                   titleText:
-                      "${widget.staticData?['input_district']['name'] ?? "Amphoe"}",
+                      "${"store.store_address_screen.input_district.name".tr()}",
                   fetchItems: (filter) async {
                     // Replace with your district fetching logic
                     return await _fetchDistricts(filter);
@@ -458,9 +456,9 @@ class _StoreAddressScreenState extends State<StoreAddressScreen> {
                 DropdownSearchCustomGroup<Location>(
                   key: ValueKey('SubDistrictDropdown-$province$amphoe'),
                   label:
-                      "${widget.staticData?['input_subdistrict']['name'] ?? "Sub District"}",
+                      "${"store.store_address_screen.input_subdistrict.name".tr()} *",
                   titleText:
-                      "${widget.staticData?['input_subdistrict']['name'] ?? "Sub District"}",
+                      "${"store.store_address_screen.input_subdistrict.name".tr()}",
                   fetchItems: (filter) async {
                     // Replace with your district fetching logic
                     return await _fetchSubDistricts(filter);
@@ -531,7 +529,7 @@ class _StoreAddressScreenState extends State<StoreAddressScreen> {
                   controller:
                       widget.storePoscodeController, // Pass the controller here
                   label:
-                      "${widget.staticData?['input_poscode']['name'] ?? "Poscode"}",
+                      "${"store.store_address_screen.input_poscode.name".tr()}",
                 ),
               ],
             ),

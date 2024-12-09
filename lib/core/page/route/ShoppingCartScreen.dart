@@ -1,12 +1,11 @@
 import 'dart:convert';
-
 import 'package:_12sale_app/core/components/Appbar.dart';
 import 'package:_12sale_app/core/components/card/CartCard.dart';
 import 'package:_12sale_app/core/components/table/CartSTable.dart';
 import 'package:_12sale_app/core/page/route/OrderScreen.dart';
 import 'package:_12sale_app/core/page/route/PromotionScreen.dart';
-
 import 'package:_12sale_app/core/styles/style.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -25,21 +24,8 @@ class ShoppingCartScreen extends StatefulWidget {
 }
 
 class _ShoppingCartScreenState extends State<ShoppingCartScreen> {
-  Map<String, dynamic>? _jsonString;
   int count = 4;
   double price = 2000.0;
-  @override
-  void initState() {
-    super.initState();
-    _loadJson();
-  }
-
-  Future<void> _loadJson() async {
-    String jsonString = await rootBundle.loadString('lang/main-th.json');
-    setState(() {
-      _jsonString = jsonDecode(jsonString)["route"]["shop_cart_screen"];
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +34,7 @@ class _ShoppingCartScreenState extends State<ShoppingCartScreen> {
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(70),
         child: AppbarCustom(
-            title: " ${_jsonString?["title"] ?? 'Order Cart'}",
+            title: " ${"route.shop_cart_screen.title".tr()}",
             icon: Icons.shopping_cart_outlined),
       ),
       body: Container(
@@ -57,13 +43,13 @@ class _ShoppingCartScreenState extends State<ShoppingCartScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("รหัสร้าน ${widget.customerNo}",
+            Text("route.shop_cart_screen.store_id".tr(),
                 style: Styles.black24(context)),
             Text("ร้าน ${widget.customerName}", style: Styles.black24(context)),
             Align(
               alignment: Alignment.center,
               child: Text(
-                "${_jsonString?["item_selected"] ?? 'Item Selected'}",
+                "route.shop_cart_screen.store_name".tr(),
                 style: Styles.black24(context),
               ),
             ),
@@ -126,8 +112,7 @@ class _ShoppingCartScreenState extends State<ShoppingCartScreen> {
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
-                    child: Text(
-                        '${_jsonString?["select_item"] ?? 'Select Item'}',
+                    child: Text("route.shop_cart_screen.select_item".tr(),
                         style: Styles.white18(context)),
                   ),
                 ),
@@ -154,8 +139,7 @@ class _ShoppingCartScreenState extends State<ShoppingCartScreen> {
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
-                    child: Text(
-                        '${_jsonString?["create_order"] ?? 'Create Order'}',
+                    child: Text("route.shop_cart_screen.create_order".tr(),
                         style: Styles.white18(context)),
                   ),
                 ),
@@ -167,12 +151,12 @@ class _ShoppingCartScreenState extends State<ShoppingCartScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text("${_jsonString?["qty"] ?? 'Quantity'}",
+                Text("route.shop_cart_screen.qty".tr(),
                     style: Styles.black24(context)),
                 Row(
                   children: [
                     Text("$count    ", style: Styles.black24(context)),
-                    Text("${_jsonString?["item"] ?? '    Items'}",
+                    Text("route.shop_cart_screen.item".tr(),
                         style: Styles.black24(context)),
                   ],
                 ),
@@ -181,12 +165,12 @@ class _ShoppingCartScreenState extends State<ShoppingCartScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text("${_jsonString?["amount"] ?? 'Amount'}",
+                Text("route.shop_cart_screen.amount".tr(),
                     style: Styles.black24(context)),
                 Row(
                   children: [
                     Text("$price          ", style: Styles.black24(context)),
-                    Text("${_jsonString?["bath"] ?? 'Bath'}",
+                    Text("route.shop_cart_screen.bath".tr(),
                         style: Styles.black24(context)),
                   ],
                 ),

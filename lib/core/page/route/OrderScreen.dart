@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:_12sale_app/core/components/BoxShadowCustom.dart';
 import 'package:_12sale_app/main.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -31,15 +32,12 @@ class Orderscreen extends StatefulWidget {
 
 class _OrderscreenState extends State<Orderscreen> with RouteAware {
   ProductType? productData;
-  String dropdownValue = 'แบรนด์'; // Default value
   int cartItemCount = 0;
   List<Order> _orders = [];
 
-  Map<String, dynamic>? _jsonString;
   @override
   void initState() {
     super.initState();
-    _loadJson();
     _loadOrdersFromStorage();
     _loadProductType();
   }
@@ -51,13 +49,6 @@ class _OrderscreenState extends State<Orderscreen> with RouteAware {
 
     setState(() {
       productData = ProductType.fromJson(jsonData);
-    });
-  }
-
-  Future<void> _loadJson() async {
-    String jsonString = await rootBundle.loadString('lang/main-th.json');
-    setState(() {
-      _jsonString = jsonDecode(jsonString)['route']["order_screen"];
     });
   }
 
@@ -112,7 +103,7 @@ class _OrderscreenState extends State<Orderscreen> with RouteAware {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(70),
         child: AppbarCustom(
-          title: " ${_jsonString?['title'] ?? 'Ordering'}",
+          title: " ${"route.order_screen.title".tr()}",
           icon: Icons.event,
         ),
       ),
@@ -124,7 +115,7 @@ class _OrderscreenState extends State<Orderscreen> with RouteAware {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "รหัสร้าน ${widget.customerNo}",
+                "${"route.order_screen.title".tr()} ${widget.customerNo}",
                 style: Styles.headerBlack24(context),
               ),
               Text(
@@ -140,7 +131,8 @@ class _OrderscreenState extends State<Orderscreen> with RouteAware {
                       child: productData != null
                           ? BoxShadowCustom(
                               child: DropDownStandard(
-                                hintText: 'กลุ่ม',
+                                hintText:
+                                    "route.order_screen.dropdown.group".tr(),
                                 selectedValue: productData!.group.first,
                                 items: productData!.group,
                                 onChanged: (String? newValue) {},
@@ -155,7 +147,8 @@ class _OrderscreenState extends State<Orderscreen> with RouteAware {
                       child: productData != null
                           ? BoxShadowCustom(
                               child: DropDownStandard(
-                                hintText: 'แบรนด์',
+                                hintText:
+                                    "route.order_screen.dropdown.brand".tr(),
                                 selectedValue: productData!.brand.first,
                                 items: productData!.brand,
                                 onChanged: (String? newValue) {},
@@ -175,7 +168,8 @@ class _OrderscreenState extends State<Orderscreen> with RouteAware {
                       child: productData != null
                           ? BoxShadowCustom(
                               child: DropDownStandard(
-                                hintText: 'ขนาด',
+                                hintText:
+                                    "route.order_screen.dropdown.size".tr(),
                                 selectedValue: productData!.size.first,
                                 items: productData!.size,
                                 onChanged: (String? newValue) {},
@@ -190,7 +184,8 @@ class _OrderscreenState extends State<Orderscreen> with RouteAware {
                       child: productData != null
                           ? BoxShadowCustom(
                               child: DropDownStandard(
-                                hintText: 'รสชาติ',
+                                hintText:
+                                    "route.order_screen.dropdown.flavour".tr(),
                                 selectedValue: productData!.flavour.first,
                                 items: productData!.flavour,
                                 onChanged: (String? newValue) {},

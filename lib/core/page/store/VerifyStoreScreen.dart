@@ -4,18 +4,17 @@ import 'package:_12sale_app/core/components/button/IconButtonWithLabel.dart';
 import 'package:_12sale_app/core/components/button/ShowPhotoButton.dart';
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:_12sale_app/data/models/Store.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class VerifyStoreScreen extends StatefulWidget {
   final Store storeData;
-  Map<String, dynamic>? staticData;
 
   VerifyStoreScreen({
     Key? key,
     required this.storeData,
-    required this.staticData,
   }) : super(key: key);
 
   @override
@@ -78,7 +77,7 @@ class _VerifyStoreScreenState extends State<VerifyStoreScreen> {
               const Icon(Icons.store, size: 40),
               const SizedBox(width: 8),
               Text(
-                "${widget.staticData?['title'] ?? "Shop Detail"}",
+                "${"store.store_verify_screen.title".tr()}",
                 style: Styles.headerBlack24(context),
               ),
             ],
@@ -90,7 +89,7 @@ class _VerifyStoreScreenState extends State<VerifyStoreScreen> {
           Text.rich(
             TextSpan(
               text:
-                  '${widget.staticData?['name'] ?? "Name"}', // This is the main text style
+                  '${"store.store_verify_screen.name".tr()}', // This is the main text style
               style: Styles.headerBlack24(context),
               children: <TextSpan>[
                 TextSpan(
@@ -101,14 +100,10 @@ class _VerifyStoreScreenState extends State<VerifyStoreScreen> {
               ],
             ),
           ),
-          // Text(
-          //   "${widget.staticData?['name'] ?? "Name"} : ${widget.storeData.copyWith().name}",
-          //   style: Styles.headerBlack24(context),
-          // ),
           Text.rich(
             TextSpan(
               text:
-                  '${widget.staticData?['tel'] ?? "Phone"}', // This is the main text style
+                  '${"store.store_verify_screen.phone".tr()}', // This is the main text style
               style: Styles.headerBlack18(context),
               children: <TextSpan>[
                 TextSpan(
@@ -122,7 +117,7 @@ class _VerifyStoreScreenState extends State<VerifyStoreScreen> {
           Text.rich(
             TextSpan(
               text:
-                  '${widget.staticData?['taxId'] ?? "Tax ID"}', // This is the main text style
+                  '${"store.store_verify_screen.taxId".tr()}', // This is the main text style
               style: Styles.headerBlack18(context),
               children: <TextSpan>[
                 TextSpan(
@@ -136,7 +131,7 @@ class _VerifyStoreScreenState extends State<VerifyStoreScreen> {
           Text.rich(
             TextSpan(
               text:
-                  '${widget.staticData?['route'] ?? "Route"}', // This is the main text style
+                  '${"store.store_verify_screen.route".tr()}', // This is the main text style
               style: Styles.headerBlack18(context),
               children: <TextSpan>[
                 TextSpan(
@@ -149,7 +144,7 @@ class _VerifyStoreScreenState extends State<VerifyStoreScreen> {
           Text.rich(
             TextSpan(
               text:
-                  '${widget.staticData?['shopType'] ?? "Shop Type"}', // This is the main text style
+                  '${"store.store_verify_screen.shopType".tr()}', // This is the main text style
               style: Styles.headerBlack18(context),
               children: <TextSpan>[
                 TextSpan(
@@ -162,7 +157,7 @@ class _VerifyStoreScreenState extends State<VerifyStoreScreen> {
           Text.rich(
             TextSpan(
               text:
-                  '${widget.staticData?['lineId'] ?? "Line ID"}', // This is the main text style
+                  '${"store.store_verify_screen.lineId".tr()}', // This is the main text style
               style: Styles.headerBlack18(context),
               children: <TextSpan>[
                 TextSpan(
@@ -176,7 +171,7 @@ class _VerifyStoreScreenState extends State<VerifyStoreScreen> {
           Text.rich(
             TextSpan(
               text:
-                  '${widget.staticData?['note'] ?? "Note"}', // This is the main text style
+                  '${"store.store_verify_screen.note".tr()}', // This is the main text style
               style: Styles.headerBlack18(context),
               children: <TextSpan>[
                 TextSpan(
@@ -190,7 +185,7 @@ class _VerifyStoreScreenState extends State<VerifyStoreScreen> {
           Text.rich(
             TextSpan(
               text:
-                  '${widget.staticData?['address'] ?? "Address"}', // This is the main text style
+                  '${"store.store_verify_screen.address".tr()}', // This is the main text style
               style: Styles.headerBlack18(context),
               children: <TextSpan>[
                 TextSpan(
@@ -207,7 +202,7 @@ class _VerifyStoreScreenState extends State<VerifyStoreScreen> {
               const Icon(Icons.photo, size: 40),
               const SizedBox(width: 8),
               Text(
-                "${widget.staticData?['title_image'] ?? "Image"}",
+                "${"store.store_verify_screen.title_image".tr()}",
                 style: Styles.headerBlack24(context),
               ),
             ],
@@ -221,18 +216,17 @@ class _VerifyStoreScreenState extends State<VerifyStoreScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               ShowPhotoButton(
-                label: "${widget.staticData?['image_store'] ?? "Store"}",
+                label: "${"store.store_verify_screen.image_store".tr()}",
                 icon: Icons.image_not_supported_outlined,
                 imagePath: storeImagePath != "" ? storeImagePath : null,
               ),
               ShowPhotoButton(
-                label: "${widget.staticData?['image_taxId'] ?? "Tax ID"}",
+                label: "${"store.store_verify_screen.image_taxId".tr()}",
                 icon: Icons.image_not_supported_outlined,
                 imagePath: taxIdImagePath != "" ? taxIdImagePath : null,
               ),
               ShowPhotoButton(
-                label:
-                    "${widget.staticData?['image_identify'] ?? "Personal Identify"}",
+                label: "${"store.store_verify_screen.image_identify".tr()}",
                 icon: Icons.image_not_supported_outlined,
                 imagePath: personalImagePath != "" ? personalImagePath : null,
               )

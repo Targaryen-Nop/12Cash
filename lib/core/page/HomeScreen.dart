@@ -12,7 +12,7 @@ import 'package:_12sale_app/core/page/setting/SettingScreen.dart';
 import 'package:_12sale_app/core/page/store/ProcessTimelineScreen.dart';
 import 'package:_12sale_app/core/page/store/StoreScreen.dart';
 // import 'package:_12sale_app/page/TestTabel.dart';
-
+import 'package:easy_localization/easy_localization.dart';
 import 'package:_12sale_app/core/components/Header.dart';
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:_12sale_app/data/models/Order.dart';
@@ -105,7 +105,7 @@ class _HomeScreenState extends State<HomeScreen> {
     StoreHeader(),
     ReportHeader(),
     ManageHeader(),
-    SettingHeader(),
+    // SettingHeader(),
   ];
 
   void _onItemTapped(int index) {
@@ -325,8 +325,6 @@ class _HomeScreenState extends State<HomeScreen> {
                             itemCount: storeItem.length,
                             itemBuilder: (context, index) {
                               return StoreCartAll(
-                                staticData: staticData!['store']
-                                    ['store_card_all'],
                                 textDetail: 'ขายสินค้า',
                                 item: storeItem[index],
                                 onDetailsPressed: () {
@@ -367,7 +365,7 @@ class _HomeScreenState extends State<HomeScreen> {
     List<Widget> _widgetOptions = <Widget>[
       Dashboardscreen(),
       Routescreen(),
-      StoreScreen(staticData: staticData?['store']),
+      StoreScreen(),
       ReportScreen(),
       ManageScreen(),
       SettingScreen(),
@@ -432,35 +430,37 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
         child: ClipRRect(
-          borderRadius: const BorderRadius.only(
+          borderRadius: BorderRadius.only(
             topLeft: Radius.circular(16),
             topRight: Radius.circular(16),
           ),
           child: BottomNavigationBar(
             items: <BottomNavigationBarItem>[
               BottomNavigationBarItem(
-                icon: const Icon(
+                icon: Icon(
                   Icons.home,
                 ),
-                label: staticData?['menu']['home'] ?? 'Home',
+                label: "menu".tr(gender: "home"),
               ),
               BottomNavigationBarItem(
                 icon: const Icon(
                   Icons.route_rounded,
                 ),
-                label: staticData?['menu']['route'] ?? 'Route',
+                label: "menu".tr(gender: "route"),
               ),
               BottomNavigationBarItem(
                 icon: const Icon(
                   Icons.store,
                 ),
-                label: staticData?['menu']['shop'] ?? 'Shop',
+                label: "menu".tr(gender: "shop"),
               ),
               BottomNavigationBarItem(
                 icon: const Icon(
                   Icons.inventory_rounded,
                 ),
-                label: staticData?['menu']['report'] ?? 'Report',
+                label: "menu".tr(
+                  gender: "manage",
+                ),
               ),
               // BottomNavigationBarItem(
               //   icon: const Icon(

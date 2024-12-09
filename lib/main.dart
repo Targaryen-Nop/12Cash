@@ -13,9 +13,11 @@ import 'package:_12sale_app/core/page/LoginScreen.dart';
 import 'package:_12sale_app/core/page/HomeScreen.dart';
 import 'package:_12sale_app/core/page/dashboard/DashboardScreen.dart';
 import 'package:_12sale_app/core/page/route/TossAddToCartScreen.dart';
-import 'package:_12sale_app/core/page/testOffline.dart';
+
+import 'package:_12sale_app/core/styles/style.dart';
 import 'package:_12sale_app/data/service/localNotification.dart';
 import 'package:_12sale_app/data/service/requestPremission.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart'; // For date localization
@@ -28,17 +30,13 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
-late List<CameraDescription> _cameras;
-
 void main() async {
   // Initialize the locale data for Thai language
-
   // Ensure the app is always in portrait mode
   WidgetsFlutterBinding.ensureInitialized();
-
+  await EasyLocalization.ensureInitialized();
   // Initialize the notifications
   await initializeNotifications();
-
   await requestAllPermissions();
   await initializeDateFormatting('th', null);
   await dotenv.load(fileName: ".env");
@@ -62,12 +60,18 @@ void main() async {
   // Get the first camera from the list
   // final firstCamera = cameras.first;
   SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
+    // DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]).then((_) {
     runApp(
-      const KeyboardVisibilityProvider(
-        child: MyApp(),
+      KeyboardVisibilityProvider(
+        child: EasyLocalization(
+            startLocale: Locale("th", "TH"), // When need to set default
+            path: 'assets/locales',
+            fallbackLocale: Locale('th', 'TH'),
+            supportedLocales: [Locale('en', 'US'), Locale('th', 'TH')],
+            saveLocale: true,
+            child: MyApp()),
       ),
     );
   });
@@ -75,9 +79,14 @@ void main() async {
 
 final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -87,6 +96,12 @@ class MyApp extends StatelessWidget {
       splitScreenMode: true,
       builder: (context, child) {
         return MaterialApp(
+          localizationsDelegates: context.localizationDelegates,
+          supportedLocales: context.supportedLocales,
+          locale: context.locale,
+          // locale: _locale,
+          // supportedLocales: _localization.supportedLocales,
+          // localizationsDelegates: _localization.localizationsDelegates,
           navigatorObservers: [routeObserver], // Register RouteObserver here
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
@@ -96,10 +111,11 @@ class MyApp extends StatelessWidget {
             ],
             textTheme: Typography.englishLike2018.apply(fontSizeFactor: 1.sp),
           ),
-          home: const LoginScreen(),
-          // home: const HomeScreen(
-          //   index: 0,
-          // ),
+          // home: SettingsScreen(),
+          // home: const LoginScreen(),
+          home: const HomeScreen(
+            index: 0,
+          ),
           // home: NotificationScreen(),
           // home: HomeScreen2(),
           // home: CustomBottomNavBar(),

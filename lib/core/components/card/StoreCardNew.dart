@@ -1,5 +1,6 @@
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:_12sale_app/data/models/Store.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -52,10 +53,10 @@ class StoreCartNew extends StatelessWidget {
                     ),
                     child: Text(
                       item.policyConsent.status == 'Agree'
-                          ? 'อนุมัติ'
+                          ? 'store.store_card_new.agree'.tr()
                           : item.policyConsent.status == 'Reject'
-                              ? 'ไม่อนุมัติ'
-                              : 'รออนุมัติ',
+                              ? 'store.store_card_new.reject'.tr()
+                              : 'store.store_card_new.pendding'.tr(),
                       style: Styles.white18(context),
                       textAlign: TextAlign.center,
                     ),
@@ -65,7 +66,8 @@ class StoreCartNew extends StatelessWidget {
             ),
             Text.rich(
               TextSpan(
-                text: 'รหัสร้าน : ', // This is the main text style
+                text:
+                    '${'store.store_card_new.storeId'.tr()} : ', // This is the main text style
                 style: Styles.headerBlack18(context),
                 children: <TextSpan>[
                   TextSpan(
@@ -77,7 +79,8 @@ class StoreCartNew extends StatelessWidget {
             ),
             Text.rich(
               TextSpan(
-                text: 'เส้นทาง : ', // This is the main text style
+                text:
+                    '${'store.store_card_new.route'.tr()} : ', // This is the main text style
                 style: Styles.headerBlack18(context),
                 children: <TextSpan>[
                   TextSpan(
@@ -93,7 +96,8 @@ class StoreCartNew extends StatelessWidget {
               children: [
                 Text.rich(
                   TextSpan(
-                    text: 'ที่อยู่ : ', // This is the main text style
+                    text:
+                        '${'store.store_card_new.address'.tr()} : ', // This is the main text style
                     style: Styles.headerBlack18(context),
                     children: <TextSpan>[
                       TextSpan(
@@ -110,7 +114,8 @@ class StoreCartNew extends StatelessWidget {
                   ),
                 ),
                 Skeleton.ignore(
-                    child: Text('รายละเอียด', style: Styles.grey18(context))),
+                    child: Text('store.store_card_all.detail'.tr(),
+                        style: Styles.grey18(context))),
               ],
             ),
             Divider(color: Colors.grey.shade300),

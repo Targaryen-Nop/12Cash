@@ -1,19 +1,19 @@
+import 'package:_12sale_app/core/page/dashboard/DashboardScreen.dart';
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:_12sale_app/data/models/Store.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class StoreCartAll extends StatelessWidget {
   final Store item;
   final VoidCallback onDetailsPressed;
-  Map<String, dynamic>? staticData;
   String? textDetail;
 
   StoreCartAll(
       {Key? key,
       required this.item,
       required this.onDetailsPressed,
-      required this.staticData,
       this.textDetail = "รายละเอียด"})
       : super(key: key);
 
@@ -39,7 +39,7 @@ class StoreCartAll extends StatelessWidget {
             Text.rich(
               TextSpan(
                 text:
-                    '${staticData?['storeId'] ?? 'Store ID'} : ', // This is the main text style
+                    '${"store.store_card_all.storeId".tr()} : ', // This is the main text style
                 style: Styles.headerBlack18(context),
                 children: <TextSpan>[
                   TextSpan(
@@ -52,7 +52,7 @@ class StoreCartAll extends StatelessWidget {
             Text.rich(
               TextSpan(
                 text:
-                    '${staticData?['route'] ?? 'Route'} : ', // This is the main text style
+                    '${"store.store_card_all.route".tr()} : ', // This is the main text style
                 style: Styles.headerBlack18(context),
                 children: <TextSpan>[
                   TextSpan(
@@ -68,7 +68,7 @@ class StoreCartAll extends StatelessWidget {
               children: [
                 Text.rich(
                   TextSpan(
-                    text: '${staticData?['address'] ?? 'Address'} : ',
+                    text: '${"store.store_card_all.address".tr()} : ',
                     style: Styles.headerBlack18(context),
                     children: <TextSpan>[
                       TextSpan(

@@ -10,6 +10,7 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class PolicyScreen extends StatefulWidget {
   const PolicyScreen({super.key});
@@ -166,7 +167,8 @@ class _PolicyScreenState extends State<PolicyScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Header with close button
-          Text('ขอความยินยอม', style: Styles.headerBlack24(context)),
+          Text('store.store_policy.title', style: Styles.headerBlack24(context))
+              .tr(),
           SizedBox(height: 8),
           Text(
             '${policy?.header}',
@@ -281,7 +283,7 @@ class _PolicyScreenState extends State<PolicyScreen> {
                     : null,
               ),
               Text(
-                'ฉันยินยอมให้เก็บข้อมูล',
+                'store.store_policy.verify_policy'.tr(),
                 style: GoogleFonts.kanit(
                   textStyle: TextStyle(
                     fontSize: screenWidth / 35,
@@ -292,57 +294,6 @@ class _PolicyScreenState extends State<PolicyScreen> {
               ),
             ],
           ),
-
-          // Buttons at the bottom
-          // Padding(
-          //   padding: const EdgeInsets.all(16.0),
-          //   child: Row(
-          //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          //     children: [
-          //       Container(
-          //         width: screenWidth / 3,
-          //         child: ElevatedButton(
-          //           onPressed: () {
-          //             // Navigator.of(context).push(
-          //             //   MaterialPageRoute(
-          //             //     builder: (context) => Orderscreen(
-          //             //         customerNo: widget.customerNo,
-          //             //         customerName: widget.customerName,
-          //             //         status: widget.status),
-          //             //   ),
-          //             // );
-          //           },
-          //           child: Text('กลับ', style: Styles.white18(context)),
-          //           style: ElevatedButton.styleFrom(
-          //             backgroundColor: Styles.primaryColor,
-          //             padding: EdgeInsets.symmetric(
-          //                 vertical: screenWidth / 85,
-          //                 horizontal: screenWidth / 17),
-          //             shape: RoundedRectangleBorder(
-          //               borderRadius: BorderRadius.circular(8),
-          //             ),
-          //           ),
-          //         ),
-          //       ),
-          //       Container(
-          //         width: screenWidth / 3,
-          //         child: ElevatedButton(
-          //           onPressed: () {},
-          //           child: Text('ถัดไป', style: Styles.white18(context)),
-          //           style: ElevatedButton.styleFrom(
-          //             backgroundColor: Styles.successButtonColor,
-          //             padding: EdgeInsets.symmetric(
-          //                 vertical: screenWidth / 80,
-          //                 horizontal: screenWidth / 11),
-          //             shape: RoundedRectangleBorder(
-          //               borderRadius: BorderRadius.circular(8),
-          //             ),
-          //           ),
-          //         ),
-          //       ),
-          //     ],
-          //   ),
-          // ),
         ],
       ),
     );
