@@ -100,7 +100,7 @@ class _VerifyStoreScreenState extends State<VerifyStoreScreen> {
                 TextSpan(
                   text:
                       ' : ${widget.storeData.copyWith().name}', // Inline bold text
-                  style: Styles.black18(context),
+                  style: Styles.black24(context),
                 ),
               ],
             ),

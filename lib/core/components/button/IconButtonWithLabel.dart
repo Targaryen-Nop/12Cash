@@ -1,9 +1,10 @@
 import 'dart:io';
 import 'package:_12sale_app/core/components/button/CameraButton.dart';
+import 'package:_12sale_app/core/page/HomeScreen.dart';
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:camera/camera.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:path/path.dart';
 
 class IconButtonWithLabel extends StatefulWidget {
   String? imagePath;
@@ -114,7 +115,7 @@ class _IconButtonWithLabelState extends State<IconButtonWithLabel> {
                     children: [
                       Icon(widget.icon, color: Colors.white, size: 50),
                       Text(
-                        "กดเพื่อถ่ายรูป",
+                        "gobal.camera_button.button".tr(),
                         style: Styles.white18(context),
                       )
                     ],

@@ -105,7 +105,7 @@ class StoreCartNew extends StatelessWidget {
                                     item.subDistrict.length +
                                     item.district.length +
                                     item.province.length) >
-                                28
+                                25
                             ? '${item.address} ${item.province != 'กรุงเทพมหานคร' ? 'ต.' : 'แขวง'}${item.subDistrict} ${item.province != 'กรุงเทพมหานคร' ? 'อ.' : 'เขต'}${item.district}...' // Limit to 22 characters + ellipsis
                             : "${item.address} ${item.province != 'กรุงเทพมหานคร' ? 'ต.' : 'แขวง'}${item.subDistrict} ${item.province != 'กรุงเทพมหานคร' ? 'อ.' : 'เขต'}${item.district}  ${item.province != 'กรุงเทพมหานคร' ? 'จ.' : ''}${item.province} ${item.postcode}",
                         style: Styles.black18(context),

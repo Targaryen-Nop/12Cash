@@ -43,7 +43,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
   bool _loading = true;
-  Map<String, dynamic>? staticData;
   List<Store> storeItem = [];
 
   List<Store> allStores = [];
@@ -88,17 +87,6 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  // List<Widget> _widgetOptions = <Widget>[
-  //   Dashboardscreen(),
-  //   Routescreen(),
-  //   StoreScreen(
-  //     staticData: staticData,
-  //   ),
-  //   ReportScreen(),
-  //   ManageScreen(),
-  //   SettingScreen(),
-  // ];
-
   static const List<Widget> _widgetOptionsHeader = <Widget>[
     DashboardHeader(),
     RouteHeader(),
@@ -111,13 +99,6 @@ class _HomeScreenState extends State<HomeScreen> {
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
-    });
-  }
-
-  Future<void> _loadJson() async {
-    String jsonString = await rootBundle.loadString('lang/main-th.json');
-    setState(() {
-      staticData = jsonDecode(jsonString);
     });
   }
 
@@ -175,7 +156,7 @@ class _HomeScreenState extends State<HomeScreen> {
     // _loadStoreData();
     _loadUserData();
     _selectedIndex = widget.index; //_selectedIndex
-    _loadJson();
+
     _clearOrders();
     _saveStoreToStorage();
     searchController.addListener(() {
@@ -210,7 +191,8 @@ class _HomeScreenState extends State<HomeScreen> {
             context,
             MaterialPageRoute(
               builder: (context) => ProcessTimelinePage(
-                  staticData: staticData!['store'], userData: userData),
+                userData: userData,
+              ),
             ),
           );
         }();
@@ -462,18 +444,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   gender: "manage",
                 ),
               ),
-              // BottomNavigationBarItem(
-              //   icon: const Icon(
-              //     Icons.inventory,
-              //   ),
-              //   label: staticData?['manage'] ?? 'Manage',
-              // ),
-              // BottomNavigationBarItem(
-              //   icon: const Icon(
-              //     Icons.more_horiz,
-              //   ),
-              //   label: staticData?['more'] ?? 'More',
-              // ),
             ],
             selectedLabelStyle: Styles.white18(context),
             iconSize: screenWidth / 20,

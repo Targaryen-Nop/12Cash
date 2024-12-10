@@ -2,9 +2,9 @@ import 'package:_12sale_app/core/components/Appbar.dart';
 
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:camera/camera.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
-import 'package:path/path.dart'; // For file path manipulation
 
 class CameraButtonWidget extends StatefulWidget {
   // final String buttonText;
@@ -94,7 +94,7 @@ class _CameraButtonWidgetState extends State<CameraButtonWidget> {
                         color: Colors.black54,
                       ),
                       Text(
-                        "กดเพื่อถ่ายรูป",
+                        "gobal.camera_button.button".tr(),
                         style: Styles.black24(context),
                       )
                     ],
@@ -127,10 +127,10 @@ class CameraPreviewScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const PreferredSize(
+      appBar: PreferredSize(
         preferredSize: Size.fromHeight(70),
-        child:
-            AppbarCustom(icon: Icons.camera_alt, title: "ตัวอย่างการถ่ายรูป"),
+        child: AppbarCustom(
+            icon: Icons.camera_alt, title: "gobal.camera_button.appbar".tr()),
       ),
       body: FutureBuilder<void>(
         future: cameraController.initialize(),

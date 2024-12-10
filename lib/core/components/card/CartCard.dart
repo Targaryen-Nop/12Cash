@@ -139,7 +139,7 @@ class _CartCardState extends State<CartCard> {
                                       ),
                                     ),
                                     Container(
-                                      decoration: BoxDecoration(
+                                      decoration: const BoxDecoration(
                                           border: Border.symmetric(
                                               horizontal: BorderSide(
                                         color: Colors.grey,

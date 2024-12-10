@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:_12sale_app/core/components/Appbar.dart';
 import 'package:_12sale_app/core/components/BoxShadowCustom.dart';
-import 'package:_12sale_app/core/components/button/AddStoreButton.dart';
 import 'package:_12sale_app/core/components/button/IconButtonWithLabel.dart';
 import 'package:_12sale_app/core/components/button/ShowPhotoButton.dart';
 import 'package:_12sale_app/core/components/search/DropdownSearchCustom.dart';
@@ -345,11 +344,6 @@ class _DetailStoreScreenState extends State<DetailStoreScreen> {
                                                   ''
                                               ? null
                                               : widget.initialSelectedRoute,
-                                          // label:
-                                          //     "${widget.staticData?['input_route']['name'] ?? "Route"} *",
-                                          // titleText:
-                                          //     "${widget.staticData?['input_route']['name'] ?? "Route"}",
-
                                           label: "รูท",
                                           titleText: "รูท",
                                           icon: Icon(Icons.route_outlined),
@@ -428,6 +422,7 @@ class _DetailStoreScreenState extends State<DetailStoreScreen> {
                                 children: [
                                   onEdit
                                       ? ShowPhotoButton(
+                                          checkNetwork: true,
                                           label: "ร้านค้า",
                                           icon: Icons
                                               .image_not_supported_outlined,
@@ -473,7 +468,8 @@ class _DetailStoreScreenState extends State<DetailStoreScreen> {
                                         ),
                                   onEdit
                                       ? ShowPhotoButton(
-                                          label: "ภ.พ.20",
+                                          checkNetwork: true,
+                                          label: "ร้านค้า",
                                           icon: Icons
                                               .image_not_supported_outlined,
                                           imagePath: widget
@@ -519,6 +515,7 @@ class _DetailStoreScreenState extends State<DetailStoreScreen> {
                                         ),
                                   onEdit
                                       ? ShowPhotoButton(
+                                          checkNetwork: true,
                                           label: "สำเนาบัตรปปช.",
                                           icon: Icons
                                               .image_not_supported_outlined,

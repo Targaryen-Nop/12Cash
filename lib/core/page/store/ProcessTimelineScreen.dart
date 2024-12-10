@@ -34,10 +34,8 @@ const inProgressColor = Styles.primaryColor;
 const todoColor = Color(0xffd1d2d7);
 
 class ProcessTimelinePage extends StatefulWidget {
-  Map<String, dynamic>? staticData;
   User? userData;
-  ProcessTimelinePage(
-      {required this.staticData, required this.userData, super.key});
+  ProcessTimelinePage({required this.userData, super.key});
 
   @override
   State<ProcessTimelinePage> createState() => _ProcessTimelinePageState();
@@ -165,7 +163,7 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
     Dio dio = Dio();
 
     // Replace with your API endpoint
-    const String apiUrl = "http://192.168.44.57:8005/api/cash/store/addStore";
+    const String apiUrl = "http://192.168.44.57:8000/api/cash/store/addStore";
 
     // JSON data
     Map<String, dynamic> jsonData = {
@@ -179,7 +177,7 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
       "district": _storeData.district,
       "subDistrict": _storeData.subDistrict,
       "province": _storeData.province,
-      "provinceCode": _storeData.postcode.substring(1, 3),
+      "provinceCode": _storeData.postcode.substring(0, 2),
       "postCode": _storeData.postcode,
       "note": _storeData.note,
       "zone": widget.userData?.zone,

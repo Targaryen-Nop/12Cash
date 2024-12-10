@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:_12sale_app/core/styles/style.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class ShowPhotoButton extends StatefulWidget {
@@ -10,6 +11,7 @@ class ShowPhotoButton extends StatefulWidget {
   final Color backgroundColor;
   final double borderRadius;
   final EdgeInsetsGeometry padding;
+  bool checkNetwork;
 
   ShowPhotoButton({
     super.key,
@@ -20,6 +22,7 @@ class ShowPhotoButton extends StatefulWidget {
     this.backgroundColor = Colors.blue,
     this.borderRadius = 8.0,
     this.padding = const EdgeInsets.symmetric(vertical: 16),
+    this.checkNetwork = false,
   });
 
   @override
@@ -52,7 +55,7 @@ class _ShowPhotoButtonState extends State<ShowPhotoButton> {
                     children: [
                       Icon(widget.icon, color: Colors.white, size: 50),
                       Text(
-                        "ไม่มีรูปภาพ",
+                        "gobal.camera_button.no_image".tr(),
                         style: Styles.white18(context),
                       )
                     ],
@@ -60,17 +63,36 @@ class _ShowPhotoButtonState extends State<ShowPhotoButton> {
                 : GestureDetector(
                     onTap: () async {
                       await showDialog(
-                          context: context,
-                          builder: (_) =>
-                              ImageDialog(imagePath: widget.imagePath!));
+                        context: context,
+                        builder: (_) => ImageDialog(
+                          imagePath: widget.imagePath!,
+                          checkNetwork: widget.checkNetwork,
+                        ),
+                      );
                     },
                     child: ClipRRect(
-                      child: Image.file(
-                        File(widget.imagePath!),
-                        width: screenWidth / 4,
-                        height: screenWidth / 4,
-                        fit: BoxFit.cover,
-                      ),
+                      child: widget.checkNetwork == false
+                          ? Image.file(
+                              File(widget.imagePath!),
+                              width: screenWidth / 4,
+                              height: screenWidth / 4,
+                              fit: BoxFit.cover,
+                            )
+                          : Image.network(
+                              widget.imagePath!,
+                              width: screenWidth / 4,
+                              height: screenWidth / 4,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) {
+                                return const Center(
+                                  child: Icon(
+                                    Icons.error,
+                                    color: Colors.red,
+                                    size: 50,
+                                  ),
+                                );
+                              },
+                            ),
                     ),
                   ),
           ),
@@ -86,8 +108,13 @@ class _ShowPhotoButtonState extends State<ShowPhotoButton> {
 
 class ImageDialog extends StatelessWidget {
   final String imagePath;
+  final bool checkNetwork;
 
-  const ImageDialog({Key? key, required this.imagePath}) : super(key: key);
+  const ImageDialog({
+    Key? key,
+    required this.imagePath,
+    this.checkNetwork = false,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -98,7 +125,9 @@ class ImageDialog extends StatelessWidget {
         height: screenWidth,
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: FileImage(File(imagePath)), // Use FileImage for file paths
+            image: checkNetwork == false
+                ? FileImage(File(imagePath))
+                : NetworkImage(imagePath), // Use FileImage for file paths
             fit: BoxFit.cover,
           ),
         ),

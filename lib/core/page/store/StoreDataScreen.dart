@@ -18,6 +18,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:path/path.dart';
+import 'package:toastification/toastification.dart';
 
 class StoreDataScreen extends StatefulWidget {
   Store storeData;
@@ -115,7 +116,8 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
     }
   }
 
-  Future<void> uploadFormDataWithDio(String imagePath, String typeImage) async {
+  Future<void> uploadFormDataWithDio(
+      String imagePath, String typeImage, BuildContext context) async {
     try {
       final dio = Dio();
       var formData = FormData.fromMap({
@@ -123,7 +125,7 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
         'area': "BE211",
       });
       var response = await dio.post(
-        'https://f8c3-171-103-242-50.ngrok-free.app/api/upload',
+        'http://192.168.44.57:8000/api/upload',
         data: formData,
         options: Options(
           headers: {
@@ -198,8 +200,29 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
         });
 
         _saveStoreToStorage();
-      } else {}
+      } else {
+        toastification.show(
+          autoCloseDuration: const Duration(seconds: 5),
+          context: context,
+          type: ToastificationType.error,
+          style: ToastificationStyle.flatColored,
+          title: Text(
+            "store.processtimeline_screen.toasting_error".tr(),
+            style: Styles.black18(context),
+          ),
+        );
+      }
     } catch (e) {
+      toastification.show(
+        autoCloseDuration: const Duration(seconds: 5),
+        context: context,
+        type: ToastificationType.error,
+        style: ToastificationStyle.flatColored,
+        title: Text(
+          "store.processtimeline_screen.toasting_error".tr(),
+          style: Styles.black18(context),
+        ),
+      );
       print('Unexpected error: $e');
     }
   }
@@ -523,7 +546,7 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
                 imagePath: storeImagePath != "" ? storeImagePath : null,
                 label: "store.store_data_screen.image_store".tr(),
                 onImageSelected: (String imagePath) async {
-                  await uploadFormDataWithDio(imagePath, 'store');
+                  await uploadFormDataWithDio(imagePath, 'store', context);
                 },
               ),
               IconButtonWithLabel(
@@ -531,7 +554,7 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
                 imagePath: taxIdImagePath != "" ? taxIdImagePath : null,
                 label: "store.store_data_screen.image_taxId".tr(),
                 onImageSelected: (String imagePath) async {
-                  await uploadFormDataWithDio(imagePath, 'tax');
+                  await uploadFormDataWithDio(imagePath, 'tax', context);
                 },
               ),
               IconButtonWithLabel(
@@ -539,7 +562,7 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
                 imagePath: personalImagePath != "" ? personalImagePath : null,
                 label: "store.store_data_screen.image_identify".tr(),
                 onImageSelected: (String imagePath) async {
-                  await uploadFormDataWithDio(imagePath, 'person');
+                  await uploadFormDataWithDio(imagePath, 'person', context);
                 },
               ),
             ],

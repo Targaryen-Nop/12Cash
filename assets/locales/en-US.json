@@ -1,4 +1,15 @@
 {
+    "gobal": {
+        "header": {
+            "online_status": "You're Online",
+            "offline_status": "You're Offline"
+        },
+        "camera_button": {
+            "no_image": "No Image",
+            "button": "Take a Picture",
+            "appbar": "Example Camera"
+        }
+    },
     "menu": {
         "home": "Home",
         "shop": "Store",

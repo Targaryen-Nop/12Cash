@@ -3,7 +3,6 @@ import 'dart:convert';
 
 import 'package:_12sale_app/core/components/BoxShadowCustom.dart';
 import 'package:_12sale_app/core/components/Loading.dart';
-import 'package:_12sale_app/core/components/button/AddStoreButton.dart';
 import 'package:_12sale_app/core/components/card/StoreCardAll.dart';
 import 'package:_12sale_app/core/components/card/StoreCardNew.dart';
 import 'package:_12sale_app/core/components/search/CustomerDropdownSearch.dart';
@@ -324,6 +323,8 @@ class _StoreScreenState extends State<StoreScreen> with RouteAware {
                                         customerName: storeAll[index].name),
                                   ),
                                 );
+                                // print(
+                                //     'imageList for ${storeAll[index].imageList[0].path}');
                               },
                             );
                           },

@@ -3,6 +3,11 @@
         "header": {
             "online_status": "คุณกำลังออนไลน์",
             "offline_status": "คุณกำลังออฟไลน์"
+        },
+        "camera_button": {
+            "no_image":"ไม่มีภาพ",
+            "button": "กดเพื่อถ่ายรูป",
+            "appbar": "ตัวอย่างการถ่ายรูป"
         }
     },
     "menu": {
