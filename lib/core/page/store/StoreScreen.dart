@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:_12sale_app/core/components/BoxShadowCustom.dart';
+import 'package:_12sale_app/core/components/Loading.dart';
 import 'package:_12sale_app/core/components/button/AddStoreButton.dart';
 import 'package:_12sale_app/core/components/card/StoreCardAll.dart';
 import 'package:_12sale_app/core/components/card/StoreCardNew.dart';
@@ -136,7 +137,7 @@ class _StoreScreenState extends State<StoreScreen> with RouteAware {
 
     // Replace with your API endpoint
     const String apiUrl =
-        "https://f8c3-171-103-242-50.ngrok-free.app/api/cash/store/getStore?area=BE214&type=new";
+        "http://192.168.44.57:8005/api/cash/store/getStore?area=BE214&type=new";
 
     try {
       final response = await dio.get(
@@ -172,7 +173,7 @@ class _StoreScreenState extends State<StoreScreen> with RouteAware {
 
     // Replace with your API endpoint
     const String apiUrl =
-        "https://f8c3-171-103-242-50.ngrok-free.app/api/cash/store/getStore?area=BE214&type=all";
+        "http://192.168.44.57:8005/api/cash/store/getStore?area=BE214&type=all";
 
     try {
       final response = await dio.get(
@@ -274,13 +275,8 @@ class _StoreScreenState extends State<StoreScreen> with RouteAware {
             const SizedBox(height: 16), // Add spacing between buttons and list
             _isSelected
                 ? Expanded(
-                    child: Skeletonizer(
-                      effect: const PulseEffect(
-                          from: Colors.grey,
-                          to: Color.fromARGB(255, 211, 211, 211),
-                          duration: Duration(seconds: 1)),
-                      enabled: _loadingNewStore,
-                      enableSwitchAnimation: true,
+                    child: LoadingSkeletonizer(
+                      loading: _loadingNewStore,
                       child: BoxShadowCustom(
                         child: ListView.builder(
                           itemCount: storeNew.length,
@@ -308,13 +304,8 @@ class _StoreScreenState extends State<StoreScreen> with RouteAware {
                     ),
                   )
                 : Expanded(
-                    child: Skeletonizer(
-                      effect: const PulseEffect(
-                          from: Colors.grey,
-                          to: Color.fromARGB(255, 211, 211, 211),
-                          duration: Duration(seconds: 1)),
-                      enabled: _loadingAllStore,
-                      enableSwitchAnimation: true,
+                    child: LoadingSkeletonizer(
+                      loading: _loadingAllStore,
                       child: BoxShadowCustom(
                         child: ListView.builder(
                           itemCount: storeAll.length,

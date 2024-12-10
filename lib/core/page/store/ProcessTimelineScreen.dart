@@ -139,6 +139,7 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
   Future<void> _clearStore() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.remove('add_store'); // Clear orders from SharedPreferences
+    await prefs.remove('image_store'); // Clear orders from SharedPreferences
   }
 
   Future<void> _loadStoreFromStorage() async {
@@ -164,8 +165,7 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
     Dio dio = Dio();
 
     // Replace with your API endpoint
-    const String apiUrl =
-        "https://f8c3-171-103-242-50.ngrok-free.app/api/cash/store/addStore";
+    const String apiUrl = "http://192.168.44.57:8005/api/cash/store/addStore";
 
     // JSON data
     Map<String, dynamic> jsonData = {
@@ -219,7 +219,7 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
             primaryColor: Colors.red,
             titleStyle: Styles.headerRed24(context),
             descriptionStyle: Styles.red12(context),
-            message: "store.processtimeline_screen.processtimeline_screen".tr(),
+            message: "store.processtimeline_screen.toasting_similar".tr(),
             description:
                 "store.processtimeline_screen.toasting_similar_des".tr(),
           );
@@ -688,8 +688,8 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
                                         );
                                       }
 
-                                      _processIndex = (_processIndex + 1) %
-                                          _processes.length;
+                                      // _processIndex = (_processIndex + 1) %
+                                      //     _processes.length;
 
                                       setState(() {
                                         initialSelectedRoute =
@@ -748,10 +748,10 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
                                           primaryColor: Colors.red,
                                         );
                                       }
-                                      // print(_storeData.address);
-                                      // print(_storeData.province);
-                                      // print(_storeData.district);
-                                      // print(_storeData.subDistrict);
+                                      print(_storeData.address);
+                                      print(_storeData.province);
+                                      print(_storeData.district);
+                                      print(_storeData.subDistrict);
 
                                       if (_storeData.address != "" &&
                                           _storeData.province != "" &&

@@ -48,10 +48,11 @@ class StoreDataScreen extends StatefulWidget {
 }
 
 class _StoreDataScreenState extends State<StoreDataScreen> {
-  Timer? _debounce;
   Store? _storeData;
+  Store? _storeDataImageLocal;
 
   List<ImageItem> imageList = [];
+  List<ImageItem> imageListLocal = [];
   String storeImagePath = "";
   String taxIdImagePath = "";
   String personalImagePath = "";
@@ -61,7 +62,6 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
   bool shoptypeInput = true;
   bool sectionOne = true;
   bool sectionTwo = true;
-  // Store? _storeData;
   Timer? _throttle;
   RouteStore selectedRoute = RouteStore(route: '');
   ShopType selectedShoptype =
@@ -76,14 +76,22 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
   Future<void> _loadStoreFromStorage() async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? jsonStoreLocal = prefs.getString("image_store");
       String? jsonStore = prefs.getString("add_store");
 
       if (jsonStore != null) {
         setState(() {
-          _storeData = (jsonStore == null
+          _storeData =
+              // ignore: unnecessary_null_comparison
+              (jsonStore == null
+                  ? null
+                  : Store.fromJson(jsonDecode(jsonStore)))!;
+
+          _storeDataImageLocal = (jsonStoreLocal == null
               ? null
-              : Store.fromJson(jsonDecode(jsonStore)))!;
-          imageList = List<ImageItem>.from(widget.imageList);
+              : Store.fromJson(jsonDecode(jsonStoreLocal)))!;
+
+          imageList = List<ImageItem>.from(_storeDataImageLocal!.imageList);
           for (var value in imageList.reversed) {
             if (value.type == "store") {
               setState(() {
@@ -123,18 +131,72 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
           },
         ),
       );
-      if (response.statusCode == 201) {
+      if (response.statusCode == 201 || response.statusCode == 200) {
         print("Image uploaded successfully ${response.data}");
+
+        final localImage = ImageItem(
+            name: response.data['data']['ImageName'],
+            path: imagePath,
+            type: typeImage);
+
         final newImage = ImageItem(
             name: response.data['data']['ImageName'],
             path: response.data['data']['path'],
             type: typeImage);
+
         imageList.insert(0, newImage);
+        imageListLocal.insert(0, localImage);
+
+        switch (typeImage) {
+          case 'store':
+            setState(() {
+              storeImagePath = imagePath;
+            });
+            break;
+          case 'tax':
+            setState(() {
+              taxIdImagePath = imagePath;
+            });
+            break;
+          case 'person':
+            setState(() {
+              personalImagePath = imagePath;
+            });
+            break;
+          default:
+        }
         setState(() {
-          storeImagePath = imagePath;
           _storeData =
               _storeData?.copyWithDynamicField('imageList', '', imageList);
+          _storeDataImageLocal = Store(
+              storeId: "",
+              name: "",
+              taxId: "",
+              tel: "",
+              route: "",
+              type: "",
+              typeName: "",
+              address: "",
+              district: "",
+              subDistrict: "",
+              province: "",
+              provinceCode: "",
+              postcode: "",
+              zone: "",
+              area: "",
+              latitude: "",
+              longitude: "",
+              lineId: "",
+              note: "",
+              status: "",
+              approve: Approve(dateSend: "", dateAction: "", appPerson: ""),
+              policyConsent: PolicyConsent(status: "", date: ""),
+              imageList: imageListLocal,
+              shippingAddress: [],
+              createdDate: "createdDate",
+              updatedDate: "");
         });
+
         _saveStoreToStorage();
       } else {}
     } catch (e) {
@@ -155,7 +217,9 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       // Convert Store object to JSON string
       String jsonStoreString = json.encode(_storeData!.toJson());
+      String jsonStoreStringLocal = json.encode(_storeDataImageLocal!.toJson());
       await prefs.setString('add_store', jsonStoreString);
+      await prefs.setString('image_store', jsonStoreStringLocal);
       print("Data saved to storage successfully.");
     } catch (e) {
       print("Error saving to storage: $e");

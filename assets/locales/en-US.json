@@ -33,25 +33,25 @@
             "store_address": "Address",
             "title": "Visit",
             "cancel": {
-                "title": "ขายไม่ได้",
+                "title": "Cloud not sell",
                 "hint": "Selected Cause",
-                "case": "ระบุสาเหตุที่Storeค้าไม่ซื้อ",
+                "case": "Cause why could't sell",
                 "store_id": "Store ID",
                 "store_name": "Store",
                 "submit": "Submit"
             },
-            "order_button": "ขาย",
+            "order_button": "Order",
             "camera": {
                 "title": "Take a photo",
                 "hint": "Save Image",
-                "submit": "Submitรูปภาพ"
+                "submit": "Submit Iamge"
             },
-            "credit_note_button": "คืน"
+            "credit_note_button": "CN"
         },
         "order_screen": {
-            "title": "การสั่งซื้อสินค้า",
-            "store_id": "การสั่งซื้อสินค้า",
-            "store_name": "การสั่งซื้อสินค้า",
+            "title": "Order List",
+            "store_id": "Store ID",
+            "store_name": "Name",
             "dropdown": {
                 "group": "Group",
                 "flavour": "Flavour",
@@ -140,13 +140,14 @@
             "step2": "Store Details",
             "step3": "Address",
             "step4": "Submit",
+            "similar_title": "Similar Store",
             "toasting_similar": "Find Store Similar",
             "toasting_similar_des": "Find Store Similar",
             "toasting_success": "Submit Success",
             "toasting_error": "Find Worng process add Store",
             "alert": {
                 "title": "Submit",
-                "desc": "Plesae re-check data before add store Submit", 
+                "desc": "Plesae re-check data before add store Submit",
                 "cancel": "cancel",
                 "submit": "Submit"
             },
@@ -166,14 +167,14 @@
         },
         "store_policy": {
             "title": "Policy",
-            "verify_policy": "ฉันยินยอมให้เก็บข้อมูล"
+            "verify_policy": "Accept Policy"
         },
         "store_data_screen": {
-            "title": "ข้อมูลStoreค้า",
+            "title": "Store Details",
             "title_image": "Image",
             "image_store": "Store",
             "image_taxId": "Phor.Por.20",
-            "image_identify": "Identify Card", 
+            "image_identify": "Identify Card",
             "input_name": {
                 "name": "Store Name",
                 "hint": "Max 36 Characters"

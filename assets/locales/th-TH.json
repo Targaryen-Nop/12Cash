@@ -1,4 +1,10 @@
 {
+    "gobal": {
+        "header": {
+            "online_status": "คุณกำลังออนไลน์",
+            "offline_status": "คุณกำลังออฟไลน์"
+        }
+    },
     "menu": {
         "home": "หน้าหลัก",
         "shop": "ร้านค้า",
@@ -140,6 +146,7 @@
             "step2": "ข้อมูลร้าน",
             "step3": "ที่อยู่",
             "step4": "ยืนยัน",
+            "similar_title": "ร้านค้าที่คล้ายกัน",
             "toasting_similar": "พบร้านค้าที่คล้ายกัน",
             "toasting_similar_des": "พบร้านค้าที่คล้ายกัน",
             "toasting_success": "บันทึกข้อมูลสําเร็จ",

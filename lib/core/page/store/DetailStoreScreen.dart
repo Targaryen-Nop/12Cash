@@ -441,7 +441,7 @@ class _DetailStoreScreenState extends State<DetailStoreScreen> {
                                                       .where((image) =>
                                                           image.type == "store")
                                                       .last
-                                                      .name
+                                                      .path
                                                   : null)
                                               : null,
                                         )
@@ -458,7 +458,7 @@ class _DetailStoreScreenState extends State<DetailStoreScreen> {
                                                       .where((image) =>
                                                           image.type == "store")
                                                       .last
-                                                      .name
+                                                      .path
                                                   : null)
                                               : null,
                                           onImageSelected:
@@ -486,7 +486,7 @@ class _DetailStoreScreenState extends State<DetailStoreScreen> {
                                                       .where((image) =>
                                                           image.type == "tax")
                                                       .last
-                                                      .name
+                                                      .path
                                                   : null)
                                               : null,
                                         )
@@ -503,7 +503,7 @@ class _DetailStoreScreenState extends State<DetailStoreScreen> {
                                                       .where((image) =>
                                                           image.type == "tax")
                                                       .last
-                                                      .name
+                                                      .path
                                                   : null)
                                               : null,
                                           onImageSelected:
@@ -534,7 +534,7 @@ class _DetailStoreScreenState extends State<DetailStoreScreen> {
                                                               image.type ==
                                                               "person")
                                                           .last
-                                                          .name
+                                                          .path
                                                       : null)
                                                   : null,
                                         )
@@ -553,7 +553,7 @@ class _DetailStoreScreenState extends State<DetailStoreScreen> {
                                                               image.type ==
                                                               "person")
                                                           .last
-                                                          .name
+                                                          .path
                                                       : null)
                                                   : null,
                                           onImageSelected:

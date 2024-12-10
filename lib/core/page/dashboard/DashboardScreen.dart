@@ -25,7 +25,6 @@ import 'package:intl/intl.dart';
 import 'package:_12sale_app/data/service/locationService.dart';
 import 'package:geolocator/geolocator.dart';
 import 'dart:async';
-import 'package:_12sale_app/core/utils/json_loader.dart';
 import 'package:path/path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

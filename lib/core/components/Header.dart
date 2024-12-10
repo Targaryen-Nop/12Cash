@@ -1,6 +1,8 @@
+import 'package:_12sale_app/core/components/button/Button.dart';
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:_12sale_app/core/utils/tost_util.dart';
 import 'package:_12sale_app/data/service/connectivityService.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import 'package:toastification/toastification.dart';
@@ -48,8 +50,9 @@ class _HeaderState extends State<Header> {
                     WidgetsBinding.instance.addPostFrameCallback((_) {
                       showToast(
                         context: context,
-                        message:
-                            isConnected ? 'คุณกำลังออนไลน์' : 'คุณกำลังออฟไลน์',
+                        message: isConnected
+                            ? 'gobal.header.online_status'.tr()
+                            : 'gobal.header.offline_status'.tr(),
                         type: isConnected
                             ? ToastificationType.success
                             : ToastificationType.error,

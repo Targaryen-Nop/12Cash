@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:_12sale_app/core/components/Appbar.dart';
 import 'package:_12sale_app/core/components/BoxShadowCustom.dart';
+import 'package:_12sale_app/core/components/button/Button.dart';
 import 'package:_12sale_app/core/components/card/DuplicateCard.dart';
 import 'package:_12sale_app/core/components/card/StoreCardAll.dart';
 import 'package:_12sale_app/core/components/card/StoreCardNew.dart';
@@ -10,6 +11,7 @@ import 'package:_12sale_app/core/styles/style.dart';
 import 'package:_12sale_app/data/models/DuplicateStore.dart';
 import 'package:_12sale_app/data/models/Route.dart';
 import 'package:_12sale_app/data/models/Store.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -91,10 +93,10 @@ class _CheckStoreDuplicateScreen2State
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const PreferredSize(
+      appBar: PreferredSize(
         preferredSize: Size.fromHeight(70),
         child: AppbarCustom(
-            title: " ร้านค้าที่คล้ายกัน",
+            title: " ${"store.processtimeline_screen.similar_title".tr()}",
             icon: Icons.store_mall_directory_rounded),
       ),
       body: Padding(
@@ -118,7 +120,7 @@ class _CheckStoreDuplicateScreen2State
                                 MaterialPageRoute(
                                   builder: (context) => DetailStoreScreen(
                                       initialSelectedRoute: RouteStore(
-                                          route: storeItems[index].route),
+                                          route: widget.stores[index].route),
                                       store: widget.stores[index],
                                       customerNo: widget.stores[index].storeId,
                                       customerName: widget.stores[index].name),

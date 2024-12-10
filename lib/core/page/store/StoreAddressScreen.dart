@@ -64,6 +64,7 @@ class _StoreAddressScreenState extends State<StoreAddressScreen> {
         _storeData =
             (jsonStore == null ? null : Store.fromJson(jsonDecode(jsonStore)))!;
       });
+      print(_storeData?.address);
       // province = _storeData.province!;
     }
   }
