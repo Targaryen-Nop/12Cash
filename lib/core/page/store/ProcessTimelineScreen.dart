@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:math';
 import 'package:_12sale_app/core/components/Appbar.dart';
-import 'package:_12sale_app/core/components/sheet/PolicyAddNewShop.dart';
 import 'package:_12sale_app/core/page/HomeScreen.dart';
 import 'package:_12sale_app/core/page/dashboard/DashboardScreen.dart';
 import 'package:_12sale_app/core/page/store/PolicyScreen.dart';
@@ -158,6 +157,162 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
     }
   }
 
+  Future<void> postData2() async {
+    // Initialize Dio
+    Dio dio = Dio();
+
+    String text = '''
+    {
+    "name": "ครรรรรร",
+    "taxId": null,
+    "tel": 869655965,
+    "route": "R04",
+    "type": 31,
+    "typeName": "ร้านหมูติดแอร์",
+    "address": "รรรรคค",
+    "district": "ซำสูง",
+    "subDistrict": "บ้านโนน",
+    "province": "ขอนแก่น",
+    "provinceCode": 40,
+    "postCode": 40170,
+    "note": null,
+    "shippingAddress": [
+        {
+            "default": 1,
+            "address": "รรรรคค",
+            "district": "ซำสูง",
+            "subDistrict": "บ้านโนน",
+            "province": "ขอนแก่น",
+            "provinceCode": 40,
+            "postCode": 40170,
+            "latitude": 13.6823751,
+            "longtitude": 100.6097463
+        }
+    ],
+    "zone": "BE",
+    "area": "BE211",
+    "latitude": 13.6823751,
+    "longtitude": 100.6097463,
+    "lineId": null,
+    "policyConsent": {
+        "status": "Agree"
+    },
+    "approve": {
+        "appPerson": null
+    }
+}''';
+
+    String jsonData = '''
+{
+      "name": "${_storeData.name}",
+      "taxId": "${_storeData.taxId}",
+      "tel": "${_storeData.tel}",
+      "route": "${_storeData.route}",
+      "type": "${_storeData.type}",
+      "typeName": "${_storeData.typeName}",
+      "address": "${_storeData.address}",
+      "district": "${_storeData.district}",
+      "subDistrict": "${_storeData.subDistrict}",
+      "province": "${_storeData.province}",
+      "provinceCode": "${_storeData.postcode.substring(0, 2)}",
+      "postCode": "${_storeData.postcode}",
+      "note":"${_storeData.note}",
+      "shippingAddress": [
+        {
+          "default": "1",
+          "address": "${_storeData.address}",
+          "district": "${_storeData.district}",
+          "subDistrict": "${_storeData.subDistrict}",
+          "province": "${_storeData.province}",
+          "provinceCode": "${_storeData.postcode.substring(0, 2)}",
+          "postCode": "${_storeData.postcode}",
+          "latitude": "${_storeData.latitude}",
+          "longtitude": "${_storeData.longitude}"
+        }
+      ],
+      "zone": "${widget.userData?.zone}",
+      "area": "${widget.userData?.area}",
+      "latitude": "${_storeData.latitude}",
+      "longtitude": "${_storeData.longitude}",
+      "lineId": "${_storeData.lineId}",
+      "policyConsent": {"status": "${_storeData.policyConsent.status}"},
+      "approve": {"appPerson": ""}
+}
+''';
+    // "approve": {"appPerson": ""} }
+    try {
+      // print(text);
+      print(jsonData);
+
+      var formData = FormData.fromMap({
+        // 'storeImage': await MultipartFile.fromFile(imagePath),
+        'storeImages': '',
+        'types': "store,document",
+        "store": jsonData
+      });
+      var response = await dio.post(
+        'https://6505-171-103-242-50.ngrok-free.app/api/cash/store/addStore',
+        data: formData,
+        options: Options(
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        ),
+      );
+      if (response.statusCode == 201 || response.statusCode == 200) {
+        print("Image uploaded successfully ${response.data}");
+        if (response.data['message'] == 'similar store') {
+          final List<dynamic> data = response.data['data'];
+          setState(() {
+            duplicateStores = data
+                .map((item) =>
+                    Store.fromJson(item['store'] as Map<String, dynamic>))
+                .toList();
+          });
+          showToastDuplicateMenu(
+            stores: duplicateStores,
+            context: context,
+            icon: const Icon(Icons.info_outline),
+            type: ToastificationType.error,
+            primaryColor: Colors.red,
+            titleStyle: Styles.headerRed24(context),
+            descriptionStyle: Styles.red12(context),
+            message: "store.processtimeline_screen.toasting_similar".tr(),
+            description:
+                "store.processtimeline_screen.toasting_similar_des".tr(),
+          );
+        } else if (response.data['message'] == 'Success') {
+          toastification.show(
+            autoCloseDuration: const Duration(seconds: 5),
+            context: context,
+            type: ToastificationType.success,
+            style: ToastificationStyle.flatColored,
+            title: Text(
+              "store.processtimeline_screen.toasting_success".tr(),
+              style: Styles.black18(context),
+            ),
+          );
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const HomeScreen(index: 2)),
+          );
+        }
+      }
+    } catch (e) {
+      toastification.show(
+        autoCloseDuration: const Duration(seconds: 5),
+        context: context,
+        type: ToastificationType.error,
+        style: ToastificationStyle.flatColored,
+        title: Text(
+          "store.processtimeline_screen.toasting_error".tr(),
+          style: Styles.black18(context),
+        ),
+      );
+      print("Error: ${e}");
+    }
+  }
+
   Future<void> postData() async {
     // Initialize Dio
     Dio dio = Dio();
@@ -222,7 +377,6 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
                 "store.processtimeline_screen.toasting_similar_des".tr(),
           );
         } else if (response.data['message'] == 'Success') {
-          // print("TEST 2");
           toastification.show(
             autoCloseDuration: const Duration(seconds: 5),
             context: context,
@@ -609,7 +763,7 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
                                     ),
                                     DialogButton(
                                       onPressed: () {
-                                        postData();
+                                        postData2();
                                       },
                                       color: Styles.successButtonColor,
                                       child: Text(

@@ -156,7 +156,6 @@ class _HomeScreenState extends State<HomeScreen> {
     // _loadStoreData();
     _loadUserData();
     _selectedIndex = widget.index; //_selectedIndex
-
     _clearOrders();
     _saveStoreToStorage();
     searchController.addListener(() {

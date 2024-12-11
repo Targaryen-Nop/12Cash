@@ -70,6 +70,7 @@ dependencies:
   infinite_scroll_pagination: ^4.1.0
   socket_io_client: ^3.0.2
   easy_localization: ^3.0.7
+  carousel_slider: ^5.0.0
 
 
 

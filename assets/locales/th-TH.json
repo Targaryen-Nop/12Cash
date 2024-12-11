@@ -19,13 +19,21 @@
         "more": "อื่นๆ"
     },
     "dashboard": {
+        "lange": "th",
+        "time": "เวลา",
         "menu": {
             "sale_report": "รายงานขาย",
             "data_analysis": "ข้อมูลเชิงลึก",
             "setting": "ตั้งค่า",
             "campaign": "แคมเปญ",
             "history": "ประวัติ",
-            "schedule": "กําหนดการ"
+            "schedule": "กําหนดการ",
+            "logistic": "โลจิสติกส์",
+            "send_money": "ส่งเงิน",
+            "mall": "มอลล์",
+            "credit_limit": "เครดิต",
+            "warehouse": "คลัง",
+            "more": "อื่นๆ"
         }
     },
     "route": {

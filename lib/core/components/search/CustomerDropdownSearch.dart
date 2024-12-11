@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:_12sale_app/data/models/Customer.dart';
-import 'package:_12sale_app/data/repositories/apiService.dart';
+import 'package:_12sale_app/data/service/apiService.dart';
 
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';

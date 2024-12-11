@@ -100,6 +100,32 @@ class _VerifyStoreScreenState extends State<VerifyStoreScreen> {
           Text.rich(
             TextSpan(
               text:
+                  '${"store.store_verify_screen.route".tr()}', // This is the main text style
+              style: Styles.headerBlack18(context),
+              children: <TextSpan>[
+                TextSpan(
+                  text: ' : ${widget.storeData.route}', // Inline bold text
+                  style: Styles.black18(context),
+                ),
+              ],
+            ),
+          ),
+          Text.rich(
+            TextSpan(
+              text:
+                  '${"store.store_verify_screen.shopType".tr()}', // This is the main text style
+              style: Styles.headerBlack18(context),
+              children: <TextSpan>[
+                TextSpan(
+                  text: ' : ${widget.storeData.typeName}', // Inline bold text
+                  style: Styles.black18(context),
+                ),
+              ],
+            ),
+          ),
+          Text.rich(
+            TextSpan(
+              text:
                   '${"store.store_verify_screen.phone".tr()}', // This is the main text style
               style: Styles.headerBlack18(context),
               children: <TextSpan>[
@@ -120,32 +146,6 @@ class _VerifyStoreScreenState extends State<VerifyStoreScreen> {
                 TextSpan(
                   text:
                       " : ${widget.storeData.taxId != '' ? widget.storeData.taxId : '-'}",
-                  style: Styles.black18(context),
-                ),
-              ],
-            ),
-          ),
-          Text.rich(
-            TextSpan(
-              text:
-                  '${"store.store_verify_screen.route".tr()}', // This is the main text style
-              style: Styles.headerBlack18(context),
-              children: <TextSpan>[
-                TextSpan(
-                  text: ' : ${widget.storeData.route}', // Inline bold text
-                  style: Styles.black18(context),
-                ),
-              ],
-            ),
-          ),
-          Text.rich(
-            TextSpan(
-              text:
-                  '${"store.store_verify_screen.shopType".tr()}', // This is the main text style
-              style: Styles.headerBlack18(context),
-              children: <TextSpan>[
-                TextSpan(
-                  text: ' : ${widget.storeData.typeName}', // Inline bold text
                   style: Styles.black18(context),
                 ),
               ],

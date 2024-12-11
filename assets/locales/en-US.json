@@ -19,13 +19,21 @@
         "more": "More"
     },
     "dashboard": {
+        "lange": "en",
+        "time": "Time",
         "menu": {
             "sale_report": "Sale Report",
             "data_analysis": "Data Analysis",
             "setting": "Setting",
             "campaign": "Campaign",
             "history": "History",
-            "schedule": "Schedule"
+            "schedule": "Schedule",
+            "logistic": "Logistic",
+            "send_money": "Send Money",
+            "mall": "Mall",
+            "credit_limit": "Credit",
+            "warehouse": "Warehouse",
+            "more": "More"
         }
     },
     "route": {

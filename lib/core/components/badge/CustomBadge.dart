@@ -26,7 +26,6 @@ class CustomBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
-
     return Container(
       width: screenWidth / 2.2,
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),

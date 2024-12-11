@@ -60,26 +60,58 @@ class _HeaderState extends State<Header> {
                       );
                     });
                   }
+                  //  Container(
+                  //             height: screenWidth / 20,
+                  //             width: screenWidth / 20,
+                  //             decoration: BoxDecoration(
+                  //               color:
+                  //                   isConnected ? Colors.green : Colors.red,
+                  //               border: Border.all(
+                  //                 width: screenWidth / 200,
+                  //                 color: isConnected
+                  //                     ? Styles.successButtonColor
+                  //                     : Styles.failTextColor,
+                  //               ),
+                  //               borderRadius: const BorderRadius.all(
+                  //                   Radius.circular(360)),
+                  //               boxShadow: const [
+                  //                 BoxShadow(
+                  //                   color: Colors.black26,
+                  //                   blurRadius: 10,
+                  //                   spreadRadius: 2,
+                  //                   offset: Offset(0, -3),
+                  //                 ),
+                  //               ],
+                  //             ),
+                  //           ),
                   return Container(
                     color: Styles.primaryColor,
                     child: Padding(
                       padding: EdgeInsets.only(top: 40),
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Container(
-                            // color: Colors.amber,
-                            height: screenWidth / 4,
-                            padding: const EdgeInsets.symmetric(horizontal: 25),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                SizedBox(
-                                    width: screenWidth / 1.3, // Specify a width
-                                    height: screenWidth / 4, // Specify a height
-                                    child: widget.leading2),
-                                Container(
+                          Stack(
+                            children: [
+                              Transform.translate(
+                                offset: Offset(20, 20),
+                                child: Container(
+                                  width: 100,
+                                  height: 100,
+                                  color: Colors.red, // Appears below
+                                ),
+                              ),
+                              Container(
+                                color: Styles.primaryColor,
+                                height: screenWidth / 4,
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 25),
+                                child: SizedBox(child: widget.leading2),
+                              ),
+                              Transform.translate(
+                                offset: Offset(screenWidth - 50, -10),
+                                child: Container(
+                                  margin: EdgeInsets.only(right: 50, top: 20),
                                   height: screenWidth / 20,
                                   width: screenWidth / 20,
                                   decoration: BoxDecoration(
@@ -103,8 +135,8 @@ class _HeaderState extends State<Header> {
                                     ],
                                   ),
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
                           Flexible(
                             flex: 4,

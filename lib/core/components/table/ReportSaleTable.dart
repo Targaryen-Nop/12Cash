@@ -14,21 +14,6 @@ class Reportsaletable extends StatefulWidget {
 }
 
 class _ReportsaletableState extends State<Reportsaletable> {
-  // Map<String, dynamic>? _jsonString;
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    // _loadJson();
-  }
-
-  // Future<void> _loadJson() async {
-  //   String jsonString = await rootBundle.loadString('lang/main-th.json');
-  //   setState(() {
-  //     _jsonString = jsonDecode(jsonString)["reportsale_table"];
-  //   });
-  // }
-
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;

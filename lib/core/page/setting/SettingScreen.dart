@@ -41,6 +41,7 @@ class _SettingScreenState extends State<SettingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    selectedLanguageCode = context.locale.toString().split("_")[0];
     double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: const PreferredSize(

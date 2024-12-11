@@ -26,22 +26,14 @@ class DetailTable extends StatefulWidget {
 }
 
 class _DetailTableState extends State<DetailTable> {
-  Map<String, dynamic>? _jsonString;
   List<Store> stores = [];
   List<ListOrder> orders = [];
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _loadJson();
-    _loadStoreDetail();
-  }
 
-  Future<void> _loadJson() async {
-    String jsonString = await rootBundle.loadString('lang/main-th.json');
-    setState(() {
-      _jsonString = jsonDecode(jsonString)["shop_route_table"];
-    });
+    _loadStoreDetail();
   }
 
   Future<void> _loadStoreDetail() async {

@@ -219,9 +219,11 @@ class _StoreScreenState extends State<StoreScreen> with RouteAware {
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () {
-                      setState(() {
-                        _isSelected = !_isSelected;
-                      });
+                      if (_isSelected != false) {
+                        setState(() {
+                          _isSelected = !_isSelected;
+                        });
+                      }
                       _getStoreDataAll();
                     },
                     style: ElevatedButton.styleFrom(
@@ -246,9 +248,11 @@ class _StoreScreenState extends State<StoreScreen> with RouteAware {
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () {
-                      setState(() {
-                        _isSelected = !_isSelected;
-                      });
+                      if (_isSelected != true) {
+                        setState(() {
+                          _isSelected = !_isSelected;
+                        });
+                      }
                       _getStoreDataNew();
                     },
                     style: ElevatedButton.styleFrom(
@@ -380,7 +384,6 @@ class _StoreHeaderState extends State<StoreHeader> {
                 fit: FlexFit.loose,
                 child: Center(
                   // margin: EdgeInsets.only(top: 10),
-
                   child: Column(
                     // mainAxisSize: MainAxisSize.max,
                     // crossAxisAlignment: CrossAxisAlignment.center,
