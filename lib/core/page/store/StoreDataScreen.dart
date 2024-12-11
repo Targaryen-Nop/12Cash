@@ -70,7 +70,6 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
 
   void initState() {
     super.initState();
-    // _loadJson();
     _loadStoreFromStorage();
   }
 

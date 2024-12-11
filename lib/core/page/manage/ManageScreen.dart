@@ -1,7 +1,6 @@
 import 'package:_12sale_app/core/components/search/CustomerDropdownSearch.dart';
 import 'package:_12sale_app/core/components/table/ReportSaleTable.dart';
 import 'package:_12sale_app/core/components/table/ShopTableNew.dart';
-
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:flutter/material.dart';
 
@@ -16,7 +15,6 @@ class _ManageScreenState extends State<ManageScreen> {
   bool _isSelected = false;
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
     return Container(
       padding: const EdgeInsets.all(16.0),
       margin: const EdgeInsets.all(8.0),

@@ -5,7 +5,7 @@
             "offline_status": "คุณกำลังออฟไลน์"
         },
         "camera_button": {
-            "no_image":"ไม่มีภาพ",
+            "no_image": "ไม่มีภาพ",
             "button": "กดเพื่อถ่ายรูป",
             "appbar": "ตัวอย่างการถ่ายรูป"
         }
@@ -17,6 +17,16 @@
         "manage": "จัดการ",
         "route": "เข้าเยี่ยม",
         "more": "อื่นๆ"
+    },
+    "dashboard": {
+        "menu": {
+            "sale_report": "รายงานขาย",
+            "data_analysis": "ข้อมูลเชิงลึก",
+            "setting": "ตั้งค่า",
+            "campaign": "แคมเปญ",
+            "history": "ประวัติ",
+            "schedule": "กําหนดการ"
+        }
     },
     "route": {
         "title": "เส้นทางเข้าเยี่ยม",

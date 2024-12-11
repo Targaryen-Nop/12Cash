@@ -60,7 +60,7 @@ void main() async {
   // Get the first camera from the list
   // final firstCamera = cameras.first;
   SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
+    // DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]).then((_) {
     runApp(

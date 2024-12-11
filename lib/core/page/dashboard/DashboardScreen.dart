@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:_12sale_app/core/components/BoxShadowCustom.dart';
 import 'package:_12sale_app/core/components/CalendarPicker.dart';
 import 'package:_12sale_app/core/components/button/CameraButton.dart';
 import 'package:_12sale_app/core/components/button/MenuButton.dart';
@@ -53,14 +54,9 @@ class _DashboardscreenState extends State<Dashboardscreen> {
     final String jsonString =
         await rootBundle.loadString('assets/locales/languages.json');
     final Map<String, dynamic> jsonData = json.decode(jsonString);
-    // languages = Map<String, String>.from(jsonData);
     setState(() {
       languages = Map<String, String>.from(jsonData);
     });
-  }
-
-  void _reload() {
-    setState(() {});
   }
 
   @override
@@ -96,89 +92,303 @@ class _DashboardscreenState extends State<Dashboardscreen> {
         // width: screenWidth / 1.5,
         child: Column(
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                MenuButton(
-                  color: Styles.successButtonColor,
-                  icon: Icons.notifications_active_outlined,
-                  label: "Local Noti",
-                  onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                          builder: (context) => NotificationScreen()),
-                    );
-                  },
-                ),
-                DropdownButton<String>(
-                  icon: const Icon(
-                    Icons.chevron_left,
-                  ),
-                  // isExpanded: true,
-                  value: selectedLanguageCode,
-                  hint: Text(
-                    'เลือกภาษา',
-                    style: Styles.black18(context),
-                  ),
-                  items: languages.entries
-                      .map(
-                        (entry) => DropdownMenuItem<String>(
-                          value: entry.key,
-                          child: Text(
-                            entry.value,
-                            style: Styles.black18(context),
+            SizedBox(height: 350, width: screenWidth, child: LineChartSample()),
+            BoxShadowCustom(
+              child: Container(
+                height: 300,
+                width: screenWidth,
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                    builder: (context) => NotificationScreen()),
+                              );
+                            },
+                            child: Container(
+                              height: 150,
+                              decoration: BoxDecoration(
+                                borderRadius: const BorderRadius.only(
+                                  topLeft: Radius.circular(16),
+                                ),
+                                border: Border.all(
+                                  color: Colors.grey[350]!,
+                                  width: 1.0,
+                                ),
+                                color: Colors.white,
+                              ),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const Icon(
+                                    Icons.description,
+                                    size: 60,
+                                    color: Styles.primaryColor,
+                                  ),
+                                  Text(
+                                    "dashboard.menu.sale_report".tr(),
+                                    style: Styles.black24(context),
+                                  )
+                                ],
+                              ),
+                            ),
                           ),
-                          // Display language name
                         ),
-                      )
-                      .toList(),
-                  onChanged: (value) async {
-                    switch (value) {
-                      case "en":
-                        await context.setLocale(const Locale('en', 'US'));
-                        break;
-                      case "th":
-                        await context.setLocale(const Locale('th', 'TH'));
-                        break;
-                      default:
-                    }
-                    //  log(locale.toString(), name: toString());
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const HomeScreen(
-                                index: 0,
-                              )),
-                    );
-                    print(context.locale.toString().split("_")[0]);
-                    setState(() {
-                      selectedLanguageCode = value;
-                    });
-                  },
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        BluetoothPrinterScreen4()),
+                              );
+                            },
+                            child: Container(
+                              height: 150,
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: Colors.grey[350]!,
+                                  width: 1.0,
+                                ),
+                                color: Colors.white,
+                              ),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const Icon(
+                                    Icons.equalizer,
+                                    size: 60,
+                                    color: Styles.primaryColor,
+                                  ),
+                                  Text(
+                                    "dashboard.menu.data_analysis".tr(),
+                                    style: Styles.black24(context),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const SettingScreen()),
+                              );
+                            },
+                            child: Container(
+                              height: 150,
+                              decoration: BoxDecoration(
+                                borderRadius: const BorderRadius.only(
+                                  topRight: Radius.circular(16),
+                                ),
+                                border: Border.all(
+                                  color: Colors.grey[350]!,
+                                  width: 1.0,
+                                ),
+                                color: Colors.white,
+                              ),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const Icon(
+                                    Icons.settings,
+                                    size: 60,
+                                    color: Styles.primaryColor,
+                                  ),
+                                  Text(
+                                    "dashboard.menu.setting".tr(),
+                                    style: Styles.black24(context),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Container(
+                            height: 150,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.only(
+                                bottomLeft: Radius.circular(16),
+                              ),
+                              border: Border.all(
+                                color: Colors.grey[350]!,
+                                width: 1.0,
+                              ),
+                              color: Colors.white,
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Icon(
+                                  Icons.campaign_rounded,
+                                  size: 60,
+                                  color: Styles.primaryColor,
+                                ),
+                                Text(
+                                  "dashboard.menu.campaign".tr(),
+                                  style: Styles.black24(context),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: Container(
+                            height: 150,
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: Colors.grey[350]!,
+                                width: 1.0,
+                              ),
+                              color: Colors.white,
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Icon(
+                                  Icons.history,
+                                  size: 60,
+                                  color: Styles.primaryColor,
+                                ),
+                                Text(
+                                  "dashboard.menu.history".tr(),
+                                  style: Styles.black24(context),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: Container(
+                            height: 150,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.only(
+                                bottomRight: Radius.circular(16),
+                              ),
+                              border: Border.all(
+                                color: Colors.grey[350]!,
+                                width: 1.0,
+                              ),
+                              color: Colors.white,
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Icon(
+                                  Icons.schedule,
+                                  size: 60,
+                                  color: Styles.primaryColor,
+                                ),
+                                Text(
+                                  "dashboard.menu.schedule".tr(),
+                                  style: Styles.black24(context),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
                 ),
-                MenuButton(
-                  color: Styles.successButtonColor,
-                  icon: Icons.settings,
-                  label: "Setting",
-                  onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => SettingScreen()),
-                    );
-                  },
-                ),
-                MenuButton(
-                  color: Colors.black,
-                  icon: Icons.print,
-                  label: "BL Printer",
-                  onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                          builder: (context) => BluetoothPrinterScreen4()),
-                    );
-                  },
-                ),
-              ],
+              ),
             ),
+
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.spaceAround,
+            //   children: [
+            //     MenuButton(
+            //       color: Styles.successButtonColor,
+            //       icon: Icons.notifications_active_outlined,
+            //       label: "Local Noti",
+            //       onPressed: () {
+            //         Navigator.of(context).push(
+            //           MaterialPageRoute(
+            //               builder: (context) => NotificationScreen()),
+            //         );
+            //       },
+            //     ),
+            //     DropdownButton<String>(
+            //       icon: const Icon(
+            //         Icons.chevron_left,
+            //       ),
+            //       // isExpanded: true,
+            //       value: selectedLanguageCode,
+            //       hint: Text(
+            //         'เลือกภาษา',
+            //         style: Styles.black18(context),
+            //       ),
+            //       items: languages.entries
+            //           .map(
+            //             (entry) => DropdownMenuItem<String>(
+            //               value: entry.key,
+            //               child: Text(
+            //                 entry.value,
+            //                 style: Styles.black18(context),
+            //               ),
+            //               // Display language name
+            //             ),
+            //           )
+            //           .toList(),
+            //       onChanged: (value) async {
+            //         switch (value) {
+            //           case "en":
+            //             await context.setLocale(const Locale('en', 'US'));
+            //             break;
+            //           case "th":
+            //             await context.setLocale(const Locale('th', 'TH'));
+            //             break;
+            //           default:
+            //         }
+            //         //  log(locale.toString(), name: toString());
+            //         Navigator.pushReplacement(
+            //           context,
+            //           MaterialPageRoute(
+            //               builder: (context) => const HomeScreen(
+            //                     index: 0,
+            //                   )),
+            //         );
+            //         print(context.locale.toString().split("_")[0]);
+            //         setState(() {
+            //           selectedLanguageCode = value;
+            //         });
+            //       },
+            //     ),
+            //     MenuButton(
+            //       color: Styles.successButtonColor,
+            //       icon: Icons.settings,
+            //       label: "Setting",
+            //       onPressed: () {
+            //         Navigator.of(context).push(
+            //           MaterialPageRoute(builder: (context) => SettingScreen()),
+            //         );
+            //       },
+            //     ),
+            //     MenuButton(
+            //       color: Colors.black,
+            //       icon: Icons.print,
+            //       label: "BL Printer",
+            //       onPressed: () {
+            //         Navigator.of(context).push(
+            //           MaterialPageRoute(
+            //               builder: (context) => BluetoothPrinterScreen4()),
+            //         );
+            //       },
+            //     ),
+            //   ],
+            // ),
             SizedBox(height: screenWidth / 25),
             const WeightCudeCard(),
             // SizedBox(height: screenWidth / 25),
@@ -196,7 +406,6 @@ class _DashboardscreenState extends State<Dashboardscreen> {
             ),
             SizedBox(height: screenWidth / 25),
 
-            Container(height: 500, width: 400, child: LineChartSample()),
             // Container(height: 500, width: 400, child: LineChartSample()),
             Expanded(
                 child: Container(
@@ -284,7 +493,7 @@ class _DashboardscreenState extends State<Dashboardscreen> {
         color: MaterialStateProperty.resolveWith<Color?>(
           (Set<MaterialState> states) {
             return isEvenRow
-                ? Colors.grey[100]
+                ? Colors.grey
                 : Colors.white; // Alternate row color
           },
         ),
@@ -326,7 +535,7 @@ class _DashboardscreenState extends State<Dashboardscreen> {
         color: MaterialStateProperty.resolveWith<Color?>(
           (Set<MaterialState> states) {
             return isEvenRow
-                ? Colors.grey[100]
+                ? Colors.grey
                 : Colors.white; // Alternate row color
           },
         ),

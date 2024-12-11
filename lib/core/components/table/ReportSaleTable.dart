@@ -14,20 +14,20 @@ class Reportsaletable extends StatefulWidget {
 }
 
 class _ReportsaletableState extends State<Reportsaletable> {
-  Map<String, dynamic>? _jsonString;
+  // Map<String, dynamic>? _jsonString;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _loadJson();
+    // _loadJson();
   }
 
-  Future<void> _loadJson() async {
-    String jsonString = await rootBundle.loadString('lang/main-th.json');
-    setState(() {
-      _jsonString = jsonDecode(jsonString)["reportsale_table"];
-    });
-  }
+  // Future<void> _loadJson() async {
+  //   String jsonString = await rootBundle.loadString('lang/main-th.json');
+  //   setState(() {
+  //     _jsonString = jsonDecode(jsonString)["reportsale_table"];
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -52,12 +52,12 @@ class _ReportsaletableState extends State<Reportsaletable> {
               ),
               child: Row(
                 children: [
-                  _buildHeaderCell(_jsonString?['order_date'] ?? 'Order Date'),
-                  _buildHeaderCell(_jsonString?['order_no'] ?? 'Order No'),
-                  _buildHeaderCell(
-                      _jsonString?['customer_name'] ?? 'Customer Name'),
-                  _buildHeaderCell(_jsonString?['amount'] ?? 'Amount'),
-                  _buildHeaderCell(_jsonString?['status'] ?? 'Status'),
+                  // _buildHeaderCell(_jsonString?['order_date'] ?? 'Order Date'),
+                  // _buildHeaderCell(_jsonString?['order_no'] ?? 'Order No'),
+                  // _buildHeaderCell(
+                  //     _jsonString?['customer_name'] ?? 'Customer Name'),
+                  // _buildHeaderCell(_jsonString?['amount'] ?? 'Amount'),
+                  // _buildHeaderCell(_jsonString?['status'] ?? 'Status'),
                 ],
               ),
             ),

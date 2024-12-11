@@ -29,16 +29,8 @@ class _VerifyStoreScreenState extends State<VerifyStoreScreen> {
   @override
   void initState() {
     super.initState();
-    // _loadJson();
     _loadStoreFromStorage();
   }
-
-  // Future<void> _loadJson() async {
-  //   String jsonString = await rootBundle.loadString('lang/main-th.json');
-  //   setState(() {
-  //     _jsonString = jsonDecode(jsonString)['shop']["add_shop_screen"];
-  //   });
-  // }
 
   Future<void> _loadStoreFromStorage() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();

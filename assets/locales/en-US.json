@@ -18,6 +18,16 @@
         "route": "Route Visit",
         "more": "More"
     },
+    "dashboard": {
+        "menu": {
+            "sale_report": "Sale Report",
+            "data_analysis": "Data Analysis",
+            "setting": "Setting",
+            "campaign": "Campaign",
+            "history": "History",
+            "schedule": "Schedule"
+        }
+    },
     "route": {
         "title": "Route",
         "month": "Month",

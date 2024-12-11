@@ -37,7 +37,6 @@ class OrderDetail extends StatefulWidget {
 
 class _OrderDetailState extends State<OrderDetail>
     with TickerProviderStateMixin, RouteAware {
-  Map<String, dynamic>? _jsonString;
   String selectedLabel = "";
   double count = 1.0; // Initialized with 1
   double unit = 1.0;
@@ -90,8 +89,7 @@ class _OrderDetailState extends State<OrderDetail>
     );
     //-------------------------------------------------
 
-// ------------------------------------------------------
-    _loadJson();
+    // -------------------------------------------------
     _loadOrdersFromStorage();
   }
 
@@ -156,13 +154,6 @@ class _OrderDetailState extends State<OrderDetail>
         ),
       );
     }
-  }
-
-  Future<void> _loadJson() async {
-    String jsonString = await rootBundle.loadString('lang/main-th.json');
-    setState(() {
-      _jsonString = jsonDecode(jsonString)['route']["order_detail_screen"];
-    });
   }
 
   Future<void> _clearOrders() async {

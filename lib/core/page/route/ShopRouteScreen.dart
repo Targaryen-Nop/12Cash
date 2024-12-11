@@ -27,22 +27,13 @@ class ShopRouteScreen extends StatefulWidget {
 }
 
 class _ShopRouteScreenState extends State<ShopRouteScreen> {
-  Map<String, dynamic>? _jsonString;
   SaleRoute? routes;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _loadJson();
     _loadSaleRoute();
-  }
-
-  Future<void> _loadJson() async {
-    String jsonString = await rootBundle.loadString('lang/main-th.json');
-    setState(() {
-      _jsonString = jsonDecode(jsonString)["route"]["shop_screen"];
-    });
   }
 
   Future<void> _loadSaleRoute() async {
@@ -120,59 +111,11 @@ class _ShopRouteScreenState extends State<ShopRouteScreen> {
             SizedBox(
               height: screenWidth / 30,
             ),
-
             Expanded(
               child: ShopRouteTable(
                 day: widget.day,
               ),
             ),
-            // const Spacer(),
-            // Container(
-            //   margin: const EdgeInsets.all(10),
-            //   child: Column(
-            //     children: [
-            //       Row(
-            //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //         children: [
-            //           Text(
-            //             _jsonString?['shop_target'] ?? 'Shop Target',
-            //             style: Styles.headerBlack24(context),
-            //           ),
-            //           Text(
-            //             "17",
-            //             style: Styles.headerBlack24(context),
-            //           )
-            //         ],
-            //       ),
-            //       Row(
-            //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //         children: [
-            //           Text(
-            //             _jsonString?['shop_visit'] ?? 'Shop Visit',
-            //             style: Styles.headerBlack24(context),
-            //           ),
-            //           Text(
-            //             "0",
-            //             style: Styles.headerBlack24(context),
-            //           )
-            //         ],
-            //       ),
-            //       Row(
-            //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //         children: [
-            //           Text(
-            //             _jsonString?['shop_order'] ?? 'Shop Order',
-            //             style: Styles.headerBlack24(context),
-            //           ),
-            //           Text(
-            //             "4",
-            //             style: Styles.headerBlack24(context),
-            //           )
-            //         ],
-            //       ),
-            //     ],
-            //   ),
-            // )
           ],
         ),
       ),
