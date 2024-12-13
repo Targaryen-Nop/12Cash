@@ -75,11 +75,26 @@ class Styles {
           color: const Color(0xFF9B1C1C),
         ),
       );
+  static TextStyle red18(BuildContext context) => GoogleFonts.kanit(
+        textStyle: TextStyle(
+          fontSize: getResponsiveFontSize(context, 18),
+          fontWeight: FontWeight.normal,
+          color: const Color(0xFF9B1C1C),
+        ),
+      );
   static TextStyle headerBlack24(BuildContext context) => GoogleFonts.kanit(
         textStyle: TextStyle(
           fontSize: getResponsiveFontSize(context, 24),
           fontWeight: FontWeight.w600,
           color: Colors.black,
+        ),
+      );
+
+  static TextStyle headerRed18(BuildContext context) => GoogleFonts.kanit(
+        textStyle: TextStyle(
+          fontSize: getResponsiveFontSize(context, 18),
+          fontWeight: FontWeight.w600,
+          color: const Color(0xFF9B1C1C),
         ),
       );
 

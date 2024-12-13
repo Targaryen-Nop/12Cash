@@ -50,10 +50,7 @@ class StoreDataScreen extends StatefulWidget {
 
 class _StoreDataScreenState extends State<StoreDataScreen> {
   Store? _storeData;
-  Store? _storeDataImageLocal;
-
   List<ImageItem> imageList = [];
-  List<ImageItem> imageListLocal = [];
   String storeImagePath = "";
   String taxIdImagePath = "";
   String personalImagePath = "";
@@ -68,6 +65,7 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
   ShopType selectedShoptype =
       ShopType(id: '', name: '', descript: '', status: '');
 
+  @override
   void initState() {
     super.initState();
     _loadStoreFromStorage();
@@ -76,7 +74,6 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
   Future<void> _loadStoreFromStorage() async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? jsonStoreLocal = prefs.getString("image_store");
       String? jsonStore = prefs.getString("add_store");
 
       if (jsonStore != null) {
@@ -87,12 +84,8 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
                   ? null
                   : Store.fromJson(jsonDecode(jsonStore)))!;
 
-          _storeDataImageLocal = (jsonStoreLocal == null
-              ? null
-              : Store.fromJson(jsonDecode(jsonStoreLocal)))!;
-
-          imageList = List<ImageItem>.from(_storeDataImageLocal!.imageList);
-          for (var value in imageList.reversed) {
+          imageList = List<ImageItem>.from(_storeData!.imageList);
+          for (var value in imageList) {
             if (value.type == "store") {
               setState(() {
                 storeImagePath = value.path;
@@ -108,7 +101,6 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
             }
           }
         });
-        // province = _storeData.province!;
       }
     } catch (e) {
       print("Error loading from storage: $e");
@@ -118,99 +110,79 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
   Future<void> uploadFormDataWithDio(
       String imagePath, String typeImage, BuildContext context) async {
     try {
-      final dio = Dio();
-      var formData = FormData.fromMap({
-        'storeImage': await MultipartFile.fromFile(imagePath),
-        'area': "BE211",
-      });
-      var response = await dio.post(
-        'http://192.168.44.57:8000/api/upload',
-        data: formData,
-        options: Options(
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        ),
+      // final dio = Dio();
+      // var formData = FormData.fromMap({
+      //   'storeImage': await MultipartFile.fromFile(imagePath),
+      //   'area': "BE211",
+      // });
+      // var response = await dio.post(
+      //   'http://192.168.44.57:8000/api/upload',
+      //   data: formData,
+      //   options: Options(
+      //     headers: {
+      //       "Content-Type": "multipart/form-data",
+      //     },
+      //   ),
+      // );
+
+      // print("Image uploaded successfully ${response.data}");
+
+      // final localImage = ImageItem(
+      //     name: response.data['data']['ImageName'],
+      //     path: imagePath,
+      //     type: typeImage);
+
+      final newImage = ImageItem(
+        name: imagePath.split('/').last,
+        path: imagePath,
+        type: typeImage,
       );
-      if (response.statusCode == 201 || response.statusCode == 200) {
-        print("Image uploaded successfully ${response.data}");
+      switch (typeImage) {
+        case 'store':
+          setState(() {
+            storeImagePath = imagePath;
+          });
+          if (imageList.length > 0) {
+            imageList.removeWhere((item) => item.type == 'store');
+          }
+          imageList.insert(0, newImage);
+          break;
+        case 'tax':
+          setState(() {
+            taxIdImagePath = imagePath;
+          });
+          if (imageList.length > 1) {
+            imageList.removeWhere((item) => item.type == 'tax');
+          }
+          imageList.insert(1, newImage);
+          break;
+        case 'person':
+          setState(() {
+            personalImagePath = imagePath;
+          });
+          if (imageList.length > 2) {
+            imageList.removeWhere((item) => item.type == 'person');
+          }
+          imageList.insert(2, newImage);
+          break;
+        default:
+      }
 
-        final localImage = ImageItem(
-            name: response.data['data']['ImageName'],
-            path: imagePath,
-            type: typeImage);
-
-        final newImage = ImageItem(
-            name: response.data['data']['ImageName'],
-            path: response.data['data']['path'],
-            type: typeImage);
-
-        imageList.insert(0, newImage);
-        imageListLocal.insert(0, localImage);
-
-        switch (typeImage) {
-          case 'store':
-            setState(() {
-              storeImagePath = imagePath;
-            });
-            break;
-          case 'tax':
-            setState(() {
-              taxIdImagePath = imagePath;
-            });
-            break;
-          case 'person':
-            setState(() {
-              personalImagePath = imagePath;
-            });
-            break;
-          default:
-        }
-        setState(() {
+      setState(
+        () {
           _storeData =
               _storeData?.copyWithDynamicField('imageList', '', imageList);
-          _storeDataImageLocal = Store(
-              storeId: "",
-              name: "",
-              taxId: "",
-              tel: "",
-              route: "",
-              type: "",
-              typeName: "",
-              address: "",
-              district: "",
-              subDistrict: "",
-              province: "",
-              provinceCode: "",
-              postcode: "",
-              zone: "",
-              area: "",
-              latitude: "",
-              longitude: "",
-              lineId: "",
-              note: "",
-              status: "",
-              approve: Approve(dateSend: "", dateAction: "", appPerson: ""),
-              policyConsent: PolicyConsent(status: "", date: ""),
-              imageList: imageListLocal,
-              shippingAddress: [],
-              createdDate: "createdDate",
-              updatedDate: "");
-        });
+        },
+      );
 
-        _saveStoreToStorage();
-      } else {
-        toastification.show(
-          autoCloseDuration: const Duration(seconds: 5),
-          context: context,
-          type: ToastificationType.error,
-          style: ToastificationStyle.flatColored,
-          title: Text(
-            "store.processtimeline_screen.toasting_error".tr(),
-            style: Styles.black18(context),
-          ),
-        );
-      }
+      // print("imageList:${imageList.length}");
+      // print("imageListDetail:${imageList[0].type}");
+      // print("imageListDetail:${imageList[1].type}");
+      // print("imageListDetail:${imageList[2].type}");
+      // print("imageStore:${imageList.length}");
+      // print("imagePhorpor:${imageList.length}");
+      // print("imagePerson:${imageList.length}");
+      _saveStoreToStorage();
     } catch (e) {
       toastification.show(
         autoCloseDuration: const Duration(seconds: 5),
@@ -239,9 +211,7 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       // Convert Store object to JSON string
       String jsonStoreString = json.encode(_storeData!.toJson());
-      String jsonStoreStringLocal = json.encode(_storeDataImageLocal!.toJson());
       await prefs.setString('add_store', jsonStoreString);
-      await prefs.setString('image_store', jsonStoreStringLocal);
       print("Data saved to storage successfully.");
     } catch (e) {
       print("Error saving to storage: $e");
@@ -338,25 +308,6 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
                   inputFormatters: [
                     FilteringTextInputFormatter.digitsOnly,
                   ],
-                  max: 13,
-                  keypadType: TextInputType.number,
-                  controller: widget.storeTaxIDController,
-                  onChanged: (value) => _onTextChanged(value, 'taxId'),
-                  onFieldTap: () {
-                    setState(() {
-                      sectionOne = true;
-                      sectionTwo = false;
-                    });
-                  },
-                  context,
-                  label: '${"store.store_data_screen.input_taxId.name".tr()} ',
-                  hint: '${"store.store_data_screen.input_taxId.hint".tr()}',
-                ),
-                const SizedBox(height: 16),
-                Customtextinput(
-                  inputFormatters: [
-                    FilteringTextInputFormatter.digitsOnly,
-                  ],
                   max: 10,
                   label: '${"store.store_data_screen.input_tel.name".tr()} *',
                   hint: "${"store.store_data_screen.input_tel.hint".tr()}",
@@ -376,69 +327,70 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Expanded(
-                        flex: 2,
-                        child: SizedBox(
-                          child: DropdownSearchCustom<ShopType>(
-                            initialSelectedValue:
-                                widget.initialSelectedShoptype.name == ''
-                                    ? null
-                                    : widget.initialSelectedShoptype,
-                            label:
-                                '${"store.store_data_screen.input_shoptype.name".tr()} *',
-                            titleText:
-                                "${"store.store_data_screen.input_shoptype.name".tr()}",
-                            fetchItems: (filter) => getShoptype(filter),
-                            onChanged: (ShopType? selected) async {
-                              if (selected != null) {
-                                selectedShoptype = ShopType(
-                                  id: selected.id,
-                                  name: selected.name,
-                                  descript: selected.descript,
-                                  status: selected.status,
-                                );
-                                setState(() {
-                                  widget.initialSelectedShoptype =
-                                      selectedShoptype;
-                                  // Update the storeData fields
-                                  _storeData = _storeData?.copyWithDynamicField(
-                                      'typeName', selected.name);
-                                  _storeData = _storeData?.copyWithDynamicField(
-                                      'type', selected.id);
-                                  // widget.storeData = widget.storeData
-                                  //     .copyWithDynamicField(
-                                  //         'typeName', selected.name);
-                                  // widget.storeData = widget.storeData
-                                  //     .copyWithDynamicField(
-                                  //         'type', selected.id);
-                                });
-                                _saveStoreToStorage();
-                              }
-                            },
-                            itemAsString: (ShopType data) => data.name,
-                            itemBuilder: (context, item, isSelected) {
-                              return Column(
-                                children: [
-                                  ListTile(
-                                    title: Text(
-                                      " ${item.name}",
-                                      style: Styles.black18(context),
-                                    ),
-                                    selected: isSelected,
-                                  ),
-                                  Divider(
-                                    color: Colors
-                                        .grey[200], // Color of the divider line
-                                    thickness: 1, // Thickness of the line
-                                    indent:
-                                        16, // Left padding for the divider line
-                                    endIndent:
-                                        16, // Right padding for the divider line
-                                  ),
-                                ],
+                      flex: 2,
+                      child: SizedBox(
+                        child: DropdownSearchCustom<ShopType>(
+                          initialSelectedValue:
+                              widget.initialSelectedShoptype.name == ''
+                                  ? null
+                                  : widget.initialSelectedShoptype,
+                          label:
+                              '${"store.store_data_screen.input_shoptype.name".tr()} *',
+                          titleText:
+                              "${"store.store_data_screen.input_shoptype.name".tr()}",
+                          fetchItems: (filter) => getShoptype(filter),
+                          onChanged: (ShopType? selected) async {
+                            if (selected != null) {
+                              selectedShoptype = ShopType(
+                                id: selected.id,
+                                name: selected.name,
+                                descript: selected.descript,
+                                status: selected.status,
                               );
-                            },
-                          ),
-                        )),
+                              setState(() {
+                                widget.initialSelectedShoptype =
+                                    selectedShoptype;
+                                // Update the storeData fields
+                                _storeData = _storeData?.copyWithDynamicField(
+                                    'typeName', selected.name);
+                                _storeData = _storeData?.copyWithDynamicField(
+                                    'type', selected.id);
+                                // widget.storeData = widget.storeData
+                                //     .copyWithDynamicField(
+                                //         'typeName', selected.name);
+                                // widget.storeData = widget.storeData
+                                //     .copyWithDynamicField(
+                                //         'type', selected.id);
+                              });
+                              _saveStoreToStorage();
+                            }
+                          },
+                          itemAsString: (ShopType data) => data.name,
+                          itemBuilder: (context, item, isSelected) {
+                            return Column(
+                              children: [
+                                ListTile(
+                                  title: Text(
+                                    " ${item.name}",
+                                    style: Styles.black18(context),
+                                  ),
+                                  selected: isSelected,
+                                ),
+                                Divider(
+                                  color: Colors
+                                      .grey[200], // Color of the divider line
+                                  thickness: 1, // Thickness of the line
+                                  indent:
+                                      16, // Left padding for the divider line
+                                  endIndent:
+                                      16, // Right padding for the divider line
+                                ),
+                              ],
+                            );
+                          },
+                        ),
+                      ),
+                    ),
                     const SizedBox(width: 8.0),
                     Expanded(
                       child: SizedBox(
@@ -460,9 +412,6 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
                                 selectedRoute =
                                     RouteStore(route: selected.route);
                                 widget.initialSelectedRoute = selectedRoute;
-                                // widget.storeData = widget.storeData
-                                //     .copyWithDynamicField(
-                                //         'route', selected.route);
                               });
                               _saveStoreToStorage();
                             }
@@ -494,6 +443,25 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
                       ),
                     ),
                   ],
+                ),
+                const SizedBox(height: 16),
+                Customtextinput(
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                  ],
+                  max: 13,
+                  keypadType: TextInputType.number,
+                  controller: widget.storeTaxIDController,
+                  onChanged: (value) => _onTextChanged(value, 'taxId'),
+                  onFieldTap: () {
+                    setState(() {
+                      sectionOne = true;
+                      sectionTwo = false;
+                    });
+                  },
+                  context,
+                  label: '${"store.store_data_screen.input_taxId.name".tr()} ',
+                  hint: '${"store.store_data_screen.input_taxId.hint".tr()}',
                 ),
                 const SizedBox(height: 16),
                 Customtextinput(

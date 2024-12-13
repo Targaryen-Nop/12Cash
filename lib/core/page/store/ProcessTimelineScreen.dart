@@ -157,51 +157,69 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
     }
   }
 
+  double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
+    const double earthRadius = 6371000; // Earth's radius in meters
+
+    double dLat = (lat2 - lat1) * (pi / 180);
+    double dLon = (lon2 - lon1) * (pi / 180);
+
+    double a = sin(dLat / 2) * sin(dLat / 2) +
+        cos(lat1 * (pi / 180)) *
+            cos(lat2 * (pi / 180)) *
+            sin(dLon / 2) *
+            sin(dLon / 2);
+
+    double c = 2 * atan2(sqrt(a), sqrt(1 - a));
+
+    return earthRadius * c; // Distance in meters
+  }
+
+  List<Map<String, dynamic>> stores = [
+    {
+      "storeId": 1,
+      "storeName": "Store A",
+      "location": {"lat": 40.7128, "lon": -74.0060}
+    },
+    {
+      "storeId": 2,
+      "storeName": "Store B",
+      "location": {"lat": 40.7129, "lon": -74.0059}
+    },
+    {
+      "storeId": 3,
+      "storeName": "Store C",
+      "location": {"lat": 40.7130, "lon": -74.0058}
+    },
+  ];
+
+  List<Map<String, dynamic>> findStoresWithinRadius(
+      double currentLat, double currentLon, double radiusMeters) {
+    return stores.where((store) {
+      double distance = calculateDistance(
+        currentLat,
+        currentLon,
+        store['location']['lat'],
+        store['location']['lon'],
+      );
+      return distance <= radiusMeters; // Check if within radius
+    }).toList();
+  }
+
+  void checkNearbyStores(double currentLat, double currentLon) {
+    double radius = 50.0; // Radius in meters
+    List<Map<String, dynamic>> nearbyStores =
+        findStoresWithinRadius(currentLat, currentLon, radius);
+
+    if (nearbyStores.isNotEmpty) {
+      print("Nearby stores within 50 meters: $nearbyStores");
+    } else {
+      print("No stores found within 50 meters.");
+    }
+  }
+
   Future<void> postData2() async {
     // Initialize Dio
     Dio dio = Dio();
-
-    String text = '''
-    {
-    "name": "ครรรรรร",
-    "taxId": null,
-    "tel": 869655965,
-    "route": "R04",
-    "type": 31,
-    "typeName": "ร้านหมูติดแอร์",
-    "address": "รรรรคค",
-    "district": "ซำสูง",
-    "subDistrict": "บ้านโนน",
-    "province": "ขอนแก่น",
-    "provinceCode": 40,
-    "postCode": 40170,
-    "note": null,
-    "shippingAddress": [
-        {
-            "default": 1,
-            "address": "รรรรคค",
-            "district": "ซำสูง",
-            "subDistrict": "บ้านโนน",
-            "province": "ขอนแก่น",
-            "provinceCode": 40,
-            "postCode": 40170,
-            "latitude": 13.6823751,
-            "longtitude": 100.6097463
-        }
-    ],
-    "zone": "BE",
-    "area": "BE211",
-    "latitude": 13.6823751,
-    "longtitude": 100.6097463,
-    "lineId": null,
-    "policyConsent": {
-        "status": "Agree"
-    },
-    "approve": {
-        "appPerson": null
-    }
-}''';
-
     String jsonData = '''
 {
       "name": "${_storeData.name}",
@@ -242,16 +260,24 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
     // "approve": {"appPerson": ""} }
     try {
       // print(text);
-      print(jsonData);
+      // print(jsonData);
+      List<MultipartFile> imageList = [];
+      for (var value in _storeData.imageList) {
+        imageList.add(
+          await MultipartFile.fromFile(
+            value.path,
+          ),
+        );
+      }
+      String type =
+          "store${imageList.length > 1 != null ? ",document" : ""}${imageList.length > 2 != null ? ",personal" : ""}";
 
-      var formData = FormData.fromMap({
-        // 'storeImage': await MultipartFile.fromFile(imagePath),
-        'storeImages': '',
-        'types': "store,document",
-        "store": jsonData
-      });
+      var formData = FormData.fromMap(
+        {'storeImages': imageList, 'types': type, "store": jsonData},
+      );
+
       var response = await dio.post(
-        'https://6505-171-103-242-50.ngrok-free.app/api/cash/store/addStore',
+        'https://a382-171-103-242-50.ngrok-free.app/api/cash/store/addStore',
         data: formData,
         options: Options(
           headers: {
@@ -275,13 +301,14 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
             icon: const Icon(Icons.info_outline),
             type: ToastificationType.error,
             primaryColor: Colors.red,
-            titleStyle: Styles.headerRed24(context),
-            descriptionStyle: Styles.red12(context),
-            message: "store.processtimeline_screen.toasting_similar".tr(),
+            titleStyle: Styles.headerRed18(context),
+            descriptionStyle: Styles.red18(context),
+            message:
+                "${response.data['data'][0]['similarity']}% ${"store.processtimeline_screen.toasting_similar".tr()}",
             description:
-                "store.processtimeline_screen.toasting_similar_des".tr(),
+                "${"store.processtimeline_screen.toasting_similar_des".tr()} ",
           );
-        } else if (response.data['message'] == 'Success') {
+        } else if (response.data['message'] == 'Store added successfully') {
           toastification.show(
             autoCloseDuration: const Duration(seconds: 5),
             context: context,

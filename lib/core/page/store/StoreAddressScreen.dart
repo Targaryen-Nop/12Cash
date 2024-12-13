@@ -381,6 +381,12 @@ class _StoreAddressScreenState extends State<StoreAddressScreen> {
                         widget.storePoscodeController.text = '';
                         _storeData = _storeData?.copyWithDynamicField(
                             'province', selected.province);
+                        _storeData =
+                            _storeData?.copyWithDynamicField('district', '');
+                        _storeData =
+                            _storeData?.copyWithDynamicField('subDistrict', '');
+                        _storeData =
+                            _storeData?.copyWithDynamicField('postcode', '');
                       });
                       _saveStoreToStorage();
                     }
@@ -443,6 +449,10 @@ class _StoreAddressScreenState extends State<StoreAddressScreen> {
                         widget.initialSelectedLocation.district = '';
                         _storeData = _storeData?.copyWithDynamicField(
                             'district', selected.amphoe);
+                        _storeData =
+                            _storeData?.copyWithDynamicField('subDistrict', '');
+                        _storeData =
+                            _storeData?.copyWithDynamicField('postcode', '');
                       });
 
                       _saveStoreToStorage();

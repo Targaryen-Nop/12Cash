@@ -12,6 +12,7 @@ import 'package:_12sale_app/core/page/HomeScreen.dart';
 import 'package:_12sale_app/core/page/LoginScreen.dart';
 import 'package:_12sale_app/core/page/HomeScreen.dart';
 import 'package:_12sale_app/core/page/dashboard/DashboardScreen.dart';
+import 'package:_12sale_app/core/page/route/TestGooglemap.dart';
 import 'package:_12sale_app/core/page/route/TossAddToCartScreen.dart';
 
 import 'package:_12sale_app/core/styles/style.dart';
@@ -60,7 +61,7 @@ void main() async {
   // Get the first camera from the list
   // final firstCamera = cameras.first;
   SystemChrome.setPreferredOrientations([
-    // DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]).then((_) {
     runApp(
@@ -99,9 +100,6 @@ class _MyAppState extends State<MyApp> {
           localizationsDelegates: context.localizationDelegates,
           supportedLocales: context.supportedLocales,
           locale: context.locale,
-          // locale: _locale,
-          // supportedLocales: _localization.supportedLocales,
-          // localizationsDelegates: _localization.localizationsDelegates,
           navigatorObservers: [routeObserver], // Register RouteObserver here
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
@@ -111,11 +109,12 @@ class _MyAppState extends State<MyApp> {
             ],
             textTheme: Typography.englishLike2018.apply(fontSizeFactor: 1.sp),
           ),
+          home: PolylineWithLabels(),
           // home: SettingsScreen(),
           // home: const LoginScreen(),
-          home: const HomeScreen(
-            index: 0,
-          ),
+          // home: const HomeScreen(
+          //   index: 0,
+          // ),
           // home: NotificationScreen(),
           // home: HomeScreen2(),
           // home: CustomBottomNavBar(),

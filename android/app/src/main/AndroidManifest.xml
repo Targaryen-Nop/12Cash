@@ -19,8 +19,9 @@
         android:label="12Cash"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+        <meta-data android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyAQ9F4z5GhkeW5n8z03OK7H5CcMpzUAZr0" />
 
-       
 
         <receiver
             android:name="com.dexterous.flutterlocalnotifications.receivers.NotificationBroadcastReceiver"

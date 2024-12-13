@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-
 import 'package:_12sale_app/core/components/BoxShadowCustom.dart';
 import 'package:_12sale_app/core/components/Loading.dart';
 import 'package:_12sale_app/core/components/card/StoreCardAll.dart';
@@ -14,7 +13,6 @@ import 'package:_12sale_app/data/models/Route.dart';
 import 'package:_12sale_app/main.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:skeletonizer/skeletonizer.dart';
-
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:_12sale_app/data/models/Store.dart';
 import 'package:dio/dio.dart';
