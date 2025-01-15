@@ -3,11 +3,12 @@ import 'package:_12sale_app/core/components/Appbar.dart';
 import 'package:_12sale_app/core/components/BoxShadowCustom.dart';
 import 'package:_12sale_app/core/components/CustomerDropdownSearch.dart';
 import 'package:_12sale_app/core/components/badge/CustomBadge.dart';
+import 'package:_12sale_app/core/components/card/StoreVisitCard.dart';
 import 'package:_12sale_app/core/components/table/ShopRouteTable.dart';
 import 'package:_12sale_app/core/page/HomeScreen.dart';
 import 'package:_12sale_app/core/page/route/TestGooglemap.dart';
 import 'package:_12sale_app/core/styles/style.dart';
-import 'package:_12sale_app/data/models/SaleRoute.dart';
+import 'package:_12sale_app/data/models/RouteVisit.dart';
 import 'package:_12sale_app/function/SavetoStorage.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -19,37 +20,40 @@ class ShopRouteScreen extends StatefulWidget {
   final String day;
   final String route;
   final String status;
+  final List<Store> listStore;
 
-  const ShopRouteScreen(
-      {super.key,
-      required this.day,
-      required this.route,
-      required this.status});
+  const ShopRouteScreen({
+    super.key,
+    required this.day,
+    required this.route,
+    required this.status,
+    required this.listStore,
+  });
 
   @override
   State<ShopRouteScreen> createState() => _ShopRouteScreenState();
 }
 
 class _ShopRouteScreenState extends State<ShopRouteScreen> {
-  SaleRoute? routes;
+  // Store? routes;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _loadSaleRoute();
+    // _loadSaleRoute();
   }
 
-  Future<void> _loadSaleRoute() async {
-    List<SaleRoute> routesData =
-        await loadFromStorage('saleRoutes', (json) => SaleRoute.fromJson(json));
-    SaleRoute? routeFilter = routesData.firstWhere(
-      (route) => route.day == widget.day.split(" ")[1],
-    );
-    setState(() {
-      routes = routeFilter;
-    });
-  }
+  // Future<void> _loadSaleRoute() async {
+  //   List<SaleRoute> routesData =
+  //       await loadFromStorage('saleRoutes', (json) => SaleRoute.fromJson(json));
+  //   SaleRoute? routeFilter = routesData.firstWhere(
+  //     (route) => route.day == widget.day.split(" ")[1],
+  //   );
+  //   setState(() {
+  //     routes = routeFilter;
+  //   });
+  // }
 
   Future<void> _launchUrl(url) async {
     if (!await launchUrl(
@@ -66,6 +70,7 @@ class _ShopRouteScreenState extends State<ShopRouteScreen> {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(70),
@@ -77,53 +82,169 @@ class _ShopRouteScreenState extends State<ShopRouteScreen> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            const CustomerDropdownSearch(),
-            SizedBox(
-              height: screenWidth / 30,
-            ),
-            Container(
-              alignment: Alignment.center,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  CustomBadge(
-                    label: "route.store_screen.checkin".tr(),
-                    count: '${routes?.storeCheckin ?? '0'}',
-                    backgroundColor: Styles.successTextColor,
-                    countBackgroundColor: Colors.white,
-                  ),
-                  CustomBadge(
-                    label: "route.store_screen.order".tr(),
-                    count: '${routes?.storeBuy ?? '0'}',
-                    backgroundColor: Styles.paddingTextColor,
-                    countBackgroundColor: Colors.white,
-                  ),
-                ],
+            BoxShadowCustom(
+              child: Container(
+                padding: EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  // color: Colors.amber,
+                  // border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.all(Radius.circular(16)),
+                ),
+                alignment: Alignment.center,
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.store_rounded,
+                              color: Styles.primaryColor,
+                              size: 50,
+                            ),
+                            Text(
+                              "36 ",
+                              style: Styles.black24(context),
+                            ),
+                            Text(
+                              "ทั้งหมด",
+                              style: Styles.black24(context),
+                            )
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Container(
+                              padding: EdgeInsets.symmetric(horizontal: 16),
+                              decoration: BoxDecoration(
+                                border: Border.all(color: Colors.grey),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(16)),
+                              ),
+                              child: Text(
+                                "35 / 36",
+                                style: Styles.black24(context),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Text(
+                              DateFormat('d MMMM yyyy', 'dashboard.lange'.tr())
+                                  .format(
+                                      DateTime.now()), // Current date and time
+                              style: Styles.black24(context),
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.check_circle_outline_rounded,
+                              color: Styles.successTextColor,
+                              size: 50,
+                            ),
+                            Text(
+                              "10 ",
+                              style: Styles.black24(context),
+                            ),
+                            Text(
+                              "เช็คอิน",
+                              style: Styles.black24(context),
+                            )
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.paid_outlined,
+                              color: Styles.paddingTextColor,
+                              size: 50,
+                            ),
+                            Text(
+                              "5 ",
+                              style: Styles.black24(context),
+                            ),
+                            Text(
+                              "ขายแล้ว",
+                              style: Styles.black24(context),
+                            )
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.cancel_outlined,
+                              color: Styles.failTextColor,
+                              size: 50,
+                            ),
+                            Text(
+                              "20 ",
+                              style: Styles.black24(context),
+                            ),
+                            Text(
+                              "ขายไม่ได้",
+                              style: Styles.black24(context),
+                            )
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
-            SizedBox(
-              height: screenWidth / 30,
-            ),
-            Container(
-              alignment: Alignment.center,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  CustomBadge(
-                    label: "route.store_screen.cancel".tr(),
-                    count: '${routes?.storeNotBuy ?? '0'}',
-                    backgroundColor: Styles.failTextColor,
-                    countBackgroundColor: Colors.white,
-                  ),
-                  CustomBadge(
-                    label: "route.store_screen.all".tr(),
-                    count: '${routes?.storeAll ?? '0'}',
-                    backgroundColor: Colors.grey,
-                    countBackgroundColor: Colors.white,
-                  ),
-                ],
-              ),
-            ),
+            // const CustomerDropdownSearch(),
+            // Container(
+            //   alignment: Alignment.center,
+            //   child: Row(
+            //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //     children: [
+            //       CustomBadge(
+            //         label: "route.store_screen.checkin".tr(),
+            //         count: '${routes?.storeCheckin ?? '0'}',
+            //         backgroundColor: Styles.successTextColor,
+            //         countBackgroundColor: Colors.white,
+            //       ),
+            //       CustomBadge(
+            //         label: "route.store_screen.order".tr(),
+            //         count: '${routes?.storeBuy ?? '0'}',
+            //         backgroundColor: Styles.paddingTextColor,
+            //         countBackgroundColor: Colors.white,
+            //       ),
+            //     ],
+            //   ),
+            // ),
+            // SizedBox(
+            //   height: screenWidth / 30,
+            // ),
+            // Container(
+            //   alignment: Alignment.center,
+            //   child: Row(
+            //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //     children: [
+            //       CustomBadge(
+            //         label: "route.store_screen.cancel".tr(),
+            //         count: '${routes?.storeNotBuy ?? '0'}',
+            //         backgroundColor: Styles.failTextColor,
+            //         countBackgroundColor: Colors.white,
+            //       ),
+            //       CustomBadge(
+            //         label: "route.store_screen.all".tr(),
+            //         count: '${routes?.storeAll ?? '0'}',
+            //         backgroundColor: Colors.grey,
+            //         countBackgroundColor: Colors.white,
+            //       ),
+            //     ],
+            //   ),
+            // ),
             // SizedBox(
             //   height: screenWidth / 30,
             // ),
@@ -131,6 +252,22 @@ class _ShopRouteScreenState extends State<ShopRouteScreen> {
             SizedBox(
               height: screenWidth / 30,
             ),
+            Expanded(
+              child: ListView.builder(
+                itemCount: widget.listStore.length,
+                itemBuilder: (context, index) {
+                  return StoreVisitCard(
+                    isFirst: index == 0,
+                    isLast: index == widget.listStore.length - 1,
+                    store: widget.listStore[index],
+                  );
+                },
+              ),
+            ),
+            SizedBox(
+              height: screenWidth / 20,
+            ),
+
             // TextButton.icon(
             //   icon: const FaIcon(FontAwesomeIcons.google, color: Colors.white),
             //   style: ButtonStyle(
@@ -154,11 +291,11 @@ class _ShopRouteScreenState extends State<ShopRouteScreen> {
             // SizedBox(
             //   height: screenWidth / 30,
             // ),
-            Expanded(
-              child: ShopRouteTable(
-                day: widget.day,
-              ),
-            ),
+            // Expanded(
+            //   child: ShopRouteTable(
+            //     day: widget.day,
+            //   ),
+            // ),
           ],
         ),
       ),

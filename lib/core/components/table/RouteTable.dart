@@ -117,13 +117,13 @@ class _RouteTableState extends State<RouteTable> {
 
     return InkWell(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) =>
-                ShopRouteScreen(day: day, route: route, status: status),
-          ),
-        );
+        // Navigator.push(
+        //   context,
+        //   MaterialPageRoute(
+        //     builder: (context) =>
+        //         ShopRouteScreen(day: day, route: route, status: status),
+        //   ),
+        // );
       },
       child: Container(
         decoration: BoxDecoration(

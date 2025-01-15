@@ -11,7 +11,6 @@ class BoxShadowCustom extends StatelessWidget {
         color: Colors.white, // Set background color if needed
         borderRadius: BorderRadius.circular(
             16), // Rounded corners for the outer container
-
         boxShadow: [
           BoxShadow(
             color:

@@ -402,11 +402,12 @@ class _DashboardHeaderState extends State<DashboardHeader> {
                               child: Row(
                                 children: [
                                   Text(
-                                      DateFormat('d MMMM yyyy',
-                                              'dashboard.lange'.tr())
-                                          .format(DateTime
-                                              .now()), // Current date and time
-                                      style: Styles.headerWhite24(context)),
+                                    DateFormat('d MMMM yyyy',
+                                            'dashboard.lange'.tr())
+                                        .format(DateTime
+                                            .now()), // Current date and time
+                                    style: Styles.headerWhite24(context),
+                                  ),
                                   StreamBuilder(
                                     stream: Stream.periodic(
                                         const Duration(seconds: 1)),

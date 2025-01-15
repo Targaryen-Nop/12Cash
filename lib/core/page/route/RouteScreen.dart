@@ -1,11 +1,22 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:ui';
+import 'package:_12sale_app/core/components/BoxShadowCustom.dart';
+import 'package:_12sale_app/core/components/Loading.dart';
+import 'package:_12sale_app/core/components/card/InvoiceCard.dart';
+import 'package:_12sale_app/core/components/card/RouteVisitCard.dart';
 import 'package:_12sale_app/core/components/search/CustomerDropdownSearch.dart';
 import 'package:_12sale_app/core/components/table/RouteTable.dart';
 import 'package:_12sale_app/core/page/HomeScreen.dart';
+import 'package:_12sale_app/core/page/route/ShopRouteScreen.dart';
+import 'package:_12sale_app/core/page/store/DetailStoreScreen.dart';
+import 'package:_12sale_app/core/page/store/StoreScreen.dart';
 import 'package:_12sale_app/core/styles/style.dart';
+import 'package:_12sale_app/data/models/Route.dart';
+import 'package:_12sale_app/data/models/RouteVisit.dart';
 import 'package:_12sale_app/data/models/SaleRoute.dart';
+import 'package:_12sale_app/data/models/User.dart';
+import 'package:_12sale_app/data/service/apiService.dart';
 import 'package:_12sale_app/function/SavetoStorage.dart';
 import 'package:charset_converter/charset_converter.dart';
 import 'package:dio/dio.dart';
@@ -25,6 +36,7 @@ class Routescreen extends StatefulWidget {
 }
 
 class _RoutescreenState extends State<Routescreen> {
+  bool _loadingRouteVisit = true;
   static const LatLng origin = LatLng(37.7749, -122.4194); // San Francisco, CA
   static const LatLng waypoint1 = LatLng(36.7783, -119.4179); // Fresno, CA
   static const LatLng waypoint2 = LatLng(34.0522, -118.2437); // Los Angeles, CA
@@ -38,6 +50,7 @@ class _RoutescreenState extends State<Routescreen> {
     waypoint2,
     destination,
   ];
+  List<RouteVisit> routeVisits = [];
 
   List<Map<String, dynamic>> _annotations = [];
   List<SaleRoute> _routes = [];
@@ -191,15 +204,6 @@ class _RoutescreenState extends State<Routescreen> {
       tilt: 59.440717697143555,
       zoom: 19.151926040649414);
 
-  @override
-  initState() {
-    super.initState();
-    // _maker.addAll(_list);
-    _loadSaleRoute();
-    _initializePolylines();
-    _initializeMarkers();
-  }
-
   void _initializePolylines() {
     setState(() {
       _polylines.add(
@@ -276,6 +280,38 @@ class _RoutescreenState extends State<Routescreen> {
     await saveToStorage('saleRoutes', _routes);
   }
 
+  Future<void> _getRouteVisit() async {
+    ApiService apiService = ApiService();
+    await apiService.init();
+    print(
+        "Path: ${'api/cash/route/getRoute?area=${User.area}&period=${DateTime.now().year}${DateFormat('MM').format(DateTime.now())}'}");
+    var response = await apiService.request(
+      endpoint:
+          'api/cash/route/getRoute?area=${User.area}&period=${DateTime.now().year}${DateFormat('MM').format(DateTime.now())}',
+      method: 'GET',
+    );
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = response.data['data'];
+      // print("getRoute: ${response.data['data']}");
+      setState(() {
+        routeVisits = data.map((item) => RouteVisit.fromJson(item)).toList();
+        _loadingRouteVisit = false;
+      });
+      print("getRoute: $routeVisits");
+    }
+  }
+
+  @override
+  initState() {
+    super.initState();
+    // _maker.addAll(_list);
+    _loadSaleRoute();
+    _initializePolylines();
+    _initializeMarkers();
+    _getRouteVisit();
+  }
+
   @override
   void dispose() {
     super.dispose();
@@ -284,71 +320,137 @@ class _RoutescreenState extends State<Routescreen> {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
-    return Column(
-      children: [
-        // Expanded(
-        //   child: Container(
-        //     padding: const EdgeInsets.all(8),
-        //     margin: EdgeInsets.all(screenWidth / 45),
-        //     child: Stack(
-        //       children: [
-        //         GoogleMap(
-        //           initialCameraPosition: const CameraPosition(
-        //             target: origin,
-        //             zoom: 5.0,
-        //           ),
-        //           markers: _markers,
-        //           // polylines: Set<Polyline>.of(polylines.values),
-        //           polylines: _polylines,
-        //           mapType: MapType.normal,
-        //           myLocationButtonEnabled: true,
-        //           myLocationEnabled: true,
-        //           // initialCameraPosition: _kGooglePlex,
-        //           onMapCreated: (controller) {
-        //             setState(() {
-        //               _mapController = controller;
-        //             });
-        //             _generateDistanceLabels();
-        //           },
-        //         ),
-        //         ...distanceLabels,
-        //       ],
-        //     ),
-        //   ),
-        // ),
-        // TextButton(
-        //   onPressed: () {
-        //     print("test");
-        //     // fetchPolylineDataWithDio(
-        //     //     origin, destination, 'AIzaSyAQ9F4z5GhkeW5n8z03OK7H5CcMpzUAZr0');
-        //   },
-        //   child: const Text('add'),
-        // ),
-        // Expanded(
-        //   child: Container(
-        //     padding: const EdgeInsets.all(8),
-        //     margin: EdgeInsets.all(screenWidth / 45),
-        //     width: screenWidth,
-        //     // color: Colors.red,
-        //     child: Column(
-        //       mainAxisAlignment: MainAxisAlignment.center,
-        //       children: [
-        //         Text(
-        //           "ยังไม่เปิดให้บริการ ",
-        //           style: Styles.black32(context),
-        //         ),
-        //       ],
-        //     ),
-        //   ),
-        // ),
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsets.only(top: 20),
-            child: RouteTable(),
+    return Scaffold(
+      backgroundColor:
+          Colors.transparent, // set scaffold background color to transparent
+      body: Container(
+        margin: EdgeInsets.only(top: 20),
+        child: LoadingSkeletonizer(
+          loading: _loadingRouteVisit,
+          child: ListView.builder(
+            itemCount: (routeVisits.length / 2).ceil(), // Number of rows needed
+            itemBuilder: (context, index) {
+              final firstIndex = index * 2;
+              final secondIndex = firstIndex + 1;
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: RouteVisitCard(
+                      item: routeVisits[firstIndex],
+                      onDetailsPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ShopRouteScreen(
+                              day: routeVisits[firstIndex].day,
+                              route: routeVisits[firstIndex].day,
+                              status: routeVisits[firstIndex].day,
+                              listStore: routeVisits[firstIndex].listStore,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  if (secondIndex <
+                      routeVisits.length) // Check if the second card exists
+                    Expanded(
+                      child: RouteVisitCard(
+                        item: routeVisits[secondIndex],
+                        onDetailsPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ShopRouteScreen(
+                                day: routeVisits[secondIndex].day,
+                                route: routeVisits[secondIndex].day,
+                                status: routeVisits[secondIndex].day,
+                                listStore: routeVisits[secondIndex].listStore,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    )
+                  else
+                    Expanded(
+                      child:
+                          SizedBox(), // Placeholder for spacing if no second card
+                    ),
+                ],
+              );
+            },
           ),
         ),
-      ],
+      ),
     );
+    // return Column(
+    //   children: [
+    //     // Expanded(
+    //     //   child: Container(
+    //     //     padding: const EdgeInsets.all(8),
+    //     //     margin: EdgeInsets.all(screenWidth / 45),
+    //     //     child: Stack(
+    //     //       children: [
+    //     //         GoogleMap(
+    //     //           initialCameraPosition: const CameraPosition(
+    //     //             target: origin,
+    //     //             zoom: 5.0,
+    //     //           ),
+    //     //           markers: _markers,
+    //     //           // polylines: Set<Polyline>.of(polylines.values),
+    //     //           polylines: _polylines,
+    //     //           mapType: MapType.normal,
+    //     //           myLocationButtonEnabled: true,
+    //     //           myLocationEnabled: true,
+    //     //           // initialCameraPosition: _kGooglePlex,
+    //     //           onMapCreated: (controller) {
+    //     //             setState(() {
+    //     //               _mapController = controller;
+    //     //             });
+    //     //             _generateDistanceLabels();
+    //     //           },
+    //     //         ),
+    //     //         ...distanceLabels,
+    //     //       ],
+    //     //     ),
+    //     //   ),
+    //     // ),
+    //     // TextButton(
+    //     //   onPressed: () {
+    //     //     print("test");
+    //     //     // fetchPolylineDataWithDio(
+    //     //     //     origin, destination, 'AIzaSyAQ9F4z5GhkeW5n8z03OK7H5CcMpzUAZr0');
+    //     //   },
+    //     //   child: const Text('add'),
+    //     // ),
+    //     // Expanded(
+    //     //   child: Container(
+    //     //     padding: const EdgeInsets.all(8),
+    //     //     margin: EdgeInsets.all(screenWidth / 45),
+    //     //     width: screenWidth,
+    //     //     // color: Colors.red,
+    //     //     child: Column(
+    //     //       mainAxisAlignment: MainAxisAlignment.center,
+    //     //       children: [
+    //     //         Text(
+    //     //           "ยังไม่เปิดให้บริการ ",
+    //     //           style: Styles.black32(context),
+    //     //         ),
+    //     //       ],
+    //     //     ),
+    //     //   ),
+    //     // ),
+    // Expanded(
+    //   child: Padding(
+    //     padding: const EdgeInsets.only(top: 20),
+    //     child: RouteTable(),
+    //   ),
+    // ),
+
+    //   ],
+    // );
   }
 }
 

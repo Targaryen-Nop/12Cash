@@ -30,20 +30,20 @@ class _ShopRouteTableState extends State<ShopRouteTable> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _loadStoreDetail();
+    // _loadStoreDetail();
   }
 
-  Future<void> _loadStoreDetail() async {
-    List<SaleRoute> routes =
-        await loadFromStorage('saleRoutes', (json) => SaleRoute.fromJson(json));
-    List<Store> filteredStores = routes
-        .where((route) => route.day == widget.day.split(" ")[1])
-        .expand((route) => route.listStore)
-        .toList();
-    setState(() {
-      stores = filteredStores;
-    });
-  }
+  // Future<void> _loadStoreDetail() async {
+  //   List<SaleRoute> routes =
+  //       await loadFromStorage('saleRoutes', (json) => SaleRoute.fromJson(json));
+  //   List<Store> filteredStores = routes
+  //       .where((route) => route.day == widget.day.split(" ")[1])
+  //       .expand((route) => route.listStore)
+  //       .toList();
+  //   setState(() {
+  //     stores = filteredStores;
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {

@@ -32,25 +32,25 @@ class _DetailTableState extends State<DetailTable> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _loadStoreDetail();
+    // _loadStoreDetail();
   }
 
-  Future<void> _loadStoreDetail() async {
-    List<SaleRoute> routes =
-        await loadFromStorage('saleRoutes', (json) => SaleRoute.fromJson(json));
-    List<Store> filteredStores = routes
-        .where((route) => route.day == widget.day.split(" ")[1])
-        .expand((route) => route.listStore)
-        .toList();
-    List<ListOrder> filteredOrders = filteredStores
-        .where((store) => store.storeInfo.storeId == widget.customerNo)
-        .expand((store) => store.listOrder)
-        .toList();
+  // Future<void> _loadStoreDetail() async {
+  //   List<SaleRoute> routes =
+  //       await loadFromStorage('saleRoutes', (json) => SaleRoute.fromJson(json));
+  //   List<Store> filteredStores = routes
+  //       .where((route) => route.day == widget.day.split(" ")[1])
+  //       .expand((route) => route.listStore)
+  //       .toList();
+  //   List<ListOrder> filteredOrders = filteredStores
+  //       .where((store) => store.storeInfo.storeId == widget.customerNo)
+  //       .expand((store) => store.listOrder)
+  //       .toList();
 
-    setState(() {
-      orders = filteredOrders;
-    });
-  }
+  //   setState(() {
+  //     orders = filteredOrders;
+  //   });
+  // }
 
   String formatDate(String dateStr) {
     DateTime date = DateTime.parse(dateStr); // Parse the original date string
