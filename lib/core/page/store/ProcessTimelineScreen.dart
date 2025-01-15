@@ -256,7 +256,7 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
     }
   }
 
-  Future<void> postData2() async {
+  Future<void> addStore() async {
     // Initialize Dio
     Dio dio = Dio();
     String jsonData = '''
@@ -296,7 +296,7 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
       "approve": {"appPerson": ""}
 }
 ''';
-    // "approve": {"appPerson": ""} }
+
     try {
       // print(text);
       // print(jsonData);
@@ -316,17 +316,6 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
         {'storeImages': imageList, 'types': type, "store": jsonData},
       );
 
-      // ApiService apiService = ApiService();
-      // await apiService.init(); // Load .env before making any API calls
-
-      // var response = await apiService.request(
-      //   endpoint:
-      //       'api/cash/store/addStore', // You only need to pass the endpoint, the base URL is handled
-      //   method: 'POST',
-      //   headers: {
-      //     "Content-Type": "multipart/form-data",
-      //   },
-      // );
       print(formData);
       print(imageList);
 
@@ -342,6 +331,7 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
 
       if (response.statusCode == 201 || response.statusCode == 200) {
         print("Image uploaded successfully ${response.data}");
+        toastification.dismissAll();
         if (response.data['message'] == 'similar store') {
           final List<dynamic> data = response.data['data'];
           setState(() {
@@ -363,7 +353,6 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
             description:
                 "${"store.processtimeline_screen.toasting_similar_des".tr()} ",
           );
-          Navigator.pop(context);
         } else if (response.data['message'] == 'Store added successfully') {
           toastification.show(
             autoCloseDuration: const Duration(seconds: 5),
@@ -733,7 +722,7 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
                                         context); // Handle cancel logic
                                   },
                                   onSubmit: () {
-                                    postData2(); // Handle submit logic
+                                    addStore(); // Handle submit logic
                                   },
                                   cancelText:
                                       "store.processtimeline_screen.alert.cancel"
@@ -784,7 +773,7 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
                                 //     ),
                                 //     DialogButton(
                                 //       onPressed: () {
-                                //         postData2();
+                                //         addStore();
                                 //       },
                                 //       color: Styles.successButtonColor,
                                 //       child: Text(

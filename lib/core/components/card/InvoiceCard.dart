@@ -111,7 +111,7 @@ class InvoiceCard extends StatelessWidget {
                                                 item.district.length +
                                                 item.province.length) >
                                             25
-                                        ? ' ${item.address} ${item.province != 'กรุงเทพมหานคร' ? 'ต.' : 'แขวง'}${item.subDistrict} ${item.province != 'กรุงเทพมหานคร' ? 'อ.' : 'เขต'}${item.district}...' // Limit to 22 characters + ellipsis
+                                        ? ' ${item.address}...' // Limit to 22 characters + ellipsis
                                         : " ${item.address} ${item.province != 'กรุงเทพมหานคร' ? 'ต.' : 'แขวง'}${item.subDistrict} ${item.province != 'กรุงเทพมหานคร' ? 'อ.' : 'เขต'}${item.district}  ${item.province != 'กรุงเทพมหานคร' ? 'จ.' : ''}${item.province} ${item.postCode}",
                                     style: Styles.black18(context),
                                   ),

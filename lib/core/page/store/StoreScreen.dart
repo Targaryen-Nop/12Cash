@@ -19,6 +19,7 @@ import 'package:_12sale_app/data/service/requestPremission.dart';
 import 'package:_12sale_app/main.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:_12sale_app/data/models/Store.dart';
@@ -28,7 +29,6 @@ import 'package:flutter/services.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:intl/intl.dart';
 
-Store? _selectedStore;
 List<Store> storeAll = [];
 List<Store> storeNew = [];
 RouteStore selectedRoute = RouteStore(route: 'R01');
@@ -339,6 +339,18 @@ class StoreHeader extends StatefulWidget {
 }
 
 class _StoreHeaderState extends State<StoreHeader> {
+  List<StoreFavoriteLocal> _storeFavoriteLocal = [];
+  Future<void> _saveStoreFavoriteStorage() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    // Convert the list of Order objects to a list of maps (JSON)
+    List<String> jsonOrders =
+        _storeFavoriteLocal.map((store) => jsonEncode(store.toJson())).toList();
+
+    // Save the JSON string list to SharedPreferences
+    await prefs.setStringList('StoreFavoriteLocal', jsonOrders);
+  }
+
   Future<List<RouteStore>> getRoutes(String filter) async {
     try {
       // Load the JSON file for districts
@@ -454,113 +466,129 @@ class _StoreHeaderState extends State<StoreHeader> {
             padding: EdgeInsets.all(8.0),
             child: Row(
               children: [
-                // Expanded(
-                //   flex: 3,
-                //   child: Container(
-                //     // margin: EdgeInsets.all(2),
-                //     child: StoreSearch(onStoreSelected: _onStoreSelected),
-                //   ),
-                // ),
                 Expanded(
                   flex: 3,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 3.5),
                     child: Container(
-                      // padding: EdgeInsets.all(8.0), // Add padding.
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(8.0),
                         color: Colors.white,
                       ),
-                      child: DropdownSearchCustom<Store>(
-                        key: ValueKey('${filterRoute}'),
-                        label: "เลือกร้านค้า",
-                        // hint: "เลือกร้านค้า",
-                        titleText: "เลือกร้านค้า",
-                        fetchItems: (filter) => getStores(filter),
-                        onChanged: (Store? selected) async {
-                          if (selected != null) {
-                            setState(() {
-                              selectedRoute = RouteStore(route: selected.route);
-                            });
-                            // storeState = StoreLocal(store: selected);
-                            storeState.updateValue([selected]);
-                            if (_isSelected) {
-                              // storeNew = [
-                              //   ...storeNewFilter.where((store) =>
-                              //       store.storeId == selected.storeId &&
-                              //       store.route == selected.route)
-                              // ];
-                            } else {
-                              // storeAll = [
-                              //   ...storeAllFilter.where((store) =>
-                              //       store.storeId == selected.storeId &&
-                              //       store.route == selected.route)
-                              // ];
-                            }
+                      child: StoreSearch(
+                        onStoreSelected: (data) {
+                          if (data != null) {
+                            storeState.updateValue([data]);
+                            setState(
+                              () {
+                                _storeFavoriteLocal =
+                                    storeState.storesFavoriteList;
+                              },
+                            );
                           }
-                        },
-                        itemAsString: (Store data) =>
-                            "${data.name} ${data.route}",
-                        itemBuilder: (context, item, isSelected) {
-                          return Column(
-                            children: [
-                              ListTile(
-                                selected: isSelected,
-                                title: Text.rich(
-                                  TextSpan(
-                                    children: [
-                                      TextSpan(
-                                        text: '${item.name} \n',
-                                        style: Styles.kanit(context).copyWith(
-                                            fontWeight: FontWeight.bold,
-                                            color: Styles.primaryColor,
-                                            fontSize: 24),
-                                      ),
-                                      TextSpan(
-                                          text: 'รหัสร้าน : ',
-                                          style: Styles.black18(context)),
-                                      TextSpan(
-                                          text: '${item.storeId} \n',
-                                          style: Styles.black18(context)),
-                                      TextSpan(
-                                          text: 'เส้นทาง : ',
-                                          style: Styles.black18(context)),
-                                      TextSpan(
-                                          text: '${item.route} \n',
-                                          style: Styles.black18(context)),
-                                      TextSpan(
-                                          text: 'ที่อยู่ : ',
-                                          style: Styles.black18(context)),
-                                      TextSpan(
-                                          text: '${item.address}',
-                                          style: Styles.black18(context)),
-                                      TextSpan(
-                                          text: ' ',
-                                          style: Styles.black18(context)),
-                                      TextSpan(
-                                        text:
-                                            '${item.subDistrict} ${item.district} ${item.province} ${item.postCode}',
-                                        style: Styles.black18(context),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              Divider(
-                                color: Colors
-                                    .grey[200], // Color of the divider line
-                                thickness: 1, // Thickness of the line
-                                indent: 16, // Left padding for the divider line
-                                endIndent:
-                                    16, // Right padding for the divider line
-                              ),
-                            ],
-                          );
                         },
                       ),
                     ),
                   ),
                 ),
+                // Expanded(
+                //   flex: 3,
+                //   child: Padding(
+                //     padding: const EdgeInsets.symmetric(vertical: 3.5),
+                //     child: Container(
+                //       // padding: EdgeInsets.all(8.0), // Add padding.
+                //       decoration: BoxDecoration(
+                //         borderRadius: BorderRadius.circular(8.0),
+                //         color: Colors.white,
+                //       ),
+                //       child: DropdownSearchCustom<Store>(
+                //         key: ValueKey('${filterRoute}'),
+                //         label: "เลือกร้านค้า",
+                //         titleText: "เลือกร้านค้า",
+                //         fetchItems: (filter) => getStores(filter),
+                //         onChanged: (Store? selected) async {
+                //           if (selected != null) {
+                //             setState(() {
+                //               selectedRoute = RouteStore(route: selected.route);
+                //             });
+                //             // storeState = StoreLocal(store: selected);
+                //             storeState.updateValue([selected]);
+                //             storeState.addStoreFavorite(selected);
+                //             // setState(
+                //             //   () {
+                //             //     _storeFavoriteLocal =
+                //             //         storeState.storesFavoriteList;
+                //             //   },
+                //             // );
+                //             // _saveStoreFavoriteStorage();
+                //             // print(
+                //             //     "storesFavoriteList Count ${storeState.storesFavoriteList[0].count}");
+                //             // print(
+                //             //     "storesFavoriteList Length ${storeState.storesFavoriteList.length}");
+                //           }
+                //         },
+                //         itemAsString: (Store data) =>
+                //             "${data.name} ${data.route}",
+                //         itemBuilder: (context, item, isSelected) {
+                //           return Column(
+                //             children: [
+                //               ListTile(
+                //                 selected: isSelected,
+                //                 title: Text.rich(
+                //                   TextSpan(
+                //                     children: [
+                //                       TextSpan(
+                //                         text: '${item.name} \n',
+                //                         style: Styles.kanit(context).copyWith(
+                //                             fontWeight: FontWeight.bold,
+                //                             color: Styles.primaryColor,
+                //                             fontSize: 24),
+                //                       ),
+                //                       TextSpan(
+                //                           text: 'รหัสร้าน : ',
+                //                           style: Styles.black18(context)),
+                //                       TextSpan(
+                //                           text: '${item.storeId} \n',
+                //                           style: Styles.black18(context)),
+                //                       TextSpan(
+                //                           text: 'เส้นทาง : ',
+                //                           style: Styles.black18(context)),
+                //                       TextSpan(
+                //                           text: '${item.route} \n',
+                //                           style: Styles.black18(context)),
+                //                       TextSpan(
+                //                           text: 'ที่อยู่ : ',
+                //                           style: Styles.black18(context)),
+                //                       TextSpan(
+                //                           text: '${item.address}',
+                //                           style: Styles.black18(context)),
+                //                       TextSpan(
+                //                           text: ' ',
+                //                           style: Styles.black18(context)),
+                //                       TextSpan(
+                //                         text:
+                //                             '${item.subDistrict} ${item.district} ${item.province} ${item.postCode}',
+                //                         style: Styles.black18(context),
+                //                       ),
+                //                     ],
+                //                   ),
+                //                 ),
+                //               ),
+                //               Divider(
+                //                 color: Colors
+                //                     .grey[200], // Color of the divider line
+                //                 thickness: 1, // Thickness of the line
+                //                 indent: 16, // Left padding for the divider line
+                //                 endIndent:
+                //                     16, // Right padding for the divider line
+                //               ),
+                //             ],
+                //           );
+                //         },
+                //       ),
+                //     ),
+                //   ),
+                // ),
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 3.5),

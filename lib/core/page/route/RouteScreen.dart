@@ -324,28 +324,29 @@ class _RoutescreenState extends State<Routescreen> {
         //   },
         //   child: const Text('add'),
         // ),
-        Expanded(
-          child: Container(
-            padding: const EdgeInsets.all(8),
-            margin: EdgeInsets.all(screenWidth / 45),
-            width: screenWidth,
-            // color: Colors.red,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  "ยังไม่เปิดให้บริการ ",
-                  style: Styles.black32(context),
-                ),
-              ],
-            ),
-          ),
-        ),
         // Expanded(
         //   child: Container(
-        //     child: RouteTable(),
+        //     padding: const EdgeInsets.all(8),
+        //     margin: EdgeInsets.all(screenWidth / 45),
+        //     width: screenWidth,
+        //     // color: Colors.red,
+        //     child: Column(
+        //       mainAxisAlignment: MainAxisAlignment.center,
+        //       children: [
+        //         Text(
+        //           "ยังไม่เปิดให้บริการ ",
+        //           style: Styles.black32(context),
+        //         ),
+        //       ],
+        //     ),
         //   ),
         // ),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.only(top: 20),
+            child: RouteTable(),
+          ),
+        ),
       ],
     );
   }
