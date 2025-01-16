@@ -6,15 +6,19 @@ import 'package:_12sale_app/core/components/Loading.dart';
 import 'package:_12sale_app/core/components/card/InvoiceCard.dart';
 import 'package:_12sale_app/core/components/card/RouteVisitCard.dart';
 import 'package:_12sale_app/core/components/search/CustomerDropdownSearch.dart';
+import 'package:_12sale_app/core/components/search/StoreSearch.dart';
 import 'package:_12sale_app/core/components/table/RouteTable.dart';
 import 'package:_12sale_app/core/page/HomeScreen.dart';
+import 'package:_12sale_app/core/page/route/DetailScreen.dart';
 import 'package:_12sale_app/core/page/route/ShopRouteScreen.dart';
 import 'package:_12sale_app/core/page/store/DetailStoreScreen.dart';
 import 'package:_12sale_app/core/page/store/StoreScreen.dart';
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:_12sale_app/data/models/Route.dart';
 import 'package:_12sale_app/data/models/RouteVisit.dart';
+import 'package:_12sale_app/data/models/RouteVisitFilterLocal.dart';
 import 'package:_12sale_app/data/models/SaleRoute.dart';
+// import 'package:_12sale_app/data/models/StoreFilterLocal.dart';
 import 'package:_12sale_app/data/models/User.dart';
 import 'package:_12sale_app/data/service/apiService.dart';
 import 'package:_12sale_app/function/SavetoStorage.dart';
@@ -25,8 +29,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:widget_to_marker/widget_to_marker.dart';
+
+List<RouteVisit> routeVisits = [];
+String filter = '1';
+String period =
+    "${DateTime.now().year}${DateFormat('MM').format(DateTime.now())}";
 
 class Routescreen extends StatefulWidget {
   const Routescreen({super.key});
@@ -50,7 +60,6 @@ class _RoutescreenState extends State<Routescreen> {
     waypoint2,
     destination,
   ];
-  List<RouteVisit> routeVisits = [];
 
   List<Map<String, dynamic>> _annotations = [];
   List<SaleRoute> _routes = [];
@@ -286,18 +295,19 @@ class _RoutescreenState extends State<Routescreen> {
     print(
         "Path: ${'api/cash/route/getRoute?area=${User.area}&period=${DateTime.now().year}${DateFormat('MM').format(DateTime.now())}'}");
     var response = await apiService.request(
-      endpoint:
-          'api/cash/route/getRoute?area=${User.area}&period=${DateTime.now().year}${DateFormat('MM').format(DateTime.now())}',
+      endpoint: 'api/cash/route/getRoute?area=${User.area}&period=${period}',
       method: 'GET',
     );
 
     if (response.statusCode == 200) {
       final List<dynamic> data = response.data['data'];
       // print("getRoute: ${response.data['data']}");
-      setState(() {
-        routeVisits = data.map((item) => RouteVisit.fromJson(item)).toList();
-        _loadingRouteVisit = false;
-      });
+      if (mounted) {
+        setState(() {
+          routeVisits = data.map((item) => RouteVisit.fromJson(item)).toList();
+          _loadingRouteVisit = false;
+        });
+      }
       print("getRoute: $routeVisits");
     }
   }
@@ -319,68 +329,187 @@ class _RoutescreenState extends State<Routescreen> {
 
   @override
   Widget build(BuildContext context) {
+    final routeState = Provider.of<RouteVisitFilterLocal>(context);
     double screenWidth = MediaQuery.of(context).size.width;
+    List<StoreFavoriteLocal> _storeFavoriteLocal = [];
     return Scaffold(
       backgroundColor:
           Colors.transparent, // set scaffold background color to transparent
-      body: Container(
-        margin: EdgeInsets.only(top: 20),
-        child: LoadingSkeletonizer(
-          loading: _loadingRouteVisit,
-          child: ListView.builder(
-            itemCount: (routeVisits.length / 2).ceil(), // Number of rows needed
-            itemBuilder: (context, index) {
-              final firstIndex = index * 2;
-              final secondIndex = firstIndex + 1;
-              return Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: RouteVisitCard(
-                      item: routeVisits[firstIndex],
-                      onDetailsPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ShopRouteScreen(
-                              day: routeVisits[firstIndex].day,
-                              route: routeVisits[firstIndex].day,
-                              status: routeVisits[firstIndex].day,
-                              listStore: routeVisits[firstIndex].listStore,
+      body: RefreshIndicator(
+        edgeOffset: 0,
+        color: Colors.white,
+        backgroundColor: Styles.primaryColor,
+        onRefresh: () async {
+          routeState.routeVisitList.clear();
+          _getRouteVisit();
+          setState(() {
+            filter = '0';
+          });
+        },
+        child: Container(
+          margin: EdgeInsets.only(top: 20),
+          child: LoadingSkeletonizer(
+            loading: _loadingRouteVisit,
+            child: ListView.builder(
+              itemCount: routeState.routeVisitList.length > 0
+                  ? (routeState.routeVisitList.length / 2).ceil()
+                  : (routeVisits.length / 2).ceil(), // Number of rows needed
+              itemBuilder: (context, index) {
+                final firstIndex = index * 2;
+                final secondIndex = firstIndex + 1;
+                return routeState.routeVisitList.length > 0
+                    ? Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            child: RouteVisitCard(
+                              item: routeState.routeVisitList[firstIndex],
+                              onDetailsPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => DetailScreen(
+                                      day: routeState
+                                          .routeVisitList[firstIndex].day,
+                                      customerNo: routeState
+                                          .routeVisitList[firstIndex]
+                                          .listStore[0]
+                                          .storeInfo
+                                          .storeId,
+                                      customerName: routeState
+                                          .routeVisitList[firstIndex]
+                                          .listStore[0]
+                                          .storeInfo
+                                          .name,
+                                      address: routeState
+                                          .routeVisitList[firstIndex]
+                                          .listStore[0]
+                                          .storeInfo
+                                          .address,
+                                      status: routeState
+                                          .routeVisitList[firstIndex]
+                                          .listStore[0]
+                                          .status,
+                                    ),
+                                  ),
+                                );
+                              },
                             ),
                           ),
-                        );
-                      },
-                    ),
-                  ),
-                  if (secondIndex <
-                      routeVisits.length) // Check if the second card exists
-                    Expanded(
-                      child: RouteVisitCard(
-                        item: routeVisits[secondIndex],
-                        onDetailsPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ShopRouteScreen(
-                                day: routeVisits[secondIndex].day,
-                                route: routeVisits[secondIndex].day,
-                                status: routeVisits[secondIndex].day,
-                                listStore: routeVisits[secondIndex].listStore,
+                          if (secondIndex <
+                              routeState.routeVisitList
+                                  .length) // Check if the second card exists
+                            Expanded(
+                              child: RouteVisitCard(
+                                item: routeState.routeVisitList[secondIndex],
+                                onDetailsPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => DetailScreen(
+                                        day: routeState
+                                            .routeVisitList[secondIndex].day,
+                                        customerNo: routeState
+                                            .routeVisitList[secondIndex]
+                                            .listStore[0]
+                                            .storeInfo
+                                            .storeId,
+                                        customerName: routeState
+                                            .routeVisitList[secondIndex]
+                                            .listStore[0]
+                                            .storeInfo
+                                            .name,
+                                        address: routeState
+                                            .routeVisitList[secondIndex]
+                                            .listStore[0]
+                                            .storeInfo
+                                            .address,
+                                        status: routeState
+                                            .routeVisitList[secondIndex]
+                                            .listStore[0]
+                                            .status,
+                                      ),
+                                    ),
+                                  );
+                                  // Navigator.push(
+                                  //   context,
+                                  //   MaterialPageRoute(
+                                  //     builder: (context) => ShopRouteScreen(
+                                  //       day: routeState
+                                  //           .routeVisitList[secondIndex].day,
+                                  //       route: routeState
+                                  //           .routeVisitList[secondIndex].day,
+                                  //       status: routeState
+                                  //           .routeVisitList[secondIndex].day,
+                                  //       listStore: routeState
+                                  //           .routeVisitList[secondIndex]
+                                  //           .listStore,
+                                  //     ),
+                                  //   ),
+                                  // );
+                                },
                               ),
+                            )
+                          else
+                            Expanded(
+                              child:
+                                  SizedBox(), // Placeholder for spacing if no second card
                             ),
-                          );
-                        },
-                      ),
-                    )
-                  else
-                    Expanded(
-                      child:
-                          SizedBox(), // Placeholder for spacing if no second card
-                    ),
-                ],
-              );
-            },
+                        ],
+                      )
+                    : Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            child: RouteVisitCard(
+                              item: routeVisits[firstIndex],
+                              onDetailsPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => ShopRouteScreen(
+                                      day: routeVisits[firstIndex].day,
+                                      route: routeVisits[firstIndex].day,
+                                      status: routeVisits[firstIndex].day,
+                                      listStore:
+                                          routeVisits[firstIndex].listStore,
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                          if (secondIndex <
+                              routeVisits
+                                  .length) // Check if the second card exists
+                            Expanded(
+                              child: RouteVisitCard(
+                                item: routeVisits[secondIndex],
+                                onDetailsPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => ShopRouteScreen(
+                                        day: routeVisits[secondIndex].day,
+                                        route: routeVisits[secondIndex].day,
+                                        status: routeVisits[secondIndex].day,
+                                        listStore:
+                                            routeVisits[secondIndex].listStore,
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            )
+                          else
+                            Expanded(
+                              child:
+                                  SizedBox(), // Placeholder for spacing if no second card
+                            ),
+                        ],
+                      );
+              },
+            ),
           ),
         ),
       ),
@@ -469,6 +598,8 @@ class _RouteHeaderState extends State<RouteHeader> {
 
   @override
   Widget build(BuildContext context) {
+    final routeState = Provider.of<RouteVisitFilterLocal>(context);
+    List<StoreFavoriteLocal> _storeFavoriteLocal = [];
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -549,11 +680,60 @@ class _RouteHeaderState extends State<RouteHeader> {
             ],
           ),
         ),
-        const Flexible(
+        // const Flexible(
+        //   fit: FlexFit.tight,
+        //   child: Padding(
+        //     padding: EdgeInsets.all(8.0),
+        //     child: CustomerDropdownSearch(),
+        //   ),
+        // ),
+        Flexible(
           fit: FlexFit.tight,
           child: Padding(
             padding: EdgeInsets.all(8.0),
-            child: CustomerDropdownSearch(),
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8.0),
+                color: Colors.white,
+              ),
+              child: StoreSearch(
+                key: ValueKey(filter),
+                onStoreSelected: (data) async {
+                  if (data != null) {
+                    ApiService apiService = ApiService();
+                    await apiService.init();
+                    print(
+                        "Path: ${'api/cash/route/getRoute?period=${DateTime.now().year}${DateFormat('MM').format(DateTime.now())}'}");
+                    var response = await apiService.request(
+                      endpoint:
+                          'api/cash/route/getRoute?period=${period}&storeId=${data.storeId}',
+                      method: 'GET',
+                    );
+
+                    if (response.statusCode == 200) {
+                      final List<dynamic> data = response.data['data'];
+                      // print("getRoute: ${response.data['data']}");
+                      if (mounted) {
+                        setState(() {
+                          routeVisits = data
+                              .map((item) => RouteVisit.fromJson(item))
+                              .toList();
+                          // _loadingRouteVisit = false;
+                          filter = '1';
+                        });
+                      }
+                      routeState.updateValue(routeVisits);
+                      print("getRoute: $routeVisits");
+                    }
+                    setState(
+                      () {
+                        _storeFavoriteLocal = routeState.storesFavoriteList;
+                      },
+                    );
+                  }
+                },
+              ),
+            ),
           ),
         ),
       ],

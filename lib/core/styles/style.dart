@@ -11,6 +11,22 @@ class Styles {
 
   static TextStyle kanit(BuildContext context) => GoogleFonts.kanit();
 
+  static TextStyle green10(BuildContext context) => GoogleFonts.kanit(
+        textStyle: TextStyle(
+          fontSize: getResponsiveFontSize(context, 10),
+          fontWeight: FontWeight.normal,
+          color: const Color(0xFF198754),
+        ),
+      );
+
+  static TextStyle red10(BuildContext context) => GoogleFonts.kanit(
+        textStyle: TextStyle(
+          fontSize: getResponsiveFontSize(context, 10),
+          fontWeight: FontWeight.normal,
+          color: const Color(0xFF9B1C1C),
+        ),
+      );
+
   static TextStyle grey12(BuildContext context) => GoogleFonts.kanit(
         textStyle: TextStyle(
           fontSize: getResponsiveFontSize(context, 12),
@@ -78,6 +94,14 @@ class Styles {
   static TextStyle red18(BuildContext context) => GoogleFonts.kanit(
         textStyle: TextStyle(
           fontSize: getResponsiveFontSize(context, 18),
+          fontWeight: FontWeight.normal,
+          color: const Color(0xFF9B1C1C),
+        ),
+      );
+
+  static TextStyle red24(BuildContext context) => GoogleFonts.kanit(
+        textStyle: TextStyle(
+          fontSize: getResponsiveFontSize(context, 24),
           fontWeight: FontWeight.normal,
           color: const Color(0xFF9B1C1C),
         ),
@@ -190,6 +214,15 @@ class Styles {
           color: const Color(0xFF6B7280),
         ),
       );
+
+  static TextStyle green24(BuildContext context) => GoogleFonts.kanit(
+        textStyle: TextStyle(
+          fontSize: getResponsiveFontSize(context, 24),
+          fontWeight: FontWeight.w600,
+          color: const Color(0xFF198754),
+        ),
+      );
+
   static TextStyle headergrey32(BuildContext context) => GoogleFonts.kanit(
         textStyle: TextStyle(
           fontSize: getResponsiveFontSize(context, 32),

@@ -74,9 +74,9 @@
         },
         "detail_screen": {
             "store_id": "รหัสร้าน",
-            "store_name": "ร้าน",
+            "store_name": "ชื่อร้านค้า",
             "store_address": "ที่อยู่",
-            "title": "เข้าเยี่ยม",
+            "title": "รายละเอียดร้านค้า",
             "cancel": {
                 "title": "ขายไม่ได้",
                 "hint": "เลือกเหตุผล",

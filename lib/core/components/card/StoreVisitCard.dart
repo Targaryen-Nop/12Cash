@@ -151,12 +151,13 @@ class ExerciseCard extends StatelessWidget {
         margin: EdgeInsets.only(left: 10, top: 5, right: 2, bottom: 5),
         color: Colors.white,
         child: ExpansionTile(
+          minTileHeight: 100,
           // collapsedBackgroundColor: Colors.white,
           backgroundColor: Colors.grey[100],
           leading: Icon(
             Icons.store_rounded,
             color: Styles.primaryColor,
-            size: 45,
+            size: 50,
           ),
           collapsedShape: RoundedRectangleBorder(
               side: BorderSide.none, // No border when collapsed
@@ -167,19 +168,23 @@ class ExerciseCard extends StatelessWidget {
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                store.storeInfo.name,
-                style: Styles.black18(context),
+              Expanded(
+                child: Text(
+                  store.storeInfo.name,
+                  style: Styles.black18(context),
+                ),
               ),
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 8),
+                // padding: EdgeInsets.symmetric(horizontal: 8),
+                width: 100,
                 decoration: BoxDecoration(
-                  color: Colors.grey[100],
+                  color: Styles.primaryColor,
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
                   '${store.statusText}',
-                  style: Styles.black18(context),
+                  style: Styles.white18(context),
+                  textAlign: TextAlign.center,
                 ),
               ),
             ],
@@ -202,26 +207,66 @@ class ExerciseCard extends StatelessWidget {
                     ],
                   ),
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        "ที่อยู่: ${store.storeInfo.address}",
-                        style: Styles.black18(context),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                "ที่อยู่: ${store.storeInfo.address}",
+                                style: Styles.black18(context),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Text(
+                                "สถานะ: ${store.status}",
+                                style: Styles.black18(context),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "จำนวนออเดอร์: ${store.status}",
+                                style: Styles.black18(context),
+                              ),
+                            ],
+                          )
+                        ],
                       ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Text(
-                        "สถานะ: ${store.status}",
-                        style: Styles.black18(context),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Text(
-                        "จำนวนออเดอร์: ${store.status}",
-                        style: Styles.black18(context),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => DetailScreen(
+                                day: store.status,
+                                customerNo: store.storeInfo.storeId,
+                                customerName: store.storeInfo.name,
+                                address: store.storeInfo.address,
+                                status: store.status,
+                              ),
+                            ),
+                          );
+                        },
+                        child: Container(
+                          padding: EdgeInsets.all(8),
+                          width: 125,
+                          decoration: BoxDecoration(
+                            color: Styles.successTextColor,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Text(
+                            'รายละเอียด',
+                            style: Styles.white18(context),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
                       ),
                     ],
                   )

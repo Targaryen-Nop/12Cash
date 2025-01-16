@@ -1,30 +1,29 @@
-// import 'package:_12sale_app/data/models/RouteVisit.dart';
-import 'package:_12sale_app/data/models/Store.dart';
+import 'package:_12sale_app/data/models/RouteVisit.dart';
 import 'package:flutter/material.dart';
 
-class StoreLocal with ChangeNotifier {
-  List<Store> _storesList = [];
+class RouteVisitFilterLocal with ChangeNotifier {
+  List<RouteVisit> _routeVisitList = [];
   List<StoreFavoriteLocal> _storesFavoriteList = [];
 
-  List<Store> get storeList => _storesList;
+  List<RouteVisit> get routeVisitList => _routeVisitList;
   List<StoreFavoriteLocal> get storesFavoriteList => _storesFavoriteList;
   StoreFavoriteLocal? existingStore;
-  void updateValue(List<Store> stores) {
-    _storesList.clear();
-    _storesList = stores;
+  void updateValue(List<RouteVisit> stores) {
+    _routeVisitList.clear();
+    _routeVisitList = stores;
     notifyListeners();
   }
 
   void addStoreFavorite(Store store) {
     if (_storesFavoriteList
-        .any((element) => element.store_id == store.storeId)) {
+        .any((element) => element.store_id == store.storeInfo.storeId)) {
       _storesFavoriteList
-          .firstWhere((element) => element.store_id == store.storeId)
+          .firstWhere((element) => element.store_id == store.storeInfo.storeId)
           .count++;
     } else {
       _storesFavoriteList.add(
         StoreFavoriteLocal(
-          store_id: store.storeId,
+          store_id: store.storeInfo.storeId,
           count: 1,
         ),
       );

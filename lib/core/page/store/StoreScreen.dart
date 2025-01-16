@@ -273,7 +273,8 @@ class _StoreScreenState extends State<StoreScreen> with RouteAware {
                         child: RefreshIndicator(
                           onRefresh: () async {
                             setState(() {
-                              filterRoute = '';
+                              filterRoute = 'R01';
+                              selectedRoute = RouteStore(route: 'R01');
                             });
                             ApiService apiService = ApiService();
                             await apiService.init();
@@ -303,17 +304,34 @@ class _StoreScreenState extends State<StoreScreen> with RouteAware {
                                     ? storeState.storeList[index]
                                     : storeAll[index],
                                 onDetailsPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => DetailStoreScreen(
-                                          initialSelectedRoute: RouteStore(
-                                              route: storeAll[index].route),
-                                          store: storeAll[index],
-                                          customerNo: storeAll[index].storeId,
-                                          customerName: storeAll[index].name),
-                                    ),
-                                  );
+                                  if (storeState.storeList.length > 0) {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => DetailStoreScreen(
+                                            initialSelectedRoute: RouteStore(
+                                                route: storeState
+                                                    .storeList[index].route),
+                                            store: storeState.storeList[index],
+                                            customerNo: storeState
+                                                .storeList[index].storeId,
+                                            customerName: storeState
+                                                .storeList[index].name),
+                                      ),
+                                    );
+                                  } else {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => DetailStoreScreen(
+                                            initialSelectedRoute: RouteStore(
+                                                route: storeAll[index].route),
+                                            store: storeAll[index],
+                                            customerNo: storeAll[index].storeId,
+                                            customerName: storeAll[index].name),
+                                      ),
+                                    );
+                                  }
                                   // print(
                                   //     'imageList for ${storeAll[index].imageList[0].path}');
                                 },
@@ -476,11 +494,15 @@ class _StoreHeaderState extends State<StoreHeader> {
                         color: Colors.white,
                       ),
                       child: StoreSearch(
+                        key: ValueKey(filterRoute),
                         onStoreSelected: (data) {
                           if (data != null) {
                             storeState.updateValue([data]);
+                            print(
+                                "storeState.storeList :${storeState.storeList}");
                             setState(
                               () {
+                                selectedRoute = RouteStore(route: data.route);
                                 _storeFavoriteLocal =
                                     storeState.storesFavoriteList;
                               },

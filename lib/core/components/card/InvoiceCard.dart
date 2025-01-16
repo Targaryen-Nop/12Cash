@@ -22,7 +22,7 @@ class InvoiceCard extends StatelessWidget {
       onTap: onDetailsPressed,
       child: Container(
         height: screenWidth / 5,
-        margin: EdgeInsets.all(16.0),
+        margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(16.0),
@@ -43,12 +43,17 @@ class InvoiceCard extends StatelessWidget {
                           color: Colors.blue.shade100,
                           borderRadius: BorderRadius.circular(32.0),
                         ),
-                        padding: EdgeInsets.all(8),
+                        padding: EdgeInsets.all(4),
                         margin: EdgeInsets.symmetric(horizontal: 4),
-                        child: FaIcon(
-                          FontAwesomeIcons.fileInvoice,
-                          color: Styles.primaryColor,
-                          size: 35,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            FaIcon(
+                              FontAwesomeIcons.fileInvoice,
+                              color: Styles.primaryColor,
+                              size: 35,
+                            ),
+                          ],
                         ),
                       ),
                     ),
@@ -117,15 +122,15 @@ class InvoiceCard extends StatelessWidget {
                                   ),
                                 ],
                               ),
-                              Container(
-                                margin: EdgeInsets.only(right: 25),
-                                child: FaIcon(
-                                  // FontAwesomeIcons.circleXmark,
-                                  FontAwesomeIcons.circleCheck,
-                                  color: Colors.green,
-                                  size: 25,
-                                ),
-                              ),
+                              // Container(
+                              //   margin: EdgeInsets.only(right: 25),
+                              //   child: FaIcon(
+                              //     // FontAwesomeIcons.circleXmark,
+                              //     FontAwesomeIcons.circleCheck,
+                              //     color: Colors.green,
+                              //     size: 25,
+                              //   ),
+                              // ),
                             ],
                           ),
                         ],

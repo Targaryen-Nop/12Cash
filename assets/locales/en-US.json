@@ -76,7 +76,7 @@
             "store_id": "Store ID",
             "store_name": "Store",
             "store_address": "Address",
-            "title": "Visit",
+            "title": "Store Details",
             "cancel": {
                 "title": "Cloud not sell",
                 "hint": "Selected Cause",

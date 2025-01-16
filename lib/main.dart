@@ -21,6 +21,7 @@ import 'package:_12sale_app/core/page/route/TestGooglemap.dart';
 import 'package:_12sale_app/core/page/route/TossAddToCartScreen.dart';
 
 import 'package:_12sale_app/core/styles/style.dart';
+import 'package:_12sale_app/data/models/RouteVisitFilterLocal.dart';
 import 'package:_12sale_app/data/models/StoreFilterLocal.dart';
 import 'package:_12sale_app/data/models/User.dart';
 import 'package:_12sale_app/data/service/localNotification.dart';
@@ -84,8 +85,11 @@ void main() async {
           fallbackLocale: Locale('th', 'TH'),
           supportedLocales: [Locale('en', 'US'), Locale('th', 'TH')],
           saveLocale: true,
-          child: ChangeNotifierProvider(
-            create: (_) => StoreLocal(),
+          child: MultiProvider(
+            providers: [
+              ChangeNotifierProvider(create: (_) => RouteVisitFilterLocal()),
+              ChangeNotifierProvider(create: (_) => StoreLocal()),
+            ],
             child: MyApp(),
           ),
         ),
