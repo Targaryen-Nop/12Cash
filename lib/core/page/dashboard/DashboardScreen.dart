@@ -3,7 +3,7 @@ import 'dart:math';
 
 import 'package:_12sale_app/core/components/BoxShadowCustom.dart';
 import 'package:_12sale_app/core/components/CalendarPicker.dart';
-import 'package:_12sale_app/core/components/button/CameraButton.dart';
+import 'package:_12sale_app/core/components/button/CameraPreviewScreen.dart';
 import 'package:_12sale_app/core/components/button/MenuButton.dart';
 import 'package:_12sale_app/core/components/card/MenuDashboard.dart';
 import 'package:_12sale_app/core/components/card/WeightCude.dart';
@@ -264,7 +264,7 @@ class _DashboardscreenState extends State<Dashboardscreen> {
             ),
 
             SizedBox(height: screenWidth / 25),
-            const WeightCudeCard(),
+            // const WeightCudeCard(),
             // SizedBox(height: screenWidth / 25),
             // SizedBox(height: 500, width: 400, child: LineChartSample()),
             // SizedBox(height: screenWidth / 25),
@@ -471,80 +471,5 @@ class _DashboardHeaderState extends State<DashboardHeader> {
         ),
       ],
     );
-  }
-}
-
-class CircularChartPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    double strokeWidth = 12.0;
-    double radius = size.width / 1.5;
-
-    // Define the paints for each section
-    Paint backgroundCircle = Paint()
-      ..color = Colors.grey[800]!
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = strokeWidth;
-
-    Paint section1 = Paint()
-      ..color = Colors.purple
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = strokeWidth
-      ..strokeCap = StrokeCap.round;
-
-    Paint section2 = Paint()
-      ..color = Colors.orange
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = strokeWidth
-      ..strokeCap = StrokeCap.round;
-
-    Paint section3 = Paint()
-      ..color = Colors.blue
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = strokeWidth
-      ..strokeCap = StrokeCap.round;
-
-    // Draw the background circle
-    canvas.drawCircle(
-        Offset(size.width / 2, size.height / 2), radius, backgroundCircle);
-
-    // Draw the colored segments
-    double startAngle =
-        -90 * (3.14159265359 / 180); // Convert degrees to radians
-    double sweepAngle1 = 120 * (3.14159265359 / 180);
-    double sweepAngle2 = 90 * (3.14159265359 / 180);
-    double sweepAngle3 = 150 * (3.14159265359 / 180);
-
-    canvas.drawArc(
-      Rect.fromCircle(
-          center: Offset(size.width / 2, size.height / 2), radius: radius),
-      startAngle,
-      sweepAngle1,
-      false,
-      section1,
-    );
-
-    canvas.drawArc(
-      Rect.fromCircle(
-          center: Offset(size.width / 2, size.height / 2), radius: radius),
-      startAngle + sweepAngle1,
-      sweepAngle2,
-      false,
-      section2,
-    );
-
-    canvas.drawArc(
-      Rect.fromCircle(
-          center: Offset(size.width / 2, size.height / 2), radius: radius),
-      startAngle + sweepAngle1 + sweepAngle2,
-      sweepAngle3,
-      false,
-      section3,
-    );
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return false;
   }
 }

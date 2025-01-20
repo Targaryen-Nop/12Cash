@@ -41,16 +41,22 @@ class RouteVisitCard extends StatelessWidget {
                     Expanded(
                       flex: 1,
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Icon(
-                                Icons.location_on_rounded,
-                                color: Styles.primaryColor,
-                                size: 40,
-                              ),
+                              SizedBox(height: 40),
+                              // FaIcon(
+                              //   FontAwesomeIcons.route,
+                              //   color: Styles.primaryColor,
+                              //   size: 40,
+                              // ),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
                               Text(
                                 "Route ${item.day}",
                                 style: Styles.black24(context),

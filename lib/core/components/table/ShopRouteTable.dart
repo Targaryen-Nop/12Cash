@@ -119,17 +119,17 @@ class _ShopRouteTableState extends State<ShopRouteTable> {
 
     return InkWell(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => DetailScreen(
-                day: widget.day,
-                customerNo: customerNo,
-                customerName: customerName,
-                address: address,
-                status: status),
-          ),
-        );
+        // Navigator.push(
+        //   context,
+        //   MaterialPageRoute(
+        //     builder: (context) => DetailScreen(
+        //         day: widget.day,
+        //         customerNo: customerNo,
+        //         customerName: customerName,
+        //         address: address,
+        //         status: status),
+        //   ),
+        // );
       },
       child: Container(
         decoration: BoxDecoration(

@@ -22,6 +22,7 @@ import 'package:_12sale_app/data/models/SaleRoute.dart';
 import 'package:_12sale_app/data/models/User.dart';
 import 'package:_12sale_app/data/service/apiService.dart';
 import 'package:_12sale_app/function/SavetoStorage.dart';
+import 'package:_12sale_app/main.dart';
 import 'package:charset_converter/charset_converter.dart';
 import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -34,7 +35,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:widget_to_marker/widget_to_marker.dart';
 
 List<RouteVisit> routeVisits = [];
-String filter = '1';
+String filterRoute = 'R01';
 String period =
     "${DateTime.now().year}${DateFormat('MM').format(DateTime.now())}";
 
@@ -45,7 +46,7 @@ class Routescreen extends StatefulWidget {
   State<Routescreen> createState() => _RoutescreenState();
 }
 
-class _RoutescreenState extends State<Routescreen> {
+class _RoutescreenState extends State<Routescreen> with RouteAware {
   bool _loadingRouteVisit = true;
   static const LatLng origin = LatLng(37.7749, -122.4194); // San Francisco, CA
   static const LatLng waypoint1 = LatLng(36.7783, -119.4179); // Fresno, CA
@@ -292,8 +293,7 @@ class _RoutescreenState extends State<Routescreen> {
   Future<void> _getRouteVisit() async {
     ApiService apiService = ApiService();
     await apiService.init();
-    print(
-        "Path: ${'api/cash/route/getRoute?area=${User.area}&period=${DateTime.now().year}${DateFormat('MM').format(DateTime.now())}'}");
+
     var response = await apiService.request(
       endpoint: 'api/cash/route/getRoute?area=${User.area}&period=${period}',
       method: 'GET',
@@ -322,10 +322,27 @@ class _RoutescreenState extends State<Routescreen> {
     _getRouteVisit();
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-  }
+  // @override
+  // void didPopNext() {
+  //   _getRouteVisit();
+  // }
+
+  // @override
+  // void didChangeDependencies() {
+  //   super.didChangeDependencies();
+  //   // Register this screen as a route-aware widget
+  //   final ModalRoute? route = ModalRoute.of(context);
+  //   if (route is PageRoute) {
+  //     // Only subscribe if the route is a P ageRoute
+  //     routeObserver.subscribe(this, route);
+  //   }
+  // }
+
+  // @override
+  // void dispose() {
+  //   // routeObserver.unsubscribe(this);
+  //   super.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -340,11 +357,18 @@ class _RoutescreenState extends State<Routescreen> {
         color: Colors.white,
         backgroundColor: Styles.primaryColor,
         onRefresh: () async {
+          print(filterRoute);
           routeState.routeVisitList.clear();
           _getRouteVisit();
-          setState(() {
-            filter = '0';
-          });
+          if (filterRoute == 'R01') {
+            setState(() {
+              filterRoute = 'R00';
+            });
+          } else {
+            setState(() {
+              filterRoute = 'R01';
+            });
+          }
         },
         child: Container(
           margin: EdgeInsets.only(top: 20),
@@ -369,7 +393,9 @@ class _RoutescreenState extends State<Routescreen> {
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => DetailScreen(
-                                      day: routeState
+                                      routeId: routeState
+                                          .routeVisitList[firstIndex].id,
+                                      route: routeState
                                           .routeVisitList[firstIndex].day,
                                       customerNo: routeState
                                           .routeVisitList[firstIndex]
@@ -407,8 +433,10 @@ class _RoutescreenState extends State<Routescreen> {
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) => DetailScreen(
-                                        day: routeState
-                                            .routeVisitList[secondIndex].day,
+                                        routeId: routeState
+                                            .routeVisitList[firstIndex].id,
+                                        route: routeState
+                                            .routeVisitList[firstIndex].day,
                                         customerNo: routeState
                                             .routeVisitList[secondIndex]
                                             .listStore[0]
@@ -468,7 +496,7 @@ class _RoutescreenState extends State<Routescreen> {
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => ShopRouteScreen(
-                                      day: routeVisits[firstIndex].day,
+                                      routeId: routeVisits[firstIndex].id,
                                       route: routeVisits[firstIndex].day,
                                       status: routeVisits[firstIndex].day,
                                       listStore:
@@ -490,7 +518,7 @@ class _RoutescreenState extends State<Routescreen> {
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) => ShopRouteScreen(
-                                        day: routeVisits[secondIndex].day,
+                                        routeId: routeVisits[secondIndex].id,
                                         route: routeVisits[secondIndex].day,
                                         status: routeVisits[secondIndex].day,
                                         listStore:
@@ -697,7 +725,7 @@ class _RouteHeaderState extends State<RouteHeader> {
                 color: Colors.white,
               ),
               child: StoreSearch(
-                key: ValueKey(filter),
+                key: ValueKey("Search${filterRoute}"),
                 onStoreSelected: (data) async {
                   if (data != null) {
                     ApiService apiService = ApiService();
@@ -719,7 +747,6 @@ class _RouteHeaderState extends State<RouteHeader> {
                               .map((item) => RouteVisit.fromJson(item))
                               .toList();
                           // _loadingRouteVisit = false;
-                          filter = '1';
                         });
                       }
                       routeState.updateValue(routeVisits);

@@ -13,12 +13,16 @@ class StoreVisitCard extends StatelessWidget {
   final bool isFirst;
   final bool isLast;
   final Store store;
+  final String route;
+  final String routeId;
 
   const StoreVisitCard({
     super.key,
     required this.isFirst,
     required this.isLast,
     required this.store,
+    required this.route,
+    required this.routeId,
   });
 
   @override
@@ -29,45 +33,53 @@ class StoreVisitCard extends StatelessWidget {
       indicatorStyle: IndicatorStyle(
         width: 30,
         height: 30,
-        color:
-            (store.status == '1' || store.status == '2' || store.status == '3')
-                ? Styles.successTextColor
-                // : store.status == '2'
-                //     ? Styles.primaryColor
-                //     : store.status == '3'
-                //         ? Styles.failTextColor
-                : Colors.grey,
+        // color:
+        //     (store.status == '1' || store.status == '2' || store.status == '3')
+        //         ? Styles.primaryColor
+        // : store.status == '2'
+        //     ? Styles.primaryColor
+        //     : store.status == '3'
+        //         ? Styles.failTextColor
+        color: store.status == '1'
+            ? Styles.successTextColor
+            : store.status == '2'
+                ? Styles.primaryColor
+                : store.status == '3'
+                    ? Styles.failTextColor
+                    : Colors.grey,
         indicator: Container(
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: (store.status == '1' ||
-                      store.status == '2' ||
-                      store.status == '3')
+              // color: (store.status == '1' ||
+              //         store.status == '2' ||
+              //         store.status == '3')
+              color: store.status == '1'
                   ? Styles.successTextColor
-                  // : store.status == '2'
-                  //     ? Styles.primaryColor
-                  //     : store.status == '3'
-                  //         ? Styles.failTextColor
-                  : Colors.grey,
+                  : store.status == '2'
+                      ? Styles.primaryColor
+                      : store.status == '3'
+                          ? Styles.failTextColor
+                          : Colors.grey,
             ),
-            child: (store.status == '1' ||
-                    store.status == '2' ||
-                    store.status == '3')
+            // child: (store.status == '1' ||
+            //         store.status == '2' ||
+            //         store.status == '3')
+            child: store.status == '1'
                 ? Icon(
-                    Icons.check,
+                    Icons.attach_money_rounded,
                     color: Colors.white,
                   )
-                // : store.status == '2'
-                //     ? Icon(
-                //         Icons.attach_money_rounded,
-                //         color: Colors.white,
-                //       )
-                //     : store.status == '3'
-                //         ? Icon(
-                //             Icons.close,
-                //             color: Colors.white,
-                //           )
-                : SizedBox()),
+                : store.status == '2'
+                    ? Icon(
+                        Icons.check,
+                        color: Colors.white,
+                      )
+                    : store.status == '3'
+                        ? Icon(
+                            Icons.close,
+                            color: Colors.white,
+                          )
+                        : SizedBox()),
       ),
       afterLineStyle: LineStyle(
         thickness: 1,
@@ -91,15 +103,26 @@ class StoreVisitCard extends StatelessWidget {
                 //     ? Styles.failTextColor
                 : Colors.grey,
       ),
-      endChild: ExerciseCard(store: store),
+      endChild: StoreCard(
+        store: store,
+        route: route,
+        routeId: routeId,
+      ),
     );
   }
 }
 
-class ExerciseCard extends StatelessWidget {
+class StoreCard extends StatelessWidget {
   final Store store;
+  final String route;
+  final String routeId;
 
-  const ExerciseCard({super.key, required this.store});
+  const StoreCard({
+    super.key,
+    required this.store,
+    required this.route,
+    required this.routeId,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -138,7 +161,8 @@ class ExerciseCard extends StatelessWidget {
           context,
           MaterialPageRoute(
             builder: (context) => DetailScreen(
-              day: store.status,
+              routeId: routeId,
+              route: route,
               customerNo: store.storeInfo.storeId,
               customerName: store.storeInfo.name,
               address: store.storeInfo.address,
@@ -178,7 +202,11 @@ class ExerciseCard extends StatelessWidget {
                 // padding: EdgeInsets.symmetric(horizontal: 8),
                 width: 100,
                 decoration: BoxDecoration(
-                  color: Styles.primaryColor,
+                  color: store.status == '1'
+                      ? Styles.successTextColor
+                      : store.status == '2'
+                          ? Styles.primaryColor
+                          : Styles.grey,
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
@@ -245,7 +273,8 @@ class ExerciseCard extends StatelessWidget {
                             context,
                             MaterialPageRoute(
                               builder: (context) => DetailScreen(
-                                day: store.status,
+                                routeId: routeId,
+                                route: route,
                                 customerNo: store.storeInfo.storeId,
                                 customerName: store.storeInfo.name,
                                 address: store.storeInfo.address,

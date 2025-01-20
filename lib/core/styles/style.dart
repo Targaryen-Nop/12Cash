@@ -327,4 +327,10 @@ class Styles {
 
   // --------------------- Button Color --------------------------------
   static const Color successButtonColor = Color(0xFF198754);
+
+  //  --------------------- Pastel Color --------------------------------
+  static const Color greenPastel = Color(0xFF0F5E5F);
+  static const Color bluePastel = Color(0xFF48B8D0);
+  static const Color skybluePastel = Color(0xFF8AE1FC);
+  static const Color redPastel = Color(0xFFC08497);
 }

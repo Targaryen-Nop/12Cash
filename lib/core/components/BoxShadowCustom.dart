@@ -2,13 +2,18 @@ import 'package:flutter/material.dart';
 
 class BoxShadowCustom extends StatelessWidget {
   final Widget child;
-  const BoxShadowCustom({super.key, required this.child});
+  Color? color;
+  BoxShadowCustom({
+    super.key,
+    required this.child,
+    this.color = Colors.white,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white, // Set background color if needed
+        color: color, // Set background color if needed
         borderRadius: BorderRadius.circular(
             16), // Rounded corners for the outer container
         boxShadow: [

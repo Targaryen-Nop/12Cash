@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:_12sale_app/core/components/button/CameraButton.dart';
+import 'package:_12sale_app/core/components/button/CameraPreviewScreen.dart';
 import 'package:_12sale_app/core/page/HomeScreen.dart';
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:camera/camera.dart';
@@ -33,13 +33,15 @@ class IconButtonWithLabel extends StatefulWidget {
   _IconButtonWithLabelState createState() => _IconButtonWithLabelState();
 }
 
-class _IconButtonWithLabelState extends State<IconButtonWithLabel> {
+class _IconButtonWithLabelState extends State<IconButtonWithLabel>
+    with WidgetsBindingObserver {
   late CameraController _cameraController;
   Future<void>? _initializeControllerFuture;
   // String? imagePath;
 
   @override
   void initState() {
+    WidgetsFlutterBinding.ensureInitialized();
     super.initState();
     _initializeCamera();
   }
@@ -52,6 +54,9 @@ class _IconButtonWithLabelState extends State<IconButtonWithLabel> {
         _cameraController = CameraController(
           firstCamera,
           ResolutionPreset.max,
+          fps: 30,
+          enableAudio: false,
+          imageFormatGroup: ImageFormatGroup.jpeg,
         );
         _initializeControllerFuture = _cameraController.initialize();
         await _initializeControllerFuture;
@@ -67,6 +72,22 @@ class _IconButtonWithLabelState extends State<IconButtonWithLabel> {
   void dispose() {
     _cameraController.dispose();
     super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    final CameraController? cameraController = _cameraController;
+
+    // App state changed before we got the chance to initialize.
+    if (cameraController == null || !cameraController.value.isInitialized) {
+      return;
+    }
+
+    if (state == AppLifecycleState.inactive) {
+      cameraController.dispose();
+    } else if (state == AppLifecycleState.resumed) {
+      _initializeCamera();
+    }
   }
 
   Future<void> openCamera(BuildContext context) async {

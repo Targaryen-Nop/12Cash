@@ -17,14 +17,15 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ShopRouteScreen extends StatefulWidget {
-  final String day;
+  final String routeId;
+
   final String route;
   final String status;
   final List<Store> listStore;
 
   const ShopRouteScreen({
     super.key,
-    required this.day,
+    required this.routeId,
     required this.route,
     required this.status,
     required this.listStore,
@@ -75,7 +76,7 @@ class _ShopRouteScreenState extends State<ShopRouteScreen> {
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(70),
         child: AppbarCustom(
-            title: ' ${"route.store_screen.title".tr()} ${widget.day}',
+            title: ' ${"route.store_screen.title".tr()} ${widget.route}',
             icon: Icons.event),
       ),
       body: Padding(
@@ -148,7 +149,7 @@ class _ShopRouteScreenState extends State<ShopRouteScreen> {
                           children: [
                             Icon(
                               Icons.check_circle_outline_rounded,
-                              color: Styles.successTextColor,
+                              color: Styles.primaryColor,
                               size: 50,
                             ),
                             Text(
@@ -163,13 +164,13 @@ class _ShopRouteScreenState extends State<ShopRouteScreen> {
                         ),
                         Row(
                           children: [
-                            Icon(
+                            FaIcon(
                               Icons.paid_outlined,
-                              color: Styles.paddingTextColor,
-                              size: 50,
+                              color: Styles.successTextColor,
+                              size: 45,
                             ),
                             Text(
-                              "5 ",
+                              " 5 ",
                               style: Styles.black24(context),
                             ),
                             Text(
@@ -260,6 +261,8 @@ class _ShopRouteScreenState extends State<ShopRouteScreen> {
                     isFirst: index == 0,
                     isLast: index == widget.listStore.length - 1,
                     store: widget.listStore[index],
+                    routeId: widget.routeId,
+                    route: widget.route,
                   );
                 },
               ),

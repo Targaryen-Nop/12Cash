@@ -11,20 +11,21 @@
     <!-- NEARBY_WIFI_DEVICES Connect to Printer -->
     <uses-permission android:name="android.permission.NEARBY_WIFI_DEVICES" />
     <uses-permission android:name="android.permission.INTERNET" />
+
     <!-- Local Notification -->
-    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <!-- <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" /> -->
     <!-- required -->
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <!-- <uses-permission android:name="android.permission.FOREGROUND_SERVICE" /> -->
     <!-- required -->
-    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <!-- <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" /> -->
     <!-- foregroundServiceType: dataSync -->
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+    <!-- <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" /> -->
     <!-- foregroundServiceType: remoteMessaging -->
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_REMOTE_MESSAGING" />
+    <!-- <uses-permission android:name="android.permission.FOREGROUND_SERVICE_REMOTE_MESSAGING" /> -->
     <application
         android:label="12Cash Testing"
         android:name="${applicationName}"
@@ -37,6 +38,12 @@
             android:exported="false" />
         <meta-data android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAQ9F4z5GhkeW5n8z03OK7H5CcMpzUAZr0" />
+        <meta-data
+            android:name="io.flutter.embedding.android.UseSkia"
+            android:value="true" />
+        <meta-data
+            android:name="io.flutter.embedding.android.EnableImpeller"
+            android:value="true" />
         <receiver
             android:name="com.dexterous.flutterlocalnotifications.receivers.NotificationBroadcastReceiver"
             android:exported="true" />

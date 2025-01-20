@@ -133,17 +133,18 @@ class _DetailTableState extends State<DetailTable> {
 
     return InkWell(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => DetailScreen(
-                day: widget.day,
-                customerNo: customerNo,
-                customerName: customerName,
-                address: address,
-                status: status),
-          ),
-        );
+        // Navigator.push(
+        //   context,
+        //   MaterialPageRoute(
+        //     builder: (context) => DetailScreen(
+        //         route:,
+        //         route: widget.day,
+        //         customerNo: customerNo,
+        //         customerName: customerName,
+        //         address: address,
+        //         status: status),
+        //   ),
+        // );
       },
       child: Container(
         decoration: BoxDecoration(

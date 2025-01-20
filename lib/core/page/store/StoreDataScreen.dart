@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:_12sale_app/core/components/button/Button.dart';
+import 'package:_12sale_app/core/components/button/IconButtonWithLabelFixed.dart';
 import 'package:_12sale_app/core/components/button/IconButtonWithLabel.dart';
 import 'package:_12sale_app/core/components/input/CustomTextInput.dart';
 import 'package:_12sale_app/core/components/search/DropdownSearchCustom.dart';
@@ -488,7 +489,7 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              IconButtonWithLabel(
+              IconButtonWithLabelFixed(
                 icon: Icons.photo_camera,
                 imagePath: storeImagePath != "" ? storeImagePath : null,
                 label: "store.store_data_screen.image_store".tr(),
@@ -496,7 +497,7 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
                   await uploadFormDataWithDio(imagePath, 'store', context);
                 },
               ),
-              IconButtonWithLabel(
+              IconButtonWithLabelFixed(
                 icon: Icons.photo_camera,
                 imagePath: taxIdImagePath != "" ? taxIdImagePath : null,
                 label: "store.store_data_screen.image_taxId".tr(),
@@ -504,7 +505,7 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
                   await uploadFormDataWithDio(imagePath, 'tax', context);
                 },
               ),
-              IconButtonWithLabel(
+              IconButtonWithLabelFixed(
                 icon: Icons.photo_camera,
                 imagePath: personalImagePath != "" ? personalImagePath : null,
                 label: "store.store_data_screen.image_identify".tr(),
