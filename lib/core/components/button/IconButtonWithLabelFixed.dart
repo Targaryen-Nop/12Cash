@@ -7,6 +7,7 @@ import 'package:camera/camera.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class IconButtonWithLabelFixed extends StatefulWidget {
   String? imagePath;
@@ -153,7 +154,7 @@ class _IconButtonWithLabelFixedState extends State<IconButtonWithLabelFixed>
       cameraDescription,
       ResolutionPreset.max,
       // enableAudio: false,
-      // imageFormatGroup: ImageFormatGroup.jpeg,
+      imageFormatGroup: ImageFormatGroup.jpeg,
       // fps: 60,
     );
     controller = cameraController;
@@ -170,24 +171,33 @@ class _IconButtonWithLabelFixedState extends State<IconButtonWithLabelFixed>
 
     try {
       await cameraController.initialize();
-      await Future.wait(<Future<Object?>>[
-        // The exposure mode is currently not supported on the web.
-        ...!kIsWeb
-            ? <Future<Object?>>[
-                cameraController.getMinExposureOffset().then(
-                    (double value) => _minAvailableExposureOffset = value),
-                cameraController
-                    .getMaxExposureOffset()
-                    .then((double value) => _maxAvailableExposureOffset = value)
-              ]
-            : <Future<Object?>>[],
-        cameraController
-            .getMaxZoomLevel()
-            .then((double value) => _maxAvailableZoom = value),
-        cameraController
-            .getMinZoomLevel()
-            .then((double value) => _minAvailableZoom = value),
-      ]);
+      // await cameraController
+      //     .lockCaptureOrientation(DeviceOrientation.portraitUp);
+      // Lock the camera orientation to portrait
+      // await cameraController
+      //     .lockCaptureOrientation(DeviceOrientation.portraitUp);
+      // await cameraController.lockCaptureOrientation(DeviceOrientation.)
+      // Ensure portrait orientation
+      // await cameraController
+      //     .lockCaptureOrientation(DeviceOrientation.landscapeRight);
+      // await Future.wait(<Future<Object?>>[
+      //   // The exposure mode is currently not supported on the web.
+      //   ...!kIsWeb
+      //       ? <Future<Object?>>[
+      //           cameraController.getMinExposureOffset().then(
+      //               (double value) => _minAvailableExposureOffset = value),
+      //           cameraController
+      //               .getMaxExposureOffset()
+      //               .then((double value) => _maxAvailableExposureOffset = value)
+      //         ]
+      //       : <Future<Object?>>[],
+      //   cameraController
+      //       .getMaxZoomLevel()
+      //       .then((double value) => _maxAvailableZoom = value),
+      //   cameraController
+      //       .getMinZoomLevel()
+      //       .then((double value) => _minAvailableZoom = value),
+      // ]);
     } on CameraException catch (e) {
       switch (e.code) {
         case 'CameraAccessDenied':
@@ -302,14 +312,23 @@ class _IconButtonWithLabelFixedState extends State<IconButtonWithLabelFixed>
       }
 
       // Get the available cameras
-      final cameras = await availableCameras();
+      var cameras = await availableCameras();
+      // cameras.first.sensorOrientation = 270;
+
+      final camera = cameras.first;
+      print('Camera sensor orientation: ${camera.sensorOrientation}');
+      print('Lens facing: ${camera.lensDirection}');
       if (cameras.isEmpty) {
         showInSnackBar('No cameras available');
         return;
       }
 
       // Initialize the camera with the first available camera
+
       final firstCamera = cameras.first;
+
+      cameras.clear();
+
       await _initializeCameraController(firstCamera);
 
       // Navigate to the camera preview screen

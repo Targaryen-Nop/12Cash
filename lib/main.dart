@@ -24,6 +24,7 @@ import 'package:_12sale_app/core/styles/style.dart';
 import 'package:_12sale_app/data/models/RouteVisitFilterLocal.dart';
 import 'package:_12sale_app/data/models/StoreFilterLocal.dart';
 import 'package:_12sale_app/data/models/User.dart';
+import 'package:_12sale_app/data/service/AndroidAPIChecker.dart';
 import 'package:_12sale_app/data/service/localNotification.dart';
 import 'package:_12sale_app/data/service/locationService.dart';
 import 'package:_12sale_app/data/service/requestPremission.dart';
@@ -31,6 +32,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
+import 'package:http/io_client.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart'; // For date localization
 import 'package:flutter/services.dart';
@@ -45,16 +47,42 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
+import 'package:http/io_client.dart';
+import 'dart:io';
 
 void main() async {
   try {
+    // // Configure the HTTP client to use a proxy
+    // final client = HttpClient()
+    //   ..findProxy = (url) {
+    //     return "PROXY proxy.example.com:8080"; // Replace with your proxy server
+    //   }
+    //   ..badCertificateCallback =
+    //       (X509Certificate cert, String host, int port) =>
+    //           true; // Allow bad certificates (optional).
+
+    // // Use the client with the http package
+    // final ioClient = http.IOClient(client);
+    // final response = await ioClient.get(Uri.parse('https://api.example.com'));
+
+    // print('Response: ${response.body}');
     // Initialize the locale data for Thai lanqguage
     // Ensure the app is always in portrait mode
     WidgetsFlutterBinding.ensureInitialized();
+
+    bool isSupported = await AndroidAPILevelChecker.isCamera2APISupported();
+    if (isSupported) {
+      print("Camera2 API is supported");
+      // Use Camera2 API features
+    } else {
+      print("Legacy Camera API will be used");
+      // Use Legacy Camera API features
+    }
+
     // await availableCameras();
     await EasyLocalization.ensureInitialized();
     await PackageInfo.fromPlatform();
-
     // Initialize the notifications
     await initializeNotifications();
     await requestAllPermissions();

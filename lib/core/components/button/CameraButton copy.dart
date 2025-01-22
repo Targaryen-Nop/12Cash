@@ -244,8 +244,9 @@ class _CameraPreviewScreenFixedState extends State<CameraPreviewScreenFixed>
     });
 
     try {
-      final cameras = await availableCameras();
-      await onNewCameraSelected(cameras.first);
+      // Camera camera = Camera.open();
+      // final cameras = await availableCameras();
+      // await onNewCameraSelected(cameras.first);
       await cameraController.initialize();
       await Future.wait(<Future<Object?>>[
         // The exposure mode is currently not supported on the web.

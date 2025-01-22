@@ -150,7 +150,7 @@ class _CameraExpandState extends State<CameraExpand>
       CameraDescription cameraDescription) async {
     final CameraController cameraController = CameraController(
       cameraDescription,
-      kIsWeb ? ResolutionPreset.max : ResolutionPreset.max,
+      ResolutionPreset.max,
       enableAudio: false,
       imageFormatGroup: ImageFormatGroup.jpeg,
       fps: 30,

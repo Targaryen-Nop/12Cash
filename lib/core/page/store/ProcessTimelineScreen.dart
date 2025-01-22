@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:math';
 import 'package:_12sale_app/core/components/Appbar.dart';
 import 'package:_12sale_app/core/components/alert/Alert.dart';
@@ -60,7 +61,6 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
       ShopType(id: '', name: '', descript: '', status: '');
   List<dynamic> imageList = [];
   List<Store> duplicateStores = [];
-
   Location initialSelectedLocation = Location(
       id: '',
       amphoe: '',
@@ -258,6 +258,10 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
 
   Future<void> addStore() async {
     // Initialize Dio
+
+    HttpClient client = new HttpClient();
+    client.findProxy = HttpClient.findProxyFromEnvironment;
+    print(client);
     Dio dio = Dio();
     String jsonData = '''
 {
@@ -318,6 +322,8 @@ class _ProcessTimelinePageState extends State<ProcessTimelinePage> {
 
       print(formData);
       print(imageList);
+
+      // client.findProxy = HttpClient.findProxyFromEnvironment;
 
       var response = await dio.post(
         '${ApiService.apiHost}/api/cash/store/addStore',

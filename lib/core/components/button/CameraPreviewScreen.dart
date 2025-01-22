@@ -1,21 +1,17 @@
 import 'package:_12sale_app/core/components/Appbar.dart';
-import 'package:_12sale_app/core/styles/style.dart';
+import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'dart:io';
 
-// Screen to display the camera preview and allow the user to take a picture
 class CameraPreviewScreen extends StatefulWidget {
   final CameraController cameraController;
   final Function(String) onImageCaptured;
 
   const CameraPreviewScreen({
-    super.key,
+    Key? key,
     required this.cameraController,
     required this.onImageCaptured,
-  });
+  }) : super(key: key);
 
   @override
   State<CameraPreviewScreen> createState() => _CameraPreviewScreenState();
@@ -24,12 +20,20 @@ class CameraPreviewScreen extends StatefulWidget {
 class _CameraPreviewScreenState extends State<CameraPreviewScreen> {
   @override
   void dispose() {
-    widget.cameraController?.dispose();
+    widget.cameraController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
+    final rotationAngle =
+        widget.cameraController.description.sensorOrientation == 270
+            ? 1.5708 // 90 degrees in radians
+            : 0.0; // No rotation for other orientations
+    final isLandscape =
+        widget.cameraController.description.sensorOrientation == 90 ||
+            widget.cameraController.description.sensorOrientation == 270;
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(70),
@@ -42,32 +46,23 @@ class _CameraPreviewScreenState extends State<CameraPreviewScreen> {
           if (snapshot.connectionState == ConnectionState.done) {
             return Stack(
               children: [
-                Center(
-                  child: Transform.rotate(
-                    angle: 90 * (3.141592653589793 / 180),
+                Transform.rotate(
+                  angle: rotationAngle, // Rotate based on sensor orientation
+                  child: Center(
                     child: AspectRatio(
-                      aspectRatio:
-                          2 * 1 / widget.cameraController.value.aspectRatio,
-                      child: CameraPreview(
-                        widget.cameraController,
+                      aspectRatio: widget.cameraController.value.aspectRatio,
+                      child: FittedBox(
+                        fit: BoxFit.cover,
+                        child: SizedBox(
+                          width: screenSize.width,
+                          height: screenSize.width *
+                              widget.cameraController.value.aspectRatio,
+                          child: CameraPreview(widget.cameraController),
+                        ),
                       ),
                     ),
                   ),
                 ),
-                // Center(
-                //   child: Transform.rotate(
-                //     angle: 90 *
-                //         (3.141592653589793 /
-                //             180), // 0 radians means no rotation (default is portrait)
-                //     child: AspectRatio(
-                //       aspectRatio:
-                //           1 / widget.cameraController.value.aspectRatio,
-                //       child: CameraPreview(
-                //         widget.cameraController,
-                //       ),
-                //     ),
-                //   ),
-                // ),
                 Align(
                   alignment: Alignment.bottomCenter,
                   child: Padding(
@@ -83,10 +78,11 @@ class _CameraPreviewScreenState extends State<CameraPreviewScreen> {
                           widget.onImageCaptured(image.path);
 
                           // Pop the current screen after the photo is taken
-                          // ignore: use_build_context_synchronously
-                          Navigator.pop(context);
+                          if (mounted) {
+                            Navigator.pop(context);
+                          }
                         } catch (e) {
-                          print(e);
+                          debugPrint('Error capturing image: $e');
                         }
                       },
                       child: const Icon(Icons.camera_alt),
