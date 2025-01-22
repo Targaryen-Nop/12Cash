@@ -262,9 +262,9 @@ class _DashboardscreenState extends State<Dashboardscreen> {
                 );
               }).toList(),
             ),
-
-            SizedBox(height: screenWidth / 25),
-            // const WeightCudeCard(),
+            // SizedBox(height: screenWidth / 20),
+            SizedBox(height: screenWidth / 37),
+            const WeightCudeCard(),
             // SizedBox(height: screenWidth / 25),
             // SizedBox(height: 500, width: 400, child: LineChartSample()),
             // SizedBox(height: screenWidth / 25),

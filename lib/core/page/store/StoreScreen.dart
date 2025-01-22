@@ -9,6 +9,7 @@ import 'package:_12sale_app/core/components/search/DropdownSearchCustom.dart';
 import 'package:_12sale_app/core/components/search/StoreSearch.dart';
 import 'package:_12sale_app/core/components/table/ShopTableAll.dart';
 import 'package:_12sale_app/core/components/table/ShopTableNew.dart';
+import 'package:_12sale_app/core/page/store/DetailNewStoreScreen.dart';
 import 'package:_12sale_app/core/page/store/DetailStoreScreen.dart';
 import 'package:_12sale_app/core/page/store/ProcessTimelineScreen.dart';
 import 'package:_12sale_app/data/models/Route.dart';
@@ -250,7 +251,7 @@ class _StoreScreenState extends State<StoreScreen> with RouteAware {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => DetailStoreScreen(
+                                    builder: (context) => DetailNewStoreScreen(
                                         initialSelectedRoute: RouteStore(
                                             route: storeNew[index].route),
                                         store: storeNew[index],
@@ -486,206 +487,101 @@ class _StoreHeaderState extends State<StoreHeader> {
               children: [
                 Expanded(
                   flex: 3,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 3.5),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8.0),
-                        color: Colors.white,
-                      ),
-                      child: StoreSearch(
-                        key: ValueKey(filterRoute),
-                        onStoreSelected: (data) {
-                          if (data != null) {
-                            storeState.updateValue([data]);
-                            print(
-                                "storeState.storeList :${storeState.storeList}");
-                            setState(
-                              () {
-                                selectedRoute = RouteStore(route: data.route);
-                                _storeFavoriteLocal =
-                                    storeState.storesFavoriteList;
-                              },
-                            );
-                          }
-                        },
-                      ),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8.0),
+                      color: Colors.white,
+                    ),
+                    child: StoreSearch(
+                      key: ValueKey(filterRoute),
+                      onStoreSelected: (data) {
+                        if (data != null) {
+                          storeState.updateValue([data]);
+                          print(
+                              "storeState.storeList :${storeState.storeList}");
+                          setState(
+                            () {
+                              selectedRoute = RouteStore(route: data.route);
+                              _storeFavoriteLocal =
+                                  storeState.storesFavoriteList;
+                            },
+                          );
+                        }
+                      },
                     ),
                   ),
                 ),
-                // Expanded(
-                //   flex: 3,
-                //   child: Padding(
-                //     padding: const EdgeInsets.symmetric(vertical: 3.5),
-                //     child: Container(
-                //       // padding: EdgeInsets.all(8.0), // Add padding.
-                //       decoration: BoxDecoration(
-                //         borderRadius: BorderRadius.circular(8.0),
-                //         color: Colors.white,
-                //       ),
-                //       child: DropdownSearchCustom<Store>(
-                //         key: ValueKey('${filterRoute}'),
-                //         label: "เลือกร้านค้า",
-                //         titleText: "เลือกร้านค้า",
-                //         fetchItems: (filter) => getStores(filter),
-                //         onChanged: (Store? selected) async {
-                //           if (selected != null) {
-                //             setState(() {
-                //               selectedRoute = RouteStore(route: selected.route);
-                //             });
-                //             // storeState = StoreLocal(store: selected);
-                //             storeState.updateValue([selected]);
-                //             storeState.addStoreFavorite(selected);
-                //             // setState(
-                //             //   () {
-                //             //     _storeFavoriteLocal =
-                //             //         storeState.storesFavoriteList;
-                //             //   },
-                //             // );
-                //             // _saveStoreFavoriteStorage();
-                //             // print(
-                //             //     "storesFavoriteList Count ${storeState.storesFavoriteList[0].count}");
-                //             // print(
-                //             //     "storesFavoriteList Length ${storeState.storesFavoriteList.length}");
-                //           }
-                //         },
-                //         itemAsString: (Store data) =>
-                //             "${data.name} ${data.route}",
-                //         itemBuilder: (context, item, isSelected) {
-                //           return Column(
-                //             children: [
-                //               ListTile(
-                //                 selected: isSelected,
-                //                 title: Text.rich(
-                //                   TextSpan(
-                //                     children: [
-                //                       TextSpan(
-                //                         text: '${item.name} \n',
-                //                         style: Styles.kanit(context).copyWith(
-                //                             fontWeight: FontWeight.bold,
-                //                             color: Styles.primaryColor,
-                //                             fontSize: 24),
-                //                       ),
-                //                       TextSpan(
-                //                           text: 'รหัสร้าน : ',
-                //                           style: Styles.black18(context)),
-                //                       TextSpan(
-                //                           text: '${item.storeId} \n',
-                //                           style: Styles.black18(context)),
-                //                       TextSpan(
-                //                           text: 'เส้นทาง : ',
-                //                           style: Styles.black18(context)),
-                //                       TextSpan(
-                //                           text: '${item.route} \n',
-                //                           style: Styles.black18(context)),
-                //                       TextSpan(
-                //                           text: 'ที่อยู่ : ',
-                //                           style: Styles.black18(context)),
-                //                       TextSpan(
-                //                           text: '${item.address}',
-                //                           style: Styles.black18(context)),
-                //                       TextSpan(
-                //                           text: ' ',
-                //                           style: Styles.black18(context)),
-                //                       TextSpan(
-                //                         text:
-                //                             '${item.subDistrict} ${item.district} ${item.province} ${item.postCode}',
-                //                         style: Styles.black18(context),
-                //                       ),
-                //                     ],
-                //                   ),
-                //                 ),
-                //               ),
-                //               Divider(
-                //                 color: Colors
-                //                     .grey[200], // Color of the divider line
-                //                 thickness: 1, // Thickness of the line
-                //                 indent: 16, // Left padding for the divider line
-                //                 endIndent:
-                //                     16, // Right padding for the divider line
-                //               ),
-                //             ],
-                //           );
-                //         },
-                //       ),
-                //     ),
-                //   ),
-                // ),
                 Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 3.5),
-                    child: Container(
-                      // padding: EdgeInsets.all(8.0), // Add padding.
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8.0),
-                        color: Colors.white,
-                      ),
-                      child: DropdownSearchCustom<RouteStore>(
-                        key: ValueKey('RouteSearch-${selectedRoute.route}'),
-                        initialSelectedValue:
-                            selectedRoute.route == '' ? null : selectedRoute,
-                        label: "",
-                        titleText:
-                            "${"store.store_data_screen.input_route.name".tr()}",
-                        fetchItems: (filter) => getRoutes(filter),
-                        onChanged: (RouteStore? selected) async {
-                          if (selected != null) {
-                            setState(() {
-                              filterRoute = selected.route;
-                              selectedRoute = RouteStore(route: selected.route);
-                            });
-                            print("_isSelected ${_isSelected}");
-                            if (_isSelected) {
-                              // storeAll = [
-                              //   ...storeAllFilter.where(
-                              //       (store) => store.route == selected.route)
-                              // ];
-                            } else {
-                              ApiService apiService = ApiService();
-                              await apiService.init();
-                              var response = await apiService.request(
-                                endpoint:
-                                    'api/cash/store/getStore?area=${User.area}&type=all&route=${selected.route}',
-                                method: 'GET',
-                              );
-                              if (response.statusCode == 200 ||
-                                  response.statusCode == 201) {
-                                final List<dynamic> data =
-                                    response.data['data'];
-                                storeState.updateValue(data
-                                    .map((item) => Store.fromJson(item))
-                                    .toList());
-                              }
-                              // storeAll = [
-                              //   ...storeAllFilter.where(
-                              //       (store) => store.route == selected.route)
-                              // ];
+                  child: Container(
+                    // padding: EdgeInsets.all(8.0), // Add padding.
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8.0),
+                      color: Colors.white,
+                    ),
+                    child: DropdownSearchCustom<RouteStore>(
+                      key: ValueKey('RouteSearch-${selectedRoute.route}'),
+                      initialSelectedValue:
+                          selectedRoute.route == '' ? null : selectedRoute,
+                      label: "",
+                      titleText:
+                          "${"store.store_data_screen.input_route.name".tr()}",
+                      fetchItems: (filter) => getRoutes(filter),
+                      onChanged: (RouteStore? selected) async {
+                        if (selected != null) {
+                          setState(() {
+                            filterRoute = selected.route;
+                            selectedRoute = RouteStore(route: selected.route);
+                          });
+                          print("_isSelected ${_isSelected}");
+                          if (_isSelected) {
+                            // storeAll = [
+                            //   ...storeAllFilter.where(
+                            //       (store) => store.route == selected.route)
+                            // ];
+                          } else {
+                            ApiService apiService = ApiService();
+                            await apiService.init();
+                            var response = await apiService.request(
+                              endpoint:
+                                  'api/cash/store/getStore?area=${User.area}&type=all&route=${selected.route}',
+                              method: 'GET',
+                            );
+                            if (response.statusCode == 200 ||
+                                response.statusCode == 201) {
+                              final List<dynamic> data = response.data['data'];
+                              storeState.updateValue(data
+                                  .map((item) => Store.fromJson(item))
+                                  .toList());
                             }
+                            // storeAll = [
+                            //   ...storeAllFilter.where(
+                            //       (store) => store.route == selected.route)
+                            // ];
                           }
-                        },
-                        itemAsString: (RouteStore data) => data.route,
-                        itemBuilder: (context, item, isSelected) {
-                          return Column(
-                            children: [
-                              ListTile(
-                                title: Text(
-                                  " ${item.route}",
-                                  style: Styles.black18(context),
-                                ),
-                                selected: isSelected,
+                        }
+                      },
+                      itemAsString: (RouteStore data) => data.route,
+                      itemBuilder: (context, item, isSelected) {
+                        return Column(
+                          children: [
+                            ListTile(
+                              title: Text(
+                                " ${item.route}",
+                                style: Styles.black18(context),
                               ),
-                              Divider(
-                                color: Colors
-                                    .grey[200], // Color of the divider line
-                                thickness: 1, // Thickness of the line
-                                indent: 16, // Left padding for the divider line
-                                endIndent:
-                                    16, // Right padding for the divider line
-                              ),
-                            ],
-                          );
-                        },
-                      ),
+                              selected: isSelected,
+                            ),
+                            Divider(
+                              color:
+                                  Colors.grey[200], // Color of the divider line
+                              thickness: 1, // Thickness of the line
+                              indent: 16, // Left padding for the divider line
+                              endIndent:
+                                  16, // Right padding for the divider line
+                            ),
+                          ],
+                        );
+                      },
                     ),
                   ),
                 ),

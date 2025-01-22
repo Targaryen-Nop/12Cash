@@ -39,6 +39,7 @@ class DetailScreen extends StatefulWidget {
   final String route;
   final String routeId;
   final String customerName;
+  final String typeName;
   final String address;
   String status;
 
@@ -49,6 +50,7 @@ class DetailScreen extends StatefulWidget {
       required this.routeId,
       required this.customerName,
       required this.address,
+      required this.typeName,
       required this.status});
 
   @override
@@ -344,33 +346,12 @@ class _DetailScreenState extends State<DetailScreen> {
                 // ),
                 // const SizedBox(height: 10),
 
-                SizedBox(height: screenWidth / 37),
-                Text('รายการสั่งซื้อ', style: Styles.black24(context)),
-                Container(
-                  height: 300,
-                  child: LoadingSkeletonizer(
-                    loading: _loadingAllStore,
-                    child: BoxShadowCustom(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        child: ListView.builder(
-                          itemCount: storeAll.length,
-                          itemBuilder: (context, index) {
-                            return InvoiceCard(
-                              item: storeAll[index],
-                              onDetailsPressed: () {},
-                            );
-                          },
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(height: screenWidth / 37),
+                // SizedBox(height: screenWidth / 37),
+
                 // Text('ข้อมูลร้านค้า ${widget.customerName}',
                 //     style: Styles.black24(context)),
                 BoxShadowCustom(
-                  color: Styles.primaryColor,
+                  // color: Styles.primaryColor,
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Column(
@@ -380,27 +361,29 @@ class _DetailScreenState extends State<DetailScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Expanded(
-                              flex: 2,
+                              flex: 1,
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text("${widget.customerName}",
-                                      style: Styles.white24(context)),
+                                      style: Styles.black24(context)),
                                   Text(
                                       '${'route.detail_screen.store_id'.tr()} : ${widget.customerNo}',
-                                      style: Styles.white18(context)),
+                                      style: Styles.black18(context)),
                                   Text('รูท : R${widget.route}',
-                                      style: Styles.white18(context)),
+                                      style: Styles.black18(context)),
+                                  Text('ประเภทร้านค้า : ${widget.typeName}',
+                                      style: Styles.black18(context)),
                                   Text(
                                       'สถานะ : ${widget.status == '2' ? 'เช็คอินแล้ว' : 'ยังไม่ได้เช็คอิน'}',
-                                      style: Styles.white18(context)),
+                                      style: Styles.black18(context)),
                                 ],
                               ),
                             ),
                             Expanded(
                               child: Text(
                                 "${'route.detail_screen.store_address'.tr()} : ${widget.address}",
-                                style: Styles.white18(context),
+                                style: Styles.black18(context),
                                 textAlign: TextAlign.start,
                               ),
                             ),
@@ -442,6 +425,33 @@ class _DetailScreenState extends State<DetailScreen> {
                           ],
                         ),
                       ],
+                    ),
+                  ),
+                ),
+                SizedBox(height: screenWidth / 37),
+                BoxShadowCustom(
+                  child: SizedBox(
+                      height: 325, width: screenWidth, child: ItemSummarize()),
+                ),
+                SizedBox(height: screenWidth / 37),
+                Text('รายการสั่งซื้อ', style: Styles.black24(context)),
+                Container(
+                  height: 300,
+                  child: LoadingSkeletonizer(
+                    loading: _loadingAllStore,
+                    child: BoxShadowCustom(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        child: ListView.builder(
+                          itemCount: storeAll.length,
+                          itemBuilder: (context, index) {
+                            return InvoiceCard(
+                              item: storeAll[index],
+                              onDetailsPressed: () {},
+                            );
+                          },
+                        ),
+                      ),
                     ),
                   ),
                 ),

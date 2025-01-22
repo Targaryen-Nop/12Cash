@@ -33,53 +33,58 @@ class StoreVisitCard extends StatelessWidget {
       indicatorStyle: IndicatorStyle(
         width: 30,
         height: 30,
-        // color:
-        //     (store.status == '1' || store.status == '2' || store.status == '3')
-        //         ? Styles.primaryColor
-        // : store.status == '2'
-        //     ? Styles.primaryColor
-        //     : store.status == '3'
-        //         ? Styles.failTextColor
-        color: store.status == '1'
-            ? Styles.successTextColor
-            : store.status == '2'
+        color:
+            (store.status == '1' || store.status == '2' || store.status == '3')
                 ? Styles.primaryColor
+                // : store.status == '2'
+                //     ? Styles.primaryColor
+                //     : store.status == '3'
+                //         ? Styles.failTextColor
+                // color: store.status == '1'
+                //     ? Styles.successTextColor
+                //     : store.status == '2'
+                //         ? Styles.primaryColor
                 : store.status == '3'
                     ? Styles.failTextColor
                     : Colors.grey,
         indicator: Container(
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              // color: (store.status == '1' ||
-              //         store.status == '2' ||
-              //         store.status == '3')
-              color: store.status == '1'
-                  ? Styles.successTextColor
-                  : store.status == '2'
-                      ? Styles.primaryColor
-                      : store.status == '3'
-                          ? Styles.failTextColor
-                          : Colors.grey,
+              color: (store.status == '1' ||
+                      store.status == '2' ||
+                      store.status == '3')
+                  ? Styles.primaryColor
+                  // color: store.status == '1'
+                  //     ? Styles.successTextColor
+                  //     : store.status == '2'
+                  //         ? Styles.primaryColor
+                  : store.status == '3'
+                      ? Styles.failTextColor
+                      : Colors.grey,
             ),
-            // child: (store.status == '1' ||
-            //         store.status == '2' ||
-            //         store.status == '3')
-            child: store.status == '1'
+            child: (store.status == '1' ||
+                    store.status == '2' ||
+                    store.status == '3')
                 ? Icon(
-                    Icons.attach_money_rounded,
+                    Icons.check,
                     color: Colors.white,
                   )
-                : store.status == '2'
-                    ? Icon(
-                        Icons.check,
-                        color: Colors.white,
-                      )
-                    : store.status == '3'
-                        ? Icon(
-                            Icons.close,
-                            color: Colors.white,
-                          )
-                        : SizedBox()),
+                // child: store.status == '1'
+                //     ? Icon(
+                //         Icons.attach_money_rounded,
+                //         color: Colors.white,
+                //       )
+                //     : store.status == '2'
+                //         ? Icon(
+                //             Icons.check,
+                //             color: Colors.white,
+                //           )
+                // : store.status == '3'
+                //     ? Icon(
+                //         Icons.close,
+                //         color: Colors.white,
+                //       )
+                : SizedBox()),
       ),
       afterLineStyle: LineStyle(
         thickness: 1,
@@ -161,6 +166,7 @@ class StoreCard extends StatelessWidget {
           context,
           MaterialPageRoute(
             builder: (context) => DetailScreen(
+              typeName: store.storeInfo.typeName,
               routeId: routeId,
               route: route,
               customerNo: store.storeInfo.storeId,
@@ -273,6 +279,7 @@ class StoreCard extends StatelessWidget {
                             context,
                             MaterialPageRoute(
                               builder: (context) => DetailScreen(
+                                typeName: store.storeInfo.typeName,
                                 routeId: routeId,
                                 route: route,
                                 customerNo: store.storeInfo.storeId,

@@ -1,16 +1,21 @@
 import 'package:_12sale_app/core/components/Appbar.dart';
+import 'package:device_info_plus/device_info_plus.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/services.dart';
 
 class CameraPreviewScreen extends StatefulWidget {
   final CameraController cameraController;
   final Function(String) onImageCaptured;
+  Map<String, dynamic>? deviceData;
 
-  const CameraPreviewScreen({
+  CameraPreviewScreen({
     Key? key,
     required this.cameraController,
     required this.onImageCaptured,
+    this.deviceData,
   }) : super(key: key);
 
   @override
@@ -18,6 +23,16 @@ class CameraPreviewScreen extends StatefulWidget {
 }
 
 class _CameraPreviewScreenState extends State<CameraPreviewScreen> {
+  // static final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
+  // Map<String, dynamic> _deviceData = <String, dynamic>{};
+
+  @override
+  void initState() {
+    // TODO: implement initState
+
+    super.initState();
+  }
+
   @override
   void dispose() {
     widget.cameraController.dispose();
@@ -47,7 +62,9 @@ class _CameraPreviewScreenState extends State<CameraPreviewScreen> {
             return Stack(
               children: [
                 Transform.rotate(
-                  angle: rotationAngle, // Rotate based on sensor orientation
+                  angle: widget.deviceData!['brand'] == 'samsung'
+                      ? 90 * (3.141592653589793 / 180)
+                      : rotationAngle, // Rotate based on sensor orientation
                   child: Center(
                     child: AspectRatio(
                       aspectRatio: widget.cameraController.value.aspectRatio,

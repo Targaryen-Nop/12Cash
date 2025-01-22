@@ -412,6 +412,11 @@ class _RoutescreenState extends State<Routescreen> with RouteAware {
                                           .listStore[0]
                                           .storeInfo
                                           .address,
+                                      typeName: routeState
+                                          .routeVisitList[firstIndex]
+                                          .listStore[0]
+                                          .storeInfo
+                                          .typeName,
                                       status: routeState
                                           .routeVisitList[firstIndex]
                                           .listStore[0]
@@ -452,6 +457,11 @@ class _RoutescreenState extends State<Routescreen> with RouteAware {
                                             .listStore[0]
                                             .storeInfo
                                             .address,
+                                        typeName: routeState
+                                            .routeVisitList[secondIndex]
+                                            .listStore[0]
+                                            .storeInfo
+                                            .typeName,
                                         status: routeState
                                             .routeVisitList[secondIndex]
                                             .listStore[0]

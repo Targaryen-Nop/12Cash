@@ -27,13 +27,13 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:toastification/toastification.dart';
 
-class DetailStoreScreen extends StatefulWidget {
+class DetailNewStoreScreen extends StatefulWidget {
   String customerNo;
   String customerName;
   Store store;
   RouteStore initialSelectedRoute;
 
-  DetailStoreScreen({
+  DetailNewStoreScreen({
     super.key,
     required this.customerNo,
     required this.customerName,
@@ -42,10 +42,10 @@ class DetailStoreScreen extends StatefulWidget {
   });
 
   @override
-  State<DetailStoreScreen> createState() => _DetailStoreScreenState();
+  State<DetailNewStoreScreen> createState() => _DetailNewStoreScreenState();
 }
 
-class _DetailStoreScreenState extends State<DetailStoreScreen> {
+class _DetailNewStoreScreenState extends State<DetailNewStoreScreen> {
   bool onEdit = true;
   late TextEditingController storeNameController;
   late TextEditingController storePhoneController;
@@ -330,7 +330,7 @@ class _DetailStoreScreenState extends State<DetailStoreScreen> {
                     child: Column(
                       children: [
                         BoxShadowCustom(
-                          // color: Styles.primaryColor,
+                          color: Styles.primaryColor,
                           child: Padding(
                             padding: const EdgeInsets.all(16.0),
                             child: Column(
@@ -352,47 +352,47 @@ class _DetailStoreScreenState extends State<DetailStoreScreen> {
                                             children: [
                                               Text(
                                                 "${widget.customerName}",
-                                                style: Styles.black24(context),
+                                                style: Styles.white24(context),
                                               ),
-                                              // Container(
-                                              //   decoration: BoxDecoration(
-                                              //     color: Styles.skybluePastel,
-                                              //     borderRadius:
-                                              //         BorderRadius.all(
-                                              //       Radius.circular(8),
-                                              //     ),
-                                              //   ),
-                                              //   padding: EdgeInsets.symmetric(
-                                              //       horizontal: 16),
-                                              //   margin: EdgeInsets.symmetric(
-                                              //       horizontal: 8),
-                                              //   child: Text(
-                                              //     'ใหม่',
-                                              //     style:
-                                              //         Styles.black18(context),
-                                              //   ),
-                                              // )
+                                              Container(
+                                                decoration: BoxDecoration(
+                                                  color: Styles.skybluePastel,
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                    Radius.circular(8),
+                                                  ),
+                                                ),
+                                                padding: EdgeInsets.symmetric(
+                                                    horizontal: 16),
+                                                margin: EdgeInsets.symmetric(
+                                                    horizontal: 8),
+                                                child: Text(
+                                                  'ใหม่',
+                                                  style:
+                                                      Styles.black18(context),
+                                                ),
+                                              )
                                             ],
                                           ),
                                           Text(
                                             '${'route.detail_screen.store_id'.tr()} : ${widget.customerNo}',
-                                            style: Styles.black18(context),
+                                            style: Styles.white18(context),
                                           ),
                                           Text(
-                                            'รูท : ${widget.store.route}',
-                                            style: Styles.black18(context),
-                                          ),
-                                          Text(
-                                            'เลขผู้เสียภาษี : ${widget.store.taxId}',
-                                            style: Styles.black18(context),
+                                            'เลขประจำตัวผู้เสียภาษี : ${widget.store.taxId}',
+                                            style: Styles.white18(context),
                                           ),
                                           Text(
                                             'เบอร์โทรศัพท์ : ${storePhoneController.text}',
-                                            style: Styles.black18(context),
+                                            style: Styles.white18(context),
+                                          ),
+                                          Text(
+                                            'รูท : ${widget.store.route}',
+                                            style: Styles.white18(context),
                                           ),
                                           Text(
                                             'ประเภทร้านค้า : ${widget.store.typeName}',
-                                            style: Styles.black18(context),
+                                            style: Styles.white18(context),
                                           ),
                                         ],
                                       ),
@@ -400,7 +400,7 @@ class _DetailStoreScreenState extends State<DetailStoreScreen> {
                                     Expanded(
                                       child: Text(
                                         "${'route.detail_screen.store_address'.tr()} : ${widget.store.address} ${widget.store.subDistrict} ${widget.store.district} ${widget.store.province} ${widget.store.postCode}",
-                                        style: Styles.black18(context),
+                                        style: Styles.white18(context),
                                         textAlign: TextAlign.start,
                                       ),
                                     ),
@@ -410,27 +410,9 @@ class _DetailStoreScreenState extends State<DetailStoreScreen> {
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
                                     MenuButton(
-                                      icon: Icons.edit_document,
-                                      label: "แก้ไข",
-                                      // color: Colors.teal,
-                                      color: Styles.bluePastel,
-                                      onPressed: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => Orderscreen(
-                                                customerNo: widget.customerNo,
-                                                customerName:
-                                                    widget.customerName,
-                                                status: widget.store.status),
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                    MenuButton(
                                       icon: Icons.store_rounded,
                                       label: "เช็คอิน",
-                                      color: Styles.successButtonColor,
+                                      color: Styles.bluePastel,
                                       onPressed: () {
                                         fetchLocation();
                                         Alert(
@@ -487,9 +469,9 @@ class _DetailStoreScreenState extends State<DetailStoreScreen> {
                                     ),
                                     MenuButton(
                                       icon: Icons.add_shopping_cart_rounded,
-                                      label: "ขาย",
+                                      label: "ขายนอกรูท",
                                       // color: Colors.teal,
-                                      color: Styles.primaryColor,
+                                      color: Styles.greenPastel,
                                       onPressed: () {
                                         Navigator.push(
                                           context,
@@ -520,7 +502,7 @@ class _DetailStoreScreenState extends State<DetailStoreScreen> {
                                 child: Row(
                                   children: [
                                     Icon(
-                                      Icons.bar_chart,
+                                      Icons.bar_chart_outlined,
                                       size: 40,
                                       color: Colors.black,
                                     ),
@@ -547,37 +529,13 @@ class _DetailStoreScreenState extends State<DetailStoreScreen> {
                                         child: Column(
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
-                                            // Text(
-                                            //   "${((completionPercentage * 100) / 360).toStringAsFixed(2)}%",
-                                            //   style: Styles.black18(context),
-                                            // ),
-                                            Row(
-                                              children: [
-                                                Text(
-                                                  "ขาย : ",
-                                                  style:
-                                                      Styles.black18(context),
-                                                ),
-                                                Text(
-                                                  "${((completionPercentage * 100) / 360).toStringAsFixed(2)}%",
-                                                  style:
-                                                      Styles.black18(context),
-                                                ),
-                                              ],
+                                            Text(
+                                              "${((completionPercentage * 100) / 360).toStringAsFixed(2)}%",
+                                              style: Styles.black24(context),
                                             ),
-                                            Row(
-                                              children: [
-                                                Text(
-                                                  "คืน : ",
-                                                  style:
-                                                      Styles.black18(context),
-                                                ),
-                                                Text(
-                                                  "${((140 * 100) / 360).toStringAsFixed(2)}%",
-                                                  style:
-                                                      Styles.black18(context),
-                                                ),
-                                              ],
+                                            Text(
+                                              "150,000 ฿",
+                                              style: Styles.black24(context),
                                             ),
                                           ],
                                         ),

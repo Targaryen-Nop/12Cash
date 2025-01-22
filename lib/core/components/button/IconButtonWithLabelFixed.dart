@@ -4,6 +4,7 @@ import 'package:_12sale_app/core/components/button/CameraPreviewScreen.dart';
 import 'package:_12sale_app/core/page/HomeScreen.dart';
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:camera/camera.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -39,6 +40,8 @@ class IconButtonWithLabelFixed extends StatefulWidget {
 
 class _IconButtonWithLabelFixedState extends State<IconButtonWithLabelFixed>
     with WidgetsBindingObserver, TickerProviderStateMixin {
+  static final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
+  Map<String, dynamic> _deviceData = <String, dynamic>{};
   CameraController? controller;
   // late CameraController _cameraController;
   // String? imagePath;
@@ -47,47 +50,110 @@ class _IconButtonWithLabelFixedState extends State<IconButtonWithLabelFixed>
   double _minAvailableZoom = 1.0;
   double _maxAvailableZoom = 1.0;
 
-  // Counting pointers (number of user fingers on screen)
-  int _pointers = 0;
-  double _currentScale = 1.0;
-  double _baseScale = 1.0;
-
-  void _handleScaleStart(ScaleStartDetails details) {
-    _baseScale = _currentScale;
-  }
-
-  void onViewFinderTap(TapDownDetails details, BoxConstraints constraints) {
-    if (controller == null) {
-      return;
-    }
-
-    final CameraController cameraController = controller!;
-
-    final Offset offset = Offset(
-      details.localPosition.dx / constraints.maxWidth,
-      details.localPosition.dy / constraints.maxHeight,
-    );
-    cameraController.setExposurePoint(offset);
-    cameraController.setFocusPoint(offset);
-  }
-
-  Future<void> _handleScaleUpdate(ScaleUpdateDetails details) async {
-    // When there are not exactly two fingers on screen don't scale
-    if (controller == null || _pointers != 2) {
-      return;
-    }
-
-    _currentScale = (_baseScale * details.scale)
-        .clamp(_minAvailableZoom, _maxAvailableZoom);
-
-    await controller!.setZoomLevel(_currentScale);
-  }
-
   @override
   void initState() {
     WidgetsFlutterBinding.ensureInitialized();
+
     super.initState();
+    initPlatformState();
     // _initializeCamera();
+  }
+
+  Future<void> initPlatformState() async {
+    var deviceData = <String, dynamic>{};
+
+    try {
+      if (kIsWeb) {
+        // deviceData = _readWebBrowserInfo(await deviceInfoPlugin.webBrowserInfo);
+      } else {
+        deviceData = switch (defaultTargetPlatform) {
+          TargetPlatform.android =>
+            _readAndroidBuildData(await deviceInfoPlugin.androidInfo),
+          TargetPlatform.iOS =>
+            _readIosDeviceInfo(await deviceInfoPlugin.iosInfo),
+          // TargetPlatform.linux =>
+          //   _readLinuxDeviceInfo(await deviceInfoPlugin.linuxInfo),
+          // TargetPlatform.windows =>
+          //   _readWindowsDeviceInfo(await deviceInfoPlugin.windowsInfo),
+          // TargetPlatform.macOS =>
+          //   _readMacOsDeviceInfo(await deviceInfoPlugin.macOsInfo),
+          // TargetPlatform.fuchsia => <String, dynamic>{
+          //     'Error:': 'Fuchsia platform isn\'t supported'
+          //   },
+          // TODO: Handle this case.
+          TargetPlatform.fuchsia => throw UnimplementedError(),
+          // TODO: Handle this case.
+          TargetPlatform.linux => throw UnimplementedError(),
+          // TODO: Handle this case.
+          TargetPlatform.macOS => throw UnimplementedError(),
+          // TODO: Handle this case.
+          TargetPlatform.windows => throw UnimplementedError(),
+        };
+      }
+    } on PlatformException {
+      deviceData = <String, dynamic>{
+        'Error:': 'Failed to get platform version.'
+      };
+    }
+
+    if (!mounted) return;
+
+    setState(() {
+      _deviceData = deviceData;
+    });
+    print("Device Mobile :${deviceData['brand']}");
+  }
+
+  Map<String, dynamic> _readIosDeviceInfo(IosDeviceInfo data) {
+    return <String, dynamic>{
+      'name': data.name,
+      'systemName': data.systemName,
+      'systemVersion': data.systemVersion,
+      'model': data.model,
+      'modelName': data.modelName,
+      'localizedModel': data.localizedModel,
+      'identifierForVendor': data.identifierForVendor,
+      'isPhysicalDevice': data.isPhysicalDevice,
+      'isiOSAppOnMac': data.isiOSAppOnMac,
+      'utsname.sysname:': data.utsname.sysname,
+      'utsname.nodename:': data.utsname.nodename,
+      'utsname.release:': data.utsname.release,
+      'utsname.version:': data.utsname.version,
+      'utsname.machine:': data.utsname.machine,
+    };
+  }
+
+  Map<String, dynamic> _readAndroidBuildData(AndroidDeviceInfo build) {
+    return <String, dynamic>{
+      'version.securityPatch': build.version.securityPatch,
+      'version.sdkInt': build.version.sdkInt,
+      'version.release': build.version.release,
+      'version.previewSdkInt': build.version.previewSdkInt,
+      'version.incremental': build.version.incremental,
+      'version.codename': build.version.codename,
+      'version.baseOS': build.version.baseOS,
+      'board': build.board,
+      'bootloader': build.bootloader,
+      'brand': build.brand,
+      'device': build.device,
+      'display': build.display,
+      'fingerprint': build.fingerprint,
+      'hardware': build.hardware,
+      'host': build.host,
+      'id': build.id,
+      'manufacturer': build.manufacturer,
+      'model': build.model,
+      'product': build.product,
+      'supported32BitAbis': build.supported32BitAbis,
+      'supported64BitAbis': build.supported64BitAbis,
+      'supportedAbis': build.supportedAbis,
+      'tags': build.tags,
+      'type': build.type,
+      'isPhysicalDevice': build.isPhysicalDevice,
+      'systemFeatures': build.systemFeatures,
+      'serialNumber': build.serialNumber,
+      'isLowRamDevice': build.isLowRamDevice,
+    };
   }
 
   // Future<void> _initializeCamera() async {
@@ -248,39 +314,6 @@ class _IconButtonWithLabelFixedState extends State<IconButtonWithLabelFixed>
     }
   }
 
-  Widget _cameraPreviewWidget() {
-    final CameraController? cameraController = controller;
-
-    if (cameraController == null || !cameraController.value.isInitialized) {
-      return const Text(
-        'Tap a camera',
-        style: TextStyle(
-          color: Colors.white,
-          fontSize: 24.0,
-          fontWeight: FontWeight.w900,
-        ),
-      );
-    } else {
-      return Listener(
-        onPointerDown: (_) => _pointers++,
-        onPointerUp: (_) => _pointers--,
-        child: CameraPreview(
-          controller!,
-          child: LayoutBuilder(
-              builder: (BuildContext context, BoxConstraints constraints) {
-            return GestureDetector(
-              behavior: HitTestBehavior.opaque,
-              onScaleStart: _handleScaleStart,
-              onScaleUpdate: _handleScaleUpdate,
-              onTapDown: (TapDownDetails details) =>
-                  onViewFinderTap(details, constraints),
-            );
-          }),
-        ),
-      );
-    }
-  }
-
   // Future<void> openCamera(BuildContext context) async {
   //   final cameras = await availableCameras();
   //   await onNewCameraSelected(cameras.first);
@@ -335,6 +368,7 @@ class _IconButtonWithLabelFixedState extends State<IconButtonWithLabelFixed>
       Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) => CameraPreviewScreen(
+            deviceData: _deviceData,
             cameraController: controller!,
             onImageCaptured: (String imagePath) {
               setState(() {
