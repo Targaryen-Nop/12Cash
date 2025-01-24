@@ -5,12 +5,14 @@ import 'package:_12sale_app/core/components/BoxShadowCustom.dart';
 import 'package:_12sale_app/core/components/Loading.dart';
 import 'package:_12sale_app/core/components/card/InvoiceCard.dart';
 import 'package:_12sale_app/core/components/card/RouteVisitCard.dart';
+import 'package:_12sale_app/core/components/card/RouteVisitCard2.dart';
 import 'package:_12sale_app/core/components/search/CustomerDropdownSearch.dart';
 import 'package:_12sale_app/core/components/search/StoreSearch.dart';
 import 'package:_12sale_app/core/components/table/RouteTable.dart';
 import 'package:_12sale_app/core/page/HomeScreen.dart';
 import 'package:_12sale_app/core/page/route/DetailScreen.dart';
 import 'package:_12sale_app/core/page/route/ShopRouteScreen.dart';
+import 'package:_12sale_app/core/page/route/ShopRouteScreen2.dart';
 import 'package:_12sale_app/core/page/store/DetailStoreScreen.dart';
 import 'package:_12sale_app/core/page/store/StoreScreen.dart';
 import 'package:_12sale_app/core/styles/style.dart';
@@ -20,6 +22,7 @@ import 'package:_12sale_app/data/models/RouteVisitFilterLocal.dart';
 import 'package:_12sale_app/data/models/SaleRoute.dart';
 // import 'package:_12sale_app/data/models/StoreFilterLocal.dart';
 import 'package:_12sale_app/data/models/User.dart';
+import 'package:_12sale_app/data/models/route/RouteVisit.dart';
 import 'package:_12sale_app/data/service/apiService.dart';
 import 'package:_12sale_app/function/SavetoStorage.dart';
 import 'package:_12sale_app/main.dart';
@@ -35,6 +38,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:widget_to_marker/widget_to_marker.dart';
 
 List<RouteVisit> routeVisits = [];
+List<RouteVisit2> routeVisits2 = [];
 String filterRoute = 'R01';
 String period =
     "${DateTime.now().year}${DateFormat('MM').format(DateTime.now())}";
@@ -290,7 +294,29 @@ class _RoutescreenState extends State<Routescreen> with RouteAware {
     await saveToStorage('saleRoutes', _routes);
   }
 
-  Future<void> _getRouteVisit() async {
+  // Future<void> _getRouteVisit() async {
+  //   ApiService apiService = ApiService();
+  //   await apiService.init();
+
+  //   var response = await apiService.request(
+  //     endpoint: 'api/cash/route/getRoute?area=${User.area}&period=${period}',
+  //     method: 'GET',
+  //   );
+
+  //   if (response.statusCode == 200) {
+  //     final List<dynamic> data = response.data['data'];
+  //     // print("getRoute: ${response.data['data']}");
+  //     if (mounted) {
+  //       setState(() {
+  //         routeVisits = data.map((item) => RouteVisit.fromJson(item)).toList();
+  //         _loadingRouteVisit = false;
+  //       });
+  //     }
+  //     print("getRoute: $routeVisits");
+  //   }
+  // }
+
+  Future<void> _getRouteVisit2() async {
     ApiService apiService = ApiService();
     await apiService.init();
 
@@ -304,11 +330,12 @@ class _RoutescreenState extends State<Routescreen> with RouteAware {
       // print("getRoute: ${response.data['data']}");
       if (mounted) {
         setState(() {
-          routeVisits = data.map((item) => RouteVisit.fromJson(item)).toList();
+          routeVisits2 =
+              data.map((item) => RouteVisit2.fromJson(item)).toList();
           _loadingRouteVisit = false;
         });
       }
-      print("getRoute: $routeVisits");
+      print("getRoute: $routeVisits2");
     }
   }
 
@@ -319,7 +346,8 @@ class _RoutescreenState extends State<Routescreen> with RouteAware {
     _loadSaleRoute();
     _initializePolylines();
     _initializeMarkers();
-    _getRouteVisit();
+    // _getRouteVisit();
+    _getRouteVisit2();
   }
 
   // @override
@@ -359,7 +387,7 @@ class _RoutescreenState extends State<Routescreen> with RouteAware {
         onRefresh: () async {
           print(filterRoute);
           routeState.routeVisitList.clear();
-          _getRouteVisit();
+          // _getRouteVisit();
           if (filterRoute == 'R01') {
             setState(() {
               filterRoute = 'R00';
@@ -377,7 +405,7 @@ class _RoutescreenState extends State<Routescreen> with RouteAware {
             child: ListView.builder(
               itemCount: routeState.routeVisitList.length > 0
                   ? (routeState.routeVisitList.length / 2).ceil()
-                  : (routeVisits.length / 2).ceil(), // Number of rows needed
+                  : (routeVisits2.length / 2).ceil(), // Number of rows needed
               itemBuilder: (context, index) {
                 final firstIndex = index * 2;
                 final secondIndex = firstIndex + 1;
@@ -499,18 +527,19 @@ class _RoutescreenState extends State<Routescreen> with RouteAware {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Expanded(
-                            child: RouteVisitCard(
-                              item: routeVisits[firstIndex],
+                            child: RouteVisitCard2(
+                              item: routeVisits2[firstIndex],
                               onDetailsPressed: () {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => ShopRouteScreen(
-                                      routeId: routeVisits[firstIndex].id,
-                                      route: routeVisits[firstIndex].day,
-                                      status: routeVisits[firstIndex].day,
-                                      listStore:
-                                          routeVisits[firstIndex].listStore,
+                                    builder: (context) => ShopRouteScreen2(
+                                      routeVisit: routeVisits2[firstIndex],
+                                      routeId: routeVisits2[firstIndex].id,
+                                      route: routeVisits2[firstIndex].day,
+                                      // status: routeVisits2[firstIndex].day,
+                                      // listStore:
+                                      //     routeVisits2[firstIndex].listStore,
                                     ),
                                   ),
                                 );
@@ -518,21 +547,22 @@ class _RoutescreenState extends State<Routescreen> with RouteAware {
                             ),
                           ),
                           if (secondIndex <
-                              routeVisits
+                              routeVisits2
                                   .length) // Check if the second card exists
                             Expanded(
-                              child: RouteVisitCard(
-                                item: routeVisits[secondIndex],
+                              child: RouteVisitCard2(
+                                item: routeVisits2[secondIndex],
                                 onDetailsPressed: () {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => ShopRouteScreen(
-                                        routeId: routeVisits[secondIndex].id,
-                                        route: routeVisits[secondIndex].day,
-                                        status: routeVisits[secondIndex].day,
-                                        listStore:
-                                            routeVisits[secondIndex].listStore,
+                                      builder: (context) => ShopRouteScreen2(
+                                        routeVisit: routeVisits2[secondIndex],
+                                        routeId: routeVisits2[secondIndex].id,
+                                        route: routeVisits2[secondIndex].day,
+                                        // status: routeVisits[secondIndex].day,
+                                        // listStore:
+                                        //     routeVisits[secondIndex].listStore,
                                       ),
                                     ),
                                   );

@@ -18,7 +18,7 @@ class CircularChartPainter extends CustomPainter {
       ..strokeWidth = strokeWidth;
 
     Paint section1 = Paint()
-      ..color = Styles.primaryColor
+      ..color = Colors.green[600]!
       ..style = PaintingStyle.stroke
       ..strokeWidth = strokeWidth
       ..strokeCap = StrokeCap.round;
@@ -43,7 +43,7 @@ class CircularChartPainter extends CustomPainter {
     double startAngle =
         -90 * (3.14159265359 / 180); // Convert degrees to radians
     double sweepAngle1 = completionPercentage * (3.14159265359 / 180);
-    double sweepAngle2 = 140 * (3.14159265359 / 180);
+    double sweepAngle2 = 0 * (3.14159265359 / 180);
     double sweepAngle3 = 0 * (3.14159265359 / 180);
 
     canvas.drawArc(

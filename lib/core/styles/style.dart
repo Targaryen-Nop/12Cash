@@ -129,6 +129,14 @@ class Styles {
           color: const Color(0xFF9B1C1C),
         ),
       );
+
+  static TextStyle headerRed32(BuildContext context) => GoogleFonts.kanit(
+        textStyle: TextStyle(
+          fontSize: getResponsiveFontSize(context, 32),
+          fontWeight: FontWeight.w600,
+          color: Colors.red,
+        ),
+      );
   static TextStyle strikeBlack24(BuildContext context) => GoogleFonts.kanit(
         textStyle: TextStyle(
           decoration: TextDecoration.lineThrough,

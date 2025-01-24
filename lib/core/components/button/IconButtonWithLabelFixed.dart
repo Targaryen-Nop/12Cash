@@ -218,12 +218,13 @@ class _IconButtonWithLabelFixedState extends State<IconButtonWithLabelFixed>
       CameraDescription cameraDescription) async {
     final CameraController cameraController = CameraController(
       cameraDescription,
-      ResolutionPreset.max,
+      ResolutionPreset.medium,
       // enableAudio: false,
-      imageFormatGroup: ImageFormatGroup.jpeg,
-      // fps: 60,
+      imageFormatGroup: ImageFormatGroup.yuv420,
+      fps: 30,
     );
     controller = cameraController;
+    // controller.s
     // If the controller is updated then update the UI.
     cameraController.addListener(() {
       if (mounted) {
@@ -237,6 +238,7 @@ class _IconButtonWithLabelFixedState extends State<IconButtonWithLabelFixed>
 
     try {
       await cameraController.initialize();
+
       // await cameraController
       //     .lockCaptureOrientation(DeviceOrientation.portraitUp);
       // Lock the camera orientation to portrait
@@ -357,7 +359,7 @@ class _IconButtonWithLabelFixedState extends State<IconButtonWithLabelFixed>
       }
 
       // Initialize the camera with the first available camera
-
+      // Lower FPS range
       final firstCamera = cameras.first;
 
       cameras.clear();

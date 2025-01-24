@@ -1,0 +1,147 @@
+class DetailStoreVisit {
+  final String id;
+  final String period;
+  final String area;
+  final String day;
+  final List<ListStore> listStore;
+  final int storeAll;
+  final int storePending;
+  final int storeBuy;
+  final int storeNotBuy;
+  final int storeTotal;
+
+  DetailStoreVisit({
+    required this.id,
+    required this.period,
+    required this.area,
+    required this.day,
+    required this.listStore,
+    required this.storeAll,
+    required this.storePending,
+    required this.storeBuy,
+    required this.storeNotBuy,
+    required this.storeTotal,
+  });
+
+  factory DetailStoreVisit.fromJson(Map<String, dynamic> json) {
+    return DetailStoreVisit(
+      id: json['id'],
+      period: json['period'],
+      area: json['area'],
+      day: json['day'],
+      listStore: (json['listStore'] as List)
+          .map((store) => ListStore.fromJson(store))
+          .toList(),
+      storeAll: json['storeAll'],
+      storePending: json['storePending'],
+      storeBuy: json['storeBuy'],
+      storeNotBuy: json['storeNotBuy'],
+      storeTotal: json['storeTotal'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'period': period,
+      'area': area,
+      'day': day,
+      'listStore': listStore.map((store) => store.toJson()).toList(),
+      'storeAll': storeAll,
+      'storePending': storePending,
+      'storeBuy': storeBuy,
+      'storeNotBuy': storeNotBuy,
+      'storeTotal': storeTotal,
+    };
+  }
+}
+
+// ListStore model
+class ListStore {
+  final StoreInfo storeInfo;
+  final String note;
+  final String? image;
+  final String? latitude;
+  final String? longtitude;
+  final String status;
+  final String statusText;
+  final String? date;
+  final List<dynamic> listOrder;
+
+  ListStore({
+    required this.storeInfo,
+    required this.note,
+    this.image,
+    this.latitude,
+    this.longtitude,
+    required this.status,
+    required this.statusText,
+    this.date,
+    required this.listOrder,
+  });
+
+  factory ListStore.fromJson(Map<String, dynamic> json) {
+    return ListStore(
+      storeInfo: StoreInfo.fromJson(json['storeInfo']),
+      note: json['note'] ?? '',
+      image: json['image'],
+      latitude: json['latitude'],
+      longtitude: json['longtitude'],
+      status: json['status'],
+      statusText: json['statusText'],
+      date: json['date'],
+      listOrder: json['listOrder'] ?? [],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'storeInfo': storeInfo.toJson(),
+      'note': note,
+      'image': image,
+      'latitude': latitude,
+      'longtitude': longtitude,
+      'status': status,
+      'statusText': statusText,
+      'date': date,
+      'listOrder': listOrder,
+    };
+  }
+}
+
+// StoreInfo model
+class StoreInfo {
+  final String id;
+  final String storeId;
+  final String name;
+  final String typeName;
+  final String address;
+
+  StoreInfo({
+    required this.id,
+    required this.storeId,
+    required this.name,
+    required this.typeName,
+    required this.address,
+  });
+
+  factory StoreInfo.fromJson(Map<String, dynamic> json) {
+    return StoreInfo(
+      id: json['_id'],
+      storeId: json['storeId'],
+      name: json['name'],
+      typeName: json['typeName'],
+      address: json['address'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      '_id': id,
+      'storeId': storeId,
+      'name': name,
+      'typeName': typeName,
+      'address': address,
+    };
+  }
+}
