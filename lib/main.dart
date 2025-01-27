@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:_12sale_app/core/components/Gird.dart';
+import 'package:_12sale_app/core/components/button/CameraAwesome.dart';
 import 'package:_12sale_app/core/page/CustomBottomBar.dart';
 import 'package:_12sale_app/core/page/NotificationScreen.dart';
 import 'package:_12sale_app/core/page/Ractangle3D.dart';

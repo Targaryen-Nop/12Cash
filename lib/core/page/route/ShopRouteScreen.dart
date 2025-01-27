@@ -1,15 +1,23 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:_12sale_app/core/components/Appbar.dart';
 import 'package:_12sale_app/core/components/BoxShadowCustom.dart';
 import 'package:_12sale_app/core/components/CustomerDropdownSearch.dart';
+import 'package:_12sale_app/core/components/Loading.dart';
 import 'package:_12sale_app/core/components/badge/CustomBadge.dart';
+import 'package:_12sale_app/core/components/card/RouteShopVisitCard.dart';
+import 'package:_12sale_app/core/components/card/RouteVisitCard.dart';
 import 'package:_12sale_app/core/components/card/StoreVisitCard.dart';
 import 'package:_12sale_app/core/components/table/ShopRouteTable.dart';
 import 'package:_12sale_app/core/page/HomeScreen.dart';
 import 'package:_12sale_app/core/page/route/TestGooglemap.dart';
 import 'package:_12sale_app/core/styles/style.dart';
-import 'package:_12sale_app/data/models/RouteVisit.dart';
+import 'package:_12sale_app/data/models/User.dart';
+import 'package:_12sale_app/data/models/route/RouteVisit.dart';
+import 'package:_12sale_app/data/models/route/StoreVisit.dart';
+import 'package:_12sale_app/data/service/apiService.dart';
 import 'package:_12sale_app/function/SavetoStorage.dart';
+import 'package:_12sale_app/main.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -18,31 +26,95 @@ import 'package:url_launcher/url_launcher.dart';
 
 class ShopRouteScreen extends StatefulWidget {
   final String routeId;
-
   final String route;
-  final String status;
-  final List<Store> listStore;
+  final RouteVisit2 routeVisit;
+  // final List<Store> listStore;
 
   const ShopRouteScreen({
     super.key,
     required this.routeId,
     required this.route,
-    required this.status,
-    required this.listStore,
+    required this.routeVisit,
+    // required this.listStore,
   });
 
   @override
   State<ShopRouteScreen> createState() => _ShopRouteScreenState();
 }
 
-class _ShopRouteScreenState extends State<ShopRouteScreen> {
-  // Store? routes;
+class _ShopRouteScreenState extends State<ShopRouteScreen> with RouteAware {
+  List<ListStore> listStore = [];
+  StoreVisit? storeVisit;
+  String period =
+      "${DateTime.now().year}${DateFormat('MM').format(DateTime.now())}";
+  bool _loadingAllStore = true;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    _getListStore();
     // _loadSaleRoute();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Register this screen as a route-aware widget
+    final ModalRoute? route = ModalRoute.of(context);
+    if (route is PageRoute) {
+      // Only subscribe if the route is a P ageRoute
+      routeObserver.subscribe(this, route);
+    }
+  }
+
+  @override
+  void didPopNext() {
+    setState(() {
+      _loadingAllStore = true;
+    });
+    // Called when the screen is popped back to
+    _getListStore();
+  }
+
+  @override
+  void dispose() {
+    // Unsubscribe when the widget is disposed
+    routeObserver.unsubscribe(this);
+    super.dispose();
+  }
+
+  Future<void> _getListStore() async {
+    ApiService apiService = ApiService();
+    await apiService.init();
+
+    var response = await apiService.request(
+      endpoint:
+          'api/cash/route/getRoute?area=${User.area}&period=${period}&routeId=${widget.routeId}',
+      method: 'GET',
+    );
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = response.data['data'][0]['listStore'];
+      final List<dynamic> dataStore = response.data['data'];
+      print("getRoute: ${response.data['data']}");
+      if (mounted) {
+        setState(() {
+          listStore = data.map((item) => ListStore.fromJson(item)).toList();
+          storeVisit =
+              data.isNotEmpty ? StoreVisit.fromJson(dataStore[0]) : null;
+        });
+      }
+      Timer(const Duration(milliseconds: 500), () {
+        if (mounted) {
+          setState(() {
+            _loadingAllStore = false;
+          });
+        }
+      });
+      print("storeVisit: $storeVisit");
+      print("listStore: ${data.length}");
+    }
   }
 
   // Future<void> _loadSaleRoute() async {
@@ -71,7 +143,6 @@ class _ShopRouteScreenState extends State<ShopRouteScreen> {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
-
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(70),
@@ -83,124 +154,72 @@ class _ShopRouteScreenState extends State<ShopRouteScreen> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            BoxShadowCustom(
-              child: Container(
-                padding: EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  // color: Colors.amber,
-                  // border: Border.all(color: Colors.grey),
-                  borderRadius: BorderRadius.all(Radius.circular(16)),
-                ),
-                alignment: Alignment.center,
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.store_rounded,
-                              color: Styles.primaryColor,
-                              size: 50,
-                            ),
-                            Text(
-                              "36 ",
-                              style: Styles.black24(context),
-                            ),
-                            Text(
-                              "ทั้งหมด",
-                              style: Styles.black24(context),
-                            )
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Container(
-                              padding: EdgeInsets.symmetric(horizontal: 16),
-                              decoration: BoxDecoration(
-                                border: Border.all(color: Colors.grey),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(16)),
-                              ),
-                              child: Text(
-                                "35 / 36",
-                                style: Styles.black24(context),
-                              ),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Text(
-                              DateFormat('d MMMM yyyy', 'dashboard.lange'.tr())
-                                  .format(
-                                      DateTime.now()), // Current date and time
-                              style: Styles.black24(context),
-                            ),
-                          ],
-                        )
-                      ],
+            Row(
+              children: [
+                Expanded(
+                  flex: 2,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(16)),
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.check_circle_outline_rounded,
-                              color: Styles.primaryColor,
-                              size: 50,
+                    alignment: Alignment.center,
+                    child: (storeVisit != null)
+                        ? LoadingSkeletonizer(
+                            loading: _loadingAllStore,
+                            child: RouteShopVisitCard(
+                              item: storeVisit!,
+                              onDetailsPressed: () {},
                             ),
-                            Text(
-                              "10 ",
-                              style: Styles.black24(context),
-                            ),
-                            Text(
-                              "เช็คอิน",
-                              style: Styles.black24(context),
-                            )
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            FaIcon(
-                              Icons.paid_outlined,
-                              color: Styles.successTextColor,
-                              size: 45,
-                            ),
-                            Text(
-                              " 5 ",
-                              style: Styles.black24(context),
-                            ),
-                            Text(
-                              "ขายแล้ว",
-                              style: Styles.black24(context),
-                            )
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.cancel_outlined,
-                              color: Styles.failTextColor,
-                              size: 50,
-                            ),
-                            Text(
-                              "20 ",
-                              style: Styles.black24(context),
-                            ),
-                            Text(
-                              "ขายไม่ได้",
-                              style: Styles.black24(context),
-                            )
-                          ],
-                        ),
-                      ],
-                    ),
-                  ],
+                          )
+                        : CircularProgressIndicator(
+                            color: Styles.primaryColor,
+                          ),
+                  ),
                 ),
-              ),
+                Expanded(
+                  child: LoadingSkeletonizer(
+                    loading: _loadingAllStore,
+                    child: Container(
+                      height: 170,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(16)),
+                      ),
+                      alignment: Alignment.center,
+                      child: BoxShadowCustom(
+                        shadowColor: Colors.red,
+                        borderColor: Colors.red,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "Effective",
+                                    style: Styles.black20(context),
+                                  )
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "40%",
+                                    style: Styles.headerRed32(context),
+                                  )
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
             // const CustomerDropdownSearch(),
             // Container(
@@ -254,19 +273,34 @@ class _ShopRouteScreenState extends State<ShopRouteScreen> {
               height: screenWidth / 30,
             ),
             Expanded(
-              child: ListView.builder(
-                itemCount: widget.listStore.length,
-                itemBuilder: (context, index) {
-                  return StoreVisitCard(
-                    isFirst: index == 0,
-                    isLast: index == widget.listStore.length - 1,
-                    store: widget.listStore[index],
-                    routeId: widget.routeId,
-                    route: widget.route,
-                  );
-                },
+              child: LoadingSkeletonizer(
+                loading: _loadingAllStore,
+                child: ListView.builder(
+                  itemCount: listStore.length,
+                  itemBuilder: (context, index) {
+                    return StoreVisitCard(
+                      isFirst: index == 0,
+                      isLast: index == listStore.length - 1,
+                      store: listStore[index],
+                      routeId: widget.routeId,
+                      route: widget.route,
+                    );
+                  },
+                ),
               ),
             ),
+
+            // Expanded(
+            //   child: ListView.builder(
+            //     itemCount: listStore.length,
+            //     itemBuilder: (context, index) {
+            //       return Text(
+            //         '${listStore[index].status}',
+            //         style: Styles.black18(context),
+            //       );
+            //     },
+            //   ),
+            // ),
             SizedBox(
               height: screenWidth / 20,
             ),

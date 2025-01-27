@@ -23,7 +23,7 @@ class Styles {
         textStyle: TextStyle(
           fontSize: getResponsiveFontSize(context, 10),
           fontWeight: FontWeight.normal,
-          color: const Color(0xFF9B1C1C),
+          color: Colors.red,
         ),
       );
 
@@ -88,14 +88,14 @@ class Styles {
         textStyle: TextStyle(
           fontSize: getResponsiveFontSize(context, 12),
           fontWeight: FontWeight.normal,
-          color: const Color(0xFF9B1C1C),
+          color: Colors.red,
         ),
       );
   static TextStyle red18(BuildContext context) => GoogleFonts.kanit(
         textStyle: TextStyle(
           fontSize: getResponsiveFontSize(context, 18),
           fontWeight: FontWeight.normal,
-          color: const Color(0xFF9B1C1C),
+          color: Colors.red,
         ),
       );
 
@@ -103,7 +103,7 @@ class Styles {
         textStyle: TextStyle(
           fontSize: getResponsiveFontSize(context, 24),
           fontWeight: FontWeight.normal,
-          color: const Color(0xFF9B1C1C),
+          color: Colors.red,
         ),
       );
   static TextStyle headerBlack24(BuildContext context) => GoogleFonts.kanit(
@@ -118,7 +118,7 @@ class Styles {
         textStyle: TextStyle(
           fontSize: getResponsiveFontSize(context, 18),
           fontWeight: FontWeight.w600,
-          color: const Color(0xFF9B1C1C),
+          color: Colors.red,
         ),
       );
 
@@ -126,7 +126,7 @@ class Styles {
         textStyle: TextStyle(
           fontSize: getResponsiveFontSize(context, 24),
           fontWeight: FontWeight.w600,
-          color: const Color(0xFF9B1C1C),
+          color: Colors.red,
         ),
       );
 
@@ -341,4 +341,9 @@ class Styles {
   static const Color bluePastel = Color(0xFF48B8D0);
   static const Color skybluePastel = Color(0xFF8AE1FC);
   static const Color redPastel = Color(0xFFC08497);
+
+  //  --------------------- Status Color --------------------------------
+  static Color? success = Colors.green[600];
+  static Color? fail = Colors.red;
+  static Color? warning = Colors.amber;
 }

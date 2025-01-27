@@ -338,12 +338,6 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
                                     'typeName', selected.name);
                                 _storeData = _storeData?.copyWithDynamicField(
                                     'type', selected.id);
-                                // widget.storeData = widget.storeData
-                                //     .copyWithDynamicField(
-                                //         'typeName', selected.name);
-                                // widget.storeData = widget.storeData
-                                //     .copyWithDynamicField(
-                                //         'type', selected.id);
                               });
                               _saveStoreToStorage();
                             }

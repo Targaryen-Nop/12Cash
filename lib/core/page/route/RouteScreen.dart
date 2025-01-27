@@ -5,14 +5,15 @@ import 'package:_12sale_app/core/components/BoxShadowCustom.dart';
 import 'package:_12sale_app/core/components/Loading.dart';
 import 'package:_12sale_app/core/components/card/InvoiceCard.dart';
 import 'package:_12sale_app/core/components/card/RouteVisitCard.dart';
-import 'package:_12sale_app/core/components/card/RouteVisitCard2.dart';
+import 'package:_12sale_app/core/components/card/RouteVisitCard.dart';
+import 'package:_12sale_app/core/components/card/RouteVisitCard.dart';
 import 'package:_12sale_app/core/components/search/CustomerDropdownSearch.dart';
 import 'package:_12sale_app/core/components/search/StoreSearch.dart';
 import 'package:_12sale_app/core/components/table/RouteTable.dart';
 import 'package:_12sale_app/core/page/HomeScreen.dart';
 import 'package:_12sale_app/core/page/route/DetailScreen.dart';
 import 'package:_12sale_app/core/page/route/ShopRouteScreen.dart';
-import 'package:_12sale_app/core/page/route/ShopRouteScreen2.dart';
+import 'package:_12sale_app/core/page/route/ShopRouteScreen.dart';
 import 'package:_12sale_app/core/page/store/DetailStoreScreen.dart';
 import 'package:_12sale_app/core/page/store/StoreScreen.dart';
 import 'package:_12sale_app/core/styles/style.dart';
@@ -350,6 +351,33 @@ class _RoutescreenState extends State<Routescreen> with RouteAware {
     _getRouteVisit2();
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Register this screen as a route-aware widget
+    final ModalRoute? route = ModalRoute.of(context);
+    if (route is PageRoute) {
+      // Only subscribe if the route is a P ageRoute
+      routeObserver.subscribe(this, route);
+    }
+  }
+
+  @override
+  void didPopNext() {
+    setState(() {
+      _loadingRouteVisit = true;
+    });
+    // Called when the screen is popped back to
+    _getRouteVisit2();
+  }
+
+  @override
+  void dispose() {
+    // Unsubscribe when the widget is disposed
+    routeObserver.unsubscribe(this);
+    super.dispose();
+  }
+
   // @override
   // void didPopNext() {
   //   _getRouteVisit();
@@ -385,6 +413,7 @@ class _RoutescreenState extends State<Routescreen> with RouteAware {
         color: Colors.white,
         backgroundColor: Styles.primaryColor,
         onRefresh: () async {
+          _getRouteVisit2();
           print(filterRoute);
           routeState.routeVisitList.clear();
           // _getRouteVisit();
@@ -423,32 +452,8 @@ class _RoutescreenState extends State<Routescreen> with RouteAware {
                                     builder: (context) => DetailScreen(
                                       routeId: routeState
                                           .routeVisitList[firstIndex].id,
-                                      route: routeState
-                                          .routeVisitList[firstIndex].day,
                                       customerNo: routeState
-                                          .routeVisitList[firstIndex]
-                                          .listStore[0]
-                                          .storeInfo
-                                          .storeId,
-                                      customerName: routeState
-                                          .routeVisitList[firstIndex]
-                                          .listStore[0]
-                                          .storeInfo
-                                          .name,
-                                      address: routeState
-                                          .routeVisitList[firstIndex]
-                                          .listStore[0]
-                                          .storeInfo
-                                          .address,
-                                      typeName: routeState
-                                          .routeVisitList[firstIndex]
-                                          .listStore[0]
-                                          .storeInfo
-                                          .typeName,
-                                      status: routeState
-                                          .routeVisitList[firstIndex]
-                                          .listStore[0]
-                                          .status,
+                                          .routeVisitList[firstIndex].id,
                                     ),
                                   ),
                                 );
@@ -468,32 +473,8 @@ class _RoutescreenState extends State<Routescreen> with RouteAware {
                                       builder: (context) => DetailScreen(
                                         routeId: routeState
                                             .routeVisitList[firstIndex].id,
-                                        route: routeState
-                                            .routeVisitList[firstIndex].day,
                                         customerNo: routeState
-                                            .routeVisitList[secondIndex]
-                                            .listStore[0]
-                                            .storeInfo
-                                            .storeId,
-                                        customerName: routeState
-                                            .routeVisitList[secondIndex]
-                                            .listStore[0]
-                                            .storeInfo
-                                            .name,
-                                        address: routeState
-                                            .routeVisitList[secondIndex]
-                                            .listStore[0]
-                                            .storeInfo
-                                            .address,
-                                        typeName: routeState
-                                            .routeVisitList[secondIndex]
-                                            .listStore[0]
-                                            .storeInfo
-                                            .typeName,
-                                        status: routeState
-                                            .routeVisitList[secondIndex]
-                                            .listStore[0]
-                                            .status,
+                                            .routeVisitList[firstIndex].id,
                                       ),
                                     ),
                                   );
@@ -527,13 +508,13 @@ class _RoutescreenState extends State<Routescreen> with RouteAware {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Expanded(
-                            child: RouteVisitCard2(
+                            child: RouteVisitCard(
                               item: routeVisits2[firstIndex],
                               onDetailsPressed: () {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => ShopRouteScreen2(
+                                    builder: (context) => ShopRouteScreen(
                                       routeVisit: routeVisits2[firstIndex],
                                       routeId: routeVisits2[firstIndex].id,
                                       route: routeVisits2[firstIndex].day,
@@ -550,13 +531,13 @@ class _RoutescreenState extends State<Routescreen> with RouteAware {
                               routeVisits2
                                   .length) // Check if the second card exists
                             Expanded(
-                              child: RouteVisitCard2(
+                              child: RouteVisitCard(
                                 item: routeVisits2[secondIndex],
                                 onDetailsPressed: () {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => ShopRouteScreen2(
+                                      builder: (context) => ShopRouteScreen(
                                         routeVisit: routeVisits2[secondIndex],
                                         routeId: routeVisits2[secondIndex].id,
                                         route: routeVisits2[secondIndex].day,
@@ -783,14 +764,14 @@ class _RouteHeaderState extends State<RouteHeader> {
                       // print("getRoute: ${response.data['data']}");
                       if (mounted) {
                         setState(() {
-                          routeVisits = data
-                              .map((item) => RouteVisit.fromJson(item))
+                          routeVisits2 = data
+                              .map((item) => RouteVisit2.fromJson(item))
                               .toList();
                           // _loadingRouteVisit = false;
                         });
                       }
-                      routeState.updateValue(routeVisits);
-                      print("getRoute: $routeVisits");
+                      routeState.updateValue(routeVisits2);
+                      print("getRoute: $routeVisits2");
                     }
                     setState(
                       () {

@@ -1,14 +1,15 @@
 import 'package:_12sale_app/data/models/RouteVisit.dart';
+import 'package:_12sale_app/data/models/route/RouteVisit.dart';
 import 'package:flutter/material.dart';
 
 class RouteVisitFilterLocal with ChangeNotifier {
-  List<RouteVisit> _routeVisitList = [];
+  List<RouteVisit2> _routeVisitList = [];
   List<StoreFavoriteLocal> _storesFavoriteList = [];
 
-  List<RouteVisit> get routeVisitList => _routeVisitList;
+  List<RouteVisit2> get routeVisitList => _routeVisitList;
   List<StoreFavoriteLocal> get storesFavoriteList => _storesFavoriteList;
   StoreFavoriteLocal? existingStore;
-  void updateValue(List<RouteVisit> stores) {
+  void updateValue(List<RouteVisit2> stores) {
     _routeVisitList.clear();
     _routeVisitList = stores;
     notifyListeners();

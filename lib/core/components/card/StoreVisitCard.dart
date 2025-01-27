@@ -1,9 +1,15 @@
+import 'dart:convert';
+
 import 'package:_12sale_app/core/components/BoxShadowCustom.dart';
+import 'package:_12sale_app/core/components/search/DropdownSearchCustom.dart';
+import 'package:_12sale_app/core/page/route/DetailScreen.dart';
 import 'package:_12sale_app/core/page/route/DetailScreen.dart';
 import 'package:_12sale_app/core/styles/style.dart';
-import 'package:_12sale_app/data/models/RouteVisit.dart';
+import 'package:_12sale_app/data/models/Route.dart';
+import 'package:_12sale_app/data/models/route/StoreVisit.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:path/path.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -12,7 +18,7 @@ import 'package:timeline_tile/timeline_tile.dart';
 class StoreVisitCard extends StatelessWidget {
   final bool isFirst;
   final bool isLast;
-  final Store store;
+  final ListStore store;
   final String route;
   final String routeId;
 
@@ -36,14 +42,6 @@ class StoreVisitCard extends StatelessWidget {
         color:
             (store.status == '1' || store.status == '2' || store.status == '3')
                 ? Styles.primaryColor
-                // : store.status == '2'
-                //     ? Styles.primaryColor
-                //     : store.status == '3'
-                //         ? Styles.failTextColor
-                // color: store.status == '1'
-                //     ? Styles.successTextColor
-                //     : store.status == '2'
-                //         ? Styles.primaryColor
                 : store.status == '3'
                     ? Styles.failTextColor
                     : Colors.grey,
@@ -54,10 +52,6 @@ class StoreVisitCard extends StatelessWidget {
                       store.status == '2' ||
                       store.status == '3')
                   ? Styles.primaryColor
-                  // color: store.status == '1'
-                  //     ? Styles.successTextColor
-                  //     : store.status == '2'
-                  //         ? Styles.primaryColor
                   : store.status == '3'
                       ? Styles.failTextColor
                       : Colors.grey,
@@ -69,43 +63,20 @@ class StoreVisitCard extends StatelessWidget {
                     Icons.check,
                     color: Colors.white,
                   )
-                // child: store.status == '1'
-                //     ? Icon(
-                //         Icons.attach_money_rounded,
-                //         color: Colors.white,
-                //       )
-                //     : store.status == '2'
-                //         ? Icon(
-                //             Icons.check,
-                //             color: Colors.white,
-                //           )
-                // : store.status == '3'
-                //     ? Icon(
-                //         Icons.close,
-                //         color: Colors.white,
-                //       )
                 : SizedBox()),
       ),
       afterLineStyle: LineStyle(
         thickness: 1,
         color:
             (store.status == '1' || store.status == '2' || store.status == '3')
-                ? Styles.successTextColor
-                // : store.status == '2'
-                //     ? Styles.primaryColor
-                //     : store.status == '3'
-                //         ? Styles.failTextColor
+                ? Styles.primaryColor
                 : Colors.grey,
       ),
       beforeLineStyle: LineStyle(
         thickness: 1,
         color:
             (store.status == '1' || store.status == '2' || store.status == '3')
-                ? Styles.successTextColor
-                // : store.status == '2'
-                //     ? Styles.primaryColor
-                // : store.status == '3'
-                //     ? Styles.failTextColor
+                ? Styles.primaryColor
                 : Colors.grey,
       ),
       endChild: StoreCard(
@@ -118,7 +89,7 @@ class StoreVisitCard extends StatelessWidget {
 }
 
 class StoreCard extends StatelessWidget {
-  final Store store;
+  final ListStore store;
   final String route;
   final String routeId;
 
@@ -129,50 +100,34 @@ class StoreCard extends StatelessWidget {
     required this.routeId,
   });
 
+  Future<List<RouteStore>> getRoutes(String filter) async {
+    try {
+      // Load the JSON file for districts
+      final String response = await rootBundle.loadString('data/route.json');
+      final data = json.decode(response);
+
+      // Filter and map JSON data to District model based on selected province and filter
+      final List<RouteStore> route =
+          (data as List).map((json) => RouteStore.fromJson(json)).toList();
+
+      // Group districts by amphoe
+      return route;
+    } catch (e) {
+      print("Error occurred: $e");
+      return [];
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    // return Card(
-    //   child: ListTile(
-    //     leading: const Icon(Icons.store_rounded),
-    //     title: Row(
-    //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    //       children: [
-    //         Text(
-    //           store.storeInfo.name,
-    //           style: Styles.black24(context),
-    //         ),
-    //         Container(
-    //           padding: EdgeInsets.all(6),
-    //           decoration: BoxDecoration(
-    //             color: Colors.amber,
-    //             borderRadius: BorderRadius.circular(8),
-    //           ),
-    //           child: Text(
-    //             'St.',
-    //             style: Styles.black18(context),
-    //           ),
-    //         ),
-    //       ],
-    //     ),
-    //     subtitle: Text(
-    //       '${store.storeInfo.storeId}',
-    //       style: Styles.black18(context),
-    //     ),
-    //   ),
-    // );
     return GestureDetector(
       onDoubleTap: () {
         Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => DetailScreen(
-              typeName: store.storeInfo.typeName,
-              routeId: routeId,
-              route: route,
               customerNo: store.storeInfo.storeId,
-              customerName: store.storeInfo.name,
-              address: store.storeInfo.address,
-              status: store.status,
+              routeId: routeId,
             ),
           ),
         );
@@ -190,11 +145,17 @@ class StoreCard extends StatelessWidget {
             size: 50,
           ),
           collapsedShape: RoundedRectangleBorder(
-              side: BorderSide.none, // No border when collapsed
-              borderRadius: BorderRadius.all(Radius.circular(16))),
+            side: BorderSide.none, // No border when collapsed
+            borderRadius: BorderRadius.all(
+              Radius.circular(16),
+            ),
+          ),
           shape: RoundedRectangleBorder(
-              side: BorderSide.none, // No border when expanded
-              borderRadius: BorderRadius.all(Radius.circular(16))),
+            side: BorderSide.none, // No border when expanded
+            borderRadius: BorderRadius.all(
+              Radius.circular(16),
+            ),
+          ),
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -211,8 +172,8 @@ class StoreCard extends StatelessWidget {
                   color: store.status == '1'
                       ? Styles.successTextColor
                       : store.status == '2'
-                          ? Styles.primaryColor
-                          : Styles.grey,
+                          ? Styles.fail
+                          : Colors.grey,
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
@@ -256,21 +217,78 @@ class StoreCard extends StatelessWidget {
                           ),
                           Row(
                             children: [
-                              Text(
-                                "สถานะ: ${store.status}",
-                                style: Styles.black18(context),
+                              Row(
+                                children: [
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Text(
+                                            "สถานะ: ${store.status}",
+                                            style: Styles.black18(context),
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          Text(
+                                            "จำนวนออเดอร์: ${store.status}",
+                                            style: Styles.black18(context),
+                                          ),
+                                        ],
+                                      ),
+                                      // Row(
+                                      //   children: [
+                                      //     Text(
+                                      //       "ปรับรูทจาก R${route} =>",
+                                      //       style: Styles.black18(context),
+                                      //     ),
+                                      //   ],
+                                      // ),
+                                    ],
+                                  ),
+                                ],
                               ),
                             ],
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                "จำนวนออเดอร์: ${store.status}",
-                                style: Styles.black18(context),
-                              ),
-                            ],
-                          )
+                          Container(
+                            margin: EdgeInsets.symmetric(vertical: 8),
+                            width: 170,
+                            height: 75,
+                            child: DropdownSearchCustom<RouteStore>(
+                              label: "ปรับรูท R${route}",
+                              titleText: "ปรับรูท R${route}",
+                              fetchItems: (filter) => getRoutes(filter),
+                              onChanged: (RouteStore? selected) async {
+                                if (selected != null) {}
+                              },
+                              itemAsString: (RouteStore data) => data.route,
+                              itemBuilder: (context, item, isSelected) {
+                                return Column(
+                                  children: [
+                                    ListTile(
+                                      title: Text(
+                                        " ${item.route}",
+                                        style: Styles.black18(context),
+                                      ),
+                                      selected: isSelected,
+                                    ),
+                                    Divider(
+                                      color: Colors.grey[
+                                          200], // Color of the divider line
+                                      thickness: 1, // Thickness of the line
+                                      indent:
+                                          16, // Left padding for the divider line
+                                      endIndent:
+                                          16, // Right padding for the divider line
+                                    ),
+                                  ],
+                                );
+                              },
+                            ),
+                          ),
                         ],
                       ),
                       GestureDetector(
@@ -279,26 +297,22 @@ class StoreCard extends StatelessWidget {
                             context,
                             MaterialPageRoute(
                               builder: (context) => DetailScreen(
-                                typeName: store.storeInfo.typeName,
                                 routeId: routeId,
-                                route: route,
                                 customerNo: store.storeInfo.storeId,
-                                customerName: store.storeInfo.name,
-                                address: store.storeInfo.address,
-                                status: store.status,
                               ),
                             ),
                           );
                         },
                         child: Container(
+                          margin: EdgeInsets.only(right: 20),
                           padding: EdgeInsets.all(8),
                           width: 125,
                           decoration: BoxDecoration(
-                            color: Styles.successTextColor,
+                            color: Styles.primaryColor,
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Text(
-                            'รายละเอียด',
+                            'ดูรายละเอียด',
                             style: Styles.white18(context),
                             textAlign: TextAlign.center,
                           ),

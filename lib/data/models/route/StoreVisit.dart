@@ -32,6 +32,7 @@ class StoreVisit {
       day: json['day'],
       storeAll: json['storeAll'],
       storePending: json['storePending'],
+      storeNotBuy: json['storeNotBuy'],
       storeBuy: json['storeBuy'],
       storeTotal: json['storeTotal'],
       listStore: (json['listStore'] as List)
@@ -49,6 +50,7 @@ class StoreVisit {
       'storeAll': storeAll,
       'storePending': storePending,
       'storeBuy': storeBuy,
+      'storeNotBuy': storeNotBuy,
       'storeTotal': storeTotal,
       'listStore': listStore.map((store) => store.toJson()).toList(),
     };

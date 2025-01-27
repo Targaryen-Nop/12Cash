@@ -1,3 +1,5 @@
+import 'package:_12sale_app/data/models/route/StoreVisit.dart';
+
 class RouteVisit2 {
   final String id;
   final String period;
@@ -8,6 +10,7 @@ class RouteVisit2 {
   final int storeSell;
   final int storeNotSell;
   final int storeTotal;
+  List<ListStore>? listStore;
 
   RouteVisit2({
     required this.id,
@@ -19,6 +22,7 @@ class RouteVisit2 {
     required this.storeSell,
     required this.storeNotSell,
     required this.storeTotal,
+    this.listStore,
   });
 
   // Factory method to parse JSON into RouteVisit2
@@ -33,6 +37,10 @@ class RouteVisit2 {
       storeSell: json['storeSell'],
       storeNotSell: json['storeNotSell'],
       storeTotal: json['storeTotal'],
+      listStore: (json['listStore'] as List?)
+              ?.map((store) => ListStore.fromJson(store))
+              .toList() ??
+          [],
     );
   }
 
@@ -48,6 +56,7 @@ class RouteVisit2 {
       'storeSell': storeSell,
       'storeNotSell': storeNotSell,
       'storeTotal': storeTotal,
+      'listStore': listStore?.map((store) => store.toJson()).toList(),
     };
   }
 }

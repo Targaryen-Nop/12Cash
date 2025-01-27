@@ -4,13 +4,19 @@ import 'package:_12sale_app/core/styles/style.dart';
 import 'package:_12sale_app/data/models/RouteVisit.dart';
 import 'package:_12sale_app/data/models/Store.dart';
 import 'package:_12sale_app/data/models/route/RouteVisit.dart';
+import 'package:_12sale_app/data/models/route/StoreVisit.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class RouteShopVisitCard extends StatelessWidget {
-  final RouteVisit2 item;
+  final StoreVisit item;
+  // final int all;
+  // final int pending;
+  // final int buy;
+  // final int notBuy;
+  // final int total;
   final VoidCallback onDetailsPressed;
   const RouteShopVisitCard({
     required this.item,
@@ -79,7 +85,7 @@ class RouteShopVisitCard extends StatelessWidget {
                                   style: Styles.black18(context),
                                 ),
                                 Text(
-                                  '${item.storeSell}',
+                                  '${item.storeBuy}',
                                   style: Styles.black18(context),
                                 ),
                               ],
@@ -92,7 +98,7 @@ class RouteShopVisitCard extends StatelessWidget {
                                   style: Styles.black18(context),
                                 ),
                                 Text(
-                                  '${item.storeNotSell}',
+                                  '${item.storeNotBuy}',
                                   style: Styles.black18(context),
                                 ),
                               ],
@@ -120,7 +126,7 @@ class RouteShopVisitCard extends StatelessWidget {
                               padding: EdgeInsets.only(
                                 bottom: 35,
                                 top: 35,
-                                left: 75,
+                                left: screenWidth / 15,
                               ),
                               child: CustomPaint(
                                 size: Size(200, 200),

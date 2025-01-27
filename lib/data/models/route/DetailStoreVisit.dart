@@ -63,7 +63,7 @@ class ListStore {
   final String? image;
   final String? latitude;
   final String? longtitude;
-  final String status;
+  String? status;
   final String statusText;
   final String? date;
   final List<dynamic> listOrder;
