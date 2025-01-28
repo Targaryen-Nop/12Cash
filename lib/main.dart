@@ -41,7 +41,7 @@ import 'package:camera/camera.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+// import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:lottie/lottie.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -51,6 +51,9 @@ import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/io_client.dart';
 import 'dart:io';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:intl/intl.dart';
+import 'package:month_year_picker/month_year_picker.dart';
 
 void main() async {
   try {
@@ -85,7 +88,7 @@ void main() async {
     await EasyLocalization.ensureInitialized();
     await PackageInfo.fromPlatform();
     // Initialize the notifications
-    await initializeNotifications();
+    // await initializeNotifications();
     await requestAllPermissions();
 
     await initializeDateFormatting('th', null);
@@ -408,6 +411,11 @@ class _MyAppState extends State<MyApp> {
             '/announce': (context) => const Announce(),
           },
           initialRoute: '/',
+          // localizationsDelegates: [
+          //   GlobalWidgetsLocalizations.delegate,
+          //   GlobalMaterialLocalizations.delegate,
+          //   MonthYearPickerLocalizations.delegate,
+          // ],
           localizationsDelegates: context.localizationDelegates,
           supportedLocales: context.supportedLocales,
           locale: context.locale,

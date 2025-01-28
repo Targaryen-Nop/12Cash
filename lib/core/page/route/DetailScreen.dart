@@ -21,6 +21,7 @@ import 'package:_12sale_app/core/page/route/OrderScreen.dart';
 
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:_12sale_app/data/models/User.dart';
+import 'package:_12sale_app/data/models/route/Cause.dart';
 import 'package:_12sale_app/data/models/route/DetailStoreVisit.dart';
 import 'package:_12sale_app/data/service/apiService.dart';
 import 'package:_12sale_app/data/service/locationService.dart';
@@ -60,6 +61,7 @@ class _DetailScreenState extends State<DetailScreen> {
   late DetailStoreVisit? detailStoreVisit;
   String status = "0";
   int statusCheck = 0;
+  List<Cause> causes = [];
 
   String period =
       "${DateTime.now().year}${DateFormat('MM').format(DateTime.now())}";
@@ -70,8 +72,28 @@ class _DetailScreenState extends State<DetailScreen> {
   void initState() {
     super.initState();
     _getDetailStore();
+    _getCauses();
 
     // _getStoreDataAll();
+  }
+
+  Future<void> _getCauses() async {
+    try {
+      ApiService apiService = ApiService();
+      await apiService.init();
+      var response = await apiService.request(
+        endpoint: 'api/cash/manage/option/get?module=route&type=notSell',
+        method: 'GET',
+      );
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final List<dynamic> data = response.data['data'];
+        setState(() {
+          causes = data.map((item) => Cause.fromJson(item)).toList();
+        });
+      }
+    } catch (e) {
+      print(e);
+    }
   }
 
   Future<void> _getDetailStore() async {
@@ -421,28 +443,75 @@ class _DetailScreenState extends State<DetailScreen> {
 
                   Container(
                     margin: EdgeInsets.symmetric(vertical: 16),
-                    child: DropDownStandard(
-                      selectedValue: selectedCause,
+                    child: DropdownButtonFormField<Cause>(
+                      icon: const Icon(
+                        Icons.chevron_left,
+                      ),
 
-                      items: const [
-                        'เลือกเหตุผล',
-                        'เช็คอิน',
-                        'ร้านค้าไม่ซื้อ',
-                        'อื่นๆ'
-                      ],
-                      hintText: 'route.detail_screen.cancel.hint'
-                          .tr(), // Default hint text
-                      onChanged: (String? newValue) {
+                      alignment: Alignment.center,
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Colors.grey[300],
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: BorderSide.none,
+                        ),
+                      ),
+                      // value: selectedValue,
+                      style: Styles.black18(context),
+                      // items: [],
+                      items: causes.map((Cause value) {
+                        return DropdownMenuItem<Cause>(
+                          value: value,
+                          child: Center(
+                            child: Text(
+                              value.name,
+                              style: Styles.black18(context),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                      onChanged: (Cause? newValue) {
                         noteController.clear();
                         setModalState(
                           () {
-                            selectedCause = newValue!;
+                            selectedCause = newValue!.name;
                           },
                         );
-                        // print('Selected Cause: $selectedCause');
                       },
+                      hint: Text(
+                        "เลือกเหตุผล",
+                        style: Styles.black18(context),
+                        textAlign: TextAlign.center,
+                      ),
                     ),
                   ),
+
+                  // Container(
+                  //   margin: EdgeInsets.symmetric(vertical: 16),
+                  //   child: DropDownStandard(
+                  //     selectedValue: selectedCause,
+
+                  //     items: const [
+                  //       'เลือกเหตุผล',
+                  //       'เช็คอิน',
+                  //       'ร้านค้าไม่ซื้อ',
+                  //       'อื่นๆ'
+                  //     ],
+                  //     hintText: 'route.detail_screen.cancel.hint'
+                  //         .tr(), // Default hint text
+                  //     onChanged: (String? newValue) {
+                  //       noteController.clear();
+                  //       setModalState(
+                  //         () {
+                  //           selectedCause = newValue!;
+                  //         },
+                  //       );
+                  //       // print('Selected Cause: $selectedCause');
+                  //     },
+                  //   ),
+                  // ),
                   // const SizedBox(height: 16),
                   selectedCause == 'อื่นๆ'
                       ? Container(

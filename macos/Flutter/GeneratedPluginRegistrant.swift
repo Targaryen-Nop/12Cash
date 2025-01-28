@@ -7,7 +7,6 @@ import Foundation
 
 import connectivity_plus
 import device_info_plus
-import flutter_local_notifications
 import geolocator_apple
 import location
 import network_info_plus
@@ -21,7 +20,6 @@ import video_player_avfoundation
 func RegisterGeneratedPlugins(registry: FlutterPluginRegistry) {
   ConnectivityPlusPlugin.register(with: registry.registrar(forPlugin: "ConnectivityPlusPlugin"))
   DeviceInfoPlusMacosPlugin.register(with: registry.registrar(forPlugin: "DeviceInfoPlusMacosPlugin"))
-  FlutterLocalNotificationsPlugin.register(with: registry.registrar(forPlugin: "FlutterLocalNotificationsPlugin"))
   GeolocatorPlugin.register(with: registry.registrar(forPlugin: "GeolocatorPlugin"))
   LocationPlugin.register(with: registry.registrar(forPlugin: "LocationPlugin"))
   NetworkInfoPlusPlugin.register(with: registry.registrar(forPlugin: "NetworkInfoPlusPlugin"))

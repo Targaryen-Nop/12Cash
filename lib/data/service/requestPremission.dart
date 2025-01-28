@@ -102,6 +102,7 @@ Future<void> requestAllPermissions() async {
     Permission.nearbyWifiDevices,
     Permission.locationAlways,
     Permission.photos,
+    Permission.storage,
   ];
 
   for (var permission in permissions) {

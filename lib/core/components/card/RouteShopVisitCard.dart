@@ -85,7 +85,7 @@ class RouteShopVisitCard extends StatelessWidget {
                                   style: Styles.black18(context),
                                 ),
                                 Text(
-                                  '${item.storeBuy}',
+                                  '${item.storeSell}',
                                   style: Styles.black18(context),
                                 ),
                               ],
@@ -98,7 +98,7 @@ class RouteShopVisitCard extends StatelessWidget {
                                   style: Styles.black18(context),
                                 ),
                                 Text(
-                                  '${item.storeNotBuy}',
+                                  '${item.storeNotSell}',
                                   style: Styles.black18(context),
                                 ),
                               ],
@@ -131,7 +131,7 @@ class RouteShopVisitCard extends StatelessWidget {
                               child: CustomPaint(
                                 size: Size(200, 200),
                                 painter: CircularChartPainter(
-                                    completionPercentage: 100),
+                                    completionPercentage: item.percentComplete),
                                 child: Center(
                                   child: Column(
                                     mainAxisSize: MainAxisSize.min,
@@ -143,10 +143,6 @@ class RouteShopVisitCard extends StatelessWidget {
                                       SizedBox(
                                         width: 80,
                                       )
-                                      // Text(
-                                      //   "150,000 ฿",
-                                      //   style: Styles.black18(context),
-                                      // ),
                                     ],
                                   ),
                                 ),

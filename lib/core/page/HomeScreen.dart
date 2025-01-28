@@ -5,6 +5,7 @@ import 'package:_12sale_app/core/components/search/DropdownSearchCustom.dart';
 import 'package:_12sale_app/core/page/dashboard/DashboardScreen.dart';
 import 'package:_12sale_app/core/page/manage/ManageScreen.dart';
 import 'package:_12sale_app/core/page/report/ReportScreen.dart';
+import 'package:_12sale_app/core/page/route/AjustRoute.dart';
 import 'package:_12sale_app/core/page/route/OrderScreen.dart';
 import 'package:_12sale_app/core/page/route/RouteScreen.dart';
 import 'package:_12sale_app/core/page/setting/SettingScreen.dart';
@@ -145,7 +146,14 @@ class _HomeScreenState extends State<HomeScreen> {
       case 0:
         return () {}();
       case 1:
-        return () {}();
+        return () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AjustRoute(),
+            ),
+          );
+        }();
       case 2:
         return () {
           Navigator.push(

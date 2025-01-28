@@ -10,17 +10,18 @@ android {
     namespace = "com.example.u_12sale_app"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
+    // coreLibraryDesugaringEnabled = true
     // compileSdkVersion 33 // Use at least 31, preferably 33 or higher
 
 
     compileOptions {
         // coreLibraryDesugaringEnabled true
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17 
+        targetCompatibility = JavaVersion.VERSION_17 
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8
+        jvmTarget = JavaVersion.VERSION_17
     }
 
     defaultConfig {

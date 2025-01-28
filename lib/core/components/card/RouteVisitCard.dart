@@ -125,7 +125,7 @@ class RouteVisitCard extends StatelessWidget {
                               child: CustomPaint(
                                 size: Size(200, 200),
                                 painter: CircularChartPainter(
-                                    completionPercentage: 100),
+                                    completionPercentage: item.percentComplete),
                                 child: Center(
                                   child: Column(
                                     mainAxisSize: MainAxisSize.min,

@@ -6,9 +6,11 @@ class StoreVisit {
   final String day;
   final int? storeAll;
   final int? storePending;
-  final int? storeBuy;
-  final int? storeNotBuy;
+  final int? storeSell;
+  final int? storeNotSell;
   final int? storeTotal;
+  final double percentComplete;
+  final double percentEffective;
   final List<ListStore> listStore;
 
   StoreVisit({
@@ -19,9 +21,11 @@ class StoreVisit {
     required this.listStore,
     this.storeAll,
     this.storePending,
-    this.storeBuy,
-    this.storeNotBuy,
+    this.storeSell,
+    this.storeNotSell,
     this.storeTotal,
+    required this.percentComplete,
+    required this.percentEffective,
   });
 
   factory StoreVisit.fromJson(Map<String, dynamic> json) {
@@ -32,9 +36,11 @@ class StoreVisit {
       day: json['day'],
       storeAll: json['storeAll'],
       storePending: json['storePending'],
-      storeNotBuy: json['storeNotBuy'],
-      storeBuy: json['storeBuy'],
+      storeNotSell: json['storeNotSell'],
+      storeSell: json['storeSell'],
       storeTotal: json['storeTotal'],
+      percentComplete: (json['percentComplete'] as num).toDouble(),
+      percentEffective: (json['percentEffective'] as num).toDouble(),
       listStore: (json['listStore'] as List)
           .map((store) => ListStore.fromJson(store))
           .toList(),
@@ -49,9 +55,11 @@ class StoreVisit {
       'day': day,
       'storeAll': storeAll,
       'storePending': storePending,
-      'storeBuy': storeBuy,
-      'storeNotBuy': storeNotBuy,
+      'storeSell': storeSell,
+      'storeNotSell': storeNotSell,
       'storeTotal': storeTotal,
+      'percentComplete': percentComplete,
+      'percentEffective': percentEffective,
       'listStore': listStore.map((store) => store.toJson()).toList(),
     };
   }

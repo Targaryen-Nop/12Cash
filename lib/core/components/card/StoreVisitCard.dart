@@ -165,21 +165,23 @@ class StoreCard extends StatelessWidget {
                   style: Styles.black18(context),
                 ),
               ),
-              Container(
-                // padding: EdgeInsets.symmetric(horizontal: 8),
-                width: 100,
-                decoration: BoxDecoration(
-                  color: store.status == '1'
-                      ? Styles.successTextColor
-                      : store.status == '2'
-                          ? Styles.fail
-                          : Colors.grey,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Text(
-                  '${store.statusText}',
-                  style: Styles.white18(context),
-                  textAlign: TextAlign.center,
+              Skeleton.ignore(
+                child: Container(
+                  // padding: EdgeInsets.symmetric(horizontal: 8),
+                  width: 100,
+                  decoration: BoxDecoration(
+                    color: store.status == '1'
+                        ? Styles.successTextColor
+                        : store.status == '2'
+                            ? Styles.fail
+                            : Colors.grey,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text(
+                    '${store.statusText}',
+                    style: Styles.white18(context),
+                    textAlign: TextAlign.center,
+                  ),
                 ),
               ),
             ],

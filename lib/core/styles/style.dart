@@ -137,6 +137,22 @@ class Styles {
           color: Colors.red,
         ),
       );
+
+  static TextStyle headerAmber32(BuildContext context) => GoogleFonts.kanit(
+        textStyle: TextStyle(
+          fontSize: getResponsiveFontSize(context, 32),
+          fontWeight: FontWeight.w600,
+          color: Colors.amber,
+        ),
+      );
+
+  static TextStyle headerGreen32(BuildContext context) => GoogleFonts.kanit(
+        textStyle: TextStyle(
+          fontSize: getResponsiveFontSize(context, 32),
+          fontWeight: FontWeight.w600,
+          color: Colors.green[600],
+        ),
+      );
   static TextStyle strikeBlack24(BuildContext context) => GoogleFonts.kanit(
         textStyle: TextStyle(
           decoration: TextDecoration.lineThrough,
