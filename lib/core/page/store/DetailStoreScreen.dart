@@ -535,55 +535,55 @@ class _DetailStoreScreenState extends State<DetailStoreScreen> {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceEvenly,
                                   children: [
-                                    Container(
-                                      padding:
-                                          EdgeInsets.symmetric(vertical: 35),
-                                      child: CustomPaint(
-                                        size: Size(200, 200),
-                                        painter: CircularChartPainter(
-                                            completionPercentage:
-                                                completionPercentage),
-                                        child: Center(
-                                          child: Column(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              // Text(
-                                              //   "${((completionPercentage * 100) / 360).toStringAsFixed(2)}%",
-                                              //   style: Styles.black18(context),
-                                              // ),
-                                              Row(
-                                                children: [
-                                                  Text(
-                                                    "ขาย : ",
-                                                    style:
-                                                        Styles.black18(context),
-                                                  ),
-                                                  Text(
-                                                    "${((completionPercentage * 100) / 360).toStringAsFixed(2)}%",
-                                                    style:
-                                                        Styles.black18(context),
-                                                  ),
-                                                ],
-                                              ),
-                                              Row(
-                                                children: [
-                                                  Text(
-                                                    "คืน : ",
-                                                    style:
-                                                        Styles.black18(context),
-                                                  ),
-                                                  Text(
-                                                    "${((140 * 100) / 360).toStringAsFixed(2)}%",
-                                                    style:
-                                                        Styles.black18(context),
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ),
+                                    // Container(
+                                    //   padding:
+                                    //       EdgeInsets.symmetric(vertical: 35),
+                                    //   child: CustomPaint(
+                                    //     size: Size(200, 200),
+                                    //     painter: CircularChartPainter(
+                                    //         completionPercentage:
+                                    //             completionPercentage),
+                                    //     child: Center(
+                                    //       child: Column(
+                                    //         mainAxisSize: MainAxisSize.min,
+                                    //         children: [
+                                    //           // Text(
+                                    //           //   "${((completionPercentage * 100) / 360).toStringAsFixed(2)}%",
+                                    //           //   style: Styles.black18(context),
+                                    //           // ),
+                                    //           Row(
+                                    //             children: [
+                                    //               Text(
+                                    //                 "ขาย : ",
+                                    //                 style:
+                                    //                     Styles.black18(context),
+                                    //               ),
+                                    //               Text(
+                                    //                 "${((completionPercentage * 100) / 360).toStringAsFixed(2)}%",
+                                    //                 style:
+                                    //                     Styles.black18(context),
+                                    //               ),
+                                    //             ],
+                                    //           ),
+                                    //           Row(
+                                    //             children: [
+                                    //               Text(
+                                    //                 "คืน : ",
+                                    //                 style:
+                                    //                     Styles.black18(context),
+                                    //               ),
+                                    //               Text(
+                                    //                 "${((140 * 100) / 360).toStringAsFixed(2)}%",
+                                    //                 style:
+                                    //                     Styles.black18(context),
+                                    //               ),
+                                    //             ],
+                                    //           ),
+                                    //         ],
+                                    //       ),
+                                    //     ),
+                                    //   ),
+                                    // ),
                                     Padding(
                                       padding: const EdgeInsets.symmetric(
                                           vertical: 8.0),

@@ -22,14 +22,14 @@ import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:flutter_date_pickers/flutter_date_pickers.dart' as dp;
 import 'package:month_year_picker/month_year_picker.dart';
 
-class AjustRoute extends StatefulWidget {
-  const AjustRoute({super.key});
+class AjustRoute3 extends StatefulWidget {
+  const AjustRoute3({super.key});
 
   @override
-  State<AjustRoute> createState() => _AjustRouteState();
+  State<AjustRoute3> createState() => _AjustRoute3State();
 }
 
-class _AjustRouteState extends State<AjustRoute> {
+class _AjustRoute3State extends State<AjustRoute3> {
   bool isLoading = true;
   List<RouteVisit2> routeVisits = [];
   String period =
@@ -231,7 +231,7 @@ class _AjustRouteState extends State<AjustRoute> {
                               ),
                               const SizedBox(width: 8),
                               Text(
-                                "ขออนุมัติ",
+                                "ยืนยัน",
                                 style: Styles.white18(context),
                               ),
                             ],

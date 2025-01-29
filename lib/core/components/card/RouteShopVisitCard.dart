@@ -33,6 +33,16 @@ class RouteShopVisitCard extends StatelessWidget {
         height: 170,
         margin: EdgeInsets.all(8.0),
         child: BoxShadowCustom(
+          shadowColor: item.percentEffective < 50
+              ? Styles.fail!
+              : item.percentEffective < 80
+                  ? Styles.warning!
+                  : Styles.success!,
+          borderColor: item.percentEffective < 50
+              ? Styles.fail!
+              : item.percentEffective < 80
+                  ? Styles.warning!
+                  : Styles.success!,
           child: Container(
             padding: EdgeInsets.symmetric(horizontal: 8),
             // color: Colors.cyan,
@@ -131,7 +141,10 @@ class RouteShopVisitCard extends StatelessWidget {
                               child: CustomPaint(
                                 size: Size(200, 200),
                                 painter: CircularChartPainter(
-                                    completionPercentage: item.percentComplete),
+                                  completionPercentage: item.percentComplete,
+                                  effectivenessPercentage:
+                                      item.percentEffective,
+                                ),
                                 child: Center(
                                   child: Column(
                                     mainAxisSize: MainAxisSize.min,

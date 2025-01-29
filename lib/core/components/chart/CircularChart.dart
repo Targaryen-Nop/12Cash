@@ -5,7 +5,11 @@ import 'package:flutter/material.dart';
 
 class CircularChartPainter extends CustomPainter {
   final double completionPercentage;
-  CircularChartPainter({required this.completionPercentage});
+  final double effectivenessPercentage;
+  CircularChartPainter({
+    required this.completionPercentage,
+    required this.effectivenessPercentage,
+  });
   @override
   void paint(Canvas canvas, Size size) {
     double strokeWidth = 12.0;
@@ -18,7 +22,11 @@ class CircularChartPainter extends CustomPainter {
       ..strokeWidth = strokeWidth;
 
     Paint section1 = Paint()
-      ..color = Colors.green[600]!
+      ..color = effectivenessPercentage < 50
+          ? Colors.red
+          : effectivenessPercentage > 80
+              ? Styles.success!
+              : Styles.warning!
       ..style = PaintingStyle.stroke
       ..strokeWidth = strokeWidth
       ..strokeCap = StrokeCap.round;

@@ -8,7 +8,6 @@ import 'package:_12sale_app/core/components/badge/CustomBadge.dart';
 import 'package:_12sale_app/core/components/card/RouteShopVisitCard.dart';
 import 'package:_12sale_app/core/components/card/RouteVisitCard.dart';
 import 'package:_12sale_app/core/components/card/StoreVisitCard.dart';
-import 'package:_12sale_app/core/components/table/ShopRouteTable.dart';
 import 'package:_12sale_app/core/page/HomeScreen.dart';
 import 'package:_12sale_app/core/page/route/TestGooglemap.dart';
 import 'package:_12sale_app/core/styles/style.dart';
@@ -27,14 +26,12 @@ import 'package:url_launcher/url_launcher.dart';
 class ShopRouteScreen extends StatefulWidget {
   final String routeId;
   final String route;
-  final RouteVisit2 routeVisit;
   // final List<Store> listStore;
 
   const ShopRouteScreen({
     super.key,
     required this.routeId,
     required this.route,
-    required this.routeVisit,
     // required this.listStore,
   });
 
@@ -183,15 +180,15 @@ class _ShopRouteScreenState extends State<ShopRouteScreen> with RouteAware {
                         alignment: Alignment.center,
                         child: BoxShadowCustom(
                           shadowColor: storeVisit!.percentEffective < 50
-                              ? Colors.red
+                              ? Styles.fail!
                               : storeVisit!.percentEffective < 80
-                                  ? Colors.amber
-                                  : Colors.green[600]!,
+                                  ? Styles.warning!
+                                  : Styles.success!,
                           borderColor: storeVisit!.percentEffective < 50
-                              ? Colors.red
+                              ? Styles.fail!
                               : storeVisit!.percentEffective < 80
-                                  ? Colors.amber
-                                  : Colors.green[600]!,
+                                  ? Styles.warning!
+                                  : Styles.success!,
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Column(
@@ -298,17 +295,6 @@ class _ShopRouteScreenState extends State<ShopRouteScreen> with RouteAware {
                 ),
               ),
 
-              // Expanded(
-              //   child: ListView.builder(
-              //     itemCount: listStore.length,
-              //     itemBuilder: (context, index) {
-              //       return Text(
-              //         '${listStore[index].status}',
-              //         style: Styles.black18(context),
-              //       );
-              //     },
-              //   ),
-              // ),
               SizedBox(
                 height: screenWidth / 20,
               ),

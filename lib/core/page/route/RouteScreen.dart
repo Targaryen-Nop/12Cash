@@ -38,8 +38,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:widget_to_marker/widget_to_marker.dart';
 
-List<RouteVisit> routeVisits = [];
-List<RouteVisit2> routeVisits2 = [];
+List<RouteVisit2> routeVisits = [];
 String filterRoute = 'R01';
 String period =
     "${DateTime.now().year}${DateFormat('MM').format(DateTime.now())}";
@@ -295,29 +294,7 @@ class _RoutescreenState extends State<Routescreen> with RouteAware {
     await saveToStorage('saleRoutes', _routes);
   }
 
-  // Future<void> _getRouteVisit() async {
-  //   ApiService apiService = ApiService();
-  //   await apiService.init();
-
-  //   var response = await apiService.request(
-  //     endpoint: 'api/cash/route/getRoute?area=${User.area}&period=${period}',
-  //     method: 'GET',
-  //   );
-
-  //   if (response.statusCode == 200) {
-  //     final List<dynamic> data = response.data['data'];
-  //     // print("getRoute: ${response.data['data']}");
-  //     if (mounted) {
-  //       setState(() {
-  //         routeVisits = data.map((item) => RouteVisit.fromJson(item)).toList();
-  //         _loadingRouteVisit = false;
-  //       });
-  //     }
-  //     print("getRoute: $routeVisits");
-  //   }
-  // }
-
-  Future<void> _getRouteVisit2() async {
+  Future<void> _getRouteVisit() async {
     ApiService apiService = ApiService();
     await apiService.init();
 
@@ -331,12 +308,11 @@ class _RoutescreenState extends State<Routescreen> with RouteAware {
       // print("getRoute: ${response.data['data']}");
       if (mounted) {
         setState(() {
-          routeVisits2 =
-              data.map((item) => RouteVisit2.fromJson(item)).toList();
+          routeVisits = data.map((item) => RouteVisit2.fromJson(item)).toList();
           _loadingRouteVisit = false;
         });
       }
-      print("getRoute: $routeVisits2");
+      print("getRoute: $routeVisits");
     }
   }
 
@@ -347,8 +323,8 @@ class _RoutescreenState extends State<Routescreen> with RouteAware {
     _loadSaleRoute();
     _initializePolylines();
     _initializeMarkers();
-    // _getRouteVisit();
-    _getRouteVisit2();
+
+    _getRouteVisit();
   }
 
   @override
@@ -368,7 +344,7 @@ class _RoutescreenState extends State<Routescreen> with RouteAware {
       _loadingRouteVisit = true;
     });
     // Called when the screen is popped back to
-    _getRouteVisit2();
+    _getRouteVisit();
   }
 
   @override
@@ -377,28 +353,6 @@ class _RoutescreenState extends State<Routescreen> with RouteAware {
     routeObserver.unsubscribe(this);
     super.dispose();
   }
-
-  // @override
-  // void didPopNext() {
-  //   _getRouteVisit();
-  // }
-
-  // @override
-  // void didChangeDependencies() {
-  //   super.didChangeDependencies();
-  //   // Register this screen as a route-aware widget
-  //   final ModalRoute? route = ModalRoute.of(context);
-  //   if (route is PageRoute) {
-  //     // Only subscribe if the route is a P ageRoute
-  //     routeObserver.subscribe(this, route);
-  //   }
-  // }
-
-  // @override
-  // void dispose() {
-  //   // routeObserver.unsubscribe(this);
-  //   super.dispose();
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -413,10 +367,10 @@ class _RoutescreenState extends State<Routescreen> with RouteAware {
         color: Colors.white,
         backgroundColor: Styles.primaryColor,
         onRefresh: () async {
-          _getRouteVisit2();
+          _getRouteVisit();
           print(filterRoute);
           routeState.routeVisitList.clear();
-          // _getRouteVisit();
+
           if (filterRoute == 'R01') {
             setState(() {
               filterRoute = 'R00';
@@ -434,7 +388,7 @@ class _RoutescreenState extends State<Routescreen> with RouteAware {
             child: ListView.builder(
               itemCount: routeState.routeVisitList.length > 0
                   ? (routeState.routeVisitList.length / 2).ceil()
-                  : (routeVisits2.length / 2).ceil(), // Number of rows needed
+                  : (routeVisits.length / 2).ceil(), // Number of rows needed
               itemBuilder: (context, index) {
                 final firstIndex = index * 2;
                 final secondIndex = firstIndex + 1;
@@ -452,8 +406,13 @@ class _RoutescreenState extends State<Routescreen> with RouteAware {
                                     builder: (context) => DetailScreen(
                                       routeId: routeState
                                           .routeVisitList[firstIndex].id,
+                                      route: routeState
+                                          .routeVisitList[firstIndex].day,
                                       customerNo: routeState
-                                          .routeVisitList[firstIndex].id,
+                                          .routeVisitList[firstIndex]
+                                          .listStore![0]
+                                          .storeInfo
+                                          .storeId,
                                     ),
                                   ),
                                 );
@@ -472,9 +431,14 @@ class _RoutescreenState extends State<Routescreen> with RouteAware {
                                     MaterialPageRoute(
                                       builder: (context) => DetailScreen(
                                         routeId: routeState
-                                            .routeVisitList[firstIndex].id,
+                                            .routeVisitList[secondIndex].id,
+                                        route: routeState
+                                            .routeVisitList[secondIndex].day,
                                         customerNo: routeState
-                                            .routeVisitList[firstIndex].id,
+                                            .routeVisitList[secondIndex]
+                                            .listStore![0]
+                                            .storeInfo
+                                            .storeId,
                                       ),
                                     ),
                                   );
@@ -509,18 +473,17 @@ class _RoutescreenState extends State<Routescreen> with RouteAware {
                         children: [
                           Expanded(
                             child: RouteVisitCard(
-                              item: routeVisits2[firstIndex],
+                              item: routeVisits[firstIndex],
                               onDetailsPressed: () {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => ShopRouteScreen(
-                                      routeVisit: routeVisits2[firstIndex],
-                                      routeId: routeVisits2[firstIndex].id,
-                                      route: routeVisits2[firstIndex].day,
-                                      // status: routeVisits2[firstIndex].day,
+                                      routeId: routeVisits[firstIndex].id,
+                                      route: routeVisits[firstIndex].day,
+                                      // status: routeVisits[firstIndex].day,
                                       // listStore:
-                                      //     routeVisits2[firstIndex].listStore,
+                                      //     routeVisits[firstIndex].listStore,
                                     ),
                                   ),
                                 );
@@ -528,19 +491,18 @@ class _RoutescreenState extends State<Routescreen> with RouteAware {
                             ),
                           ),
                           if (secondIndex <
-                              routeVisits2
+                              routeVisits
                                   .length) // Check if the second card exists
                             Expanded(
                               child: RouteVisitCard(
-                                item: routeVisits2[secondIndex],
+                                item: routeVisits[secondIndex],
                                 onDetailsPressed: () {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) => ShopRouteScreen(
-                                        routeVisit: routeVisits2[secondIndex],
-                                        routeId: routeVisits2[secondIndex].id,
-                                        route: routeVisits2[secondIndex].day,
+                                        routeId: routeVisits[secondIndex].id,
+                                        route: routeVisits[secondIndex].day,
                                         // status: routeVisits[secondIndex].day,
                                         // listStore:
                                         //     routeVisits[secondIndex].listStore,
@@ -746,13 +708,11 @@ class _RouteHeaderState extends State<RouteHeader> {
                 color: Colors.white,
               ),
               child: StoreSearch(
-                key: ValueKey("Search${filterRoute}"),
+                key: ValueKey("Search-${filterRoute}"),
                 onStoreSelected: (data) async {
                   if (data != null) {
                     ApiService apiService = ApiService();
                     await apiService.init();
-                    print(
-                        "Path: ${'api/cash/route/getRoute?period=${DateTime.now().year}${DateFormat('MM').format(DateTime.now())}'}");
                     var response = await apiService.request(
                       endpoint:
                           'api/cash/route/getRoute?period=${period}&storeId=${data.storeId}',
@@ -764,14 +724,14 @@ class _RouteHeaderState extends State<RouteHeader> {
                       // print("getRoute: ${response.data['data']}");
                       if (mounted) {
                         setState(() {
-                          routeVisits2 = data
+                          routeVisits = data
                               .map((item) => RouteVisit2.fromJson(item))
                               .toList();
                           // _loadingRouteVisit = false;
                         });
                       }
-                      routeState.updateValue(routeVisits2);
-                      print("getRoute: $routeVisits2");
+                      routeState.updateValue(routeVisits);
+                      print("getRoute: $routeVisits");
                     }
                     setState(
                       () {

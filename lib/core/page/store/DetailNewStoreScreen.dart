@@ -518,30 +518,30 @@ class _DetailNewStoreScreenState extends State<DetailNewStoreScreen> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceEvenly,
                                 children: [
-                                  Container(
-                                    padding: EdgeInsets.symmetric(vertical: 35),
-                                    child: CustomPaint(
-                                      size: Size(200, 200),
-                                      painter: CircularChartPainter(
-                                          completionPercentage:
-                                              completionPercentage),
-                                      child: Center(
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            Text(
-                                              "${((completionPercentage * 100) / 360).toStringAsFixed(2)}%",
-                                              style: Styles.black24(context),
-                                            ),
-                                            Text(
-                                              "150,000 ฿",
-                                              style: Styles.black24(context),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ),
+                                  // Container(
+                                  //   padding: EdgeInsets.symmetric(vertical: 35),
+                                  //   child: CustomPaint(
+                                  //     size: Size(200, 200),
+                                  //     painter: CircularChartPainter(
+                                  //         completionPercentage:
+                                  //             completionPercentage),
+                                  //     child: Center(
+                                  //       child: Column(
+                                  //         mainAxisSize: MainAxisSize.min,
+                                  //         children: [
+                                  //           Text(
+                                  //             "${((completionPercentage * 100) / 360).toStringAsFixed(2)}%",
+                                  //             style: Styles.black24(context),
+                                  //           ),
+                                  //           Text(
+                                  //             "150,000 ฿",
+                                  //             style: Styles.black24(context),
+                                  //           ),
+                                  //         ],
+                                  //       ),
+                                  //     ),
+                                  //   ),
+                                  // ),
                                   Padding(
                                     padding: const EdgeInsets.symmetric(
                                         vertical: 8.0),

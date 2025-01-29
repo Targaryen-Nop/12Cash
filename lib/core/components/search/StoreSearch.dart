@@ -14,7 +14,10 @@ import 'package:skeletonizer/skeletonizer.dart';
 
 class StoreSearch extends StatefulWidget {
   final Function(Store?) onStoreSelected;
-  const StoreSearch({super.key, required this.onStoreSelected});
+  const StoreSearch({
+    required this.onStoreSelected,
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<StoreSearch> createState() => _StoreSearchState();
@@ -53,7 +56,6 @@ class _StoreSearchState extends State<StoreSearch> {
 
   Future<void> _saveStoreFavoriteStorage() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-
     // Convert the list of Order objects to a list of maps (JSON)
     List<String> storeFavorites =
         _storeFavoriteLocal.map((store) => jsonEncode(store.toJson())).toList();
@@ -91,6 +93,7 @@ class _StoreSearchState extends State<StoreSearch> {
     final storeState = Provider.of<StoreLocal>(context);
     double screenWidth = MediaQuery.of(context).size.width;
     return DropdownSearch<Store>(
+      clearButtonProps: ClearButtonProps(isVisible: true),
       asyncItems: (String filter) => getStores(), // Filters data as user types
       dropdownButtonProps: DropdownButtonProps(
         icon: Padding(
@@ -120,6 +123,7 @@ class _StoreSearchState extends State<StoreSearch> {
           ),
         ),
       ),
+
       onChanged: (Store? data) {
         if (data != null) {
           storeState.addStoreFavorite(data);

@@ -102,7 +102,7 @@ class _DropdownSearchCustomState<T> extends State<DropdownSearchCustom<T>> {
             ),
           ),
           alignment: Alignment.center,
-          padding: const EdgeInsets.symmetric(vertical: 16),
+          // padding: const EdgeInsets.symmetric(vertical: 16),
           child: Text(widget.titleText, style: Styles.white18(context)),
         ),
         showSearchBox: widget.showSearchBox,

@@ -18,6 +18,7 @@ import 'package:_12sale_app/core/components/table/DetailTable.dart';
 import 'package:_12sale_app/core/components/table/ShopRouteTableMapAPI.dart';
 import 'package:_12sale_app/core/page/HomeScreen.dart';
 import 'package:_12sale_app/core/page/route/OrderScreen.dart';
+import 'package:_12sale_app/core/page/route/ShopRouteScreen.dart';
 
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:_12sale_app/data/models/User.dart';
@@ -37,11 +38,13 @@ import 'package:toastification/toastification.dart';
 class DetailScreen extends StatefulWidget {
   final String customerNo;
   final String routeId;
+  final String route;
 
   DetailScreen({
     super.key,
     required this.customerNo,
     required this.routeId,
+    required this.route,
   });
 
   @override
@@ -154,7 +157,7 @@ class _DetailScreenState extends State<DetailScreen> {
     }
   }
 
-  Future<void> checkInStore() async {
+  Future<void> checkInStore(BuildContext context) async {
     try {
       await fetchLocation();
       Dio dio = Dio();
@@ -203,6 +206,25 @@ class _DetailScreenState extends State<DetailScreen> {
             statusCheck = 2;
             storeDetail?.listStore[0].status = '2';
           });
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ShopRouteScreen(
+                routeId: widget.routeId,
+                route: widget.route,
+              ),
+            ),
+          );
+          Navigator.of(context).pop();
+          // Navigator.pop(context);
+          // Navigator.of(context).push(
+          //   MaterialPageRoute(
+          //     builder: (context) => ShopRouteScreen(
+          //       routeId: widget.routeId,
+          //       route: widget.route,
+          //     ),
+          //   ),
+          // );
         }
       }
     } on ApiException catch (e) {
@@ -488,31 +510,6 @@ class _DetailScreenState extends State<DetailScreen> {
                     ),
                   ),
 
-                  // Container(
-                  //   margin: EdgeInsets.symmetric(vertical: 16),
-                  //   child: DropDownStandard(
-                  //     selectedValue: selectedCause,
-
-                  //     items: const [
-                  //       'เลือกเหตุผล',
-                  //       'เช็คอิน',
-                  //       'ร้านค้าไม่ซื้อ',
-                  //       'อื่นๆ'
-                  //     ],
-                  //     hintText: 'route.detail_screen.cancel.hint'
-                  //         .tr(), // Default hint text
-                  //     onChanged: (String? newValue) {
-                  //       noteController.clear();
-                  //       setModalState(
-                  //         () {
-                  //           selectedCause = newValue!;
-                  //         },
-                  //       );
-                  //       // print('Selected Cause: $selectedCause');
-                  //     },
-                  //   ),
-                  // ),
-                  // const SizedBox(height: 16),
                   selectedCause == 'อื่นๆ'
                       ? Container(
                           margin: EdgeInsets.symmetric(vertical: 16),
@@ -578,9 +575,8 @@ class _DetailScreenState extends State<DetailScreen> {
                             ),
                             DialogButton(
                               onPressed: () async {
-                                await checkInStore();
-                                Navigator.of(context)
-                                    .pop(); // Close the bottom sheet
+                                await checkInStore(context);
+                                Navigator.of(context).pop();
                               },
                               color: Styles.successButtonColor,
                               child: Text(

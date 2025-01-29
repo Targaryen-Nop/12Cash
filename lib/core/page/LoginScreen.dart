@@ -243,7 +243,7 @@ class _LoginScreenState extends State<LoginScreen> with RouteAware {
                                         User.token = sharedPreferences
                                             .getString('token')!;
                                       });
-                                      Navigator.push(
+                                      Navigator.pushReplacement(
                                         context,
                                         MaterialPageRoute(
                                           builder: (context) =>

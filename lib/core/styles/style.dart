@@ -327,6 +327,22 @@ class Styles {
         ),
       );
 
+  static TextStyle headerPirmary32(BuildContext context) => GoogleFonts.kanit(
+        textStyle: TextStyle(
+          fontSize: getResponsiveFontSize(context, 32),
+          fontWeight: FontWeight.w600,
+          color: Color(0xFF00569D),
+        ),
+      );
+
+  static TextStyle headerPirmary24(BuildContext context) => GoogleFonts.kanit(
+        textStyle: TextStyle(
+          fontSize: getResponsiveFontSize(context, 24),
+          fontWeight: FontWeight.w600,
+          color: Color(0xFF00569D),
+        ),
+      );
+
 // --------------------- Primary Color ---------------------------------
   static const Color primaryColor = Color(0xFF00569D);
   static const Color secondaryColor = Color(0xFF94d3f2);
