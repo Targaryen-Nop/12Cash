@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 class RouteVisitFilterLocal with ChangeNotifier {
   List<RouteVisit2> _routeVisitList = [];
   List<StoreFavoriteLocal> _storesFavoriteList = [];
-  String filterRoute = 'R01';
 
   List<RouteVisit2> get routeVisitList => _routeVisitList;
   List<StoreFavoriteLocal> get storesFavoriteList => _storesFavoriteList;

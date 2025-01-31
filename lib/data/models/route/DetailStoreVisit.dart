@@ -11,6 +11,7 @@ class DetailStoreVisit {
   final int storeTotal;
   final double percentComplete;
   final double percentEffective;
+  final double percentVisit;
 
   DetailStoreVisit({
     required this.id,
@@ -25,6 +26,7 @@ class DetailStoreVisit {
     required this.storeTotal,
     required this.percentComplete,
     required this.percentEffective,
+    required this.percentVisit,
   });
 
   factory DetailStoreVisit.fromJson(Map<String, dynamic> json) {
@@ -43,6 +45,7 @@ class DetailStoreVisit {
       storeTotal: json['storeTotal'],
       percentComplete: (json['percentComplete'] as num).toDouble(),
       percentEffective: (json['percentEffective'] as num).toDouble(),
+      percentVisit: (json['percentVisit'] as num).toDouble(),
     );
   }
 
@@ -60,6 +63,7 @@ class DetailStoreVisit {
       'storeTotal': storeTotal,
       'percentComplete': percentComplete,
       'percentEffective': percentEffective,
+      'percentVisit': percentVisit,
     };
   }
 }
@@ -117,11 +121,13 @@ class ListStore {
   }
 }
 
-// StoreInfo model
+// StoreInfo class
 class StoreInfo {
   final String id;
   final String storeId;
   final String name;
+  final String taxId;
+  final String tel;
   final String typeName;
   final String address;
 
@@ -129,6 +135,8 @@ class StoreInfo {
     required this.id,
     required this.storeId,
     required this.name,
+    required this.taxId,
+    required this.tel,
     required this.typeName,
     required this.address,
   });
@@ -138,6 +146,8 @@ class StoreInfo {
       id: json['_id'],
       storeId: json['storeId'],
       name: json['name'],
+      taxId: json['taxId'],
+      tel: json['tel'],
       typeName: json['typeName'],
       address: json['address'],
     );
@@ -148,6 +158,8 @@ class StoreInfo {
       '_id': id,
       'storeId': storeId,
       'name': name,
+      'taxId': taxId,
+      'tel': tel,
       'typeName': typeName,
       'address': address,
     };

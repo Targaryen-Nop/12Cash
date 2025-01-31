@@ -48,24 +48,31 @@ class StoreVisitCard extends StatelessWidget {
             ? Styles.success!
             : store.status == '2'
                 ? Styles.success!
-                : Colors.red,
+                : Styles.fail!,
         indicator: Container(
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: store.status == '1'
-                  ? Styles.success!
-                  : store.status == '2'
-                      ? Styles.success!
-                      : Colors.grey,
-            ),
-            child: (store.status == '1' ||
-                    store.status == '2' ||
-                    store.status == '3')
-                ? Icon(
-                    Icons.check,
-                    color: Colors.white,
-                  )
-                : SizedBox()),
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: store.status == '1'
+                ? Styles.success!
+                : store.status == '2'
+                    ? Styles.success!
+                    : Styles.fail!,
+          ),
+          child: store.status == '1'
+              ? Icon(
+                  Icons.attach_money_rounded,
+                  color: Colors.white,
+                )
+              : store.status == '2'
+                  ? Icon(
+                      Icons.check,
+                      color: Colors.white,
+                    )
+                  : Icon(
+                      Icons.schedule,
+                      color: Colors.white,
+                    ),
+        ),
       ),
       afterLineStyle: LineStyle(
         thickness: 1,
@@ -73,7 +80,7 @@ class StoreVisitCard extends StatelessWidget {
             ? Styles.success!
             : store.status == '2'
                 ? Styles.success!
-                : Colors.grey,
+                : Styles.fail!,
       ),
       beforeLineStyle: LineStyle(
         thickness: 1,
@@ -81,7 +88,7 @@ class StoreVisitCard extends StatelessWidget {
             ? Styles.success!
             : store.status == '2'
                 ? Styles.success!
-                : Colors.grey,
+                : Styles.fail!,
       ),
       endChild: StoreCard(
         store: store,
@@ -140,58 +147,50 @@ class StoreCard extends StatelessWidget {
       child: Card(
         color: Colors.white,
         child: ListTile(
+          leading: Icon(
+            Icons.store,
+            color: Styles.primaryColor,
+            size: 40,
+          ),
           minTileHeight: 100,
-          // collapsedBackgroundColor: Colors.white,
-          // backgroundColor: Colors.grey[100],
-          // trailing: Icon(
-          //   Icons.store_rounded,
-          //   color: Styles.primaryColor,
-          //   size: 40,
-          // ),
-          // collapsedShape: RoundedRectangleBorder(
-          //   side: BorderSide.none, // No border when collapsed
-          //   borderRadius: BorderRadius.all(
-          //     Radius.circular(16),
-          //   ),
-          // ),
           shape: RoundedRectangleBorder(
             side: BorderSide.none, // No border when expanded
             borderRadius: BorderRadius.all(
               Radius.circular(16),
             ),
           ),
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                store.storeInfo.storeId,
-                style: Styles.black18(context),
-                overflow: TextOverflow.ellipsis,
-              ),
-              Skeleton.ignore(
-                child: Container(
-                  // padding: EdgeInsets.symmetric(horizontal: 8),
-                  width: 100,
-                  decoration: BoxDecoration(
-                    color: store.status == '1'
-                        ? Styles.success
-                        : store.status == '2'
-                            ? Styles.warning
-                            : Styles.fail,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Text(
-                    '${store.statusText}',
-                    style: Styles.white18(context),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          subtitle: Column(
+          title: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    store.storeInfo.storeId,
+                    style: Styles.black18(context),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  Skeleton.ignore(
+                    child: Container(
+                      // padding: EdgeInsets.symmetric(horizontal: 8),
+                      width: 100,
+                      decoration: BoxDecoration(
+                        color: store.status == '1'
+                            ? Styles.success
+                            : store.status == '2'
+                                ? Styles.warning
+                                : Styles.fail,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(
+                        '${store.statusText}',
+                        style: Styles.white18(context),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
               Text(
                 '${store.storeInfo.name}',
                 style: Styles.black18(context),
@@ -202,6 +201,20 @@ class StoreCard extends StatelessWidget {
               ),
             ],
           ),
+
+          // subtitle: Column(
+          //   crossAxisAlignment: CrossAxisAlignment.start,
+          //   children: [
+          //     Text(
+          //       '${store.storeInfo.name}',
+          //       style: Styles.black18(context),
+          //     ),
+          //     Text(
+          //       '${store.storeInfo.address}',
+          //       style: Styles.black18(context),
+          //     ),
+          //   ],
+          // ),
         ),
       ),
     );

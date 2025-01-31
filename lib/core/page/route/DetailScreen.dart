@@ -17,6 +17,7 @@ import 'package:_12sale_app/core/components/table/DetailTable.dart';
 // import 'package:_12sale_app/core/components/table/ShopRouteTable.dart';
 import 'package:_12sale_app/core/components/table/ShopRouteTableMapAPI.dart';
 import 'package:_12sale_app/core/page/HomeScreen.dart';
+import 'package:_12sale_app/core/page/route/OrderMenuList.dart';
 import 'package:_12sale_app/core/page/route/OrderScreen.dart';
 import 'package:_12sale_app/core/page/route/ShopRouteScreen.dart';
 
@@ -370,11 +371,7 @@ class _DetailScreenState extends State<DetailScreen> {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => Orderscreen(
-                                            customerNo: widget.customerNo,
-                                            customerName: storeDetail!
-                                                .listStore[0].storeInfo.name,
-                                            status: status),
+                                        builder: (context) => OrderMenuList(),
                                       ),
                                     );
                                   }

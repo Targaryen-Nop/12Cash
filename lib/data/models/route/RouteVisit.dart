@@ -12,6 +12,7 @@ class RouteVisit2 {
   final int storeTotal;
   final double percentComplete;
   final double percentEffective;
+  final double percentVisit;
   List<ListStore>? listStore;
 
   RouteVisit2({
@@ -26,6 +27,7 @@ class RouteVisit2 {
     required this.storeTotal,
     required this.percentComplete,
     required this.percentEffective,
+    required this.percentVisit,
     this.listStore,
   });
 
@@ -43,6 +45,7 @@ class RouteVisit2 {
       storeTotal: json['storeTotal'],
       percentComplete: (json['percentComplete'] as num).toDouble(),
       percentEffective: (json['percentEffective'] as num).toDouble(),
+      percentVisit: (json['percentVisit'] as num).toDouble(),
       listStore: (json['listStore'] as List?)
               ?.map((store) => ListStore.fromJson(store))
               .toList() ??
@@ -64,6 +67,7 @@ class RouteVisit2 {
       'storeTotal': storeTotal,
       'percentComplete': percentComplete,
       'percentEffective': percentEffective,
+      'percentVisit': percentVisit,
       'listStore': listStore?.map((store) => store.toJson()).toList(),
     };
   }

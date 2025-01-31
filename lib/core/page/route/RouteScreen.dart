@@ -39,7 +39,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:widget_to_marker/widget_to_marker.dart';
 
 List<RouteVisit2> routeVisits = [];
-String filterRoute = 'R01';
+
 String period =
     "${DateTime.now().year}${DateFormat('MM').format(DateTime.now())}";
 
@@ -357,8 +357,7 @@ class _RoutescreenState extends State<Routescreen> with RouteAware {
   @override
   Widget build(BuildContext context) {
     final routeState = Provider.of<RouteVisitFilterLocal>(context);
-    double screenWidth = MediaQuery.of(context).size.width;
-    List<StoreFavoriteLocal> _storeFavoriteLocal = [];
+
     return Scaffold(
       backgroundColor:
           Colors.transparent, // set scaffold background color to transparent
@@ -368,18 +367,7 @@ class _RoutescreenState extends State<Routescreen> with RouteAware {
         backgroundColor: Styles.primaryColor,
         onRefresh: () async {
           _getRouteVisit();
-          print(filterRoute);
           routeState.routeVisitList.clear();
-
-          if (filterRoute == 'R01') {
-            setState(() {
-              filterRoute = 'R00';
-            });
-          } else {
-            setState(() {
-              filterRoute = 'R01';
-            });
-          }
         },
         child: Container(
           margin: EdgeInsets.only(top: 20),
@@ -602,15 +590,38 @@ class RouteHeader extends StatefulWidget {
 }
 
 class _RouteHeaderState extends State<RouteHeader> {
+  String changeSearch = '';
   @override
   void initState() {
     super.initState();
   }
 
+  // Future<void> _getRouteVisit() async {
+  //   ApiService apiService = ApiService();
+  //   await apiService.init();
+
+  //   var response = await apiService.request(
+  //     endpoint: 'api/cash/route/getRoute?area=${User.area}&period=${period}',
+  //     method: 'GET',
+  //   );
+
+  //   if (response.statusCode == 200) {
+  //     final List<dynamic> data = response.data['data'];
+  //     // print("getRoute: ${response.data['data']}");
+  //     if (mounted) {
+  //       setState(() {
+  //         routeVisits = data.map((item) => RouteVisit2.fromJson(item)).toList();
+  //       });
+  //     }
+  //     print("getRoute: $routeVisits");
+  //   }
+  // }
+
   @override
   Widget build(BuildContext context) {
     final routeState = Provider.of<RouteVisitFilterLocal>(context);
     List<StoreFavoriteLocal> _storeFavoriteLocal = [];
+    double screenWidth = MediaQuery.of(context).size.width;
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -705,41 +716,143 @@ class _RouteHeaderState extends State<RouteHeader> {
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8.0),
-                color: Colors.white,
+                // color: Colors.white,
               ),
-              child: StoreSearch(
-                key: ValueKey("Search-${filterRoute}"),
-                onStoreSelected: (data) async {
-                  if (data != null) {
-                    ApiService apiService = ApiService();
-                    await apiService.init();
-                    var response = await apiService.request(
-                      endpoint:
-                          'api/cash/route/getRoute?period=${period}&storeId=${data.storeId}',
-                      method: 'GET',
-                    );
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        flex: 2,
+                        child: Container(
+                          // padding: EdgeInsets.symmetric(vertical: 8.0),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8.0),
+                            color: Colors.white,
+                          ),
+                          child: StoreSearch(
+                            key: ValueKey("Search-${changeSearch}"),
+                            onStoreSelected: (data) async {
+                              if (data != null) {
+                                ApiService apiService = ApiService();
+                                await apiService.init();
+                                var response = await apiService.request(
+                                  endpoint:
+                                      'api/cash/route/getRoute?period=${period}&storeId=${data.storeId}',
+                                  method: 'GET',
+                                );
 
-                    if (response.statusCode == 200) {
-                      final List<dynamic> data = response.data['data'];
-                      // print("getRoute: ${response.data['data']}");
-                      if (mounted) {
-                        setState(() {
-                          routeVisits = data
-                              .map((item) => RouteVisit2.fromJson(item))
-                              .toList();
-                          // _loadingRouteVisit = false;
-                        });
-                      }
-                      routeState.updateValue(routeVisits);
-                      print("getRoute: $routeVisits");
-                    }
-                    setState(
-                      () {
-                        _storeFavoriteLocal = routeState.storesFavoriteList;
-                      },
-                    );
-                  }
-                },
+                                if (response.statusCode == 200) {
+                                  final List<dynamic> data =
+                                      response.data['data'];
+                                  // print("getRoute: ${response.data['data']}");
+                                  if (mounted) {
+                                    setState(() {
+                                      routeVisits = data
+                                          .map((item) =>
+                                              RouteVisit2.fromJson(item))
+                                          .toList();
+                                      // _loadingRouteVisit = false;
+                                    });
+                                  }
+                                  routeState.updateValue(routeVisits);
+                                  print("getRoute: $routeVisits");
+                                }
+                                setState(
+                                  () {
+                                    _storeFavoriteLocal =
+                                        routeState.storesFavoriteList;
+                                  },
+                                );
+                              }
+                            },
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () async {
+                            routeState.routeVisitList.clear();
+                            try {
+                              ApiService apiService = ApiService();
+                              await apiService.init();
+
+                              var response = await apiService.request(
+                                endpoint:
+                                    'api/cash/route/getRoute?area=${User.area}&period=${period}',
+                                method: 'GET',
+                              );
+
+                              if (response.statusCode == 200) {
+                                final List<dynamic> data =
+                                    response.data['data'];
+                                // print("getRoute: ${response.data['data']}");
+                                if (mounted) {
+                                  setState(() {
+                                    routeVisits = data
+                                        .map((item) =>
+                                            RouteVisit2.fromJson(item))
+                                        .toList();
+                                  });
+                                }
+                                if (changeSearch == '') {
+                                  setState(() {
+                                    changeSearch = '1';
+                                  });
+                                } else {
+                                  setState(() {
+                                    changeSearch = '';
+                                  });
+                                }
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => HomeScreen(
+                                            index: 1,
+                                          )),
+                                );
+
+                                // print(
+                                //     "routeState.routeVisitList ${routeState.routeVisitList.length} ");
+                              }
+                            } catch (e) {}
+                          },
+                          child: Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 8.0),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8.0),
+                                color: Colors.grey,
+                              ),
+                              child: BoxShadowCustom(
+                                // color: Styles.success,
+                                borderColor: Colors.grey[200]!,
+                                child: Container(
+                                  padding: const EdgeInsets.all(8),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8),
+                                    color: Colors.grey[200]!,
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      const SizedBox(height: 40),
+                                      Text(
+                                        "ล้างการค้นหา",
+                                        style: Styles.black18(context),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
           ),

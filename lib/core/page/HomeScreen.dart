@@ -8,6 +8,7 @@ import 'package:_12sale_app/core/page/report/ReportScreen.dart';
 import 'package:_12sale_app/core/page/route/AjustRoute.dart';
 import 'package:_12sale_app/core/page/route/AjustRoute2.dart';
 import 'package:_12sale_app/core/page/route/AjustRoute3.dart';
+import 'package:_12sale_app/core/page/route/OrderMenuList.dart';
 import 'package:_12sale_app/core/page/route/OrderScreen.dart';
 import 'package:_12sale_app/core/page/route/RouteScreen.dart';
 import 'package:_12sale_app/core/page/setting/SettingScreen.dart';
@@ -167,7 +168,12 @@ class _HomeScreenState extends State<HomeScreen> {
         }();
       case 3:
         return () {
-          // _showSearchModal();
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => OrderMenuList(),
+            ),
+          );
         }();
       default:
         return () {}();

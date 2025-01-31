@@ -145,7 +145,7 @@ class _ShopRouteScreenState extends State<ShopRouteScreen> with RouteAware {
         appBar: PreferredSize(
           preferredSize: const Size.fromHeight(70),
           child: AppbarCustom(
-              title: ' ${"route.store_screen.title".tr()} ${widget.route}',
+              title: ' ${"route.store_screen.title".tr()} R${widget.route}',
               icon: Icons.event),
         ),
         body: Padding(
@@ -207,7 +207,7 @@ class _ShopRouteScreenState extends State<ShopRouteScreen> with RouteAware {
                                           MainAxisAlignment.center,
                                       children: [
                                         Text(
-                                          "Effective",
+                                          "Visit",
                                           style: Styles.black18(context),
                                         )
                                       ],
@@ -217,12 +217,10 @@ class _ShopRouteScreenState extends State<ShopRouteScreen> with RouteAware {
                                           MainAxisAlignment.center,
                                       children: [
                                         Text(
-                                          "${storeVisit?.percentEffective}%",
-                                          style: storeVisit!.percentEffective <
-                                                  50
+                                          "${storeVisit?.percentVisit}%",
+                                          style: storeVisit!.percentVisit < 50
                                               ? Styles.headerRed32(context)
-                                              : storeVisit!.percentEffective <
-                                                      80
+                                              : storeVisit!.percentVisit < 80
                                                   ? Styles.headerAmber32(
                                                       context)
                                                   : Styles.headerGreen32(
@@ -264,7 +262,7 @@ class _ShopRouteScreenState extends State<ShopRouteScreen> with RouteAware {
                                           MainAxisAlignment.center,
                                       children: [
                                         Text(
-                                          "Visit",
+                                          "Effective",
                                           style: Styles.black18(context),
                                         )
                                       ],

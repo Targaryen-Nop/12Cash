@@ -378,13 +378,9 @@ class _DashboardHeaderState extends State<DashboardHeader> {
                 flex: 1,
                 fit: FlexFit.loose,
                 child: Container(
-                  // margin: const EdgeInsets.symmetric(horizontal: 4),
-                  // color: Colors.red,
-                  child: Container(
-                    decoration: const BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage('assets/images/12TradingLogo.png'),
-                      ),
+                  decoration: const BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage('assets/images/12TradingLogo.png'),
                     ),
                   ),
                 ),

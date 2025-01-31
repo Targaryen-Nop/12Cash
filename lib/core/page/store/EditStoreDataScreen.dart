@@ -137,17 +137,6 @@ class _EditStoreDataScreenState extends State<EditStoreDataScreen> {
             style: Styles.black18(context),
           ),
         );
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => DetailStoreScreen(
-              customerName: widget.customerName,
-              customerNo: widget.customerNo,
-              initialSelectedRoute: widget.initialSelectedRoute,
-              store: widget.store,
-            ),
-          ),
-        );
       } else {
         toastification.show(
           autoCloseDuration: Duration(seconds: 3),
@@ -351,6 +340,22 @@ class _EditStoreDataScreenState extends State<EditStoreDataScreen> {
                                                   DialogButton(
                                                     onPressed: () async {
                                                       await _editStore(context);
+                                                      Navigator.pushReplacement(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              DetailStoreScreen(
+                                                            customerName: widget
+                                                                .customerName,
+                                                            customerNo: widget
+                                                                .customerNo,
+                                                            initialSelectedRoute:
+                                                                widget
+                                                                    .initialSelectedRoute,
+                                                            store: widget.store,
+                                                          ),
+                                                        ),
+                                                      );
                                                     },
                                                     color: Styles
                                                         .successButtonColor,

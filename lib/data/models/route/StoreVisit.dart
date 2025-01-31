@@ -11,6 +11,7 @@ class StoreVisit {
   final int? storeTotal;
   final double percentComplete;
   final double percentEffective;
+  final double percentVisit;
   final List<ListStore> listStore;
 
   StoreVisit({
@@ -26,6 +27,7 @@ class StoreVisit {
     this.storeTotal,
     required this.percentComplete,
     required this.percentEffective,
+    required this.percentVisit,
   });
 
   factory StoreVisit.fromJson(Map<String, dynamic> json) {
@@ -41,6 +43,7 @@ class StoreVisit {
       storeTotal: json['storeTotal'],
       percentComplete: (json['percentComplete'] as num).toDouble(),
       percentEffective: (json['percentEffective'] as num).toDouble(),
+      percentVisit: (json['percentVisit'] as num).toDouble(),
       listStore: (json['listStore'] as List)
           .map((store) => ListStore.fromJson(store))
           .toList(),
@@ -60,6 +63,7 @@ class StoreVisit {
       'storeTotal': storeTotal,
       'percentComplete': percentComplete,
       'percentEffective': percentEffective,
+      'percentVisit': percentVisit,
       'listStore': listStore.map((store) => store.toJson()).toList(),
     };
   }
@@ -123,6 +127,8 @@ class StoreInfo {
   final String id;
   final String storeId;
   final String name;
+  final String taxId;
+  final String tel;
   final String typeName;
   final String address;
 
@@ -130,6 +136,8 @@ class StoreInfo {
     required this.id,
     required this.storeId,
     required this.name,
+    required this.taxId,
+    required this.tel,
     required this.typeName,
     required this.address,
   });
@@ -139,6 +147,8 @@ class StoreInfo {
       id: json['_id'],
       storeId: json['storeId'],
       name: json['name'],
+      taxId: json['taxId'],
+      tel: json['name'],
       typeName: json['typeName'],
       address: json['address'],
     );
@@ -149,6 +159,8 @@ class StoreInfo {
       '_id': id,
       'storeId': storeId,
       'name': name,
+      'taxId': taxId,
+      'tel': tel,
       'typeName': typeName,
       'address': address,
     };

@@ -96,6 +96,7 @@ class _StoreSearchState extends State<StoreSearch> {
       clearButtonProps: ClearButtonProps(isVisible: true),
       asyncItems: (String filter) => getStores(), // Filters data as user types
       dropdownButtonProps: DropdownButtonProps(
+        color: Colors.white,
         icon: Padding(
           padding: const EdgeInsets.only(right: 8.0),
           child: Icon(
@@ -108,6 +109,7 @@ class _StoreSearchState extends State<StoreSearch> {
       dropdownDecoratorProps: DropDownDecoratorProps(
         baseStyle: Styles.black18(context),
         dropdownSearchDecoration: InputDecoration(
+          fillColor: Colors.white,
           // prefixIcon: widget.icon,
           labelText: 'ค้นหาร้านค้า',
           labelStyle: Styles.grey18(context),
