@@ -12,6 +12,7 @@ import 'package:_12sale_app/core/components/search/DropdownSearchCustom.dart';
 import 'package:_12sale_app/core/page/HomeScreen.dart';
 import 'package:_12sale_app/core/page/dashboard/DashboardScreen.dart';
 import 'package:_12sale_app/core/page/route/OrderScreen.dart';
+import 'package:_12sale_app/core/page/store/DetailStoreScreen.dart';
 import 'package:_12sale_app/core/page/store/ProcessTimelineScreen.dart';
 
 import 'package:_12sale_app/core/styles/style.dart';
@@ -87,7 +88,7 @@ class _EditStoreDataScreenState extends State<EditStoreDataScreen> {
     });
   }
 
-  Future<void> _editStore() async {
+  Future<void> _editStore(BuildContext context) async {
     Dio dio = Dio();
 
     final String apiUrl2 =
@@ -125,9 +126,6 @@ class _EditStoreDataScreenState extends State<EditStoreDataScreen> {
         ),
       );
       if (response.statusCode == 200) {
-        print(response.data['message']);
-        print(response.data);
-
         toastification.show(
           autoCloseDuration: Duration(seconds: 3),
           context: context,
@@ -137,6 +135,17 @@ class _EditStoreDataScreenState extends State<EditStoreDataScreen> {
           title: Text(
             "แก้ไขข้อมูลเรียบร้อย",
             style: Styles.black18(context),
+          ),
+        );
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => DetailStoreScreen(
+              customerName: widget.customerName,
+              customerNo: widget.customerNo,
+              initialSelectedRoute: widget.initialSelectedRoute,
+              store: widget.store,
+            ),
           ),
         );
       } else {
@@ -292,10 +301,68 @@ class _EditStoreDataScreenState extends State<EditStoreDataScreen> {
                                             width: screenWidth / 40,
                                           ),
                                           GestureDetector(
-                                            onTap: () {
-                                              AllAlert.editAlert(
-                                                  context, _editStore);
-                                              // _editStore();
+                                            onTap: () async {
+                                              Alert(
+                                                context: context,
+                                                title:
+                                                    "store.processtimeline_screen.alert.title"
+                                                        .tr(),
+                                                style: AlertStyle(
+                                                  animationType:
+                                                      AnimationType.grow,
+                                                  isCloseButton: true,
+                                                  isOverlayTapDismiss: false,
+                                                  descStyle:
+                                                      Styles.black18(context),
+                                                  descTextAlign:
+                                                      TextAlign.start,
+                                                  animationDuration:
+                                                      const Duration(
+                                                          milliseconds: 400),
+                                                  alertBorder:
+                                                      RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            22.0),
+                                                    side: const BorderSide(
+                                                      color: Colors.grey,
+                                                    ),
+                                                  ),
+                                                  titleStyle:
+                                                      Styles.headerBlack32(
+                                                          context),
+                                                  alertAlignment:
+                                                      Alignment.center,
+                                                ),
+                                                desc:
+                                                    "คุณต้องการแก้ไขข้อมูลร้านค้าใช่หรีอไม่ ?",
+                                                buttons: [
+                                                  DialogButton(
+                                                    onPressed: () =>
+                                                        Navigator.pop(context),
+                                                    color: Styles.failTextColor,
+                                                    child: Text(
+                                                      "store.processtimeline_screen.alert.cancel"
+                                                          .tr(),
+                                                      style: Styles.white18(
+                                                          context),
+                                                    ),
+                                                  ),
+                                                  DialogButton(
+                                                    onPressed: () async {
+                                                      await _editStore(context);
+                                                    },
+                                                    color: Styles
+                                                        .successButtonColor,
+                                                    child: Text(
+                                                      "store.processtimeline_screen.alert.submit"
+                                                          .tr(),
+                                                      style: Styles.white18(
+                                                          context),
+                                                    ),
+                                                  )
+                                                ],
+                                              ).show();
                                             },
                                             child: BoxShadowCustom(
                                               child: Container(

@@ -155,72 +155,144 @@ class _ShopRouteScreenState extends State<ShopRouteScreen> with RouteAware {
               Row(
                 children: [
                   Expanded(
-                    flex: 2,
+                    flex: 3,
                     child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(16)),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(16)),
+                      ),
+                      alignment: Alignment.center,
+                      child: LoadingSkeletonizer(
+                        loading: _loadingAllStore,
+                        child: RouteShopVisitCard(
+                          item: storeVisit!,
+                          onDetailsPressed: () {},
                         ),
-                        alignment: Alignment.center,
-                        child: LoadingSkeletonizer(
-                          loading: _loadingAllStore,
-                          child: RouteShopVisitCard(
-                            item: storeVisit!,
-                            onDetailsPressed: () {},
-                          ),
-                        )),
+                      ),
+                    ),
                   ),
+                  SizedBox(width: 8),
                   Expanded(
+                    flex: 2,
                     child: LoadingSkeletonizer(
                       loading: _loadingAllStore,
-                      child: Container(
-                        height: 170,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(16)),
-                        ),
-                        alignment: Alignment.center,
-                        child: BoxShadowCustom(
-                          shadowColor: storeVisit!.percentEffective < 50
-                              ? Styles.fail!
-                              : storeVisit!.percentEffective < 80
-                                  ? Styles.warning!
-                                  : Styles.success!,
-                          borderColor: storeVisit!.percentEffective < 50
-                              ? Styles.fail!
-                              : storeVisit!.percentEffective < 80
-                                  ? Styles.warning!
-                                  : Styles.success!,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Row(
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(4.0),
+                            child: Container(
+                              height: 95,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(16),
+                                ),
+                              ),
+                              alignment: Alignment.center,
+                              child: BoxShadowCustom(
+                                shadowColor: storeVisit!.percentEffective < 50
+                                    ? Styles.fail!
+                                    : storeVisit!.percentEffective < 80
+                                        ? Styles.warning!
+                                        : Styles.success!,
+                                borderColor: storeVisit!.percentEffective < 50
+                                    ? Styles.fail!
+                                    : storeVisit!.percentEffective < 80
+                                        ? Styles.warning!
+                                        : Styles.success!,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Text(
-                                      "Effective",
-                                      style: Styles.black20(context),
-                                    )
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          "Effective",
+                                          style: Styles.black18(context),
+                                        )
+                                      ],
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          "${storeVisit?.percentEffective}%",
+                                          style: storeVisit!.percentEffective <
+                                                  50
+                                              ? Styles.headerRed32(context)
+                                              : storeVisit!.percentEffective <
+                                                      80
+                                                  ? Styles.headerAmber32(
+                                                      context)
+                                                  : Styles.headerGreen32(
+                                                      context),
+                                        )
+                                      ],
+                                    ),
                                   ],
                                 ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      "${storeVisit?.percentEffective}%",
-                                      style: storeVisit!.percentEffective < 50
-                                          ? Styles.headerRed32(context)
-                                          : storeVisit!.percentEffective < 80
-                                              ? Styles.headerAmber32(context)
-                                              : Styles.headerGreen32(context),
-                                    )
-                                  ],
-                                ),
-                              ],
+                              ),
                             ),
                           ),
-                        ),
+                          Padding(
+                            padding: const EdgeInsets.all(4.0),
+                            child: Container(
+                              height: 95,
+                              decoration: BoxDecoration(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(16)),
+                              ),
+                              alignment: Alignment.center,
+                              child: BoxShadowCustom(
+                                shadowColor: storeVisit!.percentEffective < 50
+                                    ? Styles.fail!
+                                    : storeVisit!.percentEffective < 80
+                                        ? Styles.warning!
+                                        : Styles.success!,
+                                borderColor: storeVisit!.percentEffective < 50
+                                    ? Styles.fail!
+                                    : storeVisit!.percentEffective < 80
+                                        ? Styles.warning!
+                                        : Styles.success!,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          "Visit",
+                                          style: Styles.black18(context),
+                                        )
+                                      ],
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          "${storeVisit?.percentEffective}%",
+                                          style: storeVisit!.percentEffective <
+                                                  50
+                                              ? Styles.headerRed32(context)
+                                              : storeVisit!.percentEffective <
+                                                      80
+                                                  ? Styles.headerAmber32(
+                                                      context)
+                                                  : Styles.headerGreen32(
+                                                      context),
+                                        )
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),

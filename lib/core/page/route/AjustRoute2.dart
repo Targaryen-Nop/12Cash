@@ -6,6 +6,7 @@ import 'package:_12sale_app/core/components/BoxShadowCustom.dart';
 import 'package:_12sale_app/core/components/CalendarPicker%20copy.dart';
 import 'package:_12sale_app/core/components/CalendarPicker.dart';
 import 'package:_12sale_app/core/components/Loading.dart';
+import 'package:_12sale_app/core/components/alert/AllAlert.dart';
 import 'package:_12sale_app/core/components/card/RouteAjustCard.dart';
 import 'package:_12sale_app/core/components/card/StoreVisitCard.dart';
 import 'package:_12sale_app/core/components/search/DropdownSearchCustom.dart';
@@ -87,28 +88,30 @@ class _AjustRoute2State extends State<AjustRoute2> {
     String toRoute,
   ) async {
     try {
-      ApiService apiService = ApiService();
-      await apiService.init();
-      var response = await apiService.request(
-        endpoint: 'api/cash/route/change',
-        method: 'POST',
-        body: {
-          "area": "${User.area}",
-          "period": "${period}",
-          "storeId": "${storeId}",
-          "fromRoute": "${fromRoute}",
-          "toRoute": "${toRoute}",
-          "changedBy": "${User.username}",
-          "changedDate": "${DateTime.now().toIso8601String()}",
-          "status": "0",
-          "approvedBy": "",
-          "approvedDate": ""
-        },
-      );
+      AllAlert.checkinAlert(context, () async {
+        ApiService apiService = ApiService();
+        await apiService.init();
+        var response = await apiService.request(
+          endpoint: 'api/cash/route/change',
+          method: 'POST',
+          body: {
+            "area": "${User.area}",
+            "period": "${period}",
+            "storeId": "${storeId}",
+            "fromRoute": "${fromRoute}",
+            "toRoute": "${toRoute}",
+            "changedBy": "${User.username}",
+            "changedDate": "${DateTime.now().toIso8601String()}",
+            "status": "0",
+            "approvedBy": "",
+            "approvedDate": ""
+          },
+        );
 
-      if (response.statusCode == 200) {
-        print("statusCode: $response.statusCode");
-      }
+        if (response.statusCode == 200) {
+          print("statusCode: $response.statusCode");
+        }
+      });
     } catch (e) {
       print("Error: $e");
     }

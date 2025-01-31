@@ -27,6 +27,7 @@ import 'package:_12sale_app/data/models/route/DetailStoreVisit.dart';
 import 'package:_12sale_app/data/service/apiService.dart';
 import 'package:_12sale_app/data/service/locationService.dart';
 import 'package:dio/dio.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -78,6 +79,32 @@ class _DetailScreenState extends State<DetailScreen> {
     _getCauses();
 
     // _getStoreDataAll();
+  }
+
+  Future<List<Cause>> getRoutesDropdown(String filter) async {
+    try {
+      // Load the JSON file for districts
+      ApiService apiService = ApiService();
+      await apiService.init();
+      var response = await apiService.request(
+        endpoint: 'api/cash/manage/option/get?module=route&type=notSell',
+        method: 'GET',
+      );
+
+      // Filter and map JSON data to District model based on selected province and filter
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final List<dynamic> data = response.data['data'];
+        setState(() {
+          causes = data.map((item) => Cause.fromJson(item)).toList();
+        });
+      }
+
+      // Group districts by amphoe
+      return causes;
+    } catch (e) {
+      print("Error occurred: $e");
+      return [];
+    }
   }
 
   Future<void> _getCauses() async {
@@ -160,71 +187,82 @@ class _DetailScreenState extends State<DetailScreen> {
   Future<void> checkInStore(BuildContext context) async {
     try {
       await fetchLocation();
+      print('selectedCause ${selectedCause == 'เลือกเหตุผล'}');
       Dio dio = Dio();
       MultipartFile? imageFile;
       imageFile = await MultipartFile.fromFile(checkinImagePath!);
-      if (checkinImagePath != null) {
-        // print(
-        //     "Check Data  : routeId ${widget.routeId}, storeId${widget.customerNo}, note${selectedCause}, checkInImage${imageFile}, latitude${latitude}, longtitude${longitude}");
-        var formData = FormData.fromMap(
-          {
-            'routeId': storeDetail?.id,
-            'storeId': widget.customerNo,
-            'note': selectedCause,
-            'checkInImage': imageFile,
-            // "note":
-            //     noteController.text != "" ? noteController.text : selectedCause,
-            // "checkInImage": imageFile,
-            "latitude": latitude,
-            "longtitude": longitude
-          },
-        );
-        var response = await dio.post(
-          // '${ApiService.apiHost}/api/cash/route/checkIn',
-          'http://192.168.44.57:8006/api/cash/route/checkIn',
-          data: formData,
-          options: Options(
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
+      if (selectedCause == 'เลือกเหตุผล') {
+        Navigator.of(context).pop();
+        toastification.show(
+          autoCloseDuration: const Duration(seconds: 5),
+          context: context,
+          primaryColor: Colors.red,
+          type: ToastificationType.error,
+          style: ToastificationStyle.flatColored,
+          title: Text(
+            "กรุณาเลือกเหตุผลที่เช็คอิน",
+            style: Styles.black18(context),
           ),
         );
-        if (response.statusCode == 201 || response.statusCode == 200) {
-          print("Response API ${response.data}");
-          toastification.show(
-            autoCloseDuration: const Duration(seconds: 5),
-            context: context,
-            primaryColor: Colors.green,
-            type: ToastificationType.success,
-            style: ToastificationStyle.flatColored,
-            title: Text(
-              "store.processtimeline_screen.toasting_success".tr(),
-              style: Styles.black18(context),
+      } else {
+        if (checkinImagePath != null) {
+          // print(
+          //     "Check Data  : routeId ${widget.routeId}, storeId${widget.customerNo}, note${selectedCause}, checkInImage${imageFile}, latitude${latitude}, longtitude${longitude}");
+
+          String note =
+              selectedCause == "อื่นๆ" ? noteController.text : selectedCause;
+          print("TestNote ${note}");
+          var formData = FormData.fromMap(
+            {
+              'routeId': storeDetail?.id,
+              'storeId': widget.customerNo,
+              'note': note,
+              'checkInImage': imageFile,
+              // "note":
+              //     noteController.text != "" ? noteController.text : selectedCause,
+              // "checkInImage": imageFile,
+              "latitude": latitude,
+              "longtitude": longitude
+            },
+          );
+          var response = await dio.post(
+            // '${ApiService.apiHost}/api/cash/route/checkIn',
+            'http://192.168.44.57:8006/api/cash/route/checkIn',
+            data: formData,
+            options: Options(
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
             ),
           );
-          setState(() {
-            statusCheck = 2;
-            storeDetail?.listStore[0].status = '2';
-          });
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => ShopRouteScreen(
-                routeId: widget.routeId,
-                route: widget.route,
+          if (response.statusCode == 201 || response.statusCode == 200) {
+            print("Response API ${response.data}");
+            toastification.show(
+              autoCloseDuration: const Duration(seconds: 5),
+              context: context,
+              primaryColor: Colors.green,
+              type: ToastificationType.success,
+              style: ToastificationStyle.flatColored,
+              title: Text(
+                "store.processtimeline_screen.toasting_success".tr(),
+                style: Styles.black18(context),
               ),
-            ),
-          );
-          Navigator.of(context).pop();
-          // Navigator.pop(context);
-          // Navigator.of(context).push(
-          //   MaterialPageRoute(
-          //     builder: (context) => ShopRouteScreen(
-          //       routeId: widget.routeId,
-          //       route: widget.route,
-          //     ),
-          //   ),
-          // );
+            );
+            setState(() {
+              statusCheck = 2;
+              storeDetail?.listStore[0].status = '2';
+            });
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ShopRouteScreen(
+                  routeId: widget.routeId,
+                  route: widget.route,
+                ),
+              ),
+              (route) => route.isFirst, // Keeps only the first route
+            );
+          }
         }
       }
     } on ApiException catch (e) {
@@ -315,7 +353,7 @@ class _DetailScreenState extends State<DetailScreen> {
                                   if (statusCheck <= 0) {
                                     _showCheckInSheet(context);
                                     setState(() {
-                                      selectedCause = "เลือกสาเหตุ";
+                                      selectedCause = "เลือกเหตุผล";
                                     });
                                   }
                                 },
@@ -462,53 +500,166 @@ class _DetailScreenState extends State<DetailScreen> {
                       // await uploadFormDataWithDio(imagePath, 'store', context);
                     },
                   ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          child: Container(
+                            child: DropdownSearch<Cause>(
+                              dropdownButtonProps: DropdownButtonProps(
+                                color: Colors.white,
+                                icon: Icon(
+                                  Icons.arrow_drop_down,
+                                  size: screenWidth / 20,
+                                  color: Colors.black54,
+                                ),
+                              ),
 
-                  Container(
-                    margin: EdgeInsets.symmetric(vertical: 16),
-                    child: DropdownButtonFormField<Cause>(
-                      icon: const Icon(
-                        Icons.chevron_left,
-                      ),
+                              itemAsString: (item) => item.name,
+                              asyncItems: (filter) => getRoutesDropdown(filter),
 
-                      alignment: Alignment.center,
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Colors.grey[300],
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide: BorderSide.none,
-                        ),
-                      ),
-                      // value: selectedValue,
-                      style: Styles.black18(context),
-                      // items: [],
-                      items: causes.map((Cause value) {
-                        return DropdownMenuItem<Cause>(
-                          value: value,
-                          child: Center(
-                            child: Text(
-                              value.name,
-                              style: Styles.black18(context),
-                              textAlign: TextAlign.center,
+                              // items:(filter, infiniteScrollProps) =>
+                              dropdownDecoratorProps: DropDownDecoratorProps(
+                                baseStyle: Styles.black18(context),
+                                dropdownSearchDecoration: InputDecoration(
+                                  // fillColor: Colors.white,
+                                  // prefixIcon: widget.icon,
+                                  labelText: "เลือกเหตุผลเช็คอิน",
+                                  labelStyle: Styles.grey18(context),
+                                  hintText: "เลือกเหตุผลเช็คอิน",
+                                  hintStyle: Styles.grey18(context),
+                                  border: const OutlineInputBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(8)),
+                                    borderSide: BorderSide(
+                                        color: Colors.grey, width: 1),
+                                  ),
+                                  focusedBorder: const OutlineInputBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(8)),
+                                    borderSide: BorderSide(
+                                        color: Colors.blue, width: 1.5),
+                                  ),
+                                ),
+                              ),
+                              onChanged: (Cause? data) {
+                                noteController.clear();
+                                setModalState(
+                                  () {
+                                    selectedCause = data!.name;
+                                  },
+                                );
+                              },
+                              popupProps: PopupPropsMultiSelection.dialog(
+                                constraints: BoxConstraints(
+                                  maxHeight: screenWidth * 0.7,
+                                  maxWidth: screenWidth,
+                                  minHeight: screenWidth * 0.7,
+                                  minWidth: screenWidth,
+                                ),
+                                title: Container(
+                                  decoration: const BoxDecoration(
+                                    color: Styles.primaryColor,
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(16),
+                                      topRight: Radius.circular(16),
+                                    ),
+                                  ),
+                                  alignment: Alignment.center,
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 16),
+                                  child: Text(
+                                    "เลือกเหตุผลเช็คอิน",
+                                    style: Styles.white18(context),
+                                  ),
+                                ),
+
+                                // showSearchBox: widget.showSearchBox,
+                                itemBuilder: (context, item, isSelected) {
+                                  return Column(
+                                    children: [
+                                      ListTile(
+                                        title: Text(
+                                          " ${item.name}",
+                                          style: Styles.black18(context),
+                                        ),
+                                        selected: isSelected,
+                                      ),
+                                      Divider(
+                                        color: Colors.grey[
+                                            200], // Color of the divider line
+                                        thickness: 1, // Thickness of the line
+                                        indent:
+                                            16, // Left padding for the divider line
+                                        endIndent:
+                                            16, // Right padding for the divider line
+                                      ),
+                                    ],
+                                  );
+                                },
+                                searchFieldProps: TextFieldProps(
+                                  style: Styles.black18(context),
+                                  autofocus: true,
+                                ),
+                              ),
                             ),
                           ),
-                        );
-                      }).toList(),
-                      onChanged: (Cause? newValue) {
-                        noteController.clear();
-                        setModalState(
-                          () {
-                            selectedCause = newValue!.name;
-                          },
-                        );
-                      },
-                      hint: Text(
-                        "เลือกเหตุผล",
-                        style: Styles.black18(context),
-                        textAlign: TextAlign.center,
+                        ),
                       ),
-                    ),
+                    ],
                   ),
+                  // Container(
+                  //   width: 130,
+                  //   child: ,
+                  // )
+
+                  // Container(
+                  //   margin: EdgeInsets.symmetric(vertical: 16),
+                  //   child: DropdownButtonFormField<Cause>(
+                  //     icon: const Icon(
+                  //       Icons.chevron_left,
+                  //     ),
+
+                  //     alignment: Alignment.center,
+                  //     decoration: InputDecoration(
+                  //       filled: true,
+                  //       fillColor: Colors.grey[300],
+                  //       border: OutlineInputBorder(
+                  //         borderRadius: BorderRadius.circular(8),
+                  //         borderSide: BorderSide.none,
+                  //       ),
+                  //     ),
+                  //     // value: selectedValue,
+                  //     style: Styles.black18(context),
+                  //     // items: [],
+                  //     items: causes.map((Cause value) {
+                  //       return DropdownMenuItem<Cause>(
+                  //         value: value,
+                  //         child: Center(
+                  //           child: Text(
+                  //             value.name,
+                  //             style: Styles.black18(context),
+                  //             textAlign: TextAlign.center,
+                  //           ),
+                  //         ),
+                  //       );
+                  //     }).toList(),
+                  //     onChanged: (Cause? newValue) {
+                  //       noteController.clear();
+                  //       setModalState(
+                  //         () {
+                  //           selectedCause = newValue!.name;
+                  //         },
+                  //       );
+                  //     },
+                  //     hint: Text(
+                  //       "เลือกเหตุผล",
+                  //       style: Styles.black18(context),
+                  //       textAlign: TextAlign.center,
+                  //     ),
+                  //   ),
+                  // ),
 
                   selectedCause == 'อื่นๆ'
                       ? Container(
@@ -576,7 +727,16 @@ class _DetailScreenState extends State<DetailScreen> {
                             DialogButton(
                               onPressed: () async {
                                 await checkInStore(context);
-                                Navigator.of(context).pop();
+                                // Navigator.of(context).pop();
+                                // Navigator.pushReplacement(
+                                //   context,
+                                //   MaterialPageRoute(
+                                //     builder: (context) => ShopRouteScreen(
+                                //       routeId: widget.routeId,
+                                //       route: widget.route,
+                                //     ),
+                                //   ),
+                                // );
                               },
                               color: Styles.successButtonColor,
                               child: Text(

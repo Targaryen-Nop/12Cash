@@ -48,7 +48,7 @@ class StoreVisitCard extends StatelessWidget {
             ? Styles.success!
             : store.status == '2'
                 ? Styles.success!
-                : Colors.grey,
+                : Colors.red,
         indicator: Container(
             decoration: BoxDecoration(
               shape: BoxShape.circle,
@@ -125,7 +125,7 @@ class StoreCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onDoubleTap: () {
+      onTap: () {
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -138,23 +138,22 @@ class StoreCard extends StatelessWidget {
         );
       },
       child: Card(
-        margin: EdgeInsets.only(left: 10, top: 5, right: 2, bottom: 5),
         color: Colors.white,
-        child: ExpansionTile(
+        child: ListTile(
           minTileHeight: 100,
           // collapsedBackgroundColor: Colors.white,
-          backgroundColor: Colors.grey[100],
-          leading: Icon(
-            Icons.store_rounded,
-            color: Styles.primaryColor,
-            size: 50,
-          ),
-          collapsedShape: RoundedRectangleBorder(
-            side: BorderSide.none, // No border when collapsed
-            borderRadius: BorderRadius.all(
-              Radius.circular(16),
-            ),
-          ),
+          // backgroundColor: Colors.grey[100],
+          // trailing: Icon(
+          //   Icons.store_rounded,
+          //   color: Styles.primaryColor,
+          //   size: 40,
+          // ),
+          // collapsedShape: RoundedRectangleBorder(
+          //   side: BorderSide.none, // No border when collapsed
+          //   borderRadius: BorderRadius.all(
+          //     Radius.circular(16),
+          //   ),
+          // ),
           shape: RoundedRectangleBorder(
             side: BorderSide.none, // No border when expanded
             borderRadius: BorderRadius.all(
@@ -164,11 +163,10 @@ class StoreCard extends StatelessWidget {
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Expanded(
-                child: Text(
-                  store.storeInfo.name,
-                  style: Styles.black18(context),
-                ),
+              Text(
+                store.storeInfo.storeId,
+                style: Styles.black18(context),
+                overflow: TextOverflow.ellipsis,
               ),
               Skeleton.ignore(
                 child: Container(
@@ -178,8 +176,8 @@ class StoreCard extends StatelessWidget {
                     color: store.status == '1'
                         ? Styles.success
                         : store.status == '2'
-                            ? Styles.fail
-                            : Colors.grey,
+                            ? Styles.warning
+                            : Styles.fail,
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
@@ -191,111 +189,19 @@ class StoreCard extends StatelessWidget {
               ),
             ],
           ),
-          subtitle: Text(
-            '${store.storeInfo.storeId}',
-            style: Styles.black18(context),
-          ),
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Text(
-                                "ที่อยู่: ${store.storeInfo.address}",
-                                style: Styles.black18(context),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Row(
-                                children: [
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Text(
-                                            "สถานะ: ${store.status}",
-                                            style: Styles.black18(context),
-                                          ),
-                                        ],
-                                      ),
-                                      Row(
-                                        children: [
-                                          Text(
-                                            "จำนวนออเดอร์: ${store.status}",
-                                            style: Styles.black18(context),
-                                          ),
-                                        ],
-                                      ),
-                                      // Row(
-                                      //   children: [
-                                      //     Text(
-                                      //       "ปรับรูทจาก R${route} =>",
-                                      //       style: Styles.black18(context),
-                                      //     ),
-                                      //   ],
-                                      // ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => DetailScreen(
-                                route: route,
-                                routeId: routeId,
-                                customerNo: store.storeInfo.storeId,
-                              ),
-                            ),
-                          );
-                        },
-                        child: Container(
-                          margin: EdgeInsets.only(right: 20),
-                          padding: EdgeInsets.all(8),
-                          width: 125,
-                          decoration: BoxDecoration(
-                            color: Styles.primaryColor,
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Text(
-                            'ดูรายละเอียด',
-                            style: Styles.white18(context),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Text(
-                        "ประเภท: ${store.storeInfo.typeName}",
-                        style: Styles.black18(context),
-                      ),
-                    ],
-                  ),
-                ],
+          subtitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                '${store.storeInfo.name}',
+                style: Styles.black18(context),
               ),
-            )
-          ],
+              Text(
+                '${store.storeInfo.address}',
+                style: Styles.black18(context),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -367,18 +273,6 @@ class _StoreAjustRouteCardState extends State<StoreAjustRouteCard> {
             "approvedDate": ""
           },
         );
-        print({
-          "area": "${User.area}",
-          "period": "${period}",
-          "storeId": "${storeId}",
-          "fromRoute": "R${fromRoute}",
-          "toRoute": "${toRoute}",
-          "changedBy": "${User.username}",
-          "changedDate": "${DateTime.now().toIso8601String()}",
-          "status": "0",
-          "approvedBy": "",
-          "approvedDate": ""
-        });
 
         if (response.statusCode == 200) {
           print("statusCode: $response.statusCode");
@@ -566,6 +460,124 @@ class _StoreAjustRouteCardState extends State<StoreAjustRouteCard> {
               ),
             )
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class StoreAjust2RouteCard extends StatefulWidget {
+  final int index;
+  final ListStore store;
+  final String route;
+  final String routeId;
+
+  const StoreAjust2RouteCard({
+    super.key,
+    required this.index,
+    required this.store,
+    required this.route,
+    required this.routeId,
+  });
+
+  @override
+  State<StoreAjust2RouteCard> createState() => _StoreAjust2RouteCardState();
+}
+
+class _StoreAjust2RouteCardState extends State<StoreAjust2RouteCard> {
+  String toRoute = '';
+  bool isChecked = false;
+  Future<List<RouteStore>> getRoutes(String filter) async {
+    try {
+      // Load the JSON file for districts
+      final String response = await rootBundle.loadString('data/route.json');
+      final data = json.decode(response);
+
+      // Filter and map JSON data to District model based on selected province and filter
+      final List<RouteStore> route =
+          (data as List).map((json) => RouteStore.fromJson(json)).toList();
+
+      // Group districts by amphoe
+      return route;
+    } catch (e) {
+      print("Error occurred: $e");
+      return [];
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onDoubleTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => DetailScreen(
+              customerNo: widget.store.storeInfo.storeId,
+              routeId: widget.routeId,
+              route: widget.route,
+            ),
+          ),
+        );
+      },
+      child: Card(
+        margin: EdgeInsets.only(left: 10, top: 5, right: 2, bottom: 5),
+        color: Colors.white,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  Row(
+                    children: [
+                      Checkbox(
+                        value: isChecked,
+                        onChanged: (bool? value) {
+                          setState(() {
+                            isChecked = value!;
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                "${widget.store.storeInfo.name}",
+                                style: Styles.black24(context),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Text(
+                                "ที่อยู่: ${widget.store.storeInfo.address}",
+                                style: Styles.black18(context),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Text(
+                                "ประเภท: ${widget.store.storeInfo.typeName}",
+                                style: Styles.black18(context),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

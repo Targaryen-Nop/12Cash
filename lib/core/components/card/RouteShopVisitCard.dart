@@ -30,7 +30,7 @@ class RouteShopVisitCard extends StatelessWidget {
     return GestureDetector(
       onTap: onDetailsPressed,
       child: Container(
-        height: 170,
+        height: 195,
         margin: EdgeInsets.all(8.0),
         child: BoxShadowCustom(
           shadowColor: item.percentEffective < 50
@@ -53,6 +53,7 @@ class RouteShopVisitCard extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Row(
                     // mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -52,18 +52,17 @@ class _DropdownSearchCustomState<T> extends State<DropdownSearchCustom<T>> {
     return DropdownSearch<T>(
       enabled: !widget.enabled,
       dropdownButtonProps: DropdownButtonProps(
-        icon: Padding(
-          padding: const EdgeInsets.only(right: 8.0),
-          child: Icon(
-            Icons.arrow_drop_down,
-            size: screenWidth / 20,
-            color: Colors.black54,
-          ),
+        color: Colors.white,
+        icon: Icon(
+          Icons.arrow_drop_down,
+          size: screenWidth / 20,
+          color: Colors.black54,
         ),
       ),
       dropdownDecoratorProps: DropDownDecoratorProps(
         baseStyle: Styles.black18(context),
         dropdownSearchDecoration: InputDecoration(
+          // fillColor: Colors.white,
           prefixIcon: widget.icon,
           labelText: widget.label,
           labelStyle: Styles.grey18(context),
@@ -102,7 +101,7 @@ class _DropdownSearchCustomState<T> extends State<DropdownSearchCustom<T>> {
             ),
           ),
           alignment: Alignment.center,
-          // padding: const EdgeInsets.symmetric(vertical: 16),
+          padding: const EdgeInsets.symmetric(vertical: 16),
           child: Text(widget.titleText, style: Styles.white18(context)),
         ),
         showSearchBox: widget.showSearchBox,

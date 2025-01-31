@@ -19,6 +19,14 @@ class Styles {
         ),
       );
 
+  static TextStyle green18(BuildContext context) => GoogleFonts.kanit(
+        textStyle: TextStyle(
+          fontSize: getResponsiveFontSize(context, 18),
+          fontWeight: FontWeight.normal,
+          color: const Color(0xFF198754),
+        ),
+      );
+
   static TextStyle red10(BuildContext context) => GoogleFonts.kanit(
         textStyle: TextStyle(
           fontSize: getResponsiveFontSize(context, 10),
@@ -56,6 +64,14 @@ class Styles {
   static TextStyle black18(BuildContext context) => GoogleFonts.kanit(
         textStyle: TextStyle(
           fontSize: getResponsiveFontSize(context, 18),
+          fontWeight: FontWeight.normal,
+          color: Colors.black,
+        ),
+      );
+
+  static TextStyle black16(BuildContext context) => GoogleFonts.kanit(
+        textStyle: TextStyle(
+          fontSize: getResponsiveFontSize(context, 16),
           fontWeight: FontWeight.normal,
           color: Colors.black,
         ),
@@ -169,6 +185,14 @@ class Styles {
           color: Colors.black,
         ),
       );
+
+  // static TextStyle headerBlack20(BuildContext context) => GoogleFonts.kanit(
+  //       textStyle: TextStyle(
+  //         fontSize: getResponsiveFontSize(context, 24),
+  //         fontWeight: FontWeight.bold,
+  //         color: Colors.black,
+  //       ),
+  //     );
   static TextStyle headerBlack32(BuildContext context) => GoogleFonts.kanit(
         textStyle: TextStyle(
           fontSize: getResponsiveFontSize(context, 32),
@@ -377,5 +401,5 @@ class Styles {
   //  --------------------- Status Color --------------------------------
   static Color? success = Colors.green[600];
   static Color? fail = Colors.red;
-  static Color? warning = Colors.amber;
+  static Color? warning = Colors.amber[600];
 }

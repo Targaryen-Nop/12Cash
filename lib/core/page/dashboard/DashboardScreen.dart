@@ -203,18 +203,19 @@ class _DashboardscreenState extends State<Dashboardscreen> {
           children: [
             // SizedBox(height: 300, width: screenWidth, child: LineChartSample()),
             SizedBox(height: 335, width: screenWidth, child: ItemSummarize()),
-            SizedBox(
-                height: 50,
-                width: screenWidth,
-                child: CalendarPicker(
-                  label: 'dashboard.menu.calendar'.tr(),
-                  firstDate: DateTime(2025),
-                  onDateSelected: (p0) {
-                    print(p0);
-                  },
-                  lastDate: DateTime.now(),
-                  initialDate: DateTime(2025, 1, 14),
-                )),
+            // SizedBox(
+            //   height: 50,
+            //   width: screenWidth,
+            //   child: CalendarPicker(
+            //     label: 'dashboard.menu.calendar'.tr(),
+            //     firstDate: DateTime(2025),
+            //     onDateSelected: (p0) {
+            //       print(p0);
+            //     },
+            //     lastDate: DateTime.now(),
+            //     initialDate: DateTime(2025, 1, 14),
+            //   ),
+            // ),
             // CustomPaint(
             //   size: Size(200, 200),
             //   painter: CircularChartPainter(),
