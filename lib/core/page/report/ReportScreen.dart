@@ -89,7 +89,6 @@ class _ReportScreenState extends State<ReportScreen> {
         //     ],
         //   ),
         // ),
-
         child: LoadingSkeletonizer(
           loading: _loadingAllStore,
           child: ListView.builder(
@@ -97,21 +96,7 @@ class _ReportScreenState extends State<ReportScreen> {
             itemBuilder: (context, index) {
               return InvoiceCard(
                 item: storeAll[index],
-                onDetailsPressed: () {
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(
-                  //     builder: (context) => DetailStoreScreen(
-                  //         initialSelectedRoute:
-                  //             RouteStore(route: storeAll[index].route),
-                  //         store: storeAll[index],
-                  //         customerNo: storeAll[index].storeId,
-                  //         customerName: storeAll[index].name),
-                  //   ),
-                  // );
-                  // print(
-                  //     'imageList for ${storeAll[index].imageList[0].path}');
-                },
+                onDetailsPressed: () {},
               );
             },
           ),

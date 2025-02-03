@@ -41,6 +41,7 @@ import 'package:camera/camera.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
+import 'package:loader_overlay/loader_overlay.dart';
 // import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:lottie/lottie.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -393,66 +394,68 @@ class _MyAppState extends State<MyApp> {
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (context, child) {
-        return MaterialApp(
-          routes: {
-            // '/': (context) => const HomeScreen(
-            //       index: 0,
-            //     ),
-            '/': (context) => const AuthCheck(),
-            '/route': (context) => const HomeScreen(
-                  index: 1,
-                ),
-            '/store': (context) => const HomeScreen(
-                  index: 2,
-                ),
-            '/manage': (context) => const HomeScreen(
-                  index: 3,
-                ),
-            '/announce': (context) => const Announce(),
-          },
-          initialRoute: '/',
-          // localizationsDelegates: [
-          //   GlobalWidgetsLocalizations.delegate,
-          //   GlobalMaterialLocalizations.delegate,
-          //   MonthYearPickerLocalizations.delegate,
-          // ],
-          localizationsDelegates: context.localizationDelegates,
-          supportedLocales: context.supportedLocales,
-          locale: context.locale,
-          navigatorObservers: [routeObserver], // Register RouteObserver here
-          debugShowCheckedModeBanner: false,
-          theme: ThemeData(
-            // splashColor: Colors.transparent,
-            // highlightColor: Colors.transparent,
-            // hoverColor: Colors.transparent,
-            // iconTheme: IconThemeData(
-            //   color: Colors.transparent,
-            //   opacity: 0.0,
-            // ),
-            primarySwatch: Colors.blue,
-            extensions: const [
-              SkeletonizerConfigData.dark(),
-            ],
-            textTheme: Typography.englishLike2018.apply(fontSizeFactor: 1.sp),
-          ),
+        return GlobalLoaderOverlay(
+          child: MaterialApp(
+            routes: {
+              // '/': (context) => const HomeScreen(
+              //       index: 0,
+              //     ),
+              '/': (context) => const AuthCheck(),
+              '/route': (context) => const HomeScreen(
+                    index: 1,
+                  ),
+              '/store': (context) => const HomeScreen(
+                    index: 2,
+                  ),
+              '/manage': (context) => const HomeScreen(
+                    index: 3,
+                  ),
+              '/announce': (context) => const Announce(),
+            },
+            initialRoute: '/',
+            // localizationsDelegates: [
+            //   GlobalWidgetsLocalizations.delegate,
+            //   GlobalMaterialLocalizations.delegate,
+            //   MonthYearPickerLocalizations.delegate,
+            // ],
+            localizationsDelegates: context.localizationDelegates,
+            supportedLocales: context.supportedLocales,
+            locale: context.locale,
+            navigatorObservers: [routeObserver], // Register RouteObserver here
+            debugShowCheckedModeBanner: false,
+            theme: ThemeData(
+              // splashColor: Colors.transparent,
+              // highlightColor: Colors.transparent,
+              // hoverColor: Colors.transparent,
+              // iconTheme: IconThemeData(
+              //   color: Colors.transparent,
+              //   opacity: 0.0,
+              // ),
+              primarySwatch: Colors.blue,
+              extensions: const [
+                SkeletonizerConfigData.dark(),
+              ],
+              textTheme: Typography.englishLike2018.apply(fontSizeFactor: 1.sp),
+            ),
 
-          // home: PolylineWithLabels(),
-          // home: SettingsScreen(),
-          // home: const LoginScreen(),
-          // home: const HomeScreen(
-          //   index: 0,
-          // ),
-          // home: NotificationScreen(),
-          // home: HomeScreen2(),
-          // home: CustomBottomNavBar(),
-          // home: BluetoothPrinterScreen4(),
-          // home: AddToCartAnimationPage(),
-          // home: Column(
-          //   children: [
-          //     Expanded(child: _buildCommunicationDataText()),
-          //     _buildServiceControlButtons(),
-          //   ],
-          // ),
+            // home: PolylineWithLabels(),
+            // home: SettingsScreen(),
+            // home: const LoginScreen(),
+            // home: const HomeScreen(
+            //   index: 0,
+            // ),
+            // home: NotificationScreen(),
+            // home: HomeScreen2(),
+            // home: CustomBottomNavBar(),
+            // home: BluetoothPrinterScreen4(),
+            // home: AddToCartAnimationPage(),
+            // home: Column(
+            //   children: [
+            //     Expanded(child: _buildCommunicationDataText()),
+            //     _buildServiceControlButtons(),
+            //   ],
+            // ),
+          ),
         );
       },
     );

@@ -21,6 +21,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:loader_overlay/loader_overlay.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ShopRouteScreen extends StatefulWidget {
@@ -107,6 +108,7 @@ class _ShopRouteScreenState extends State<ShopRouteScreen> with RouteAware {
           setState(() {
             _loadingAllStore = false;
           });
+          context.loaderOverlay.hide();
         }
       });
       print("storeVisit: $storeVisit");

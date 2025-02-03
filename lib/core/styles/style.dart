@@ -367,6 +367,14 @@ class Styles {
         ),
       );
 
+  static TextStyle pirmary18(BuildContext context) => GoogleFonts.kanit(
+        textStyle: TextStyle(
+          fontSize: getResponsiveFontSize(context, 18),
+          fontWeight: FontWeight.normal,
+          color: Color(0xFF00569D),
+        ),
+      );
+
 // --------------------- Primary Color ---------------------------------
   static const Color primaryColor = Color(0xFF00569D);
   static const Color secondaryColor = Color(0xFF94d3f2);

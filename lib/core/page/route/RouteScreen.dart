@@ -838,9 +838,18 @@ class _RouteHeaderState extends State<RouteHeader> {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       const SizedBox(height: 40),
-                                      Text(
-                                        "ล้างการค้นหา",
-                                        style: Styles.black18(context),
+                                      Row(
+                                        children: [
+                                          Icon(
+                                            Icons.search_off_outlined,
+                                            color: Colors.grey[600],
+                                          ),
+                                          const SizedBox(width: 8),
+                                          Text(
+                                            "ล้างการค้นหา",
+                                            style: Styles.black18(context),
+                                          ),
+                                        ],
                                       ),
                                     ],
                                   ),

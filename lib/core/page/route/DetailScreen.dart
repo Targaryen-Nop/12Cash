@@ -22,6 +22,7 @@ import 'package:_12sale_app/core/page/route/OrderScreen.dart';
 import 'package:_12sale_app/core/page/route/ShopRouteScreen.dart';
 
 import 'package:_12sale_app/core/styles/style.dart';
+import 'package:_12sale_app/data/models/Store.dart';
 import 'package:_12sale_app/data/models/User.dart';
 import 'package:_12sale_app/data/models/route/Cause.dart';
 import 'package:_12sale_app/data/models/route/DetailStoreVisit.dart';
@@ -34,6 +35,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:loader_overlay/loader_overlay.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:toastification/toastification.dart';
 
@@ -67,6 +69,8 @@ class _DetailScreenState extends State<DetailScreen> {
   String status = "0";
   int statusCheck = 0;
   List<Cause> causes = [];
+  List<Store> storeAll = [];
+  bool _loadingAllStore = true;
 
   String period =
       "${DateTime.now().year}${DateFormat('MM').format(DateTime.now())}";
@@ -78,8 +82,36 @@ class _DetailScreenState extends State<DetailScreen> {
     super.initState();
     _getDetailStore();
     _getCauses();
+    _getStoreDataAll();
+  }
 
-    // _getStoreDataAll();
+  Future<void> _getStoreDataAll() async {
+    try {
+      ApiService apiService = ApiService();
+      await apiService.init();
+      var response = await apiService.request(
+        endpoint:
+            'api/cash/store/getStore?area=${User.area}&type=all', // You only need to pass the endpoint, the base URL is handled
+        method: 'GET',
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final List<dynamic> data = response.data['data'];
+        print(response.data['data']);
+        setState(() {
+          storeAll = data.map((item) => Store.fromJson(item)).toList();
+        });
+        Timer(const Duration(milliseconds: 500), () {
+          if (mounted) {
+            setState(() {
+              _loadingAllStore = false;
+            });
+          }
+        });
+      }
+    } catch (e) {
+      print(e);
+    }
   }
 
   Future<List<Cause>> getRoutesDropdown(String filter) async {
@@ -282,13 +314,16 @@ class _DetailScreenState extends State<DetailScreen> {
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(70),
         child: AppbarCustom(
-            title: ' ${"route.detail_screen.title".tr()}', icon: Icons.event),
+            title: ' ${"route.detail_screen.title".tr()} R${storeDetail?.day}',
+            icon: Icons.event),
       ),
       body: RefreshIndicator(
         edgeOffset: 0,
         color: Colors.white,
         backgroundColor: Styles.primaryColor,
-        onRefresh: () async {},
+        onRefresh: () async {
+          _getDetailStore();
+        },
         child: SingleChildScrollView(
           child: LoadingSkeletonizer(
             loading: _loadingDetailStore,
@@ -317,10 +352,16 @@ class _DetailScreenState extends State<DetailScreen> {
                                     Text(
                                         "${storeDetail?.listStore[0].storeInfo.name}",
                                         style: Styles.black24(context)),
+                                    Text('รูท : R${storeDetail?.day}',
+                                        style: Styles.black18(context)),
                                     Text(
                                         '${'route.detail_screen.store_id'.tr()} : ${widget.customerNo}',
                                         style: Styles.black18(context)),
-                                    Text('รูท : R${storeDetail?.day}',
+                                    Text(
+                                        'เบอร์โทร : ${storeDetail?.listStore[0].storeInfo.tel}',
+                                        style: Styles.black18(context)),
+                                    Text(
+                                        'เลขผู้เสียภาษี : ${storeDetail?.listStore[0].storeInfo.taxId}',
                                         style: Styles.black18(context)),
                                     Text(
                                         'ประเภทร้านค้า : ${storeDetail?.listStore[0].storeInfo.typeName}',
@@ -343,39 +384,55 @@ class _DetailScreenState extends State<DetailScreen> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
-                              MenuButton(
-                                icon: Icons.store_rounded,
-                                label: "เช็คอิน",
-                                // color: Styles.success!,
-                                color: statusCheck > 0
-                                    ? Colors.grey
-                                    : Styles.bluePastel,
-                                onPressed: () {
-                                  if (statusCheck <= 0) {
-                                    _showCheckInSheet(context);
-                                    setState(() {
-                                      selectedCause = "เลือกเหตุผล";
-                                    });
-                                  }
-                                },
+                              Column(
+                                children: [
+                                  MenuButton(
+                                    icon: Icons.store_rounded,
+                                    label: "เช็คอิน",
+                                    // color: Styles.success!,
+                                    color: statusCheck > 0
+                                        ? Colors.grey
+                                        : Styles.bluePastel,
+                                    onPressed: () {
+                                      if (statusCheck <= 0) {
+                                        _showCheckInSheet(context);
+                                        setState(() {
+                                          selectedCause = "เลือกเหตุผล";
+                                        });
+                                      }
+                                    },
+                                  ),
+                                  Text(
+                                    '',
+                                    style: Styles.black12(context),
+                                  )
+                                ],
                               ),
-                              MenuButton(
-                                icon: Icons.add_shopping_cart_rounded,
-                                label: "route.detail_screen.order_button".tr(),
-                                // color: Styles.success!,
-                                // color: Colors.teal,
-                                color:
-                                    statusCheck > 0 ? Colors.grey : Colors.teal,
-                                onPressed: () {
-                                  if (statusCheck <= 0) {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => OrderMenuList(),
-                                      ),
-                                    );
-                                  }
-                                },
+                              Column(
+                                children: [
+                                  MenuButton(
+                                    icon: Icons.add_shopping_cart_rounded,
+                                    label: "ขาย",
+                                    // color: Styles.success!,
+                                    color: Colors.grey,
+                                    // color:
+                                    //     statusCheck > 0 ? Colors.grey : Colors.teal,
+                                    onPressed: () {
+                                      if (statusCheck <= 0) {
+                                        // Navigator.push(
+                                        //   context,
+                                        //   MaterialPageRoute(
+                                        //     builder: (context) => OrderMenuList(),
+                                        //   ),
+                                        // );
+                                      }
+                                    },
+                                  ),
+                                  Text(
+                                    'ยังไม่เปิดให้ใช้งาน',
+                                    style: Styles.black12(context),
+                                  )
+                                ],
                               ),
                             ],
                           ),
@@ -391,27 +448,28 @@ class _DetailScreenState extends State<DetailScreen> {
                         child: ItemSummarize()),
                   ),
                   SizedBox(height: screenWidth / 37),
-                  Text('รายการสั่งซื้อ', style: Styles.black24(context)),
-                  // Container(
-                  //   height: 300,
-                  //   child: LoadingSkeletonizer(
-                  //     loading: _loadingAllStore,
-                  //     child: BoxShadowCustom(
-                  //       child: Padding(
-                  //         padding: const EdgeInsets.symmetric(vertical: 16),
-                  //         child: ListView.builder(
-                  //           itemCount: storeAll.length,
-                  //           itemBuilder: (context, index) {
-                  //             return InvoiceCard(
-                  //               item: storeAll[index],
-                  //               onDetailsPressed: () {},
-                  //             );
-                  //           },
-                  //         ),
-                  //       ),
-                  //     ),
-                  //   ),
-                  // ),
+                  Text('ตัวอย่างรายการสั่งซื้อ',
+                      style: Styles.black24(context)),
+                  Container(
+                    height: 300,
+                    child: LoadingSkeletonizer(
+                      loading: _loadingAllStore,
+                      child: BoxShadowCustom(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          child: ListView.builder(
+                            itemCount: storeAll.length,
+                            itemBuilder: (context, index) {
+                              return InvoiceCard(
+                                item: storeAll[index],
+                                onDetailsPressed: () {},
+                              );
+                            },
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                   SizedBox(height: screenWidth / 37),
                 ],
               ),
@@ -688,62 +746,147 @@ class _DetailScreenState extends State<DetailScreen> {
                     width: double.infinity, // Full width button
                     child: ElevatedButton(
                       onPressed: () async {
-                        // Perform save action
-                        Alert(
-                          context: context,
-                          title:
-                              "store.processtimeline_screen.alert.title".tr(),
-                          style: AlertStyle(
-                            animationType: AnimationType.grow,
-                            isCloseButton: true,
-                            isOverlayTapDismiss: false,
-                            descStyle: Styles.black18(context),
-                            descTextAlign: TextAlign.start,
-                            animationDuration:
-                                const Duration(milliseconds: 400),
-                            alertBorder: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(22.0),
-                              side: const BorderSide(
-                                color: Colors.grey,
+                        if (checkinImagePath != null) {
+                          if (selectedCause != 'เลือกเหตุผล') {
+                            if (selectedCause == 'อื่นๆ') {
+                              if (noteController.text == "") {
+                                toastification.show(
+                                  autoCloseDuration: const Duration(seconds: 5),
+                                  context: context,
+                                  primaryColor: Colors.red,
+                                  type: ToastificationType.error,
+                                  style: ToastificationStyle.flatColored,
+                                  title: Text(
+                                    "กรุณาใส่เหตุผลที่เช็คอิน",
+                                    style: Styles.black18(context),
+                                  ),
+                                );
+                              } else {
+                                Alert(
+                                  context: context,
+                                  title:
+                                      "store.processtimeline_screen.alert.title"
+                                          .tr(),
+                                  style: AlertStyle(
+                                    animationType: AnimationType.grow,
+                                    isCloseButton: true,
+                                    isOverlayTapDismiss: false,
+                                    descStyle: Styles.black18(context),
+                                    descTextAlign: TextAlign.start,
+                                    animationDuration:
+                                        const Duration(milliseconds: 400),
+                                    alertBorder: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(22.0),
+                                      side: const BorderSide(
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                    titleStyle: Styles.headerBlack32(context),
+                                    alertAlignment: Alignment.center,
+                                  ),
+                                  desc:
+                                      "คุณต้องการยืนยันการเช็คอินร้านค้าใช่หรือไม่ ?",
+                                  buttons: [
+                                    DialogButton(
+                                      onPressed: () => Navigator.pop(context),
+                                      color: Styles.failTextColor,
+                                      child: Text(
+                                        "store.processtimeline_screen.alert.cancel"
+                                            .tr(),
+                                        style: Styles.white18(context),
+                                      ),
+                                    ),
+                                    DialogButton(
+                                      onPressed: () async {
+                                        context.loaderOverlay.show();
+                                        await checkInStore(context);
+                                      },
+                                      color: Styles.successButtonColor,
+                                      child: Text(
+                                        "store.processtimeline_screen.alert.submit"
+                                            .tr(),
+                                        style: Styles.white18(context),
+                                      ),
+                                    )
+                                  ],
+                                ).show();
+                              }
+                            } else {
+                              Alert(
+                                context: context,
+                                title:
+                                    "store.processtimeline_screen.alert.title"
+                                        .tr(),
+                                style: AlertStyle(
+                                  animationType: AnimationType.grow,
+                                  isCloseButton: true,
+                                  isOverlayTapDismiss: false,
+                                  descStyle: Styles.black18(context),
+                                  descTextAlign: TextAlign.start,
+                                  animationDuration:
+                                      const Duration(milliseconds: 400),
+                                  alertBorder: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(22.0),
+                                    side: const BorderSide(
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                  titleStyle: Styles.headerBlack32(context),
+                                  alertAlignment: Alignment.center,
+                                ),
+                                desc:
+                                    "คุณต้องการยืนยันการเช็คอินร้านค้าใช่หรือไม่ ?",
+                                buttons: [
+                                  DialogButton(
+                                    onPressed: () => Navigator.pop(context),
+                                    color: Styles.failTextColor,
+                                    child: Text(
+                                      "store.processtimeline_screen.alert.cancel"
+                                          .tr(),
+                                      style: Styles.white18(context),
+                                    ),
+                                  ),
+                                  DialogButton(
+                                    onPressed: () async {
+                                      context.loaderOverlay.show();
+                                      await checkInStore(context);
+                                    },
+                                    color: Styles.successButtonColor,
+                                    child: Text(
+                                      "store.processtimeline_screen.alert.submit"
+                                          .tr(),
+                                      style: Styles.white18(context),
+                                    ),
+                                  )
+                                ],
+                              ).show();
+                            }
+                          } else {
+                            toastification.show(
+                              autoCloseDuration: const Duration(seconds: 5),
+                              context: context,
+                              primaryColor: Colors.red,
+                              type: ToastificationType.error,
+                              style: ToastificationStyle.flatColored,
+                              title: Text(
+                                "กรุณาเลือกเหตุผลที่เช็คอิน",
+                                style: Styles.black18(context),
                               ),
+                            );
+                          }
+                        } else {
+                          toastification.show(
+                            autoCloseDuration: const Duration(seconds: 5),
+                            context: context,
+                            primaryColor: Colors.red,
+                            type: ToastificationType.error,
+                            style: ToastificationStyle.flatColored,
+                            title: Text(
+                              "กรุณาถ่ายรูปก่อนเช็คอิน",
+                              style: Styles.black18(context),
                             ),
-                            titleStyle: Styles.headerBlack32(context),
-                            alertAlignment: Alignment.center,
-                          ),
-                          desc: "คุณต้องการยืนยันการเช็คอินร้านค้าใช่หรือไม่ ?",
-                          buttons: [
-                            DialogButton(
-                              onPressed: () => Navigator.pop(context),
-                              color: Styles.failTextColor,
-                              child: Text(
-                                "store.processtimeline_screen.alert.cancel"
-                                    .tr(),
-                                style: Styles.white18(context),
-                              ),
-                            ),
-                            DialogButton(
-                              onPressed: () async {
-                                await checkInStore(context);
-                                // Navigator.of(context).pop();
-                                // Navigator.pushReplacement(
-                                //   context,
-                                //   MaterialPageRoute(
-                                //     builder: (context) => ShopRouteScreen(
-                                //       routeId: widget.routeId,
-                                //       route: widget.route,
-                                //     ),
-                                //   ),
-                                // );
-                              },
-                              color: Styles.successButtonColor,
-                              child: Text(
-                                "store.processtimeline_screen.alert.submit"
-                                    .tr(),
-                                style: Styles.white18(context),
-                              ),
-                            )
-                          ],
-                        ).show();
+                          );
+                        }
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Styles.primaryColor,

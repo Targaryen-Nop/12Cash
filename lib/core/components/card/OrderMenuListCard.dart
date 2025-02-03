@@ -1,11 +1,13 @@
 import 'dart:io';
 
 import 'package:_12sale_app/core/styles/style.dart';
+import 'package:_12sale_app/data/models/order/Product.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class OrderMenuListCard extends StatefulWidget {
-  const OrderMenuListCard({super.key});
+  Product product;
+  OrderMenuListCard({required this.product, super.key});
 
   @override
   State<OrderMenuListCard> createState() => _OrderMenuListCardState();
@@ -29,7 +31,7 @@ class _OrderMenuListCardState extends State<OrderMenuListCard> {
                   borderRadius:
                       BorderRadius.circular(8), // Optional: Add rounded corners
                   child: Image.network(
-                    'https://images.unsplash.com/photo-1735632629408-30233b7455c9?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+                    'https://jobbkk.com/upload/employer/0D/53D/03153D/images/202045.webp',
                     width: screenWidth / 4,
                     height: screenWidth / 4,
                     fit: BoxFit.cover,
@@ -53,16 +55,22 @@ class _OrderMenuListCardState extends State<OrderMenuListCard> {
                     children: [
                       Row(
                         children: [
-                          Text(
-                            'ผงปรุงรสหมู ฟ้าไทย 1200g x6',
-                            style: Styles.headerBlack24(context),
+                          Expanded(
+                            child: Text(
+                              '${widget.product.name}',
+                              style: Styles.headerBlack24(context),
+                              overflow:
+                                  TextOverflow.ellipsis, // Truncate if too long
+                              maxLines: 1, // Restrict to 1 line
+                              softWrap: false, // Avoid wrapping
+                            ),
                           ),
                         ],
                       ),
                       Row(
                         children: [
                           Text(
-                            'ผงปรุงรส',
+                            '${widget.product.group} | ${widget.product.brand}',
                             style: Styles.grey18(context),
                           ),
                         ],
@@ -70,7 +78,7 @@ class _OrderMenuListCardState extends State<OrderMenuListCard> {
                       Row(
                         children: [
                           Text(
-                            'ฟ้าไทย',
+                            '${widget.product.flavour} | ${widget.product.size}',
                             style: Styles.grey18(context),
                           ),
                         ],
@@ -78,15 +86,44 @@ class _OrderMenuListCardState extends State<OrderMenuListCard> {
                       Row(
                         children: [
                           Text(
-                            '1.2 KG',
+                            'Net ${widget.product.weightNet} | Gross ${widget.product.weightGross}',
                             style: Styles.grey18(context),
                           ),
                         ],
                       ),
+                      // Row(
+                      //   children: [
+                      //     Expanded(
+                      //       child: ListView.builder(
+                      //         itemCount: widget.product.listUnit.length,
+                      //         scrollDirection: Axis.horizontal,
+                      //         itemBuilder: (context, index) {
+                      //           final unit = widget.product.listUnit[index];
+                      //           return Padding(
+                      //             padding: const EdgeInsets.symmetric(
+                      //                 horizontal: 8.0), // Adds spacing
+                      //             child: Text(
+                      //               '${unit.name} (${unit.factor}) - ฿${unit.price}', // Shows name, factor, and price
+                      //               style: Styles.grey18(context),
+                      //             ),
+                      //           );
+                      //         },
+                      //       ),
+                      //     ),
+                      //   ],
+                      // ),
+                      // Row(
+                      //   children: [
+                      //     Text(
+                      //       '${widget.product.flavour} ${widget.product.size}',
+                      //       style: Styles.grey18(context),
+                      //     ),
+                      //   ],
+                      // ),
                       Row(
                         children: [
                           Text(
-                            'หมู',
+                            '${widget.product.type}',
                             style: Styles.grey18(context),
                           ),
                         ],

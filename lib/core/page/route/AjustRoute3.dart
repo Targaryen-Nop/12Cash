@@ -363,7 +363,7 @@ class _AjustRoute3State extends State<AjustRoute3> {
                             child: Container(
                               padding: const EdgeInsets.all(8),
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8),
+                                borderRadius: BorderRadius.circular(16),
                                 color: isEdit ? Colors.amber : Colors.grey,
                               ),
                               child: Row(
@@ -421,7 +421,7 @@ class _AjustRoute3State extends State<AjustRoute3> {
                             child: Container(
                               padding: const EdgeInsets.all(8),
                               decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8),
+                                  borderRadius: BorderRadius.circular(16),
                                   color: isEdit
                                       ? Colors.grey
                                       : Styles.primaryColor),
@@ -569,7 +569,7 @@ class _AjustRoute3State extends State<AjustRoute3> {
                                   child: Container(
                                     padding: const EdgeInsets.all(8),
                                     decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(8),
+                                      borderRadius: BorderRadius.circular(16),
                                       color: Colors.green[600],
                                     ),
                                     child: Row(
