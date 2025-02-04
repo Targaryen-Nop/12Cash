@@ -52,7 +52,7 @@ class _OrderMenuListVerticalCardState extends State<OrderMenuListVerticalCard> {
               child: Column(
                 children: [
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Expanded(
                         child: Text(
@@ -67,7 +67,7 @@ class _OrderMenuListVerticalCardState extends State<OrderMenuListVerticalCard> {
                     ],
                   ),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
                         'ผงปรุงรส',
@@ -76,7 +76,7 @@ class _OrderMenuListVerticalCardState extends State<OrderMenuListVerticalCard> {
                     ],
                   ),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
                         'ฟ้าไทย',
@@ -85,7 +85,7 @@ class _OrderMenuListVerticalCardState extends State<OrderMenuListVerticalCard> {
                     ],
                   ),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
                         '1.2 KG',
@@ -94,7 +94,7 @@ class _OrderMenuListVerticalCardState extends State<OrderMenuListVerticalCard> {
                     ],
                   ),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
                         'หมู',
@@ -104,19 +104,6 @@ class _OrderMenuListVerticalCardState extends State<OrderMenuListVerticalCard> {
                   ),
                 ],
               ),
-            ),
-
-            // Divider(
-            //   color: Colors.grey[200], // Color of the divider line
-            //   thickness: 1, // Thickness of the line
-            //   indent: 16, // Left padding for the divider line
-            //   endIndent: 16, // Right padding for the divider line
-            // ),
-            VerticalDivider(
-              // ✅ Vertical line
-              color: Colors.grey,
-              thickness: 1,
-              width: 1, // Space between items
             ),
           ],
         ),

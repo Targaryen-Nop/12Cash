@@ -229,7 +229,7 @@ class _AjustRoute3State extends State<AjustRoute3> {
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(70),
         child: AppbarCustom(
-          title: "ปรับรูท ",
+          title: "ตัวอย่างการปรับรูท ",
           icon: Icons.route_outlined,
         ),
       ),
@@ -316,7 +316,7 @@ class _AjustRoute3State extends State<AjustRoute3> {
                           Text(
                             _selectedDate != null
                                 ? "${_selectedDate!.month}/${_selectedDate!.year}"
-                                : "กรุณาเลือกวันที่",
+                                : "${DateFormat('MM').format(DateTime.now())}/${DateTime.now().year}",
                             style: Styles.black18(context),
                           ),
                           const Icon(Icons.calendar_today,
@@ -495,8 +495,12 @@ class _AjustRoute3State extends State<AjustRoute3> {
                               ),
                               label: "เลือกรูท ",
                               titleText: "เลือกรูท ",
-                              // label: "ปรับรูท R${widget.route}",
-                              // titleText: "ปรับรูท R${widget.route}",
+                              filterFn: (RouteStore product, String filter) {
+                                return product.route != "R" &&
+                                    product.route
+                                        .toLowerCase()
+                                        .contains(filter.toLowerCase());
+                              },
                               fetchItems: (filter) => getRoutes(filter),
                               onChanged: (RouteStore? selected) async {
                                 if (selected != null) {
@@ -504,6 +508,20 @@ class _AjustRoute3State extends State<AjustRoute3> {
                                       RouteStore(route: selected.route);
                                   _loadingAllStore = true;
                                   _getListStore();
+                                  if (selected.route == selectedToRoute.route) {
+                                    toastification.show(
+                                      autoCloseDuration:
+                                          const Duration(seconds: 5),
+                                      context: context,
+                                      primaryColor: Colors.red,
+                                      type: ToastificationType.error,
+                                      style: ToastificationStyle.flatColored,
+                                      title: Text(
+                                        "ไม่สามารถเลือกรูทเดียวกันได้",
+                                        style: Styles.black18(context),
+                                      ),
+                                    );
+                                  }
 
                                   // if (toStore.isNotEmpty) {
                                   //   AllAlert.changeAjustRouteAlert(
@@ -557,10 +575,26 @@ class _AjustRoute3State extends State<AjustRoute3> {
                               padding: EdgeInsets.all(8),
                               child: GestureDetector(
                                 onTap: () {
-                                  if (isEdit) {
-                                    _updateRouteStore('edit');
+                                  if (selectedRoute.route !=
+                                      selectedToRoute.route) {
+                                    if (isEdit) {
+                                      _updateRouteStore('edit');
+                                    } else {
+                                      _updateRouteStore('add');
+                                    }
                                   } else {
-                                    _updateRouteStore('add');
+                                    toastification.show(
+                                      autoCloseDuration:
+                                          const Duration(seconds: 5),
+                                      context: context,
+                                      primaryColor: Colors.red,
+                                      type: ToastificationType.error,
+                                      style: ToastificationStyle.flatColored,
+                                      title: Text(
+                                        "ไม่สามารถเลือกรูทเดียวกันได้",
+                                        style: Styles.black18(context),
+                                      ),
+                                    );
                                   }
                                 },
                                 child: BoxShadowCustom(
@@ -697,7 +731,20 @@ class _AjustRoute3State extends State<AjustRoute3> {
                                   if (selected != null) {
                                     selectedToRoute =
                                         RouteStore(route: selected.route);
-                                    ;
+                                    if (selected.route == selectedRoute.route) {
+                                      toastification.show(
+                                        autoCloseDuration:
+                                            const Duration(seconds: 5),
+                                        context: context,
+                                        primaryColor: Colors.red,
+                                        type: ToastificationType.error,
+                                        style: ToastificationStyle.flatColored,
+                                        title: Text(
+                                          "ไม่สามารถเลือกรูทเดียวกันได้",
+                                          style: Styles.black18(context),
+                                        ),
+                                      );
+                                    }
                                   }
                                 },
                                 itemAsString: (RouteStore data) => data.route,

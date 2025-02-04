@@ -330,7 +330,7 @@ class _DetailNewStoreScreenState extends State<DetailNewStoreScreen> {
                     child: Column(
                       children: [
                         BoxShadowCustom(
-                          color: Styles.primaryColor,
+                          // color: Styles.primaryColor,
                           child: Padding(
                             padding: const EdgeInsets.all(16.0),
                             child: Column(
@@ -352,7 +352,7 @@ class _DetailNewStoreScreenState extends State<DetailNewStoreScreen> {
                                             children: [
                                               Text(
                                                 "${widget.customerName}",
-                                                style: Styles.white24(context),
+                                                style: Styles.black24(context),
                                               ),
                                               Container(
                                                 decoration: BoxDecoration(
@@ -376,23 +376,23 @@ class _DetailNewStoreScreenState extends State<DetailNewStoreScreen> {
                                           ),
                                           Text(
                                             '${'route.detail_screen.store_id'.tr()} : ${widget.customerNo}',
-                                            style: Styles.white18(context),
+                                            style: Styles.black18(context),
                                           ),
                                           Text(
                                             'เลขประจำตัวผู้เสียภาษี : ${widget.store.taxId}',
-                                            style: Styles.white18(context),
+                                            style: Styles.black18(context),
                                           ),
                                           Text(
                                             'เบอร์โทรศัพท์ : ${storePhoneController.text}',
-                                            style: Styles.white18(context),
+                                            style: Styles.black18(context),
                                           ),
                                           Text(
                                             'รูท : ${widget.store.route}',
-                                            style: Styles.white18(context),
+                                            style: Styles.black18(context),
                                           ),
                                           Text(
                                             'ประเภทร้านค้า : ${widget.store.typeName}',
-                                            style: Styles.white18(context),
+                                            style: Styles.black18(context),
                                           ),
                                         ],
                                       ),
@@ -400,7 +400,7 @@ class _DetailNewStoreScreenState extends State<DetailNewStoreScreen> {
                                     Expanded(
                                       child: Text(
                                         "${'route.detail_screen.store_address'.tr()} : ${widget.store.address} ${widget.store.subDistrict} ${widget.store.district} ${widget.store.province} ${widget.store.postCode}",
-                                        style: Styles.white18(context),
+                                        style: Styles.black18(context),
                                         textAlign: TextAlign.start,
                                       ),
                                     ),
@@ -409,81 +409,110 @@ class _DetailNewStoreScreenState extends State<DetailNewStoreScreen> {
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
-                                    MenuButton(
-                                      icon: Icons.store_rounded,
-                                      label: "เช็คอิน",
-                                      color: Styles.bluePastel,
-                                      onPressed: () {
-                                        fetchLocation();
-                                        Alert(
-                                          context: context,
-                                          title:
-                                              "store.processtimeline_screen.alert.title"
-                                                  .tr(),
-                                          style: AlertStyle(
-                                            animationType: AnimationType.grow,
-                                            isCloseButton: true,
-                                            isOverlayTapDismiss: false,
-                                            descStyle: Styles.black18(context),
-                                            descTextAlign: TextAlign.start,
-                                            animationDuration: const Duration(
-                                                milliseconds: 400),
-                                            alertBorder: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(22.0),
-                                              side: const BorderSide(
-                                                color: Colors.grey,
+                                    Column(
+                                      children: [
+                                        MenuButton(
+                                          icon: Icons.store_rounded,
+                                          label: "เช็คอิน",
+                                          color: Styles.bluePastel,
+                                          onPressed: () {
+                                            fetchLocation();
+                                            Alert(
+                                              context: context,
+                                              title:
+                                                  "store.processtimeline_screen.alert.title"
+                                                      .tr(),
+                                              style: AlertStyle(
+                                                animationType:
+                                                    AnimationType.grow,
+                                                isCloseButton: true,
+                                                isOverlayTapDismiss: false,
+                                                descStyle:
+                                                    Styles.black18(context),
+                                                descTextAlign: TextAlign.start,
+                                                animationDuration:
+                                                    const Duration(
+                                                        milliseconds: 400),
+                                                alertBorder:
+                                                    RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          22.0),
+                                                  side: const BorderSide(
+                                                    color: Colors.grey,
+                                                  ),
+                                                ),
+                                                titleStyle:
+                                                    Styles.headerBlack32(
+                                                        context),
+                                                alertAlignment:
+                                                    Alignment.center,
                                               ),
-                                            ),
-                                            titleStyle:
-                                                Styles.headerBlack32(context),
-                                            alertAlignment: Alignment.center,
-                                          ),
-                                          desc:
-                                              "คุณต้องการยืนยันการเช็คอินร้านค้าใช่หรือไม่ ?",
-                                          buttons: [
-                                            DialogButton(
-                                              onPressed: () =>
-                                                  Navigator.pop(context),
-                                              color: Styles.failTextColor,
-                                              child: Text(
-                                                "store.processtimeline_screen.alert.cancel"
-                                                    .tr(),
-                                                style: Styles.white18(context),
-                                              ),
-                                            ),
-                                            DialogButton(
-                                              onPressed: () {
-                                                _checkin();
-                                              },
-                                              color: Styles.successButtonColor,
-                                              child: Text(
-                                                "store.processtimeline_screen.alert.submit"
-                                                    .tr(),
-                                                style: Styles.white18(context),
-                                              ),
-                                            )
-                                          ],
-                                        ).show();
-                                      },
+                                              desc:
+                                                  "คุณต้องการยืนยันการเช็คอินร้านค้าใช่หรือไม่ ?",
+                                              buttons: [
+                                                DialogButton(
+                                                  onPressed: () =>
+                                                      Navigator.pop(context),
+                                                  color: Styles.failTextColor,
+                                                  child: Text(
+                                                    "store.processtimeline_screen.alert.cancel"
+                                                        .tr(),
+                                                    style:
+                                                        Styles.black18(context),
+                                                  ),
+                                                ),
+                                                DialogButton(
+                                                  onPressed: () {
+                                                    _checkin();
+                                                  },
+                                                  color:
+                                                      Styles.successButtonColor,
+                                                  child: Text(
+                                                    "store.processtimeline_screen.alert.submit"
+                                                        .tr(),
+                                                    style:
+                                                        Styles.black18(context),
+                                                  ),
+                                                )
+                                              ],
+                                            ).show();
+                                          },
+                                        ),
+                                        Text(
+                                          '',
+                                          style: Styles.black12(context),
+                                        ),
+                                      ],
                                     ),
-                                    MenuButton(
-                                      icon: Icons.add_shopping_cart_rounded,
-                                      label: "ขายนอกรูท",
-                                      // color: Colors.teal,
-                                      color: Styles.greenPastel,
-                                      onPressed: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => Orderscreen(
-                                                customerNo: widget.customerNo,
-                                                customerName:
-                                                    widget.customerName,
-                                                status: widget.store.status),
-                                          ),
-                                        );
-                                      },
+                                    Column(
+                                      children: [
+                                        MenuButton(
+                                          icon: Icons.add_shopping_cart_rounded,
+                                          label: "ขาย",
+                                          // color: Colors.teal,
+                                          color: Styles.grey,
+                                          onPressed: () {
+                                            // Navigator.push(
+                                            //   context,
+                                            //   MaterialPageRoute(
+                                            //     builder: (context) =>
+                                            //         Orderscreen(
+                                            //             customerNo:
+                                            //                 widget.customerNo,
+                                            //             customerName:
+                                            //                 widget.customerName,
+                                            //             status: widget
+                                            //                 .store.status),
+                                            //   ),
+                                            // );
+                                          },
+                                        ),
+                                        Text(
+                                          'ยังไม่เปิดให้บริการ',
+                                          style: Styles.black12(context),
+                                        ),
+                                      ],
                                     ),
                                   ],
                                 ),
@@ -507,7 +536,7 @@ class _DetailNewStoreScreenState extends State<DetailNewStoreScreen> {
                                       color: Colors.black,
                                     ),
                                     Text(
-                                      'Dashboard',
+                                      'ตัวอย่าง Dashboard',
                                       textAlign: TextAlign.start,
                                       style: Styles.black24(context),
                                     ),
@@ -629,44 +658,45 @@ class _DetailNewStoreScreenState extends State<DetailNewStoreScreen> {
                                   ),
                                   Column(
                                     children: [
-                                      Container(
-                                        decoration: BoxDecoration(
-                                          color: Colors.grey[200],
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                        ),
-                                        child: Padding(
-                                          padding: EdgeInsets.all(8),
-                                          child: Column(
-                                            children: [
-                                              Text(
-                                                "เป้าหมาย",
-                                                style: Styles.black24(context),
-                                              ),
-                                              Row(
-                                                children: [
-                                                  FaIcon(
-                                                      FontAwesomeIcons
-                                                          .caretDown,
-                                                      color:
-                                                          Styles.failTextColor),
-                                                  Text(
-                                                    " 10%",
-                                                    style:
-                                                        Styles.red10(context),
-                                                  ),
-                                                  Text(
-                                                    " ${1500} บาท",
-                                                    style: Styles.headerRed24(
-                                                        context),
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                      SizedBox(height: 10),
+                                      // Container(
+                                      //   decoration: BoxDecoration(
+                                      //     color: Colors.grey[200],
+                                      //     borderRadius:
+                                      //         BorderRadius.circular(10),
+                                      //   ),
+                                      //   child: Padding(
+                                      //     padding: EdgeInsets.all(8),
+                                      //     child: Column(
+                                      //       children: [
+                                      //         Text(
+                                      //           "เป้าหมาย",
+                                      //           style: Styles.black24(context),
+                                      //         ),
+                                      //         Row(
+                                      //           children: [
+                                      //             FaIcon(
+                                      //                 FontAwesomeIcons
+                                      //                     .caretDown,
+                                      //                 color:
+                                      //                     Styles.failTextColor),
+                                      //             Text(
+                                      //               " 10%",
+                                      //               style:
+                                      //                   Styles.red10(context),
+                                      //             ),
+                                      //             Text(
+                                      //               " ${1500} บาท",
+                                      //               style: Styles.headerRed24(
+                                      //                   context),
+                                      //             ),
+                                      //           ],
+                                      //         ),
+                                      //       ],
+                                      //     ),
+                                      //   ),
+                                      // ),
+                                      // SizedBox(height: 10),
+
                                       Container(
                                         decoration: BoxDecoration(
                                           color: Colors.grey[200],
@@ -723,350 +753,350 @@ class _DetailNewStoreScreenState extends State<DetailNewStoreScreen> {
                           ),
                         ),
                         SizedBox(height: 20),
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(
-                                    0.2), // Shadow color with transparency
-                                spreadRadius: 2, // Spread of the shadow
-                                blurRadius: 8, // Blur radius of the shadow
-                                offset: const Offset(0,
-                                    4), // Offset of the shadow (horizontal, vertical)
-                              ),
-                            ],
-                            // border: Border.all(color: Colors.grey),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: Column(
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        const Icon(
-                                          Icons.store,
-                                          size: 40,
-                                        ),
-                                        const SizedBox(width: 8),
-                                        Text(
-                                          "แก้ไขข้อมูลร้านค้า",
-                                          style: Styles.black24(context),
-                                        ),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        // GestureDetector(
-                                        //   onTap: () {
-                                        //     fetchLocation();
-                                        //     Alert(
-                                        //       context: context,
-                                        //       title:
-                                        //           "store.processtimeline_screen.alert.title"
-                                        //               .tr(),
-                                        //       style: AlertStyle(
-                                        //         animationType:
-                                        //             AnimationType.grow,
-                                        //         isCloseButton: true,
-                                        //         isOverlayTapDismiss: false,
-                                        //         descStyle:
-                                        //             Styles.black18(context),
-                                        //         descTextAlign: TextAlign.start,
-                                        //         animationDuration:
-                                        //             const Duration(
-                                        //                 milliseconds: 400),
-                                        //         alertBorder:
-                                        //             RoundedRectangleBorder(
-                                        //           borderRadius:
-                                        //               BorderRadius.circular(
-                                        //                   22.0),
-                                        //           side: const BorderSide(
-                                        //             color: Colors.grey,
-                                        //           ),
-                                        //         ),
-                                        //         titleStyle:
-                                        //             Styles.headerBlack32(
-                                        //                 context),
-                                        //         alertAlignment:
-                                        //             Alignment.center,
-                                        //       ),
-                                        //       desc:
-                                        //           "คุณต้องการยืนยันการเช็คอินร้านค้าใช่หรือไม่ ?",
-                                        //       buttons: [
-                                        //         DialogButton(
-                                        //           onPressed: () =>
-                                        //               Navigator.pop(context),
-                                        //           color: Styles.failTextColor,
-                                        //           child: Text(
-                                        //             "store.processtimeline_screen.alert.cancel"
-                                        //                 .tr(),
-                                        //             style:
-                                        //                 Styles.white18(context),
-                                        //           ),
-                                        //         ),
-                                        //         DialogButton(
-                                        //           onPressed: () {
-                                        //             _checkin();
-                                        //           },
-                                        //           color:
-                                        //               Styles.successButtonColor,
-                                        //           child: Text(
-                                        //             "store.processtimeline_screen.alert.submit"
-                                        //                 .tr(),
-                                        //             style:
-                                        //                 Styles.white18(context),
-                                        //           ),
-                                        //         )
-                                        //       ],
-                                        //     ).show();
-                                        //   },
-                                        //   child: BoxShadowCustom(
-                                        //     child: Container(
-                                        //       padding: const EdgeInsets.all(8),
-                                        //       decoration: BoxDecoration(
-                                        //           borderRadius:
-                                        //               BorderRadius.circular(8),
-                                        //           color: Styles
-                                        //               .successButtonColor),
-                                        //       child: Row(
-                                        //         children: [
-                                        //           const Icon(
-                                        //             Icons.login,
-                                        //             size: 40,
-                                        //             color: Colors.white,
-                                        //           ),
-                                        //           const SizedBox(width: 8),
-                                        //           Text(
-                                        //             "เช็คอิน",
-                                        //             style:
-                                        //                 Styles.white18(context),
-                                        //           ),
-                                        //         ],
-                                        //       ),
-                                        //     ),
-                                        //   ),
-                                        // ),
-                                        SizedBox(
-                                          width: screenWidth / 40,
-                                        ),
-                                        GestureDetector(
-                                          onTap: () {
-                                            setState(() {
-                                              onEdit =
-                                                  !onEdit; // Toggle the value of onEdit
-                                            });
-                                            if (onEdit) {
-                                              _editStore();
-                                            }
-                                          },
-                                          child: BoxShadowCustom(
-                                            child: Container(
-                                              padding: const EdgeInsets.all(8),
-                                              decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(8),
-                                                  color: onEdit
-                                                      ? Styles.primaryColor
-                                                      : Styles
-                                                          .successButtonColor),
-                                              child: Row(
-                                                children: [
-                                                  Icon(
-                                                    onEdit
-                                                        ? Icons.edit
-                                                        : Icons.save_outlined,
-                                                    size: 40,
-                                                    color: Colors.white,
-                                                  ),
-                                                  const SizedBox(width: 8),
-                                                  Text(
-                                                    onEdit ? "แก้ไข" : "บันทึก",
-                                                    style:
-                                                        Styles.white18(context),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    )
-                                  ],
-                                ),
-                                SizedBox(height: screenWidth / 37),
-                                _buildCustomFormField(
-                                    'ชื่อร้านค้า',
-                                    storeNameController.text,
-                                    Icons.store,
-                                    storeNameController,
-                                    readOnly: onEdit),
-                                _buildCustomFormField(
-                                    'เลขประจำตัวผู้เสียภาษี',
-                                    '${widget.store.taxId}',
-                                    Icons.person_outline,
-                                    storeTaxConroller),
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: _buildCustomFormField(
-                                          max: 10,
-                                          'โทรศัพท์',
-                                          '${storePhoneController.text}',
-                                          Icons.phone,
-                                          storePhoneController,
-                                          keypadType: TextInputType.number,
-                                          readOnly: onEdit),
-                                    ),
-                                    const SizedBox(width: 16),
-                                    Expanded(
-                                      child: Padding(
-                                        padding:
-                                            const EdgeInsets.only(bottom: 16.0),
-                                        child: Container(
-                                          color: true
-                                              ? Colors.grey[200]
-                                              : Colors.white,
-                                          child:
-                                              DropdownSearchCustom<RouteStore>(
-                                            enabled: true,
-                                            initialSelectedValue: widget
-                                                        .initialSelectedRoute
-                                                        .route ==
-                                                    ''
-                                                ? null
-                                                : widget.initialSelectedRoute,
-                                            label: "รูท",
-                                            titleText: "รูท",
-                                            icon: Icon(Icons.route_outlined),
-                                            fetchItems: (filter) =>
-                                                getRoutes(filter),
-                                            onChanged:
-                                                (RouteStore? selected) async {
-                                              if (selected != null) {
-                                                setState(() {
-                                                  widget.initialSelectedRoute =
-                                                      RouteStore(
-                                                          route:
-                                                              selected.route);
-                                                  selectedRoute =
-                                                      selected.route;
-                                                });
-                                              }
-                                            },
-                                            itemAsString: (RouteStore data) =>
-                                                data.route,
-                                            itemBuilder:
-                                                (context, item, isSelected) {
-                                              return Column(
-                                                children: [
-                                                  ListTile(
-                                                    title: Text(
-                                                      " ${item.route}",
-                                                      style: Styles.black18(
-                                                          context),
-                                                    ),
-                                                    selected: isSelected,
-                                                  ),
-                                                  Divider(
-                                                    color: Colors.grey[
-                                                        200], // Color of the divider line
-                                                    thickness:
-                                                        1, // Thickness of the line
-                                                    indent:
-                                                        16, // Left padding for the divider line
-                                                    endIndent:
-                                                        16, // Right padding for the divider line
-                                                  ),
-                                                ],
-                                              );
-                                            },
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                _buildCustomFormField(
-                                    'ไลน์',
-                                    storeLineIdController.text,
-                                    Icons.alternate_email,
-                                    storeLineIdController,
-                                    readOnly: onEdit),
-                                _buildCustomFormField(
-                                    'ประเภทร้านค้า',
-                                    '${widget.store.typeName}',
-                                    Icons.store_mall_directory,
-                                    storeShoptypeController),
-                                _buildCustomFormField(
-                                    'หมายเหตุ',
-                                    storeNoteController.text,
-                                    Icons.note,
-                                    storeNoteController,
-                                    readOnly: onEdit),
-                                // SizedBox(height: screenWidth / 37),
-                                _buildCustomFormField(
-                                    'ที่อยู่',
-                                    '${widget.store.address} ${widget.store.province != 'กรุงเทพมหานคร' ? 'ต.' : 'แขวง'}${widget.store.subDistrict} ${widget.store.province != 'กรุงเทพมหานคร' ? 'อ.' : 'เขต'}${widget.store.district} ${widget.store.province != 'กรุงเทพมหานคร' ? 'จ.' : ''}${widget.store.province} ${widget.store.postCode}',
-                                    Icons.location_on_rounded,
-                                    storeAddressController),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                  children: [
-                                    ShowPhotoButton(
-                                      checkNetwork: true,
-                                      label: "ร้านค้า",
-                                      icon: Icons.image_not_supported_outlined,
-                                      imagePath: widget
-                                              .store.imageList.isNotEmpty
-                                          ? (widget.store.imageList
-                                                  .where((image) =>
-                                                      image.type == "store")
-                                                  .isNotEmpty
-                                              ? "${ApiService.apiHost}/image/stores/${User.area}/${widget.store.imageList.where((image) => image.type == "store").last.name}"
-                                              : null)
-                                          : null,
-                                    ),
-                                    ShowPhotoButton(
-                                      checkNetwork: true,
-                                      label: "ภ.พ.20",
-                                      icon: Icons.image_not_supported_outlined,
-                                      imagePath: widget
-                                              .store.imageList.isNotEmpty
-                                          ? (widget.store.imageList
-                                                  .where((image) =>
-                                                      image.type == "document")
-                                                  .isNotEmpty
-                                              ? "${ApiService.apiHost}/image/stores/${User.area}/${widget.store.imageList.where((image) => image.type == "document").last.name}"
-                                              : null)
-                                          : null,
-                                    ),
-                                    ShowPhotoButton(
-                                      checkNetwork: true,
-                                      label: "สำเนาบัตรปปช.",
-                                      icon: Icons.image_not_supported_outlined,
-                                      imagePath: widget
-                                              .store.imageList.isNotEmpty
-                                          ? (widget.store.imageList
-                                                  .where((image) =>
-                                                      image.type == "idCard")
-                                                  .isNotEmpty
-                                              ? "${ApiService.apiHost}/image/stores/${User.area}/${widget.store.imageList.where((image) => image.type == "idCard").last.name}"
-                                              : null)
-                                          : null,
-                                    ),
-                                  ],
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
+                        // Container(
+                        //   decoration: BoxDecoration(
+                        //     color: Colors.white,
+                        //     boxShadow: [
+                        //       BoxShadow(
+                        //         color: Colors.black.withOpacity(
+                        //             0.2), // Shadow color with transparency
+                        //         spreadRadius: 2, // Spread of the shadow
+                        //         blurRadius: 8, // Blur radius of the shadow
+                        //         offset: const Offset(0,
+                        //             4), // Offset of the shadow (horizontal, vertical)
+                        //       ),
+                        //     ],
+                        //     // border: Border.all(color: Colors.grey),
+                        //     borderRadius: BorderRadius.circular(10),
+                        //   ),
+                        //   child: Padding(
+                        //     padding: const EdgeInsets.all(16.0),
+                        //     child: Column(
+                        //       children: [
+                        //         Row(
+                        //           mainAxisAlignment:
+                        //               MainAxisAlignment.spaceBetween,
+                        //           children: [
+                        //             Row(
+                        //               children: [
+                        //                 const Icon(
+                        //                   Icons.store,
+                        //                   size: 40,
+                        //                 ),
+                        //                 const SizedBox(width: 8),
+                        //                 Text(
+                        //                   "แก้ไขข้อมูลร้านค้า",
+                        //                   style: Styles.black24(context),
+                        //                 ),
+                        //               ],
+                        //             ),
+                        //             Row(
+                        //               children: [
+                        //                 // GestureDetector(
+                        //                 //   onTap: () {
+                        //                 //     fetchLocation();
+                        //                 //     Alert(
+                        //                 //       context: context,
+                        //                 //       title:
+                        //                 //           "store.processtimeline_screen.alert.title"
+                        //                 //               .tr(),
+                        //                 //       style: AlertStyle(
+                        //                 //         animationType:
+                        //                 //             AnimationType.grow,
+                        //                 //         isCloseButton: true,
+                        //                 //         isOverlayTapDismiss: false,
+                        //                 //         descStyle:
+                        //                 //             Styles.black18(context),
+                        //                 //         descTextAlign: TextAlign.start,
+                        //                 //         animationDuration:
+                        //                 //             const Duration(
+                        //                 //                 milliseconds: 400),
+                        //                 //         alertBorder:
+                        //                 //             RoundedRectangleBorder(
+                        //                 //           borderRadius:
+                        //                 //               BorderRadius.circular(
+                        //                 //                   22.0),
+                        //                 //           side: const BorderSide(
+                        //                 //             color: Colors.grey,
+                        //                 //           ),
+                        //                 //         ),
+                        //                 //         titleStyle:
+                        //                 //             Styles.headerBlack32(
+                        //                 //                 context),
+                        //                 //         alertAlignment:
+                        //                 //             Alignment.center,
+                        //                 //       ),
+                        //                 //       desc:
+                        //                 //           "คุณต้องการยืนยันการเช็คอินร้านค้าใช่หรือไม่ ?",
+                        //                 //       buttons: [
+                        //                 //         DialogButton(
+                        //                 //           onPressed: () =>
+                        //                 //               Navigator.pop(context),
+                        //                 //           color: Styles.failTextColor,
+                        //                 //           child: Text(
+                        //                 //             "store.processtimeline_screen.alert.cancel"
+                        //                 //                 .tr(),
+                        //                 //             style:
+                        //                 //                 Styles.white18(context),
+                        //                 //           ),
+                        //                 //         ),
+                        //                 //         DialogButton(
+                        //                 //           onPressed: () {
+                        //                 //             _checkin();
+                        //                 //           },
+                        //                 //           color:
+                        //                 //               Styles.successButtonColor,
+                        //                 //           child: Text(
+                        //                 //             "store.processtimeline_screen.alert.submit"
+                        //                 //                 .tr(),
+                        //                 //             style:
+                        //                 //                 Styles.white18(context),
+                        //                 //           ),
+                        //                 //         )
+                        //                 //       ],
+                        //                 //     ).show();
+                        //                 //   },
+                        //                 //   child: BoxShadowCustom(
+                        //                 //     child: Container(
+                        //                 //       padding: const EdgeInsets.all(8),
+                        //                 //       decoration: BoxDecoration(
+                        //                 //           borderRadius:
+                        //                 //               BorderRadius.circular(8),
+                        //                 //           color: Styles
+                        //                 //               .successButtonColor),
+                        //                 //       child: Row(
+                        //                 //         children: [
+                        //                 //           const Icon(
+                        //                 //             Icons.login,
+                        //                 //             size: 40,
+                        //                 //             color: Colors.white,
+                        //                 //           ),
+                        //                 //           const SizedBox(width: 8),
+                        //                 //           Text(
+                        //                 //             "เช็คอิน",
+                        //                 //             style:
+                        //                 //                 Styles.white18(context),
+                        //                 //           ),
+                        //                 //         ],
+                        //                 //       ),
+                        //                 //     ),
+                        //                 //   ),
+                        //                 // ),
+                        //                 SizedBox(
+                        //                   width: screenWidth / 40,
+                        //                 ),
+                        //                 GestureDetector(
+                        //                   onTap: () {
+                        //                     setState(() {
+                        //                       onEdit =
+                        //                           !onEdit; // Toggle the value of onEdit
+                        //                     });
+                        //                     if (onEdit) {
+                        //                       _editStore();
+                        //                     }
+                        //                   },
+                        //                   child: BoxShadowCustom(
+                        //                     child: Container(
+                        //                       padding: const EdgeInsets.all(8),
+                        //                       decoration: BoxDecoration(
+                        //                           borderRadius:
+                        //                               BorderRadius.circular(8),
+                        //                           color: onEdit
+                        //                               ? Styles.primaryColor
+                        //                               : Styles
+                        //                                   .successButtonColor),
+                        //                       child: Row(
+                        //                         children: [
+                        //                           Icon(
+                        //                             onEdit
+                        //                                 ? Icons.edit
+                        //                                 : Icons.save_outlined,
+                        //                             size: 40,
+                        //                             color: Colors.white,
+                        //                           ),
+                        //                           const SizedBox(width: 8),
+                        //                           Text(
+                        //                             onEdit ? "แก้ไข" : "บันทึก",
+                        //                             style:
+                        //                                 Styles.white18(context),
+                        //                           ),
+                        //                         ],
+                        //                       ),
+                        //                     ),
+                        //                   ),
+                        //                 ),
+                        //               ],
+                        //             )
+                        //           ],
+                        //         ),
+                        //         SizedBox(height: screenWidth / 37),
+                        //         _buildCustomFormField(
+                        //             'ชื่อร้านค้า',
+                        //             storeNameController.text,
+                        //             Icons.store,
+                        //             storeNameController,
+                        //             readOnly: onEdit),
+                        //         _buildCustomFormField(
+                        //             'เลขประจำตัวผู้เสียภาษี',
+                        //             '${widget.store.taxId}',
+                        //             Icons.person_outline,
+                        //             storeTaxConroller),
+                        //         Row(
+                        //           children: [
+                        //             Expanded(
+                        //               child: _buildCustomFormField(
+                        //                   max: 10,
+                        //                   'โทรศัพท์',
+                        //                   '${storePhoneController.text}',
+                        //                   Icons.phone,
+                        //                   storePhoneController,
+                        //                   keypadType: TextInputType.number,
+                        //                   readOnly: onEdit),
+                        //             ),
+                        //             const SizedBox(width: 16),
+                        //             Expanded(
+                        //               child: Padding(
+                        //                 padding:
+                        //                     const EdgeInsets.only(bottom: 16.0),
+                        //                 child: Container(
+                        //                   color: true
+                        //                       ? Colors.grey[200]
+                        //                       : Colors.white,
+                        //                   child:
+                        //                       DropdownSearchCustom<RouteStore>(
+                        //                     enabled: true,
+                        //                     initialSelectedValue: widget
+                        //                                 .initialSelectedRoute
+                        //                                 .route ==
+                        //                             ''
+                        //                         ? null
+                        //                         : widget.initialSelectedRoute,
+                        //                     label: "รูท",
+                        //                     titleText: "รูท",
+                        //                     icon: Icon(Icons.route_outlined),
+                        //                     fetchItems: (filter) =>
+                        //                         getRoutes(filter),
+                        //                     onChanged:
+                        //                         (RouteStore? selected) async {
+                        //                       if (selected != null) {
+                        //                         setState(() {
+                        //                           widget.initialSelectedRoute =
+                        //                               RouteStore(
+                        //                                   route:
+                        //                                       selected.route);
+                        //                           selectedRoute =
+                        //                               selected.route;
+                        //                         });
+                        //                       }
+                        //                     },
+                        //                     itemAsString: (RouteStore data) =>
+                        //                         data.route,
+                        //                     itemBuilder:
+                        //                         (context, item, isSelected) {
+                        //                       return Column(
+                        //                         children: [
+                        //                           ListTile(
+                        //                             title: Text(
+                        //                               " ${item.route}",
+                        //                               style: Styles.black18(
+                        //                                   context),
+                        //                             ),
+                        //                             selected: isSelected,
+                        //                           ),
+                        //                           Divider(
+                        //                             color: Colors.grey[
+                        //                                 200], // Color of the divider line
+                        //                             thickness:
+                        //                                 1, // Thickness of the line
+                        //                             indent:
+                        //                                 16, // Left padding for the divider line
+                        //                             endIndent:
+                        //                                 16, // Right padding for the divider line
+                        //                           ),
+                        //                         ],
+                        //                       );
+                        //                     },
+                        //                   ),
+                        //                 ),
+                        //               ),
+                        //             ),
+                        //           ],
+                        //         ),
+                        //         _buildCustomFormField(
+                        //             'ไลน์',
+                        //             storeLineIdController.text,
+                        //             Icons.alternate_email,
+                        //             storeLineIdController,
+                        //             readOnly: onEdit),
+                        //         _buildCustomFormField(
+                        //             'ประเภทร้านค้า',
+                        //             '${widget.store.typeName}',
+                        //             Icons.store_mall_directory,
+                        //             storeShoptypeController),
+                        //         _buildCustomFormField(
+                        //             'หมายเหตุ',
+                        //             storeNoteController.text,
+                        //             Icons.note,
+                        //             storeNoteController,
+                        //             readOnly: onEdit),
+                        //         // SizedBox(height: screenWidth / 37),
+                        //         _buildCustomFormField(
+                        //             'ที่อยู่',
+                        //             '${widget.store.address} ${widget.store.province != 'กรุงเทพมหานคร' ? 'ต.' : 'แขวง'}${widget.store.subDistrict} ${widget.store.province != 'กรุงเทพมหานคร' ? 'อ.' : 'เขต'}${widget.store.district} ${widget.store.province != 'กรุงเทพมหานคร' ? 'จ.' : ''}${widget.store.province} ${widget.store.postCode}',
+                        //             Icons.location_on_rounded,
+                        //             storeAddressController),
+                        //         Row(
+                        //           mainAxisAlignment:
+                        //               MainAxisAlignment.spaceAround,
+                        //           children: [
+                        //             ShowPhotoButton(
+                        //               checkNetwork: true,
+                        //               label: "ร้านค้า",
+                        //               icon: Icons.image_not_supported_outlined,
+                        //               imagePath: widget
+                        //                       .store.imageList.isNotEmpty
+                        //                   ? (widget.store.imageList
+                        //                           .where((image) =>
+                        //                               image.type == "store")
+                        //                           .isNotEmpty
+                        //                       ? "${ApiService.apiHost}/image/stores/${User.area}/${widget.store.imageList.where((image) => image.type == "store").last.name}"
+                        //                       : null)
+                        //                   : null,
+                        //             ),
+                        //             ShowPhotoButton(
+                        //               checkNetwork: true,
+                        //               label: "ภ.พ.20",
+                        //               icon: Icons.image_not_supported_outlined,
+                        //               imagePath: widget
+                        //                       .store.imageList.isNotEmpty
+                        //                   ? (widget.store.imageList
+                        //                           .where((image) =>
+                        //                               image.type == "document")
+                        //                           .isNotEmpty
+                        //                       ? "${ApiService.apiHost}/image/stores/${User.area}/${widget.store.imageList.where((image) => image.type == "document").last.name}"
+                        //                       : null)
+                        //                   : null,
+                        //             ),
+                        //             ShowPhotoButton(
+                        //               checkNetwork: true,
+                        //               label: "สำเนาบัตรปปช.",
+                        //               icon: Icons.image_not_supported_outlined,
+                        //               imagePath: widget
+                        //                       .store.imageList.isNotEmpty
+                        //                   ? (widget.store.imageList
+                        //                           .where((image) =>
+                        //                               image.type == "idCard")
+                        //                           .isNotEmpty
+                        //                       ? "${ApiService.apiHost}/image/stores/${User.area}/${widget.store.imageList.where((image) => image.type == "idCard").last.name}"
+                        //                       : null)
+                        //                   : null,
+                        //             ),
+                        //           ],
+                        //         )
+                        //       ],
+                        //     ),
+                        //   ),
+                        // ),
                       ],
                     ),
                   ),

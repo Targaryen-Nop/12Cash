@@ -122,10 +122,11 @@ class _DetailStoreScreenState extends State<DetailStoreScreen> {
             style: Styles.black18(context),
           ),
         );
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const HomeScreen(index: 2)),
-        );
+        Navigator.pop(context);
+        // Navigator.push(
+        //   context,
+        //   MaterialPageRoute(builder: (context) => const HomeScreen(index: 2)),
+        // );
       } else {
         toastification.show(
           autoCloseDuration: Duration(seconds: 3),
@@ -395,136 +396,118 @@ class _DetailStoreScreenState extends State<DetailStoreScreen> {
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     children: [
-                                      MenuButton(
-                                        icon: Icons.image,
-                                        label: "รูปภาพ",
-                                        // color: Colors.teal,
-                                        color: Styles.bluePastel,
-                                        onPressed: () {
-                                          // Navigator.push(
-                                          //   context,
-                                          //   MaterialPageRoute(
-                                          //     builder: (context) =>
-                                          //         EditStoreDataScreen(
-                                          //             initialSelectedRoute: RouteStore(
-                                          //                 route: widget
-                                          //                     .initialSelectedRoute
-                                          //                     .route),
-                                          //             store: widget.store,
-                                          //             customerNo:
-                                          //                 widget.customerNo,
-                                          //             customerName:
-                                          //                 widget.customerName),
-                                          //   ),
-                                          // );
-                                        },
+                                      Column(
+                                        children: [
+                                          MenuButton(
+                                            icon: Icons.image,
+                                            label: "รูปภาพ",
+                                            // color: Colors.teal,
+                                            color: Styles.grey,
+                                            onPressed: () {
+                                              // Navigator.push(
+                                              //   context,
+                                              //   MaterialPageRoute(
+                                              //     builder: (context) =>
+                                              //         EditStoreDataScreen(
+                                              //             initialSelectedRoute: RouteStore(
+                                              //                 route: widget
+                                              //                     .initialSelectedRoute
+                                              //                     .route),
+                                              //             store: widget.store,
+                                              //             customerNo:
+                                              //                 widget.customerNo,
+                                              //             customerName:
+                                              //                 widget.customerName),
+                                              //   ),
+                                              // );
+                                            },
+                                          ),
+                                          Text(
+                                            'ยังไม่เปิดให้บริการ',
+                                            style: Styles.black12(context),
+                                          ),
+                                        ],
                                       ),
-                                      MenuButton(
-                                        icon: Icons.edit_document,
-                                        label: "แก้ไข",
-                                        // color: Colors.teal,
-                                        color: Styles.warning!,
-                                        onPressed: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  EditStoreDataScreen(
-                                                      initialSelectedRoute: RouteStore(
-                                                          route: widget
-                                                              .initialSelectedRoute
-                                                              .route),
-                                                      store: widget.store,
-                                                      customerNo:
-                                                          widget.customerNo,
-                                                      customerName:
-                                                          widget.customerName),
-                                            ),
-                                          );
-                                        },
+                                      Column(
+                                        children: [
+                                          MenuButton(
+                                            icon: Icons.edit_document,
+                                            label: "แก้ไข",
+                                            // color: Colors.teal,
+                                            color: Styles.warning!,
+                                            onPressed: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      EditStoreDataScreen(
+                                                          initialSelectedRoute:
+                                                              RouteStore(
+                                                                  route: widget
+                                                                      .initialSelectedRoute
+                                                                      .route),
+                                                          store: widget.store,
+                                                          customerNo:
+                                                              widget.customerNo,
+                                                          customerName: widget
+                                                              .customerName),
+                                                ),
+                                              );
+                                            },
+                                          ),
+                                          Text(
+                                            '',
+                                            style: Styles.black12(context),
+                                          ),
+                                        ],
                                       ),
-                                      MenuButton(
-                                        icon: Icons.store_rounded,
-                                        label: "เช็คอิน",
-                                        color: Styles.successButtonColor,
-                                        onPressed: () {
-                                          fetchLocation();
-                                          AllAlert.checkinAlert(
-                                              context, _checkin);
-                                          // Alert(
-                                          //   context: context,
-                                          //   title:
-                                          //       "store.processtimeline_screen.alert.title"
-                                          //           .tr(),
-                                          //   style: AlertStyle(
-                                          //     animationType: AnimationType.grow,
-                                          //     isCloseButton: true,
-                                          //     isOverlayTapDismiss: false,
-                                          //     descStyle:
-                                          //         Styles.black18(context),
-                                          //     descTextAlign: TextAlign.start,
-                                          //     animationDuration: const Duration(
-                                          //         milliseconds: 400),
-                                          //     alertBorder:
-                                          //         RoundedRectangleBorder(
-                                          //       borderRadius:
-                                          //           BorderRadius.circular(22.0),
-                                          //       side: const BorderSide(
-                                          //         color: Colors.grey,
-                                          //       ),
-                                          //     ),
-                                          //     titleStyle:
-                                          //         Styles.headerBlack32(context),
-                                          //     alertAlignment: Alignment.center,
-                                          //   ),
-                                          //   desc:
-                                          //       "คุณต้องการยืนยันการเช็คอินร้านค้าใช่หรือไม่ ?",
-                                          //   buttons: [
-                                          //     DialogButton(
-                                          //       onPressed: () =>
-                                          //           Navigator.pop(context),
-                                          //       color: Styles.failTextColor,
-                                          //       child: Text(
-                                          //         "store.processtimeline_screen.alert.cancel"
-                                          //             .tr(),
-                                          //         style:
-                                          //             Styles.white18(context),
-                                          //       ),
-                                          //     ),
-                                          //     DialogButton(
-                                          //       onPressed: () {
-                                          //         _checkin();
-                                          //       },
-                                          //       color:
-                                          //           Styles.successButtonColor,
-                                          //       child: Text(
-                                          //         "store.processtimeline_screen.alert.submit"
-                                          //             .tr(),
-                                          //         style:
-                                          //             Styles.white18(context),
-                                          //       ),
-                                          //     )
-                                          //   ],
-                                          // ).show();
-                                        },
+                                      Column(
+                                        children: [
+                                          MenuButton(
+                                            icon: Icons.store_rounded,
+                                            label: "เช็คอิน",
+                                            color: Styles.successButtonColor,
+                                            onPressed: () async {
+                                              await fetchLocation();
+                                              AllAlert.checkinAlert(
+                                                  context, _checkin);
+                                            },
+                                          ),
+                                          Text(
+                                            '',
+                                            style: Styles.black12(context),
+                                          ),
+                                        ],
                                       ),
-                                      MenuButton(
-                                        icon: Icons.add_shopping_cart_rounded,
-                                        label: "ขาย",
-                                        // color: Colors.teal,
-                                        color: Styles.primaryColor,
-                                        onPressed: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) => Orderscreen(
-                                                  customerNo: widget.customerNo,
-                                                  customerName:
-                                                      widget.customerName,
-                                                  status: widget.store.status),
-                                            ),
-                                          );
-                                        },
+                                      Column(
+                                        children: [
+                                          MenuButton(
+                                            icon:
+                                                Icons.add_shopping_cart_rounded,
+                                            label: "ขาย",
+                                            // color: Colors.teal,
+                                            color: Styles.grey,
+                                            onPressed: () {
+                                              // Navigator.push(
+                                              //   context,
+                                              //   MaterialPageRoute(
+                                              //     builder: (context) =>
+                                              //         Orderscreen(
+                                              //             customerNo: widget
+                                              //                 .customerNo,
+                                              //             customerName: widget
+                                              //                 .customerName,
+                                              //             status: widget
+                                              //                 .store.status),
+                                              //   ),
+                                              // );
+                                            },
+                                          ),
+                                          Text(
+                                            'ยังไม่เปิดให้บริการ',
+                                            style: Styles.black12(context),
+                                          ),
+                                        ],
                                       ),
                                     ],
                                   ),
@@ -548,7 +531,7 @@ class _DetailStoreScreenState extends State<DetailStoreScreen> {
                                         color: Colors.black,
                                       ),
                                       Text(
-                                        'Dashboard',
+                                        'ตัวอย่าง Dashboard',
                                         textAlign: TextAlign.start,
                                         style: Styles.black24(context),
                                       ),
@@ -696,45 +679,45 @@ class _DetailStoreScreenState extends State<DetailStoreScreen> {
                                     ),
                                     Column(
                                       children: [
-                                        Container(
-                                          decoration: BoxDecoration(
-                                            color: Colors.grey[200],
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                          ),
-                                          child: Padding(
-                                            padding: EdgeInsets.all(8),
-                                            child: Column(
-                                              children: [
-                                                Text(
-                                                  "เป้าหมาย",
-                                                  style:
-                                                      Styles.black24(context),
-                                                ),
-                                                Row(
-                                                  children: [
-                                                    FaIcon(
-                                                        FontAwesomeIcons
-                                                            .caretDown,
-                                                        color: Styles
-                                                            .failTextColor),
-                                                    Text(
-                                                      " 10%",
-                                                      style:
-                                                          Styles.red10(context),
-                                                    ),
-                                                    Text(
-                                                      " ${1500} บาท",
-                                                      style: Styles.headerRed24(
-                                                          context),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                        SizedBox(height: 10),
+                                        // Container(
+                                        //   decoration: BoxDecoration(
+                                        //     color: Colors.grey[200],
+                                        //     borderRadius:
+                                        //         BorderRadius.circular(10),
+                                        //   ),
+                                        //   child: Padding(
+                                        //     padding: EdgeInsets.all(8),
+                                        //     child: Column(
+                                        //       children: [
+                                        //         Text(
+                                        //           "เป้าหมาย",
+                                        //           style:
+                                        //               Styles.black24(context),
+                                        //         ),
+                                        //         Row(
+                                        //           children: [
+                                        //             FaIcon(
+                                        //                 FontAwesomeIcons
+                                        //                     .caretDown,
+                                        //                 color: Styles
+                                        //                     .failTextColor),
+                                        //             Text(
+                                        //               " 10%",
+                                        //               style:
+                                        //                   Styles.red10(context),
+                                        //             ),
+                                        //             Text(
+                                        //               " ${1500} บาท",
+                                        //               style: Styles.headerRed24(
+                                        //                   context),
+                                        //             ),
+                                        //           ],
+                                        //         ),
+                                        //       ],
+                                        //     ),
+                                        //   ),
+                                        // ),
+                                        // SizedBox(height: 10),
                                         Container(
                                           decoration: BoxDecoration(
                                             color: Colors.grey[200],
@@ -795,7 +778,7 @@ class _DetailStoreScreenState extends State<DetailStoreScreen> {
                                         color: Colors.black,
                                       ),
                                       Text(
-                                        'สรุปการขาย',
+                                        'ตัวอย่างสรุปการขาย',
                                         textAlign: TextAlign.start,
                                         style: Styles.black24(context),
                                       ),

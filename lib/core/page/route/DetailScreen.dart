@@ -259,8 +259,7 @@ class _DetailScreenState extends State<DetailScreen> {
             },
           );
           var response = await dio.post(
-            // '${ApiService.apiHost}/api/cash/route/checkIn',
-            'http://192.168.44.57:8006/api/cash/route/checkIn',
+            '${ApiService.apiHost}/api/cash/route/checkIn',
             data: formData,
             options: Options(
               headers: {
@@ -268,6 +267,16 @@ class _DetailScreenState extends State<DetailScreen> {
               },
             ),
           );
+          // var response = await dio.post(
+          //   // '${ApiService.apiHost}/api/cash/route/checkIn',
+          //   'http://147.50.183.98:8000/api/cash/route/checkIn',
+          //   data: formData,
+          //   options: Options(
+          //     headers: {
+          //       "Content-Type": "multipart/form-data",
+          //     },
+          //   ),
+          // );
           if (response.statusCode == 201 || response.statusCode == 200) {
             print("Response API ${response.data}");
             toastification.show(
@@ -392,7 +401,7 @@ class _DetailScreenState extends State<DetailScreen> {
                                     // color: Styles.success!,
                                     color: statusCheck > 0
                                         ? Colors.grey
-                                        : Styles.bluePastel,
+                                        : Styles.secondaryColor,
                                     onPressed: () {
                                       if (statusCheck <= 0) {
                                         _showCheckInSheet(context);

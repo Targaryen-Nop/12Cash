@@ -370,13 +370,14 @@ class _EditStoreDataScreenState extends State<EditStoreDataScreen> {
                                               ).show();
                                             },
                                             child: BoxShadowCustom(
+                                              borderColor: Colors.transparent,
                                               child: Container(
                                                 padding:
                                                     const EdgeInsets.all(8),
                                                 decoration: BoxDecoration(
                                                     borderRadius:
                                                         BorderRadius.circular(
-                                                            8),
+                                                            16),
                                                     color: Styles
                                                         .successButtonColor),
                                                 child: Row(

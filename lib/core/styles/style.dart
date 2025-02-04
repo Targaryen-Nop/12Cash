@@ -377,7 +377,7 @@ class Styles {
 
 // --------------------- Primary Color ---------------------------------
   static const Color primaryColor = Color(0xFF00569D);
-  static const Color secondaryColor = Color(0xFF94d3f2);
+  static const Color secondaryColor = Color(0xFF8fd7f5);
   static const Color grey = Colors.grey;
   static const Color white = Colors.white;
 

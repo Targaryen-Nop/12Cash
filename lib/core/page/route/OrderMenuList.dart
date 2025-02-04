@@ -43,8 +43,15 @@ class _OrderMenuListState extends State<OrderMenuList> {
   @override
   void initState() {
     super.initState();
-    _getFliter();
+    // _getFliter();
     _getProduct();
+    _loadSaleRoute();
+  }
+
+  Future<void> _loadSaleRoute() async {
+    setState(() {
+      _loadingProduct = false;
+    });
   }
 
   Future<void> _getProduct() async {
@@ -56,10 +63,11 @@ class _OrderMenuListState extends State<OrderMenuList> {
         endpoint: 'api/cash/product/get?type=sale&search=ผงปรุงรส',
         method: 'GET',
       );
-
+      // print("Response: $response");
       if (response.statusCode == 200) {
         final List<dynamic> data = response.data['data'];
-
+        productList = data.map((item) => Product.fromJson(item)).toList();
+        // print("productList $productList");
         if (mounted) {
           setState(() {
             productList = data.map((item) => Product.fromJson(item)).toList();

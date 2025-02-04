@@ -38,26 +38,54 @@ class Product {
   });
 
   // ✅ Convert JSON to Dart Object
+  // factory Product.fromJson(Map<String, dynamic> json) {
+  //   return Product(
+  //     id: json['id'],
+  //     name: json['name'],
+  //     group: json['group'],
+  //     brand: json['brand'],
+  //     size: json['size'],
+  //     flavour: json['flavour'],
+  //     type: json['type'],
+  //     weightGross: json['weightGross'],
+  //     weightNet: json['weightNet'],
+  //     statusSale: json['statusSale'],
+  //     statusWithdraw: json['statusWithdraw'],
+  //     statusRefund: json['statusRefund'],
+  //     image: json['image'],
+  //     listUnit: (json['listUnit'] as List<dynamic>)
+  //         .map((unit) => Unit.fromJson(unit))
+  //         .toList(),
+  //     createdDate: DateTime.parse(json['createdDate']),
+  //     updatedDate: DateTime.parse(json['updatedDate']),
+  //   );
+  // }
+
   factory Product.fromJson(Map<String, dynamic> json) {
     return Product(
-      id: json['id'],
-      name: json['name'],
-      group: json['group'],
-      brand: json['brand'],
-      size: json['size'],
-      flavour: json['flavour'],
-      type: json['type'],
-      weightGross: json['weightGross'],
-      weightNet: json['weightNet'],
-      statusSale: json['statusSale'],
-      statusWithdraw: json['statusWithdraw'],
-      statusRefund: json['statusRefund'],
-      image: json['image'],
-      listUnit: (json['listUnit'] as List<dynamic>)
-          .map((unit) => Unit.fromJson(unit))
-          .toList(),
-      createdDate: DateTime.parse(json['createdDate']),
-      updatedDate: DateTime.parse(json['updatedDate']),
+      id: json['id'] ?? '', // ✅ Default to empty string if null
+      name: json['name'] ?? '',
+      group: json['group'] ?? '',
+      brand: json['brand'] ?? '',
+      size: json['size'] ?? '',
+      flavour: json['flavour'] ?? '',
+      type: json['type'] ?? '',
+      weightGross: json['weightGross'] ?? '',
+      weightNet: json['weightNet'] ?? '',
+      statusSale: json['statusSale'] ?? '',
+      statusWithdraw: json['statusWithdraw'] ?? '',
+      statusRefund: json['statusRefund'] ?? '',
+      image: json['image'] ?? '',
+      listUnit: (json['listUnit'] as List<dynamic>?)
+              ?.map((unit) => Unit.fromJson(unit))
+              .toList() ??
+          [], // ✅ Default to empty list if null
+      createdDate: json['createdDate'] != null
+          ? DateTime.parse(json['createdDate'])
+          : DateTime.now(), // ✅ Default to current date if null
+      updatedDate: json['updatedDate'] != null
+          ? DateTime.parse(json['updatedDate'])
+          : DateTime.now(),
     );
   }
 

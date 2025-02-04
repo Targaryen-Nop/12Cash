@@ -526,6 +526,12 @@ class _StoreHeaderState extends State<StoreHeader> {
                       titleText:
                           "${"store.store_data_screen.input_route.name".tr()}",
                       fetchItems: (filter) => getRoutes(filter),
+                      filterFn: (RouteStore product, String filter) {
+                        return product.route != "R" &&
+                            product.route
+                                .toLowerCase()
+                                .contains(filter.toLowerCase());
+                      },
                       onChanged: (RouteStore? selected) async {
                         if (selected != null) {
                           setState(() {

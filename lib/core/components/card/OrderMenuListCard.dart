@@ -18,7 +18,6 @@ class _OrderMenuListCardState extends State<OrderMenuListCard> {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     return Container(
-      // height: screenWidth / 5,
       child: Column(
         children: [
           Row(

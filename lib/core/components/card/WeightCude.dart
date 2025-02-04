@@ -34,7 +34,7 @@ class _WeightCudeCardState extends State<WeightCudeCard> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    "dashboard.weightcude_card.title".tr(),
+                    "ตัวอย่าง${"dashboard.weightcude_card.title".tr()}",
                     style: Styles.black24(context),
                   ),
                 ],

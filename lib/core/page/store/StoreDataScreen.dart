@@ -393,6 +393,12 @@ class _StoreDataScreenState extends State<StoreDataScreen> {
                               _saveStoreToStorage();
                             }
                           },
+                          filterFn: (RouteStore product, String filter) {
+                            return product.route != "R" &&
+                                product.route
+                                    .toLowerCase()
+                                    .contains(filter.toLowerCase());
+                          },
                           itemAsString: (RouteStore data) => data.route,
                           itemBuilder: (context, item, isSelected) {
                             return Column(
