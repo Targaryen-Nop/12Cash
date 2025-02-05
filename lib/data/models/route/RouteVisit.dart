@@ -1,6 +1,6 @@
 import 'package:_12sale_app/data/models/route/StoreVisit.dart';
 
-class RouteVisit2 {
+class RouteVisit {
   final String id;
   final String period;
   final String area;
@@ -15,7 +15,7 @@ class RouteVisit2 {
   final double percentVisit;
   List<ListStore>? listStore;
 
-  RouteVisit2({
+  RouteVisit({
     required this.id,
     required this.period,
     required this.area,
@@ -31,9 +31,9 @@ class RouteVisit2 {
     this.listStore,
   });
 
-  // Factory method to parse JSON into RouteVisit2
-  factory RouteVisit2.fromJson(Map<String, dynamic> json) {
-    return RouteVisit2(
+  // Factory method to parse JSON into RouteVisit
+  factory RouteVisit.fromJson(Map<String, dynamic> json) {
+    return RouteVisit(
       id: json['id'],
       period: json['period'],
       area: json['area'],

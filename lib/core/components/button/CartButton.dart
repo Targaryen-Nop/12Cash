@@ -18,11 +18,11 @@ class _CartbuttonState extends State<Cartbutton> {
     return Container(
       child: FittedBox(
         child: Stack(
-          alignment: Alignment(1.5, -1.5),
+          alignment: Alignment(1.3, -1.5),
           children: [
             SizedBox(
-              width: screenWidth / 6.5, // Set the width of the button
-              height: screenWidth / 6.5, // Set the height of the button
+              width: 60, // Set the width of the button
+              height: 60, // Set the height of the button
               child: FloatingActionButton(
                 // Your actual Fab
                 onPressed: () {
@@ -38,21 +38,22 @@ class _CartbuttonState extends State<Cartbutton> {
                 child: Icon(
                   Icons.shopping_cart,
                   color: Colors.white,
-                  size: screenWidth / 12,
+                  size: 35,
                 ),
               ),
             ),
             Container(
-              width: screenWidth / 14, // Set the width of the button
-              height: screenWidth / 14,
-              constraints: BoxConstraints(minHeight: 32, minWidth: 32),
+              width: 25, // Set the width of the button
+              height: 25,
+              // constraints: BoxConstraints(minHeight: 32, minWidth: 32),
               decoration: BoxDecoration(
                 // This controls the shadow
                 boxShadow: [
                   BoxShadow(
-                      spreadRadius: 1,
-                      blurRadius: 5,
-                      color: Colors.black.withAlpha(50))
+                    spreadRadius: 1,
+                    blurRadius: 5,
+                    color: Colors.black.withAlpha(50),
+                  )
                 ],
                 borderRadius: BorderRadius.circular(180),
                 color: Colors.red, // This would be color of the Badge
@@ -60,7 +61,11 @@ class _CartbuttonState extends State<Cartbutton> {
               // This is your Badge
               child: Center(
                 // Here you can put whatever content you want inside your Badge
-                child: Text(widget.count, style: Styles.white18(context)),
+                child: Text(
+                  widget.count,
+                  style: Styles.white18(context),
+                  textAlign: TextAlign.center,
+                ),
               ),
             ),
           ],

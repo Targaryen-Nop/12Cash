@@ -18,9 +18,8 @@ import 'package:_12sale_app/core/page/store/DetailStoreScreen.dart';
 import 'package:_12sale_app/core/page/store/StoreScreen.dart';
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:_12sale_app/data/models/Route.dart';
-import 'package:_12sale_app/data/models/RouteVisit.dart';
-import 'package:_12sale_app/data/models/RouteVisitFilterLocal.dart';
-import 'package:_12sale_app/data/models/SaleRoute.dart';
+import 'package:_12sale_app/data/models/search/RouteVisitFilterLocal.dart';
+import 'package:_12sale_app/data/models/search/SaleRoute.dart';
 // import 'package:_12sale_app/data/models/StoreFilterLocal.dart';
 import 'package:_12sale_app/data/models/User.dart';
 import 'package:_12sale_app/data/models/route/RouteVisit.dart';
@@ -38,7 +37,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:widget_to_marker/widget_to_marker.dart';
 
-List<RouteVisit2> routeVisits = [];
+List<RouteVisit> routeVisits = [];
 
 String period =
     "${DateTime.now().year}${DateFormat('MM').format(DateTime.now())}";
@@ -308,7 +307,7 @@ class _RoutescreenState extends State<Routescreen> with RouteAware {
       // print("getRoute: ${response.data['data']}");
       if (mounted) {
         setState(() {
-          routeVisits = data.map((item) => RouteVisit2.fromJson(item)).toList();
+          routeVisits = data.map((item) => RouteVisit.fromJson(item)).toList();
           _loadingRouteVisit = false;
         });
       }
@@ -610,7 +609,7 @@ class _RouteHeaderState extends State<RouteHeader> {
   //     // print("getRoute: ${response.data['data']}");
   //     if (mounted) {
   //       setState(() {
-  //         routeVisits = data.map((item) => RouteVisit2.fromJson(item)).toList();
+  //         routeVisits = data.map((item) => RouteVisit.fromJson(item)).toList();
   //       });
   //     }
   //     print("getRoute: $routeVisits");
@@ -750,7 +749,7 @@ class _RouteHeaderState extends State<RouteHeader> {
                                     setState(() {
                                       routeVisits = data
                                           .map((item) =>
-                                              RouteVisit2.fromJson(item))
+                                              RouteVisit.fromJson(item))
                                           .toList();
                                       // _loadingRouteVisit = false;
                                     });
@@ -790,8 +789,8 @@ class _RouteHeaderState extends State<RouteHeader> {
                                 if (mounted) {
                                   setState(() {
                                     routeVisits = data
-                                        .map((item) =>
-                                            RouteVisit2.fromJson(item))
+                                        .map(
+                                            (item) => RouteVisit.fromJson(item))
                                         .toList();
                                   });
                                 }

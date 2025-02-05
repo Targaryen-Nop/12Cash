@@ -42,7 +42,7 @@ class _AjustRoute2State extends State<AjustRoute2> {
   bool _loadingAllStore = true;
   List<ListStore> listStore = [];
   bool isLoading = true;
-  List<RouteVisit2> routeVisits = [];
+  List<RouteVisit> routeVisits = [];
   String period =
       "${DateTime.now().year}${DateFormat('MM').format(DateTime.now())}";
   DateTime? _selectedDate;
@@ -68,7 +68,7 @@ class _AjustRoute2State extends State<AjustRoute2> {
       // print("getRoute: ${response.data['data']}");
       if (mounted) {
         setState(() {
-          routeVisits = data.map((item) => RouteVisit2.fromJson(item)).toList();
+          routeVisits = data.map((item) => RouteVisit.fromJson(item)).toList();
         });
       }
       Timer(const Duration(milliseconds: 500), () {

@@ -8,7 +8,6 @@ import 'package:_12sale_app/core/page/route/DetailScreen.dart';
 import 'package:_12sale_app/core/page/route/RouteScreen.dart';
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:_12sale_app/data/models/Route.dart';
-import 'package:_12sale_app/data/models/RouteVisit.dart';
 import 'package:_12sale_app/data/models/User.dart';
 import 'package:_12sale_app/data/models/route/RouteVisit.dart';
 import 'package:_12sale_app/data/models/route/StoreVisit.dart';
@@ -19,10 +18,10 @@ import 'package:flutter/services.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class RouteAjustCard extends StatefulWidget {
-  final RouteVisit2 routeVisit2;
+  final RouteVisit routeVisit;
   const RouteAjustCard({
     super.key,
-    required this.routeVisit2,
+    required this.routeVisit,
   });
 
   @override
@@ -33,13 +32,13 @@ class _RouteAjustCardState extends State<RouteAjustCard> {
   @override
   Widget build(BuildContext context) {
     return RouteAjust(
-      routeVisit: widget.routeVisit2,
+      routeVisit: widget.routeVisit,
     );
   }
 }
 
 class RouteAjust extends StatefulWidget {
-  final RouteVisit2 routeVisit;
+  final RouteVisit routeVisit;
 
   const RouteAjust({
     super.key,

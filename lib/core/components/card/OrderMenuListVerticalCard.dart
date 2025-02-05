@@ -2,14 +2,17 @@ import 'dart:io';
 
 import 'package:_12sale_app/core/components/BoxShadowCustom.dart';
 import 'package:_12sale_app/core/styles/style.dart';
+import 'package:_12sale_app/data/models/order/Product.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class OrderMenuListVerticalCard extends StatefulWidget {
   final VoidCallback onDetailsPressed;
+  final Product item;
   const OrderMenuListVerticalCard({
     super.key,
     required this.onDetailsPressed,
+    required this.item,
   });
 
   @override
@@ -33,8 +36,8 @@ class _OrderMenuListVerticalCardState extends State<OrderMenuListVerticalCard> {
                   BorderRadius.circular(8), // Optional: Add rounded corners
               child: Image.network(
                 'https://jobbkk.com/upload/employer/0D/53D/03153D/images/202045.webp',
-                width: screenWidth / 4,
-                height: screenWidth / 4,
+                width: screenWidth / 3,
+                height: screenWidth / 3,
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) {
                   return const Center(
@@ -56,7 +59,7 @@ class _OrderMenuListVerticalCardState extends State<OrderMenuListVerticalCard> {
                     children: [
                       Expanded(
                         child: Text(
-                          'ผงปรุงรสหมู ฟ้าไทย 1200g x6',
+                          "${widget.item.name}",
                           style: Styles.headerBlack24(context),
                           overflow:
                               TextOverflow.ellipsis, // Truncate if too long
@@ -67,37 +70,19 @@ class _OrderMenuListVerticalCardState extends State<OrderMenuListVerticalCard> {
                     ],
                   ),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Text(
-                        'ผงปรุงรส',
+                        '${widget.item.group} ${widget.item.brand}',
                         style: Styles.grey18(context),
                       ),
                     ],
                   ),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Text(
-                        'ฟ้าไทย',
-                        style: Styles.grey18(context),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        '1.2 KG',
-                        style: Styles.grey18(context),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'หมู',
+                        '${widget.item.size} รส${widget.item.flavour}',
                         style: Styles.grey18(context),
                       ),
                     ],

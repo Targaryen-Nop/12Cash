@@ -13,7 +13,7 @@ import 'package:_12sale_app/core/page/store/DetailNewStoreScreen.dart';
 import 'package:_12sale_app/core/page/store/DetailStoreScreen.dart';
 import 'package:_12sale_app/core/page/store/ProcessTimelineScreen.dart';
 import 'package:_12sale_app/data/models/Route.dart';
-import 'package:_12sale_app/data/models/StoreFilterLocal.dart';
+import 'package:_12sale_app/data/models/search/StoreFilterLocal.dart';
 import 'package:_12sale_app/data/models/User.dart';
 import 'package:_12sale_app/data/service/apiService.dart';
 import 'package:_12sale_app/data/service/requestPremission.dart';

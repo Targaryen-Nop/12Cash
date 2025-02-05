@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:_12sale_app/data/models/Store.dart';
-import 'package:_12sale_app/data/models/StoreFilterLocal.dart';
+import 'package:_12sale_app/data/models/search/StoreFilterLocal.dart';
 import 'package:_12sale_app/data/models/User.dart';
 import 'package:_12sale_app/data/models/order/Product.dart';
 import 'package:_12sale_app/data/service/apiService.dart';

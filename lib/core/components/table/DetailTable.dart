@@ -4,7 +4,7 @@ import 'package:_12sale_app/core/page/route/DetailScreen.dart';
 
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:_12sale_app/data/models/Order.dart';
-import 'package:_12sale_app/data/models/SaleRoute.dart';
+import 'package:_12sale_app/data/models/search/SaleRoute.dart';
 import 'package:_12sale_app/function/SavetoStorage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

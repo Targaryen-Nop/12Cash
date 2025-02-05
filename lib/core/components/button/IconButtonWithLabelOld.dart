@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:_12sale_app/core/components/button/CameraOld.dart';
+import 'package:_12sale_app/core/components/button/CameraButton.dart';
 import 'package:_12sale_app/core/page/HomeScreen.dart';
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:camera/camera.dart';
@@ -47,6 +47,7 @@ class _IconButtonWithLabelOldState extends State<IconButtonWithLabelOld> {
   Future<void> _initializeCamera() async {
     try {
       final cameras = await availableCameras();
+      // print("cameras.length:${cameras.length}");
       if (cameras.isNotEmpty) {
         final firstCamera = cameras.first;
         _cameraController = CameraController(
@@ -73,7 +74,7 @@ class _IconButtonWithLabelOldState extends State<IconButtonWithLabelOld> {
     await _initializeControllerFuture;
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => CameraPreviewScreenOld(
+        builder: (context) => CameraPreviewScreen(
           cameraController: _cameraController,
           onImageCaptured: (
             String imagePath,

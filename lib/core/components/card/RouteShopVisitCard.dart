@@ -1,7 +1,7 @@
 import 'package:_12sale_app/core/components/BoxShadowCustom.dart';
 import 'package:_12sale_app/core/components/chart/CircularChart.dart';
 import 'package:_12sale_app/core/styles/style.dart';
-import 'package:_12sale_app/data/models/RouteVisit.dart';
+
 import 'package:_12sale_app/data/models/Store.dart';
 import 'package:_12sale_app/data/models/route/RouteVisit.dart';
 import 'package:_12sale_app/data/models/route/StoreVisit.dart';

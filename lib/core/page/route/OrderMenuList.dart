@@ -3,9 +3,11 @@ import 'dart:async';
 import 'package:_12sale_app/core/components/Appbar.dart';
 import 'package:_12sale_app/core/components/BoxShadowCustom.dart';
 import 'package:_12sale_app/core/components/Loading.dart';
+import 'package:_12sale_app/core/components/button/CartButton.dart';
 import 'package:_12sale_app/core/components/card/OrderMenuListCard.dart';
 import 'package:_12sale_app/core/components/card/OrderMenuListVerticalCard.dart';
 import 'package:_12sale_app/core/components/search/ProductSearch.dart';
+import 'package:_12sale_app/core/page/route/ShoppingCartScreen.dart';
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:_12sale_app/data/models/User.dart';
 import 'package:_12sale_app/data/models/order/Product.dart';
@@ -249,6 +251,15 @@ class _OrderMenuListState extends State<OrderMenuList> {
           icon: FontAwesomeIcons.clipboardList,
         ),
       ),
+      floatingActionButton: Cartbutton(
+        count: "0",
+        // screen: ShoppingCartScreen(
+        //   customerNo: widget.customerNo,
+        //   customerName: widget.customerName,
+        //   status: widget.status,
+        // ),
+        screen: SizedBox(),
+      ),
       body: LayoutBuilder(
         builder: (context, constraints) {
           return Container(
@@ -303,176 +314,199 @@ class _OrderMenuListState extends State<OrderMenuList> {
                             indent: 16, // Left padding for the divider line
                             endIndent: 16, // Right padding for the divider line
                           ),
-                          SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: Row(
-                              children: [
-                                GestureDetector(
-                                  onTap: () => _showBottomSheet(context),
-                                  child: badgeFilter(
-                                      isSelected: (selectedBrands.isNotEmpty ||
-                                              selectedGroups.isNotEmpty ||
-                                              selectedSizes.isNotEmpty ||
-                                              selectedFlavours.isNotEmpty)
-                                          ? true
-                                          : false,
-                                      openIcon: false,
-                                      Icon(
-                                        FontAwesomeIcons.sliders,
-                                        color: (selectedBrands.isNotEmpty ||
-                                                selectedGroups.isNotEmpty ||
-                                                selectedSizes.isNotEmpty ||
-                                                selectedFlavours.isNotEmpty)
-                                            ? Styles.primaryColor
-                                            : Colors.grey,
-                                        size: 24,
-                                      ),
-                                      50),
-                                ),
-                                badgeFilter(
-                                  isSelected:
-                                      selectedGroups.isNotEmpty ? true : false,
-                                  Text(
-                                    selectedGroups.isEmpty
-                                        ? 'กลุ่ม'
-                                        : selectedGroups.join(', '),
-                                    style: selectedGroups.isEmpty
-                                        ? Styles.grey18(context)
-                                        : Styles.pirmary18(context),
-                                    overflow: TextOverflow
-                                        .ellipsis, // Truncate if too long
-                                    maxLines: 1, // Restrict to 1 line
-                                    softWrap: false, // Avoid wrapping
-                                  ),
-                                  selectedGroups.isEmpty ? 85 : 150,
-                                ),
-                                badgeFilter(
-                                  isSelected:
-                                      selectedBrands.isNotEmpty ? true : false,
-                                  Text(
-                                    selectedBrands.isEmpty
-                                        ? 'แบรนด์'
-                                        : selectedBrands.join(', '),
-                                    style: selectedBrands.isEmpty
-                                        ? Styles.grey18(context)
-                                        : Styles.pirmary18(context),
-                                    overflow: TextOverflow
-                                        .ellipsis, // Truncate if too long
-                                    maxLines: 1, // Restrict to 1 line
-                                    softWrap: false, // Avoid wrapping
-                                  ),
-                                  selectedBrands.isEmpty ? 110 : 200,
-                                ),
-                                badgeFilter(
-                                  isSelected:
-                                      selectedSizes.isNotEmpty ? true : false,
-                                  Text(
-                                    selectedSizes.isEmpty
-                                        ? 'ขนาด'
-                                        : selectedSizes.join(', '),
-                                    style: selectedSizes.isEmpty
-                                        ? Styles.grey18(context)
-                                        : Styles.pirmary18(context),
-                                    overflow: TextOverflow
-                                        .ellipsis, // Truncate if too long
-                                    maxLines: 1, // Restrict to 1 line
-                                    softWrap: false, // Avoid wrapping
-                                  ),
-                                  selectedSizes.isEmpty ? 100 : 200,
-                                ),
-                                badgeFilter(
-                                  isSelected: selectedFlavours.isNotEmpty
-                                      ? true
-                                      : false,
-                                  Text(
-                                    selectedFlavours.isEmpty
-                                        ? 'รสชาติ'
-                                        : selectedFlavours.join(', '),
-                                    style: selectedFlavours.isEmpty
-                                        ? Styles.grey18(context)
-                                        : Styles.pirmary18(context),
-                                    overflow: TextOverflow
-                                        .ellipsis, // Truncate if too long
-                                    maxLines: 1, // Restrict to 1 line
-                                    softWrap: false, // Avoid wrapping
-                                  ),
-                                  selectedFlavours.isEmpty ? 110 : 200,
-                                ),
-                                GestureDetector(
-                                  onTap: () => _clearFilter(),
-                                  child: badgeFilter(
-                                    openIcon: false,
-                                    Text(
-                                      'ล้างตัวเลือก',
-                                      style: Styles.grey18(context),
-                                    ),
-                                    110,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Expanded(
-                                flex: 2,
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 8.0,
-                                    horizontal: 16,
-                                  ),
-                                  child: Container(
-                                    child: ProductSearch(
-                                        onStoreSelected: (data) {}),
+                                flex: 3,
+                                child: SingleChildScrollView(
+                                  scrollDirection: Axis.horizontal,
+                                  child: Row(
+                                    children: [
+                                      GestureDetector(
+                                        onTap: () => _showBottomSheet(context),
+                                        child: badgeFilter(
+                                            isSelected: (selectedBrands
+                                                        .isNotEmpty ||
+                                                    selectedGroups.isNotEmpty ||
+                                                    selectedSizes.isNotEmpty ||
+                                                    selectedFlavours.isNotEmpty)
+                                                ? true
+                                                : false,
+                                            openIcon: false,
+                                            Icon(
+                                              FontAwesomeIcons.sliders,
+                                              color:
+                                                  (selectedBrands.isNotEmpty ||
+                                                          selectedGroups
+                                                              .isNotEmpty ||
+                                                          selectedSizes
+                                                              .isNotEmpty ||
+                                                          selectedFlavours
+                                                              .isNotEmpty)
+                                                      ? Styles.primaryColor
+                                                      : Colors.grey,
+                                              size: 24,
+                                            ),
+                                            50),
+                                      ),
+                                      badgeFilter(
+                                        isSelected: selectedGroups.isNotEmpty
+                                            ? true
+                                            : false,
+                                        Text(
+                                          selectedGroups.isEmpty
+                                              ? 'กลุ่ม'
+                                              : selectedGroups.join(', '),
+                                          style: selectedGroups.isEmpty
+                                              ? Styles.grey18(context)
+                                              : Styles.pirmary18(context),
+                                          overflow: TextOverflow
+                                              .ellipsis, // Truncate if too long
+                                          maxLines: 1, // Restrict to 1 line
+                                          softWrap: false, // Avoid wrapping
+                                        ),
+                                        selectedGroups.isEmpty ? 85 : 150,
+                                      ),
+                                      badgeFilter(
+                                        isSelected: selectedBrands.isNotEmpty
+                                            ? true
+                                            : false,
+                                        Text(
+                                          selectedBrands.isEmpty
+                                              ? 'แบรนด์'
+                                              : selectedBrands.join(', '),
+                                          style: selectedBrands.isEmpty
+                                              ? Styles.grey18(context)
+                                              : Styles.pirmary18(context),
+                                          overflow: TextOverflow
+                                              .ellipsis, // Truncate if too long
+                                          maxLines: 1, // Restrict to 1 line
+                                          softWrap: false, // Avoid wrapping
+                                        ),
+                                        selectedBrands.isEmpty ? 110 : 200,
+                                      ),
+                                      badgeFilter(
+                                        isSelected: selectedSizes.isNotEmpty
+                                            ? true
+                                            : false,
+                                        Text(
+                                          selectedSizes.isEmpty
+                                              ? 'ขนาด'
+                                              : selectedSizes.join(', '),
+                                          style: selectedSizes.isEmpty
+                                              ? Styles.grey18(context)
+                                              : Styles.pirmary18(context),
+                                          overflow: TextOverflow
+                                              .ellipsis, // Truncate if too long
+                                          maxLines: 1, // Restrict to 1 line
+                                          softWrap: false, // Avoid wrapping
+                                        ),
+                                        selectedSizes.isEmpty ? 100 : 200,
+                                      ),
+                                      badgeFilter(
+                                        isSelected: selectedFlavours.isNotEmpty
+                                            ? true
+                                            : false,
+                                        Text(
+                                          selectedFlavours.isEmpty
+                                              ? 'รสชาติ'
+                                              : selectedFlavours.join(', '),
+                                          style: selectedFlavours.isEmpty
+                                              ? Styles.grey18(context)
+                                              : Styles.pirmary18(context),
+                                          overflow: TextOverflow
+                                              .ellipsis, // Truncate if too long
+                                          maxLines: 1, // Restrict to 1 line
+                                          softWrap: false, // Avoid wrapping
+                                        ),
+                                        selectedFlavours.isEmpty ? 110 : 200,
+                                      ),
+                                      GestureDetector(
+                                        onTap: () => _clearFilter(),
+                                        child: badgeFilter(
+                                          openIcon: false,
+                                          Text(
+                                            'ล้างตัวเลือก',
+                                            style: Styles.grey18(context),
+                                          ),
+                                          110,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ),
                               Expanded(
                                 child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Text("มุมมอง",
-                                        style: Styles.black18(context)),
-                                    GestureDetector(
-                                      onTap: () {
-                                        if (!_isGridView) {
-                                          setState(() {
-                                            _isGridView = true;
-                                          });
-                                        } else {
-                                          setState(() {
-                                            _isGridView = false;
-                                          });
-                                        }
-                                      },
-                                      child: Container(
-                                        margin: const EdgeInsets.all(8.0),
-                                        height: 50,
-                                        width: 100,
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          border: Border.all(
-                                            color: Colors.grey,
-                                            width: 1,
+                                    Column(
+                                      children: [
+                                        // Text("มุมมอง",
+                                        //     style: Styles.black18(context)),
+                                        GestureDetector(
+                                          onTap: () {
+                                            if (!_isGridView) {
+                                              setState(() {
+                                                _isGridView = true;
+                                              });
+                                            } else {
+                                              setState(() {
+                                                _isGridView = false;
+                                              });
+                                            }
+                                          },
+                                          child: Container(
+                                            margin: const EdgeInsets.all(8.0),
+                                            height: 50,
+                                            width: 70,
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              border: Border.all(
+                                                color: Colors.grey,
+                                                width: 1,
+                                              ),
+                                              borderRadius:
+                                                  BorderRadius.circular(16),
+                                            ),
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Icon(
+                                              _isGridView
+                                                  ? FontAwesomeIcons.tableList
+                                                  : FontAwesomeIcons
+                                                      .tableCellsLarge,
+                                              color: Colors.grey,
+                                            ),
                                           ),
-                                          borderRadius:
-                                              BorderRadius.circular(16),
                                         ),
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Icon(
-                                          _isGridView
-                                              ? FontAwesomeIcons.tableList
-                                              : FontAwesomeIcons
-                                                  .tableCellsLarge,
-                                          color: Colors.grey,
-                                        ),
-                                      ),
+                                      ],
                                     ),
                                   ],
                                 ),
-                              )
+                              ),
                             ],
                           ),
+                          // Row(
+                          //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          //   children: [
+                          //     Expanded(
+                          //       flex: 2,
+                          //       child: Padding(
+                          //         padding: const EdgeInsets.symmetric(
+                          //           vertical: 8.0,
+                          //           horizontal: 16,
+                          //         ),
+                          //         child: Container(
+                          //           child: ProductSearch(
+                          //               onStoreSelected: (data) {}),
+                          //         ),
+                          //       ),
+                          //     ),
+                          //     // Expanded(
+                          //     //   child:
+                          //     // )
+                          //   ],
+                          // ),
                           SizedBox(
                             height: 16,
                           ),
@@ -494,6 +528,8 @@ class _OrderMenuListState extends State<OrderMenuList> {
                                                   Expanded(
                                                     child:
                                                         OrderMenuListVerticalCard(
+                                                      item: productList[
+                                                          firstIndex],
                                                       onDetailsPressed: () {},
                                                     ),
                                                   ),
@@ -502,6 +538,8 @@ class _OrderMenuListState extends State<OrderMenuList> {
                                                   Expanded(
                                                     child:
                                                         OrderMenuListVerticalCard(
+                                                      item: productList[
+                                                          secondIndex],
                                                       onDetailsPressed: () {},
                                                     ),
                                                   ),

@@ -22,8 +22,8 @@ import 'package:_12sale_app/core/page/route/TestGooglemap.dart';
 import 'package:_12sale_app/core/page/route/TossAddToCartScreen.dart';
 
 import 'package:_12sale_app/core/styles/style.dart';
-import 'package:_12sale_app/data/models/RouteVisitFilterLocal.dart';
-import 'package:_12sale_app/data/models/StoreFilterLocal.dart';
+import 'package:_12sale_app/data/models/search/RouteVisitFilterLocal.dart';
+import 'package:_12sale_app/data/models/search/StoreFilterLocal.dart';
 import 'package:_12sale_app/data/models/User.dart';
 import 'package:_12sale_app/data/service/AndroidAPIChecker.dart';
 import 'package:_12sale_app/data/service/localNotification.dart';
@@ -233,18 +233,6 @@ class _MyAppState extends State<MyApp> {
   final LocationService locationService = LocationService();
   double latitude = 00.00;
   double longitude = 00.00;
-
-  Future<void> _initializeCamera() async {
-    final cameras = await availableCameras();
-    final firstCamera = cameras.first;
-
-    // _cameraController = CameraController(
-    //   firstCamera,
-    //   ResolutionPreset.max,
-    // );
-
-    // _initializeControllerFuture = _cameraController.initialize();
-  }
 
   Future<void> _requestPermissions() async {
     // Android 13+, you need to allow notification permission to display foreground service notification.

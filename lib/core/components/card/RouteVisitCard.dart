@@ -1,7 +1,6 @@
 import 'package:_12sale_app/core/components/BoxShadowCustom.dart';
 import 'package:_12sale_app/core/components/chart/CircularChart.dart';
 import 'package:_12sale_app/core/styles/style.dart';
-import 'package:_12sale_app/data/models/RouteVisit.dart';
 import 'package:_12sale_app/data/models/Store.dart';
 import 'package:_12sale_app/data/models/route/RouteVisit.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -10,7 +9,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class RouteVisitCard extends StatelessWidget {
-  final RouteVisit2 item;
+  final RouteVisit item;
   final VoidCallback onDetailsPressed;
   const RouteVisitCard({
     required this.item,
