@@ -34,6 +34,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
 import '../../components/table/TestGridTable.dart';
+import 'package:timezone/standalone.dart' as tz;
 
 class Dashboardscreen extends StatefulWidget {
   const Dashboardscreen({super.key});
@@ -362,6 +363,22 @@ class DashboardHeader extends StatefulWidget {
 class _DashboardHeaderState extends State<DashboardHeader> {
   // final SharedPreferences prefs = await SharedPreferences.getInstance();
   late SharedPreferences sharedPreferences;
+  DateTime now = DateTime.now();
+
+  @override
+  void initState() {
+    super.initState();
+    // setup();
+  }
+
+  Future<void> setup() async {
+    await tz.initializeTimeZone();
+    var detroit = tz.getLocation('Asia/Bangkok');
+    setState(() {
+      now = tz.TZDateTime.now(detroit);
+    });
+    // var now = tz.TZDateTime.now(detroit);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -419,7 +436,8 @@ class _DashboardHeaderState extends State<DashboardHeader> {
                                   ),
                                   StreamBuilder(
                                     stream: Stream.periodic(
-                                        const Duration(seconds: 1)),
+                                      const Duration(seconds: 1),
+                                    ),
                                     builder: (context, snapshot) {
                                       return Text(
                                           ' ${'dashboard.time'.tr()}:${DateFormat('HH:mm:ss').format(DateTime.now())}',

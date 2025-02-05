@@ -55,9 +55,12 @@ import 'dart:io';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart';
 import 'package:month_year_picker/month_year_picker.dart';
+// import 'package:timezone/standalone.dart' as tz;
+// import 'package:timezone/data/latest.dart' as tz;
 
 void main() async {
   try {
+    // tz.initializeTimeZones();
     // // Configure the HTTP client to use a proxy
     // final client = HttpClient()
     //   ..findProxy = (url) {

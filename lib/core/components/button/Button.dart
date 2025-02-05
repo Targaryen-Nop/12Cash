@@ -105,7 +105,6 @@ class _ButtonFullWidthState extends State<ButtonFullWidth> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      // padding: EdgeInsets.symmetric(vertical: 16),
       width: double.infinity,
       child: ElevatedButton(
         onPressed: () {
@@ -169,7 +168,7 @@ class _ButtonFullWidthState extends State<ButtonFullWidth> {
           }
         },
         style: ElevatedButton.styleFrom(
-          padding: const EdgeInsets.symmetric(vertical: 16),
+          padding: const EdgeInsets.symmetric(vertical: 8),
           backgroundColor: widget.blackGroundColor,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
