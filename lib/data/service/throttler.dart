@@ -1,15 +1,20 @@
 import 'dart:async';
-import 'package:flutter/material.dart';
+import 'dart:ui';
 
-class Throttler {
-  final Duration delay;
+class Throttle {
+  Duration delay;
   Timer? _timer;
+  bool _isReady = true;
 
-  Throttler({required this.delay});
+  Throttle(this.delay);
 
   void run(VoidCallback action) {
-    if (_timer == null || !_timer!.isActive) {
-      _timer = Timer(delay, action);
+    if (_isReady) {
+      _isReady = false;
+      action();
+      _timer = Timer(delay, () {
+        _isReady = true;
+      });
     }
   }
 }

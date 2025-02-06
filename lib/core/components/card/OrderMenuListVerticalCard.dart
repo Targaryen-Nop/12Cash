@@ -24,10 +24,20 @@ class _OrderMenuListVerticalCardState extends State<OrderMenuListVerticalCard> {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
-    return GestureDetector(
-      onTap: widget.onDetailsPressed,
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        padding: const EdgeInsets.all(0),
+        elevation: 0, // Disable shadow
+        shadowColor: Colors.transparent, // Ensure no shadow color
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.zero, // No rounded corners
+          side: BorderSide.none, // Remove border
+        ),
+      ),
+      onPressed: widget.onDetailsPressed,
       child: Container(
-        height: 295,
+        height: 350,
         margin: EdgeInsets.all(8.0),
         child: Column(
           children: [
@@ -61,10 +71,10 @@ class _OrderMenuListVerticalCardState extends State<OrderMenuListVerticalCard> {
                         child: Text(
                           "${widget.item.name}",
                           style: Styles.headerBlack24(context),
-                          overflow:
-                              TextOverflow.ellipsis, // Truncate if too long
-                          maxLines: 1, // Restrict to 1 line
-                          softWrap: false, // Avoid wrapping
+                          // overflow:
+                          //     TextOverflow.ellipsis, // Truncate if too long
+                          maxLines: 2, // Restrict to 1 line
+                          softWrap: true, // Avoid wrapping
                         ),
                       ),
                     ],

@@ -806,9 +806,10 @@ class _RouteHeaderState extends State<RouteHeader> {
                                 Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => HomeScreen(
-                                            index: 1,
-                                          )),
+                                    builder: (context) => HomeScreen(
+                                      index: 1,
+                                    ),
+                                  ),
                                 );
 
                                 // print(

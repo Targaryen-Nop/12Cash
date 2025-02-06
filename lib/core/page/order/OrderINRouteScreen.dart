@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:_12sale_app/core/components/Appbar.dart';
 import 'package:_12sale_app/core/components/BoxShadowCustom.dart';
 import 'package:_12sale_app/core/components/Loading.dart';
@@ -8,10 +7,15 @@ import 'package:_12sale_app/core/components/button/CartButton.dart';
 import 'package:_12sale_app/core/components/card/OrderMenuListCard.dart';
 import 'package:_12sale_app/core/components/card/OrderMenuListVerticalCard.dart';
 import 'package:_12sale_app/core/components/search/ProductSearch.dart';
+import 'package:_12sale_app/core/components/search/StoreSearch.dart';
+import 'package:_12sale_app/core/page/order/CheckoutScreen.dart';
+import 'package:_12sale_app/core/page/order/CreateOrderScreen.dart';
 import 'package:_12sale_app/core/page/route/ShoppingCartScreen.dart';
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:_12sale_app/data/models/User.dart';
+import 'package:_12sale_app/data/models/order/Cart.dart';
 import 'package:_12sale_app/data/models/order/Product.dart';
+import 'package:_12sale_app/data/models/route/DetailStoreVisit.dart';
 import 'package:_12sale_app/data/service/apiService.dart';
 import 'package:_12sale_app/data/service/throttler.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -19,17 +23,23 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:toastification/toastification.dart';
 
-class OrderMenuList extends StatefulWidget {
-  const OrderMenuList({super.key});
+class OrderINRouteScreen extends StatefulWidget {
+  final DetailStoreVisit? storeDetail;
+
+  const OrderINRouteScreen({
+    super.key,
+    required this.storeDetail,
+  });
 
   @override
-  State<OrderMenuList> createState() => _OrderMenuListState();
+  State<OrderINRouteScreen> createState() => _OrderINRouteScreenState();
 }
 
-class _OrderMenuListState extends State<OrderMenuList> {
-  final Throttler throttler = Throttler(delay: Duration(seconds: 5));
+class _OrderINRouteScreenState extends State<OrderINRouteScreen> {
   List<Product> productList = [];
+  List<CartList> cartList = [];
   bool _loadingProduct = true;
 
   List<String> groupList = [];
@@ -50,12 +60,86 @@ class _OrderMenuListState extends State<OrderMenuList> {
   double price = 0;
   double total = 0.00;
   String selectedSize = "";
+  String selectedUnit = "";
+  double totalCart = 0.00;
+
+  String selectedStore = "กรุณาเลือกร้านค้า";
+  String selectedStoreId = "";
+  String selectedStoreAddress = "";
+  String selectedStoreTel = "";
+  String selectedStoreShopType = "";
 
   @override
   void initState() {
     super.initState();
     _getFliter();
     _getProduct();
+    _getCart();
+  }
+
+  Future<void> _deleteCart(Product product) async {}
+
+  Future<void> _getCart() async {
+    try {
+      ApiService apiService = ApiService();
+      await apiService.init();
+      var response = await apiService.request(
+        endpoint:
+            'api/cash/cart/get?type=sale&area=${User.area}&storeId=${widget.storeDetail?.listStore[0].storeInfo.storeId}',
+        method: 'GET',
+      );
+      if (response.statusCode == 200) {
+        final List<dynamic> data = response.data['data']['listProduct'];
+        setState(() {
+          totalCart = response.data['data']['total'].toDouble();
+          cartList = data.map((item) => CartList.fromJson(item)).toList();
+        });
+      }
+    } catch (e) {
+      print("Error $e");
+    }
+  }
+
+  Future<void> _addCart(Product product) async {
+    try {
+      ApiService apiService = ApiService();
+      await apiService.init();
+      var response = await apiService.request(
+        endpoint: 'api/cash/cart/add',
+        method: 'POST',
+        body: {
+          "type": "sale",
+          "area": "${User.area}",
+          "storeId": "${widget.storeDetail?.listStore[0].storeInfo.storeId}",
+          "id": "${product.id}",
+          "qty": count,
+          "unit": "${selectedUnit}"
+        },
+      );
+      print("Response add Cart: ${response.data['data']['listProduct']}");
+      if (response.statusCode == 200) {
+        toastification.show(
+          autoCloseDuration: const Duration(seconds: 5),
+          context: context,
+          primaryColor: Colors.green,
+          type: ToastificationType.success,
+          style: ToastificationStyle.flatColored,
+          title: Text(
+            "เพิ่มลงในตะกร้าสําเร็จ",
+            style: Styles.green18(context),
+          ),
+        );
+
+        final List<dynamic> data = response.data['data']['listProduct'];
+        setState(() {
+          totalCart = response.data['data']['total'].toDouble();
+          cartList = data.map((item) => CartList.fromJson(item)).toList();
+        });
+        await _getCart();
+      }
+    } catch (e) {
+      print("Error $e");
+    }
   }
 
   Future<void> _getProduct() async {
@@ -279,355 +363,512 @@ class _OrderMenuListState extends State<OrderMenuList> {
             // margin: const EdgeInsets.all(8.0),
             child: LoadingSkeletonizer(
               loading: _loadingProduct,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    height: 8,
-                  ),
-                  Expanded(
-                    child: BoxShadowCustom(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      height: 8,
+                    ),
+                    BoxShadowCustom(
+                      child: Container(
+                        margin: EdgeInsets.all(8),
                         child: Column(
                           children: [
-                            Container(
-                              child: Row(
-                                children: [
-                                  const Icon(
-                                    Icons.store,
-                                    size: 40,
-                                    color: Styles.primaryColor,
-                                  ),
-                                  const SizedBox(width: 8),
-                                  Text(
-                                    "VB21200372",
-                                    style: Styles.black24(context),
-                                  ),
-                                  const SizedBox(width: 8),
-                                  Expanded(
-                                    // Ensures text does not overflow the screen
-                                    child: Text(
-                                      "บริษัท มิราเคิล แพลนเนท จำกัด (สำนักงานใหญ่)",
-                                      style: Styles.black24(context),
-                                      overflow: TextOverflow
-                                          .ellipsis, // Truncate if too long
-                                      maxLines: 1, // Restrict to 1 line
-                                      softWrap: false, // Avoid wrapping
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Divider(
-                              color:
-                                  Colors.grey[200], // Color of the divider line
-                              thickness: 1, // Thickness of the line
-                              indent: 16, // Left padding for the divider line
-                              endIndent:
-                                  16, // Right padding for the divider line
-                            ),
                             Row(
                               children: [
-                                Expanded(
-                                  flex: 3,
-                                  child: SingleChildScrollView(
-                                    scrollDirection: Axis.horizontal,
-                                    child: Row(
-                                      children: [
-                                        GestureDetector(
-                                          onTap: () {
-                                            _showFilterGroupSheet(context);
-                                          },
-                                          child: badgeFilter(
-                                            isSelected:
-                                                selectedGroups.isNotEmpty
-                                                    ? true
-                                                    : false,
-                                            Text(
-                                              selectedGroups.isEmpty
-                                                  ? 'กลุ่ม'
-                                                  : selectedGroups.join(', '),
-                                              style: selectedGroups.isEmpty
-                                                  ? Styles.grey18(context)
-                                                  : Styles.pirmary18(context),
-                                              overflow: TextOverflow
-                                                  .ellipsis, // Truncate if too long
-                                              maxLines: 1, // Restrict to 1 line
-                                              softWrap: false, // Avoid wrapping
-                                            ),
-                                            selectedGroups.isEmpty ? 85 : 120,
-                                          ),
-                                        ),
-                                        GestureDetector(
-                                          onTap: () {
-                                            _showFilterBrandSheet(context);
-                                          },
-                                          child: badgeFilter(
-                                            isSelected:
-                                                selectedBrands.isNotEmpty
-                                                    ? true
-                                                    : false,
-                                            Text(
-                                              selectedBrands.isEmpty
-                                                  ? 'แบรนด์'
-                                                  : selectedBrands.join(', '),
-                                              style: selectedBrands.isEmpty
-                                                  ? Styles.grey18(context)
-                                                  : Styles.pirmary18(context),
-                                              overflow: TextOverflow
-                                                  .ellipsis, // Truncate if too long
-                                              maxLines: 1, // Restrict to 1 line
-                                              softWrap: false, // Avoid wrapping
-                                            ),
-                                            selectedBrands.isEmpty ? 120 : 120,
-                                          ),
-                                        ),
-                                        GestureDetector(
-                                          onTap: () {
-                                            _showFilterSizeSheet(context);
-                                          },
-                                          child: badgeFilter(
-                                            isSelected: selectedSizes.isNotEmpty
-                                                ? true
-                                                : false,
-                                            Text(
-                                              selectedSizes.isEmpty
-                                                  ? 'ขนาด'
-                                                  : selectedSizes.join(', '),
-                                              style: selectedSizes.isEmpty
-                                                  ? Styles.grey18(context)
-                                                  : Styles.pirmary18(context),
-                                              overflow: TextOverflow
-                                                  .ellipsis, // Truncate if too long
-                                              maxLines: 1, // Restrict to 1 line
-                                              softWrap: false, // Avoid wrapping
-                                            ),
-                                            selectedSizes.isEmpty ? 120 : 120,
-                                          ),
-                                        ),
-                                        GestureDetector(
-                                          onTap: () {
-                                            _showFilterFlavourSheet(context);
-                                          },
-                                          child: badgeFilter(
-                                            isSelected:
-                                                selectedFlavours.isNotEmpty
-                                                    ? true
-                                                    : false,
-                                            Text(
-                                              selectedFlavours.isEmpty
-                                                  ? 'รสชาติ'
-                                                  : selectedFlavours.join(', '),
-                                              style: selectedFlavours.isEmpty
-                                                  ? Styles.grey18(context)
-                                                  : Styles.pirmary18(context),
-                                              overflow: TextOverflow
-                                                  .ellipsis, // Truncate if too long
-                                              maxLines: 1, // Restrict to 1 line
-                                              softWrap: false, // Avoid wrapping
-                                            ),
-                                            selectedFlavours.isEmpty
-                                                ? 120
-                                                : 120,
-                                          ),
-                                        ),
-                                        GestureDetector(
-                                          onTap: () {
-                                            _clearFilter();
-                                            context.loaderOverlay.show();
-                                            _getProduct();
-                                          },
-                                          child: badgeFilter(
-                                            openIcon: false,
-                                            Text(
-                                              'ล้างตัวเลือก',
-                                              style: Styles.grey18(context),
-                                            ),
-                                            110,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
+                                const Icon(
+                                  Icons.store,
+                                  size: 40,
+                                  color: Styles.primaryColor,
                                 ),
+                                const SizedBox(width: 8),
                                 Expanded(
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Column(
-                                        children: [
-                                          // Text("มุมมอง",
-                                          //     style: Styles.black18(context)),
-                                          GestureDetector(
-                                            onTap: () {
-                                              if (!_isGridView) {
-                                                setState(() {
-                                                  _isGridView = true;
-                                                });
-                                              } else {
-                                                setState(() {
-                                                  _isGridView = false;
-                                                });
-                                              }
-                                            },
-                                            child: Container(
-                                              margin: const EdgeInsets.all(8.0),
-                                              height: 50,
-                                              width: 70,
-                                              decoration: BoxDecoration(
-                                                color: Colors.white,
-                                                border: Border.all(
-                                                  color: Colors.grey,
-                                                  width: 1,
-                                                ),
-                                                borderRadius:
-                                                    BorderRadius.circular(16),
-                                              ),
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
-                                              child: Icon(
-                                                _isGridView
-                                                    ? FontAwesomeIcons.tableList
-                                                    : FontAwesomeIcons
-                                                        .tableCellsLarge,
-                                                color: Colors.grey,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
+                                  // flex: 2,
+                                  child: Text(
+                                    "${widget.storeDetail?.listStore[0].storeInfo.name}",
+                                    style: Styles.black24(context),
                                   ),
                                 ),
                               ],
                             ),
-                            SizedBox(
-                              height: 16,
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "รหัสร้าน : ${widget.storeDetail?.listStore[0].storeInfo.storeId}",
+                                        style: Styles.black18(context),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "เบอร์ติดต่อ : ${widget.storeDetail?.listStore[0].storeInfo.tel}",
+                                        style: Styles.black18(context),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              ],
                             ),
-                            _isGridView
-                                ? Expanded(
-                                    child: Column(
-                                      children: [
-                                        Expanded(
-                                          child: ListView.builder(
-                                            itemCount:
-                                                (productList.length / 2).ceil(),
-                                            itemBuilder: (context, index) {
-                                              final firstIndex = index * 2;
-                                              final secondIndex =
-                                                  firstIndex + 1;
-                                              return Row(
-                                                children: [
-                                                  Expanded(
-                                                    child:
-                                                        OrderMenuListVerticalCard(
-                                                      item: productList[
-                                                          firstIndex],
-                                                      onDetailsPressed: () {},
-                                                    ),
-                                                  ),
-                                                  if (secondIndex <
-                                                      productList.length)
-                                                    Expanded(
-                                                      child:
-                                                          OrderMenuListVerticalCard(
-                                                        item: productList[
-                                                            secondIndex],
-                                                        onDetailsPressed: () {},
-                                                      ),
-                                                    )
-                                                  else
-                                                    Expanded(
-                                                      child:
-                                                          SizedBox(), // Placeholder for spacing if no second card
-                                                    ),
-                                                ],
-                                              );
-                                            },
-                                          ),
-                                        )
-
-                                        // Row(
-                                        //   children: [
-                                        //     Expanded(
-                                        //       child: OrderMenuListVerticalCard(
-                                        //         onDetailsPressed: () {},
-                                        //       ),
-                                        //     ),
-                                        //     Expanded(
-                                        //       child: OrderMenuListVerticalCard(
-                                        //         onDetailsPressed: () {},
-                                        //       ),
-                                        //     ),
-                                        //   ],
-                                        // ),
-                                      ],
-                                    ),
-                                  )
-                                : Expanded(
-                                    child: Column(
-                                      children: [
-                                        Expanded(
-                                          child: ListView.builder(
-                                            itemCount: productList.length,
-                                            itemBuilder: (context, index) {
-                                              return OrderMenuListCard(
-                                                product: productList[index],
-                                                onTap: () {
-                                                  print(productList[index]);
-                                                  setState(() {
-                                                    selectedSize = '';
-                                                    price = 0.00;
-                                                    count = 0;
-                                                    total = 0.00;
-                                                  });
-                                                  _showProductSheet(context,
-                                                      productList[index]);
-                                                },
-                                              );
-                                            },
-                                          ),
-                                        ),
-                                      ],
-                                    ),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    "ประเภท : ${widget.storeDetail?.listStore[0].storeInfo.typeName}",
+                                    style: Styles.black18(context),
                                   ),
-                            Container(
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    // Ensures text does not overflow the screen
-                                    child: ButtonFullWidth(
-                                      text: 'ใส่ตะกร้า',
-                                      blackGroundColor: Styles.primaryColor,
-                                      textStyle: Styles.white18(context),
-                                    ),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    "ที่อยู่ : ${widget.storeDetail?.listStore[0].storeInfo.address}",
+                                    style: Styles.black18(context),
                                   ),
-                                  Expanded(
-                                    flex: 2,
-                                    child: Text(
-                                      "ยอดรวม ฿${total.toStringAsFixed(2)} บาท",
-                                      style: Styles.black24(context),
-                                    ),
-                                  ),
-                                  const SizedBox(width: 8),
-                                  Expanded(
-                                    // Ensures text does not overflow the screen
-                                    child: ButtonFullWidth(
-                                      text: 'ใส่ตะกร้า',
-                                      blackGroundColor: Styles.primaryColor,
-                                      textStyle: Styles.white18(context),
-                                    ),
-                                  ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
                           ],
                         ),
                       ),
                     ),
-                  )
-                ],
+                    SizedBox(
+                      height: 8,
+                    ),
+                    Expanded(
+                      child: BoxShadowCustom(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            children: [
+                              Row(
+                                children: [
+                                  Expanded(
+                                    flex: 3,
+                                    child: SingleChildScrollView(
+                                      scrollDirection: Axis.horizontal,
+                                      child: Row(
+                                        children: [
+                                          GestureDetector(
+                                            onTap: () {
+                                              _showFilterGroupSheet(context);
+                                            },
+                                            child: badgeFilter(
+                                              isSelected:
+                                                  selectedGroups.isNotEmpty
+                                                      ? true
+                                                      : false,
+                                              Text(
+                                                selectedGroups.isEmpty
+                                                    ? 'กลุ่ม'
+                                                    : selectedGroups.join(', '),
+                                                style: selectedGroups.isEmpty
+                                                    ? Styles.grey18(context)
+                                                    : Styles.pirmary18(context),
+                                                overflow: TextOverflow
+                                                    .ellipsis, // Truncate if too long
+                                                maxLines:
+                                                    1, // Restrict to 1 line
+                                                softWrap:
+                                                    false, // Avoid wrapping
+                                              ),
+                                              selectedGroups.isEmpty ? 85 : 120,
+                                            ),
+                                          ),
+                                          GestureDetector(
+                                            onTap: () {
+                                              _showFilterBrandSheet(context);
+                                            },
+                                            child: badgeFilter(
+                                              isSelected:
+                                                  selectedBrands.isNotEmpty
+                                                      ? true
+                                                      : false,
+                                              Text(
+                                                selectedBrands.isEmpty
+                                                    ? 'แบรนด์'
+                                                    : selectedBrands.join(', '),
+                                                style: selectedBrands.isEmpty
+                                                    ? Styles.grey18(context)
+                                                    : Styles.pirmary18(context),
+                                                overflow: TextOverflow
+                                                    .ellipsis, // Truncate if too long
+                                                maxLines:
+                                                    1, // Restrict to 1 line
+                                                softWrap:
+                                                    false, // Avoid wrapping
+                                              ),
+                                              selectedBrands.isEmpty
+                                                  ? 120
+                                                  : 120,
+                                            ),
+                                          ),
+                                          GestureDetector(
+                                            onTap: () {
+                                              _showFilterSizeSheet(context);
+                                            },
+                                            child: badgeFilter(
+                                              isSelected:
+                                                  selectedSizes.isNotEmpty
+                                                      ? true
+                                                      : false,
+                                              Text(
+                                                selectedSizes.isEmpty
+                                                    ? 'ขนาด'
+                                                    : selectedSizes.join(', '),
+                                                style: selectedSizes.isEmpty
+                                                    ? Styles.grey18(context)
+                                                    : Styles.pirmary18(context),
+                                                overflow: TextOverflow
+                                                    .ellipsis, // Truncate if too long
+                                                maxLines:
+                                                    1, // Restrict to 1 line
+                                                softWrap:
+                                                    false, // Avoid wrapping
+                                              ),
+                                              selectedSizes.isEmpty ? 120 : 120,
+                                            ),
+                                          ),
+                                          GestureDetector(
+                                            onTap: () {
+                                              _showFilterFlavourSheet(context);
+                                            },
+                                            child: badgeFilter(
+                                              isSelected:
+                                                  selectedFlavours.isNotEmpty
+                                                      ? true
+                                                      : false,
+                                              Text(
+                                                selectedFlavours.isEmpty
+                                                    ? 'รสชาติ'
+                                                    : selectedFlavours
+                                                        .join(', '),
+                                                style: selectedFlavours.isEmpty
+                                                    ? Styles.grey18(context)
+                                                    : Styles.pirmary18(context),
+                                                overflow: TextOverflow
+                                                    .ellipsis, // Truncate if too long
+                                                maxLines:
+                                                    1, // Restrict to 1 line
+                                                softWrap:
+                                                    false, // Avoid wrapping
+                                              ),
+                                              selectedFlavours.isEmpty
+                                                  ? 120
+                                                  : 120,
+                                            ),
+                                          ),
+                                          GestureDetector(
+                                            onTap: () {
+                                              _clearFilter();
+                                              context.loaderOverlay.show();
+                                              _getProduct();
+                                            },
+                                            child: badgeFilter(
+                                              openIcon: false,
+                                              Text(
+                                                'ล้างตัวเลือก',
+                                                style: Styles.grey18(context),
+                                              ),
+                                              110,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Column(
+                                          children: [
+                                            // Text("มุมมอง",
+                                            //     style: Styles.black18(context)),
+                                            GestureDetector(
+                                              onTap: () {
+                                                if (!_isGridView) {
+                                                  setState(() {
+                                                    _isGridView = true;
+                                                  });
+                                                } else {
+                                                  setState(() {
+                                                    _isGridView = false;
+                                                  });
+                                                }
+                                              },
+                                              child: Container(
+                                                margin:
+                                                    const EdgeInsets.all(8.0),
+                                                height: 50,
+                                                width: 70,
+                                                decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  border: Border.all(
+                                                    color: Colors.grey,
+                                                    width: 1,
+                                                  ),
+                                                  borderRadius:
+                                                      BorderRadius.circular(16),
+                                                ),
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: Icon(
+                                                  _isGridView
+                                                      ? FontAwesomeIcons
+                                                          .tableList
+                                                      : FontAwesomeIcons
+                                                          .tableCellsLarge,
+                                                  color: Colors.grey,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 16,
+                              ),
+                              _isGridView
+                                  ? Expanded(
+                                      child: Column(
+                                        children: [
+                                          Expanded(
+                                            child: ListView.builder(
+                                              itemCount:
+                                                  (productList.length / 2)
+                                                      .ceil(),
+                                              itemBuilder: (context, index) {
+                                                final firstIndex = index * 2;
+                                                final secondIndex =
+                                                    firstIndex + 1;
+                                                return Row(
+                                                  children: [
+                                                    Expanded(
+                                                      child:
+                                                          OrderMenuListVerticalCard(
+                                                        item: productList[
+                                                            firstIndex],
+                                                        onDetailsPressed: () {
+                                                          setState(() {
+                                                            selectedUnit = '';
+                                                            selectedSize = '';
+                                                            price = 0.00;
+                                                            count = 1;
+                                                            total = 0.00;
+                                                          });
+                                                          _showProductSheet(
+                                                              context,
+                                                              productList[
+                                                                  firstIndex]);
+                                                        },
+                                                      ),
+                                                    ),
+                                                    if (secondIndex <
+                                                        productList.length)
+                                                      Expanded(
+                                                        child:
+                                                            OrderMenuListVerticalCard(
+                                                          item: productList[
+                                                              secondIndex],
+                                                          onDetailsPressed: () {
+                                                            setState(() {
+                                                              selectedUnit = '';
+                                                              selectedSize = '';
+                                                              price = 0.00;
+                                                              count = 1;
+                                                              total = 0.00;
+                                                            });
+                                                            _showProductSheet(
+                                                                context,
+                                                                productList[
+                                                                    secondIndex]);
+                                                          },
+                                                        ),
+                                                      )
+                                                    else
+                                                      Expanded(
+                                                        child:
+                                                            SizedBox(), // Placeholder for spacing if no second card
+                                                      ),
+                                                  ],
+                                                );
+                                              },
+                                            ),
+                                          )
+
+                                          // Row(
+                                          //   children: [
+                                          //     Expanded(
+                                          //       child: OrderMenuListVerticalCard(
+                                          //         onDetailsPressed: () {},
+                                          //       ),
+                                          //     ),
+                                          //     Expanded(
+                                          //       child: OrderMenuListVerticalCard(
+                                          //         onDetailsPressed: () {},
+                                          //       ),
+                                          //     ),
+                                          //   ],
+                                          // ),
+                                        ],
+                                      ),
+                                    )
+                                  : Expanded(
+                                      child: Column(
+                                        children: [
+                                          Expanded(
+                                            child: ListView.builder(
+                                              itemCount: productList.length,
+                                              itemBuilder: (context, index) {
+                                                return OrderMenuListCard(
+                                                  product: productList[index],
+                                                  onTap: () {
+                                                    print(productList[index]);
+                                                    setState(() {
+                                                      selectedUnit = '';
+                                                      selectedSize = '';
+                                                      price = 0.00;
+                                                      count = 1;
+                                                      total = 0.00;
+                                                    });
+                                                    _showProductSheet(context,
+                                                        productList[index]);
+                                                  },
+                                                );
+                                              },
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                              Container(
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    // Expanded(
+                                    //   // Ensures text does not overflow the screen
+                                    //   child: ButtonFullWidth(
+                                    //     text: 'ใส่ตะกร้า',
+                                    //     blackGroundColor: Styles.primaryColor,
+                                    //     textStyle: Styles.white18(context),
+                                    //   ),
+                                    // ),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 8.0),
+                                      child: Stack(
+                                        alignment: Alignment(1.3, -1.5),
+                                        children: [
+                                          ElevatedButton(
+                                            onPressed: () {
+                                              _showCartSheet(context, cartList);
+                                            },
+                                            child: Icon(
+                                              Icons.shopping_bag_outlined,
+                                              color: Colors.white,
+                                              size: 40,
+                                            ),
+                                            style: ElevatedButton.styleFrom(
+                                              padding: EdgeInsets.all(8),
+                                              backgroundColor:
+                                                  Styles.primaryColor,
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(8),
+                                              ),
+                                            ),
+                                          ),
+                                          cartList.isNotEmpty
+                                              ? Container(
+                                                  width:
+                                                      25, // Set the width of the button
+                                                  height: 25,
+                                                  // constraints: BoxConstraints(minHeight: 32, minWidth: 32),
+                                                  decoration: BoxDecoration(
+                                                    // This controls the shadow
+                                                    boxShadow: [
+                                                      BoxShadow(
+                                                        spreadRadius: 1,
+                                                        blurRadius: 5,
+                                                        color: Colors.black
+                                                            .withAlpha(50),
+                                                      )
+                                                    ],
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            180),
+                                                    color: Colors
+                                                        .red, // This would be color of the Badge
+                                                  ),
+                                                  // This is your Badge
+                                                )
+                                              : Container(),
+                                        ],
+                                      ),
+                                    ),
+                                    const SizedBox(width: 20),
+                                    Expanded(
+                                      flex: 2,
+                                      child: Text(
+                                        "ยอดรวม ฿${NumberFormat.currency(locale: 'th_TH', symbol: '').format(totalCart)} บาท",
+                                        style: Styles.black24(context),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Expanded(
+                                      // Ensures text does not overflow the screen
+                                      child: ButtonFullWidth(
+                                        text: 'สร้างออเดอร์',
+                                        blackGroundColor: Styles.primaryColor,
+                                        textStyle: Styles.white18(context),
+                                        onPressed: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  CheckoutScreen(
+                                                storeId: widget.storeDetail
+                                                    ?.listStore[0].storeInfo.id,
+                                                storeName: widget
+                                                    .storeDetail
+                                                    ?.listStore[0]
+                                                    .storeInfo
+                                                    .name,
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
           );
@@ -810,9 +1051,17 @@ class _OrderMenuListState extends State<OrderMenuList> {
                                                   setModalState(
                                                     () {
                                                       selectedSize = data.name;
+                                                      selectedUnit = data.unit;
                                                       total = price * count;
                                                     },
                                                   );
+                                                  setState(() {
+                                                    price = double.parse(
+                                                        data.price);
+                                                    selectedSize = data.name;
+                                                    selectedUnit = data.unit;
+                                                    total = price * count;
+                                                  });
                                                 },
                                                 style: ElevatedButton.styleFrom(
                                                   padding: const EdgeInsets
@@ -899,6 +1148,10 @@ class _OrderMenuListState extends State<OrderMenuList> {
                                                   count--;
                                                   total = price * count;
                                                 });
+                                                setState(() {
+                                                  count = count;
+                                                  total = price * count;
+                                                });
                                               }
                                             },
                                             style: ElevatedButton.styleFrom(
@@ -939,6 +1192,10 @@ class _OrderMenuListState extends State<OrderMenuList> {
                                                 count++;
                                                 total = price * count;
                                               });
+                                              setState(() {
+                                                count = count;
+                                                total = price * count;
+                                              });
                                               print("total${total}");
                                             },
                                             style: ElevatedButton.styleFrom(
@@ -971,6 +1228,32 @@ class _OrderMenuListState extends State<OrderMenuList> {
                                                   Styles.primaryColor,
                                               textStyle:
                                                   Styles.white18(context),
+                                              onPressed: () {
+                                                print(
+                                                    "selectedSize $selectedSize");
+                                                if (selectedSize != "" &&
+                                                    widget.storeDetail?.id !=
+                                                        "") {
+                                                  _addCart(product);
+                                                } else {
+                                                  toastification.show(
+                                                    autoCloseDuration:
+                                                        const Duration(
+                                                            seconds: 5),
+                                                    context: context,
+                                                    primaryColor: Colors.red,
+                                                    type: ToastificationType
+                                                        .error,
+                                                    style: ToastificationStyle
+                                                        .flatColored,
+                                                    title: Text(
+                                                      "กรุณาเลือกขนาดและร้านค้า",
+                                                      style:
+                                                          Styles.red18(context),
+                                                    ),
+                                                  );
+                                                }
+                                              },
                                             ),
                                           ),
                                         ],
@@ -987,6 +1270,205 @@ class _OrderMenuListState extends State<OrderMenuList> {
                         ),
                       ),
                     ),
+                  ],
+                ),
+              );
+            },
+          );
+        });
+      },
+    );
+  }
+
+  void _showCartSheet(BuildContext context, List<CartList> cartlist) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true, // Allow full height and scrolling
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16.0)),
+      ),
+      builder: (context) {
+        return StatefulBuilder(
+            builder: (BuildContext context, StateSetter setModalState) {
+          return DraggableScrollableSheet(
+            expand: false, // Allows dragging but does not expand fully
+            initialChildSize: 0.6, // 60% of screen height
+            minChildSize: 0.4,
+            maxChildSize: 0.9,
+            builder: (context, scrollController) {
+              return Container(
+                width: screenWidth * 0.95,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      decoration: const BoxDecoration(
+                        color: Styles.primaryColor,
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(16),
+                          topRight: Radius.circular(16),
+                        ),
+                      ),
+                      alignment: Alignment.centerLeft,
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 8.0, horizontal: 16.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.shopping_bag_outlined,
+                                color: Colors.white,
+                                size: 30,
+                              ),
+                              Text('ตะกร้าสินค้าที่เลือก',
+                                  style: Styles.white24(context)),
+                            ],
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.close, color: Colors.white),
+                            onPressed: () => Navigator.of(context).pop(),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: Container(
+                        height: screenHeight * 0.9,
+                        color: Colors.white,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 8.0, horizontal: 16.0),
+                          child: Column(
+                            children: [
+                              Expanded(
+                                  child: ListView.builder(
+                                itemCount: cartlist.length,
+                                itemBuilder: (context, index) {
+                                  return Column(
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(8),
+                                            child: Image.network(
+                                              'https://jobbkk.com/upload/employer/0D/53D/03153D/images/202045.webp',
+                                              width: screenWidth / 8,
+                                              height: screenWidth / 8,
+                                              fit: BoxFit.cover,
+                                              errorBuilder:
+                                                  (context, error, stackTrace) {
+                                                return const Center(
+                                                  child: Icon(
+                                                    Icons.error,
+                                                    color: Colors.red,
+                                                    size: 50,
+                                                  ),
+                                                );
+                                              },
+                                            ),
+                                          ),
+                                          Expanded(
+                                            flex: 3,
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(16.0),
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Row(
+                                                    children: [
+                                                      Expanded(
+                                                        child: Text(
+                                                          cartlist[index].name,
+                                                          style: Styles.black16(
+                                                              context),
+                                                          softWrap: true,
+                                                          maxLines: 2,
+                                                          overflow: TextOverflow
+                                                              .visible,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  Row(
+                                                    children: [
+                                                      Text(
+                                                        'id : ${cartlist[index].id}',
+                                                        style: Styles.black16(
+                                                            context),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  Row(
+                                                    children: [
+                                                      Text(
+                                                        'จำนวน : ${cartlist[index].qty.toStringAsFixed(0)} ${cartlist[index].unit}',
+                                                        style: Styles.black16(
+                                                            context),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  Row(
+                                                    children: [
+                                                      Text(
+                                                        'ราคา : ${cartlist[index].price}',
+                                                        style: Styles.black16(
+                                                            context),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                          Expanded(
+                                            child: Container(
+                                              color: Colors.red,
+                                              width: 20,
+                                              height: 100,
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                      Divider(
+                                        color: Colors.grey[200],
+                                        thickness: 1,
+                                        indent: 16,
+                                        endIndent: 16,
+                                      ),
+                                    ],
+                                  );
+                                },
+                              ))
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      color: Styles.primaryColor,
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text("ยอดรวม", style: Styles.white24(context)),
+                            Text(
+                                "฿${NumberFormat.currency(locale: 'th_TH', symbol: '').format(totalCart)} บาท",
+                                style: Styles.white24(context)),
+                          ],
+                        ),
+                      ),
+                    )
                   ],
                 ),
               );

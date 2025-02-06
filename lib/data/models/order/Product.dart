@@ -130,14 +130,21 @@ class Product {
 
 class Unit {
   final String name;
+  final String unit;
   final String factor;
   final String price;
 
-  Unit({required this.name, required this.factor, required this.price});
+  Unit({
+    required this.name,
+    required this.unit,
+    required this.factor,
+    required this.price,
+  });
 
   // ✅ Convert JSON to Dart Object
   factory Unit.fromJson(Map<String, dynamic> json) {
     return Unit(
+      unit: json['unit'],
       name: json['name'],
       factor: json['factor'],
       price: json['price'],
@@ -147,6 +154,7 @@ class Unit {
   // ✅ Convert Dart Object to JSON
   Map<String, dynamic> toJson() {
     return {
+      'unit': unit,
       'name': name,
       'factor': factor,
       'price': price,

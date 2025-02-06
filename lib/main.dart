@@ -17,7 +17,7 @@ import 'package:_12sale_app/core/page/HomeScreen.dart';
 import 'package:_12sale_app/core/page/LoginScreen.dart';
 import 'package:_12sale_app/core/page/HomeScreen.dart';
 import 'package:_12sale_app/core/page/dashboard/DashboardScreen.dart';
-import 'package:_12sale_app/core/page/route/OrderScreen.dart';
+import 'package:_12sale_app/core/page/order/OrderScreen.dart';
 import 'package:_12sale_app/core/page/route/TestGooglemap.dart';
 import 'package:_12sale_app/core/page/route/TossAddToCartScreen.dart';
 

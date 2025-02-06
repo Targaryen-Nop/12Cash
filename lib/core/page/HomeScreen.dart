@@ -8,8 +8,8 @@ import 'package:_12sale_app/core/page/report/ReportScreen.dart';
 import 'package:_12sale_app/core/page/route/AjustRoute.dart';
 import 'package:_12sale_app/core/page/route/AjustRoute2.dart';
 import 'package:_12sale_app/core/page/route/AjustRoute3.dart';
-import 'package:_12sale_app/core/page/route/OrderMenuList.dart';
-import 'package:_12sale_app/core/page/route/OrderScreen.dart';
+import 'package:_12sale_app/core/page/order/OrderOutRouteScreen.dart';
+import 'package:_12sale_app/core/page/order/OrderScreen.dart';
 import 'package:_12sale_app/core/page/route/RouteScreen.dart';
 import 'package:_12sale_app/core/page/setting/SettingScreen.dart';
 import 'package:_12sale_app/core/page/store/ProcessTimelineScreen.dart';
@@ -171,7 +171,7 @@ class _HomeScreenState extends State<HomeScreen> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => OrderMenuList(),
+              builder: (context) => OrderOutRouteScreen(),
             ),
           );
         }();

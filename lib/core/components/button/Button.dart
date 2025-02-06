@@ -154,14 +154,6 @@ class _ButtonFullWidthState extends State<ButtonFullWidth> {
                 )
               ],
             ).show();
-            // ConfirmationAlert(
-            //   context: context,
-            //   onConfirm: () {
-            //     Navigator.of(context).push(
-            //       MaterialPageRoute(builder: (context) => widget.screen!),
-            //     );
-            //   },
-            // ).show();
           }
           if (widget.onPressed != null) {
             widget.onPressed!();

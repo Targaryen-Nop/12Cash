@@ -231,7 +231,7 @@ class _DetailSimilarStoreState extends State<DetailSimilarStore> {
       //     },
       //   ),
       // ),
-      appBar: const PreferredSize(
+      appBar: PreferredSize(
         preferredSize: Size.fromHeight(70),
         child: AppbarCustom(
             title: " รายละเอียดร้านค้า",

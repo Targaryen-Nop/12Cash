@@ -11,7 +11,7 @@ import 'package:_12sale_app/core/components/chart/ItemSummarize.dart';
 import 'package:_12sale_app/core/components/search/DropdownSearchCustom.dart';
 import 'package:_12sale_app/core/page/HomeScreen.dart';
 import 'package:_12sale_app/core/page/dashboard/DashboardScreen.dart';
-import 'package:_12sale_app/core/page/route/OrderScreen.dart';
+import 'package:_12sale_app/core/page/order/OrderScreen.dart';
 import 'package:_12sale_app/core/page/store/DetailStoreScreen.dart';
 import 'package:_12sale_app/core/page/store/ProcessTimelineScreen.dart';
 
@@ -226,7 +226,7 @@ class _EditStoreDataScreenState extends State<EditStoreDataScreen> {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
-      appBar: const PreferredSize(
+      appBar: PreferredSize(
         preferredSize: Size.fromHeight(70),
         child: AppbarCustom(
             title: " แก้ไขร้านค้า", icon: Icons.store_mall_directory_rounded),

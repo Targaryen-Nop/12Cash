@@ -95,6 +95,7 @@ dependencies:
   month_year_picker: ^0.4.0+1
   loader_overlay: ^5.0.0
   timezone: ^0.10.0
+  flutter_debouncer: ^2.0.0
 
 dev_dependencies:
   flutter_test:

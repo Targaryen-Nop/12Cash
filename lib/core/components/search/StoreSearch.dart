@@ -93,7 +93,7 @@ class _StoreSearchState extends State<StoreSearch> {
     final storeState = Provider.of<StoreLocal>(context);
     double screenWidth = MediaQuery.of(context).size.width;
     return DropdownSearch<Store>(
-      clearButtonProps: ClearButtonProps(isVisible: true),
+      // clearButtonProps: ClearButtonProps(isVisible: true),
       asyncItems: (String filter) => getStores(), // Filters data as user types
       dropdownButtonProps: DropdownButtonProps(
         color: Colors.white,

@@ -17,8 +17,9 @@ import 'package:_12sale_app/core/components/table/DetailTable.dart';
 // import 'package:_12sale_app/core/components/table/ShopRouteTable.dart';
 import 'package:_12sale_app/core/components/table/ShopRouteTableMapAPI.dart';
 import 'package:_12sale_app/core/page/HomeScreen.dart';
-import 'package:_12sale_app/core/page/route/OrderMenuList.dart';
-import 'package:_12sale_app/core/page/route/OrderScreen.dart';
+import 'package:_12sale_app/core/page/order/OrderINRouteScreen.dart';
+import 'package:_12sale_app/core/page/order/OrderOutRouteScreen.dart';
+import 'package:_12sale_app/core/page/order/OrderScreen.dart';
 import 'package:_12sale_app/core/page/route/ShopRouteScreen.dart';
 
 import 'package:_12sale_app/core/styles/style.dart';
@@ -422,18 +423,20 @@ class _DetailScreenState extends State<DetailScreen> {
                                   MenuButton(
                                     icon: Icons.add_shopping_cart_rounded,
                                     label: "ขาย",
-                                    // color: Styles.success!,
-                                    color: Colors.grey,
+                                    color: Styles.success!,
+                                    // color: Colors.grey,
                                     // color:
                                     //     statusCheck > 0 ? Colors.grey : Colors.teal,
                                     onPressed: () {
                                       if (statusCheck <= 0) {
-                                        // Navigator.push(
-                                        //   context,
-                                        //   MaterialPageRoute(
-                                        //     builder: (context) => OrderMenuList(),
-                                        //   ),
-                                        // );
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                OrderINRouteScreen(
+                                                    storeDetail: storeDetail),
+                                          ),
+                                        );
                                       }
                                     },
                                   ),
