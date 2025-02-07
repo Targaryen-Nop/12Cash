@@ -8,7 +8,7 @@ import 'package:_12sale_app/core/components/card/OrderMenuListCard.dart';
 import 'package:_12sale_app/core/components/card/OrderMenuListVerticalCard.dart';
 import 'package:_12sale_app/core/components/search/ProductSearch.dart';
 import 'package:_12sale_app/core/components/search/StoreSearch.dart';
-import 'package:_12sale_app/core/page/order/CheckoutScreen.dart';
+import 'package:_12sale_app/core/page/order/CheckOutScreen.dart';
 import 'package:_12sale_app/core/page/order/CreateOrderScreen.dart';
 import 'package:_12sale_app/core/page/route/ShoppingCartScreen.dart';
 import 'package:_12sale_app/core/styles/style.dart';
@@ -845,15 +845,7 @@ class _OrderINRouteScreenState extends State<OrderINRouteScreen> {
                                             context,
                                             MaterialPageRoute(
                                               builder: (context) =>
-                                                  CheckoutScreen(
-                                                storeId: widget.storeDetail
-                                                    ?.listStore[0].storeInfo.id,
-                                                storeName: widget
-                                                    .storeDetail
-                                                    ?.listStore[0]
-                                                    .storeInfo
-                                                    .name,
-                                              ),
+                                                  CheckOutScreen(),
                                             ),
                                           );
                                         },

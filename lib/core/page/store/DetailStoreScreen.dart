@@ -296,21 +296,6 @@ class _DetailStoreScreenState extends State<DetailStoreScreen> {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
-      // floatingActionButton: SizedBox(
-      //   width: 100, // Set the width of the button
-      //   height: screenWidth / 8, // Set the height of the button
-      //   child: AddStoreButton(
-      //     icon: Icons.add,
-      //     onPressed: () {
-      //       Navigator.push(
-      //         context,
-      //         MaterialPageRoute(
-      //           builder: (context) => ProcessTimelinePage(),
-      //         ),
-      //       );
-      //     },
-      //   ),
-      // ),
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(70),
         child: AppbarCustom(

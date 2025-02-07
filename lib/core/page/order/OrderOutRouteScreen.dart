@@ -9,7 +9,7 @@ import 'package:_12sale_app/core/components/card/OrderMenuListCard.dart';
 import 'package:_12sale_app/core/components/card/OrderMenuListVerticalCard.dart';
 import 'package:_12sale_app/core/components/search/ProductSearch.dart';
 import 'package:_12sale_app/core/components/search/StoreSearch.dart';
-import 'package:_12sale_app/core/page/order/CheckoutScreen.dart';
+import 'package:_12sale_app/core/page/order/CheckOutScreen.dart';
 import 'package:_12sale_app/core/page/order/CreateOrderScreen.dart';
 import 'package:_12sale_app/core/page/route/ShoppingCartScreen.dart';
 import 'package:_12sale_app/core/styles/style.dart';
@@ -76,7 +76,7 @@ class _OrderOutRouteScreenState extends State<OrderOutRouteScreen> {
     _getProduct();
   }
 
-  Future<void> _deleteCart(CartList cart) async {
+  Future<void> _deleteCart(CartList cart, StateSetter setModalState) async {
     try {
       ApiService apiService = ApiService();
       await apiService.init();
@@ -92,6 +92,9 @@ class _OrderOutRouteScreenState extends State<OrderOutRouteScreen> {
         },
       );
       if (response.statusCode == 200) {
+        setState(() {
+          totalCart = response.data['data']['total'].toDouble();
+        });
         toastification.show(
           autoCloseDuration: const Duration(seconds: 5),
           context: context,
@@ -107,12 +110,12 @@ class _OrderOutRouteScreenState extends State<OrderOutRouteScreen> {
     } catch (e) {}
   }
 
-  Future<void> _reduceCart(CartList cart) async {
+  Future<void> _reduceCart(CartList cart, StateSetter setModalState) async {
     const duration = Duration(seconds: 1);
     try {
-      _throttler.throttle(
+      _debouncer.debounce(
         duration: duration,
-        onThrottle: () async {
+        onDebounce: () async {
           ApiService apiService = ApiService();
           await apiService.init();
           var response = await apiService.request(
@@ -128,6 +131,9 @@ class _OrderOutRouteScreenState extends State<OrderOutRouteScreen> {
             },
           );
           if (response.statusCode == 200) {
+            setState(() {
+              totalCart = response.data['data']['total'].toDouble();
+            });
             toastification.show(
               autoCloseDuration: const Duration(seconds: 5),
               context: context,
@@ -139,7 +145,7 @@ class _OrderOutRouteScreenState extends State<OrderOutRouteScreen> {
                 style: Styles.green18(context),
               ),
             );
-            await _getTotalCart();
+            await _getTotalCart(setModalState);
           }
         },
       );
@@ -159,7 +165,7 @@ class _OrderOutRouteScreenState extends State<OrderOutRouteScreen> {
     }
   }
 
-  Future<void> _getTotalCart() async {
+  Future<void> _getTotalCart(StateSetter setModalState) async {
     try {
       ApiService apiService = ApiService();
       await apiService.init();
@@ -172,6 +178,11 @@ class _OrderOutRouteScreenState extends State<OrderOutRouteScreen> {
         setState(() {
           totalCart = response.data['data']['total'].toDouble();
         });
+        setModalState(
+          () {
+            totalCart = response.data['data']['total'].toDouble();
+          },
+        );
       }
     } catch (e) {
       setState(() {
@@ -245,7 +256,7 @@ class _OrderOutRouteScreenState extends State<OrderOutRouteScreen> {
     } catch (e) {}
   }
 
-  Future<void> _addCartDu(CartList cart) async {
+  Future<void> _addCartDu(CartList cart, StateSetter setModalState) async {
     const duration = Duration(seconds: 1);
     try {
       _debouncer.debounce(
@@ -278,7 +289,7 @@ class _OrderOutRouteScreenState extends State<OrderOutRouteScreen> {
                 style: Styles.green18(context),
               ),
             );
-            await _getTotalCart();
+            await _getTotalCart(setModalState);
 
             setState(() {
               totalCart = response.data['data']['total'].toDouble();
@@ -496,15 +507,6 @@ class _OrderOutRouteScreenState extends State<OrderOutRouteScreen> {
           icon: FontAwesomeIcons.clipboardList,
         ),
       ),
-      // floatingActionButton: Cartbutton(
-      //   count: "0",
-      //   // screen: ShoppingCartScreen(
-      //   //   customerNo: widget.customerNo,
-      //   //   customerName: widget.customerName,
-      //   //   status: widget.status,
-      //   // ),
-      //   screen: SizedBox(),
-      // ),
       body: LayoutBuilder(
         builder: (context, constraints) {
           return Container(
@@ -1009,7 +1011,7 @@ class _OrderOutRouteScreenState extends State<OrderOutRouteScreen> {
                                     Expanded(
                                       // Ensures text does not overflow the screen
                                       child: ButtonFullWidth(
-                                        text: 'สร้างออเดอร์',
+                                        text: 'สั่งซื้อ',
                                         blackGroundColor: Styles.primaryColor,
                                         textStyle: Styles.white18(context),
                                         onPressed: () {
@@ -1018,10 +1020,13 @@ class _OrderOutRouteScreenState extends State<OrderOutRouteScreen> {
                                               context,
                                               MaterialPageRoute(
                                                 builder: (context) =>
-                                                    CheckoutScreen(
-                                                  storeId: selectedStoreId,
-                                                  storeName: selectedStore,
-                                                ),
+                                                    CreateOrderScreen(
+                                                        storeId:
+                                                            selectedStoreId,
+                                                        storeName:
+                                                            selectedStore,
+                                                        storeAddress:
+                                                            selectedStoreAddress),
                                               ),
                                             );
                                           }
@@ -1630,13 +1635,8 @@ class _OrderOutRouteScreenState extends State<OrderOutRouteScreen> {
                                                               });
                                                               await _reduceCart(
                                                                   cartlist[
-                                                                      index]);
-                                                              setModalState(
-                                                                () {
-                                                                  totalCart =
-                                                                      totalCart;
-                                                                },
-                                                              );
+                                                                      index],
+                                                                  setModalState);
                                                             },
                                                             style:
                                                                 ElevatedButton
@@ -1696,15 +1696,12 @@ class _OrderOutRouteScreenState extends State<OrderOutRouteScreen> {
                                                                 () async {
                                                               await _addCartDu(
                                                                   cartlist[
-                                                                      index]);
+                                                                      index],
+                                                                  setModalState);
+
                                                               setModalState(() {
                                                                 cartlist[index]
                                                                     .qty++;
-                                                              });
-
-                                                              setModalState(() {
-                                                                totalCart =
-                                                                    totalCart;
                                                               });
                                                             },
                                                             style:
@@ -1736,7 +1733,8 @@ class _OrderOutRouteScreenState extends State<OrderOutRouteScreen> {
                                                                 () async {
                                                               await _deleteCart(
                                                                   cartlist[
-                                                                      index]);
+                                                                      index],
+                                                                  setModalState);
 
                                                               setModalState(
                                                                 () {
@@ -1749,13 +1747,9 @@ class _OrderOutRouteScreenState extends State<OrderOutRouteScreen> {
                                                                               .unit));
                                                                 },
                                                               );
-                                                              await _getTotalCart();
-                                                              setModalState(
-                                                                () {
-                                                                  totalCart =
-                                                                      totalCart;
-                                                                },
-                                                              );
+                                                              await _getTotalCart(
+                                                                  setModalState);
+
                                                               if (cartList
                                                                       .length ==
                                                                   0) {

@@ -8,8 +8,10 @@ import 'package:_12sale_app/core/page/NotificationScreen.dart';
 import 'package:_12sale_app/core/page/Ractangle3D.dart';
 import 'package:_12sale_app/core/page/Square3D.dart';
 import 'package:_12sale_app/core/page/announce/Announce.dart';
+import 'package:_12sale_app/core/page/order/CheckOutScreen.dart';
+import 'package:_12sale_app/core/page/order/CreateOrderScreen.dart';
 import 'package:_12sale_app/core/page/printer/BluetoothPrinterScreen.dart';
-import 'package:_12sale_app/core/page/printer/PrinterBluetoothScreen.dart';
+import 'package:_12sale_app/core/page/printer/PrinterScreen.dart';
 import 'package:_12sale_app/core/page/printer/TestPrint.dart';
 import 'package:_12sale_app/core/page/printer/TestPrinterScreen.dart';
 import 'package:_12sale_app/core/page/dashboard/DashboardScreen.dart';
@@ -388,10 +390,12 @@ class _MyAppState extends State<MyApp> {
         return GlobalLoaderOverlay(
           child: MaterialApp(
             routes: {
-              // '/': (context) => const HomeScreen(
-              //       index: 0,
+              '/': (context) => BluetoothPrinterScreen4(),
+              // '/': (context) => CreateOrderScreen(
+              //       storeId: "V10160027",
+              //       storeName: "ร้านเพชรไทยคำ",
+              //       storeAddress: "ตลาดคลองขวาง เขตบางแค จ.กรุงเทพฯ",
               //     ),
-              '/': (context) => const AuthCheck(),
               '/route': (context) => const HomeScreen(
                     index: 1,
                   ),

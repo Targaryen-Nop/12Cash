@@ -375,11 +375,9 @@ class _StoreHeaderState extends State<StoreHeader> {
       // Load the JSON file for districts
       final String response = await rootBundle.loadString('data/route.json');
       final data = json.decode(response);
-
       // Filter and map JSON data to District model based on selected province and filter
       final List<RouteStore> route =
           (data as List).map((json) => RouteStore.fromJson(json)).toList();
-
       // Group districts by amphoe
       return route;
     } catch (e) {

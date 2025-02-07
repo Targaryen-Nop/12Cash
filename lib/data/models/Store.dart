@@ -250,7 +250,7 @@ class Store with ChangeNotifier {
 
   //  Set Strig to Show in Search Dropdown
   @override
-  String toString() => '$storeId';
+  String toString() => '$name $storeId';
 
   ///this method will prevent the override of toString
   ///when the object is passed as a parameter to a function Filtter

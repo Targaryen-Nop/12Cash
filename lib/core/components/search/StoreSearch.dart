@@ -64,7 +64,7 @@ class _StoreSearchState extends State<StoreSearch> {
     await prefs.setStringList('StoreFavoriteLocal', storeFavorites);
   }
 
-  Future<List<Store>> getStores() async {
+  Future<List<Store>> getStores(String filter) async {
     try {
       ApiService apiService = ApiService();
       await apiService.init();
@@ -94,7 +94,8 @@ class _StoreSearchState extends State<StoreSearch> {
     double screenWidth = MediaQuery.of(context).size.width;
     return DropdownSearch<Store>(
       // clearButtonProps: ClearButtonProps(isVisible: true),
-      asyncItems: (String filter) => getStores(), // Filters data as user types
+      asyncItems: (String filter) =>
+          getStores(filter), // Filters data as user types
       dropdownButtonProps: DropdownButtonProps(
         color: Colors.white,
         icon: Padding(

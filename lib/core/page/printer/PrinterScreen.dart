@@ -1,4 +1,7 @@
 import 'dart:typed_data';
+import 'package:_12sale_app/data/models/User.dart';
+import 'package:_12sale_app/data/models/order/Cart.dart';
+import 'package:_12sale_app/data/service/apiService.dart';
 import 'package:sprintf/sprintf.dart';
 import 'package:_12sale_app/core/page/printer/StingHelper.dart';
 import 'package:charset_converter/charset_converter.dart';
@@ -18,6 +21,37 @@ class _BluetoothPrinterScreen4State extends State<BluetoothPrinterScreen4> {
   BluetoothInfo? _selectedDevice;
   final int paperWidth = 69;
   final int paperWidthHeader = 76;
+  List<CartList> cartList = [];
+
+  Future<void> _getCart() async {
+    try {
+      ApiService apiService = ApiService();
+      await apiService.init();
+      var response = await apiService.request(
+        endpoint: 'api/cash/cart/get?type=sale&area=BE215&storeId=V10160027',
+        method: 'GET',
+      );
+      if (response.statusCode == 200) {
+        final List<dynamic> data = response.data['data']['listProduct'];
+        setState(() {
+          cartList = data.map((item) => CartList.fromJson(item)).toList();
+
+          // Map cartList to receiptData["items"]
+          receiptData["items"] = cartList
+              .map((cartItem) => {
+                    "name": cartItem.name,
+                    "qty": cartItem.qty.toString(),
+                    "unit": cartItem.unit,
+                    "price": cartItem.price.toStringAsFixed(2),
+                  })
+              .toList();
+        });
+        print(receiptData);
+      }
+    } catch (e) {
+      print("Error $e");
+    }
+  }
 
   final Map<String, dynamic> receiptData = {
     "customer": {
@@ -32,78 +66,13 @@ class _BluetoothPrinterScreen4State extends State<BluetoothPrinterScreen4> {
     },
     "CUOR": "6707132130012",
     "OAORDT": "06/07/2024",
-    "items": [
-      {
-        "itemname": "ผงปรุงรสหมู ฟ้าไทย 10g x12x20",
-        "qtytext": "21",
-        "unit": "หีบ",
-        "OBSAPR": "1455.00",
-        "disamount": "0.00",
-        "itemamount": "2910.00"
-      },
-      // {
-      //   "itemname": "ผงปรุงรสหมู ฟ้าไทย 10g x24x10 ชนิดแผง",
-      //   "qtytext": "1",
-      //   "unit": "ซอง",
-      //   "OBSAPR": "762.00",
-      //   "disamount": "0.00",
-      //   "itemamount": "762.00"
-      // },
-      // {
-      //   "itemname": "ผงปรุงรสหมู ฟ้าไทย 80g x10x8 แถมช้อนจีน",
-      //   "qtytext": "1",
-      //   "unit": "ถุง",
-      //   "OBSAPR": "0.00",
-      //   "disamount": "0.00",
-      //   "itemamount": "0.00"
-      // },
-      // {
-      //   "itemname": "ผงปรุงรสหมู ฟ้าไทย 450g x12 แถมชามพลาสติก",
-      //   "qtytext": "6",
-      //   "unit": "แผง",
-      //   "OBSAPR": "0.00",
-      //   "disamount": "102.00",
-      //   "itemamount": "0.00"
-      // },
-      // {
-      //   "itemname": "ผงปรุงรสหมู ฟ้าไทย 80g x10x8 แถมเห็ด 10g",
-      //   "qtytext": "13",
-      //   "unit": "กระสอบ",
-      //   "OBSAPR": "0.00",
-      //   "disamount": "0.00",
-      //   "itemamount": "0.00"
-      // },
-      {
-        "itemname": "ผงปรุงรสไก่ ฟ้าไทย 80g x10x8",
-        "qtytext": "2",
-        "unit": "แพ็ค",
-        "OBSAPR": "0.00",
-        "disamount": "0.00",
-        "itemamount": "0.00"
-      },
-      // {
-      //   "itemname": "ผงปรุงรสไก่ ฟ้าไทย 900g x6",
-      //   "qtytext": "1",
-      //   "unit": "กล่อง",
-      //   "OBSAPR": "0.00",
-      //   "disamount": "0.00",
-      //   "itemamount": "0.00"
-      // },
-      {
-        "itemname": "ผงปรุงรสไก่ ฟ้าไทย 850g x6 แถมรสไก่ 80g",
-        "qtytext": "7",
-        "unit": "กระปุก",
-        "OBSAPR": "0.00",
-        "disamount": "0.00",
-        "itemamount": "0.00"
-      }
-    ],
+    "items": [],
     "totaltext": "3672.45",
     "ex_vat": "3431.78",
     "vat": "240.22",
     "totaldis": "0.00",
     "total": "3672.45",
-    "OBSMCD": "ลูกนง ปทุมศรี"
+    "OBSMCD": "${User.surName}"
   };
 
   static const String encoding = 'TIS-620';
@@ -127,6 +96,7 @@ class _BluetoothPrinterScreen4State extends State<BluetoothPrinterScreen4> {
   @override
   void initState() {
     super.initState();
+    _getCart();
     _fetchPairedDevices();
   }
 
@@ -393,12 +363,12 @@ ${centerText('เอกสารออกเป็นชุด', paperWidthHeade
       var item = entry.value;
 
       // Safely get a substring only if the length is greater than 36
-      String itemName = item['itemname'];
+      String itemName = item['name'];
       return formatFixedWidthRow2(
         '${(index + 1).toString()} $itemName',
-        item['qtytext'],
+        item['qty'],
         item['unit'],
-        item['OBSAPR'],
+        item['price'],
         item['disamount'],
         item['itemamount'],
       );

@@ -374,6 +374,13 @@ class Styles {
           color: Color(0xFF00569D),
         ),
       );
+  static TextStyle headerPirmary18(BuildContext context) => GoogleFonts.kanit(
+        textStyle: TextStyle(
+          fontSize: getResponsiveFontSize(context, 18),
+          fontWeight: FontWeight.w600,
+          color: Color(0xFF00569D),
+        ),
+      );
 
 // --------------------- Primary Color ---------------------------------
   static const Color primaryColor = Color(0xFF00569D);
