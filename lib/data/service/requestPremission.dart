@@ -98,6 +98,8 @@ Future<void> requestAllPermissions() async {
   final permissions = [
     Permission.notification,
     Permission.bluetoothConnect,
+    Permission.bluetoothScan,
+    Permission.locationWhenInUse,
     Permission.camera,
     Permission.nearbyWifiDevices,
     Permission.locationAlways,

@@ -1,0 +1,484 @@
+import 'dart:typed_data';
+
+import 'package:_12sale_app/core/components/Appbar.dart';
+import 'package:_12sale_app/core/styles/style.dart';
+import 'package:_12sale_app/data/models/User.dart';
+import 'package:charset_converter/charset_converter.dart';
+import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:print_bluetooth_thermal/print_bluetooth_thermal.dart';
+
+class OrderDetailScreen extends StatefulWidget {
+  const OrderDetailScreen({super.key});
+
+  @override
+  State<OrderDetailScreen> createState() => _OrderDetailScreenState();
+}
+
+class _OrderDetailScreenState extends State<OrderDetailScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // requestPermissions();
+    // _getCart();
+    _fetchPairedDevices();
+  }
+
+  // Bluetooth Connect
+  List<BluetoothInfo> _devices = [];
+  bool _connected = false;
+  BluetoothInfo? _selectedDevice;
+  final int paperWidth = 69;
+  final int paperWidthHeader = 76;
+
+  static const String encoding = 'TIS-620';
+  final List<String> vowelAndToneMark = [
+    '่',
+    '้',
+    '๊',
+    '๋',
+    'ั',
+    '็',
+    'ิ',
+    'ี',
+    'ุ',
+    'ู',
+    'ึ',
+    'ื',
+    '์',
+    '.'
+  ];
+
+  final Map<String, dynamic> receiptData = {
+    "customer": {
+      "customercode": "VB22600260",
+      "customername": "เจ๊โฉลก",
+      "address1": "172/1 ต.ศรีมหาโพธิ์",
+      "address2": "อ.ปากน้ำ",
+      "address3": "จ.สมุทรปราการ",
+      "postCode": "10270",
+      "taxno": "1234567890123",
+      "salecode": "20359-คุณจาง"
+    },
+    "CUOR": "6707132130012",
+    "OAORDT": "06/07/2024",
+    "items": [],
+    "totaltext": "3672.45",
+    "ex_vat": "3431.78",
+    "vat": "240.22",
+    "totaldis": "0.00",
+    "total": "3672.45",
+    "OBSMCD": "${User.surName}"
+  };
+
+  Future<void> _fetchPairedDevices() async {
+    try {
+      final List<BluetoothInfo> pairedDevices =
+          await PrintBluetoothThermal.pairedBluetooths;
+      setState(() {
+        _devices = pairedDevices;
+      });
+    } catch (e) {
+      print("Error fetching paired devices: $e");
+    }
+  }
+
+  Future<void> printTest() async {
+    bool connectionStatus = await PrintBluetoothThermal.connectionStatus;
+    if (connectionStatus) {
+      await printHeaderSeparator();
+      await printHeaderBill('บิลเงินสด/ใบกำกับภาษี');
+      await printBodyBill(receiptData);
+      await printHeaderSeparator();
+      await printHeaderBill('ใบลดหนี้');
+      await printBodyBill(receiptData);
+    } else {
+      print("Printer is disconnected ($connectionStatus)");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Printer is not connected")),
+      );
+    }
+  }
+
+  String centerText(String text, int width) {
+    int leftPadding = (width - text.length) ~/ 2;
+    return ' ' * leftPadding + text;
+  }
+
+  Future<void> printHeaderBill(String typeBill) async {
+    String header = '''
+${centerText('บริษัท วันทูเทรดดิ้ง จำกัด', paperWidthHeader)}
+${centerText('58/3 หมู่ที่ 6 ถ.พระประโทน-บ้านแพ้ว', paperWidthHeader)}
+${centerText('ต.ตลาดจินดา อ.สามพราน จ.นครปฐม 73110', paperWidthHeader)}
+${centerText('โทร.(034) 981-555', paperWidthHeader)}
+${centerText('เลขประจำตัวผู้เสียภาษี 0105563063410', paperWidthHeader)}
+${centerText('ออกใบกำกับภาษีโดยสำนักงานใหญ่', paperWidthHeader)}
+${centerText('($typeBill)', paperWidthHeader)}
+${centerText('เอกสารออกเป็นชุด', paperWidthHeader)}''';
+    Uint8List encodedContent = await CharsetConverter.encode('TIS-620', header);
+    await PrintBluetoothThermal.writeBytes(List<int>.from(encodedContent));
+  }
+
+  Future<void> printHeaderSeparator() async {
+    String header =
+        '''\n${centerTextSeparator('ตัดตามรอยปะ', paperWidth)}\n\n\n''';
+    Uint8List encodedContent = await CharsetConverter.encode('TIS-620', header);
+    await PrintBluetoothThermal.writeBytes(List<int>.from(encodedContent));
+  }
+
+  String centerTextSeparator(String text, int width) {
+    int totalPadding = width - text.length;
+    int leftPadding = totalPadding ~/ 2;
+    int rightPadding = totalPadding - leftPadding;
+    return '-' * leftPadding + text + '-' * rightPadding;
+  }
+
+  Future<void> _printText(String text,
+      {int fontSize = 1, bool isBold = false, int newLine = 1}) async {
+    // Convert text to TIS-620 encoding
+    Uint8List encodedText = await CharsetConverter.encode(encoding, text);
+
+    // Print the encoded text
+    await PrintBluetoothThermal.writeBytes(List<int>.from(encodedText));
+  }
+
+  int _getNoOfUpperLowerChars(String text) {
+    int counter = 0;
+    for (var char in vowelAndToneMark) {
+      counter += char.allMatches(text).length;
+    }
+    return counter;
+  }
+
+  Future<void> printBill(String text,
+      {TextAlign align = TextAlign.left,
+      int newLine = 1,
+      int fontSize = 1,
+      bool isBold = false}) async {
+    String alignedText;
+
+    switch (align) {
+      case TextAlign.center:
+        alignedText = text.padLeft((paperWidth + text.length) ~/ 2);
+        break;
+      case TextAlign.right:
+        alignedText = text.padLeft(paperWidth);
+        break;
+      default:
+        alignedText = text;
+    }
+
+    await _printText(alignedText,
+        fontSize: fontSize, isBold: isBold, newLine: newLine);
+  }
+
+  Future<void> printBetween(String frontText, String backText,
+      {int fontSize = 1, bool isBold = false}) async {
+    int frontSpaces = paperWidth ~/ 2 + _getNoOfUpperLowerChars(frontText);
+    int backSpaces = paperWidth ~/ 2 + _getNoOfUpperLowerChars(backText);
+
+    String formattedText =
+        frontText.padRight(frontSpaces) + backText.padLeft(backSpaces);
+    await _printText(formattedText, fontSize: fontSize, isBold: isBold);
+  }
+
+  String thaiNumberToWords(double amount) {
+    String convert(int number) {
+      final values = [
+        '',
+        'หนึ่ง',
+        'สอง',
+        'สาม',
+        'สี่',
+        'ห้า',
+        'หก',
+        'เจ็ด',
+        'แปด',
+        'เก้า'
+      ];
+      final places = ['', 'สิบ', 'ร้อย', 'พัน', 'หมื่น', 'แสน', 'ล้าน'];
+      final exceptions = {
+        'หนึ่งสิบ': 'สิบ',
+        'สองสิบ': 'ยี่สิบ',
+        'สิบหนึ่ง': 'สิบเอ็ด'
+      };
+
+      String output = '';
+      var numStr = number.toString().split('').reversed.toList();
+
+      for (int i = 0; i < numStr.length; i++) {
+        if (i % 6 == 0 && i > 0) output = places[6] + output;
+        if (numStr[i] != '0')
+          output = values[int.parse(numStr[i])] + places[i % 6] + output;
+      }
+
+      exceptions.forEach((search, replace) {
+        output = output.replaceAll(search, replace);
+      });
+
+      return output;
+    }
+
+    List<String> parts = amount.toStringAsFixed(2).split('.');
+    String baht = convert(int.parse(parts[0]));
+    String satang = convert(int.parse(parts[1]));
+    String output = amount < 0 ? 'ลบ' : '';
+    output += baht.isNotEmpty ? '$bahtบาท' : '';
+    output += satang.isNotEmpty ? '$satangสตางค์' : 'ถ้วน';
+
+    return output.isEmpty ? 'ศูนย์บาทถ้วน' : output;
+  }
+
+  String formatFixedWidthRow2(String itemName, String qty, String unit,
+      String price, String discount, String total) {
+    const int nameWidth = 31;
+    const int qtyWidth = 3;
+    const int unitWidth = 5;
+    const int priceWidth = 8;
+    const int discountWidth = 8;
+    const int totalWidth = 8;
+    List<String> wrapText(String text, int width) {
+      List<String> lines = [];
+      for (int i = 0; i < text.length; i += width) {
+        lines.add(text.substring(
+            i, i + width > text.length ? text.length : i + width));
+      }
+      return lines;
+    }
+
+    List<String> itemNameLines = wrapText(itemName, nameWidth);
+    for (var i = 0; i < itemNameLines.length; i++) {
+      for (var j = itemNameLines[i].length; j < nameWidth; j++) {
+        itemNameLines[i] += ' ';
+      }
+    }
+
+    String formattedQty = qty.padLeft(qtyWidth);
+    String formattedUnit =
+        unit.padRight(unitWidth + _getNoOfUpperLowerChars(unit));
+    String formattedPrice = price.padLeft(priceWidth);
+    String formattedDiscount = discount.padLeft(discountWidth);
+    String formattedTotal = total.padLeft(totalWidth);
+    // Format each line with wrapped itemName
+    StringBuffer rowBuffer = StringBuffer();
+    for (int i = 0; i < itemNameLines.length; i++) {
+      // First line includes all columns, subsequent lines only contain `itemName`
+      rowBuffer.write(
+          itemNameLines[i].padRight(18 + _getNoOfUpperLowerChars(itemName)));
+      if (i == 0) {
+        // First line includes other columns
+        rowBuffer.write(
+            '${'   $formattedQty'}${' $formattedUnit'}${'  $formattedPrice'}${' $formattedDiscount'}${' $formattedTotal'}\n');
+      } else {
+        // Subsequent lines only contain the item name to create a wrapped effect
+        rowBuffer.write('\n');
+      }
+    }
+    return rowBuffer.toString();
+  }
+
+  String leftRightText(String left, String right, int width) {
+    int space = width - left.length - right.length;
+    return left + ' ' * space + right;
+  }
+
+  Future<void> printBodyBill(Map<String, dynamic> data) async {
+    await printBetween('รหัสลูกค้า ${data['customer']['customercode']}',
+        'เลขที่ ${data['CUOR']}');
+    await printBetween('ชื่อลูกค้า ${data['customer']['customername']}',
+        'วันที่ ${data['OAORDT']}');
+    await printBill(
+        'ที่อยู่ ${data['customer']['address1']} ${data['customer']['address2']} ${data['customer']['address3']}');
+    // String body = formatFixedWidthRow2(
+    //     'รายการสินค้า', 'จํานวน', '', 'ราคา', 'ส่วนลด', 'รวม');
+    String body = '''
+รายการสินค้า${' ' * (21)}จำนวน${' ' * (10)}ราคา${' ' * (4)}ส่วนลด${' ' * (6)}รวม
+''';
+    // Print table header
+//     String header = '''
+// ${padThaiText('รายการสินค้า', nameWidth)}${padThaiText('จำนวน', 11)}${padThaiText('ราคา', priceWidth)}${padThaiText('ส่วนลด', discountWidth)}${padThaiText('รวม', totalWidth)}
+// ''';
+    Uint8List encodedBody = await CharsetConverter.encode('TIS-620', body);
+    await PrintBluetoothThermal.writeBytes(List<int>.from(encodedBody));
+
+    String items = await data['items'].asMap().entries.map((entry) {
+      int index = entry.key;
+      var item = entry.value;
+
+      // Safely get a substring only if the length is greater than 36
+      String itemName = item['name'];
+      return formatFixedWidthRow2(
+        '${(index + 1).toString()} $itemName',
+        item['qty'],
+        item['unit'],
+        item['price'],
+        item['disamount'],
+        item['itemamount'],
+      );
+    }).join('\n');
+    Uint8List encodedItems = await CharsetConverter.encode('TIS-620', items);
+    await PrintBluetoothThermal.writeBytes(List<int>.from(encodedItems));
+
+    double? totalValue = double.tryParse(data['totaltext'] ?? "00.00");
+    String totalText = thaiNumberToWords(totalValue!);
+    await printBetween('รวมมูลค่าสินค้า', data['ex_vat'].toString());
+    await printBetween('ส่วนลด', '0.00');
+    await printBetween('ภาษีมูลค่าเพิ่ม 7%', data['vat'].toString());
+    await printBetween('ส่วนลดท้ายบิล', '00.00');
+    await printBetween('ส่วนลดร้านค้า', data['totaldis'].toString());
+    await printBetween('จำนวนเงินรวมสุทธิ', data['total'].toString());
+    await printBetween("", "($totalText)");
+    String footer = '''
+    ${leftRightText('ผู้รับเงิน 20406-${data['OBSMCD']}', '.........................', 70)}
+    ${leftRightText('', 'ลายเซ็นลูกค้า', 58)}
+    ''';
+    Uint8List encodedFooter = await CharsetConverter.encode('TIS-620', footer);
+    await PrintBluetoothThermal.writeBytes(List<int>.from(encodedFooter));
+  }
+
+  Future<void> _disconnectPrinter() async {
+    bool result = await PrintBluetoothThermal.disconnect;
+    print("Printer disconnected ($result)");
+    setState(() {
+      _connected = !result;
+      _selectedDevice = null;
+    });
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text("Printer disconnected")),
+    );
+  }
+
+  Future<void> _connectToPrinter(BluetoothInfo device) async {
+    bool result = await PrintBluetoothThermal.connect(
+        macPrinterAddress: device.macAdress);
+    setState(() {
+      _connected = result;
+      _selectedDevice = result ? device : null;
+    });
+
+    final snackBarText = result
+        ? "Connected to ${device.name}"
+        : "Failed to connect to ${device.name}";
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(snackBarText)));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(70),
+        child: AppbarCustom(
+          title: " รายละเอียดออเดอร์",
+          icon: FontAwesomeIcons.clipboardList,
+        ),
+      ),
+      body: LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints viewportConstraints) {
+        return SingleChildScrollView(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              minHeight: viewportConstraints.maxHeight,
+            ),
+            child: IntrinsicHeight(
+              child: Column(
+                children: [
+                  SizedBox(
+                    height:
+                        MediaQuery.of(context).size.height * 0.8, // Set height
+                    child: Container(color: Colors.blue),
+                  ),
+                  _devices.isNotEmpty
+                      ? Expanded(
+                          child: Container(
+                            height: viewportConstraints.maxHeight * 0.2,
+                            color: Colors.red,
+                            child: ListView.builder(
+                              itemCount: _devices.length,
+                              itemBuilder: (context, index) {
+                                final device = _devices[index];
+                                return ListTile(
+                                  title: Text(
+                                    device.name ?? "Unknown Device",
+                                    style: Styles.black18(context),
+                                  ),
+                                  subtitle: Text(
+                                    device.macAdress,
+                                    style: Styles.black18(context),
+                                  ),
+                                  trailing: _connected &&
+                                          _selectedDevice == device
+                                      ? Icon(Icons.check, color: Colors.green)
+                                      : null,
+                                  onTap: () => _connectToPrinter(device),
+                                );
+                              },
+                            ),
+                          ),
+                        )
+                      : Center(child: Text("No paired devices found")),
+                  Container(
+                    height: viewportConstraints.maxHeight * 0.2,
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Container(
+                        color: Colors.amber,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            ElevatedButton(
+                              child: Text(
+                                "Print Test",
+                                style: Styles.black18(context),
+                              ),
+                              onPressed: _connected ? printTest : null,
+                            ),
+                            ElevatedButton(
+                              child: Text(
+                                "Disconnect",
+                                style: Styles.black18(context),
+                              ),
+                              onPressed: _connected ? _disconnectPrinter : null,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    height: viewportConstraints.maxHeight * 0.2,
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Container(
+                        color: Colors.amber,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            ElevatedButton(
+                              child: Text(
+                                "Print Test",
+                                style: Styles.black18(context),
+                              ),
+                              onPressed: _connected ? printTest : null,
+                            ),
+                            ElevatedButton(
+                              child: Text(
+                                "Disconnect",
+                                style: Styles.black18(context),
+                              ),
+                              onPressed: _connected ? _disconnectPrinter : null,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+        );
+      }),
+    );
+  }
+}

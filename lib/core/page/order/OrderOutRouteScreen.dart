@@ -17,6 +17,7 @@ import 'package:_12sale_app/data/models/User.dart';
 import 'package:_12sale_app/data/models/order/Cart.dart';
 import 'package:_12sale_app/data/models/order/Product.dart';
 import 'package:_12sale_app/data/service/apiService.dart';
+import 'package:_12sale_app/main.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_debouncer/flutter_debouncer.dart';
@@ -33,7 +34,8 @@ class OrderOutRouteScreen extends StatefulWidget {
   State<OrderOutRouteScreen> createState() => _OrderOutRouteScreenState();
 }
 
-class _OrderOutRouteScreenState extends State<OrderOutRouteScreen> {
+class _OrderOutRouteScreenState extends State<OrderOutRouteScreen>
+    with RouteAware {
   final Debouncer _debouncer = Debouncer();
 
   final Throttler _throttler = Throttler();
@@ -74,6 +76,33 @@ class _OrderOutRouteScreenState extends State<OrderOutRouteScreen> {
     super.initState();
     _getFliter();
     _getProduct();
+  }
+
+  @override
+  void didPopNext() {
+    // setState(() {
+    //   _loadingRouteVisit = true;
+    // });
+    // Called when the screen is popped back to
+    _getCart();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Register this screen as a route-aware widget
+    final ModalRoute? route = ModalRoute.of(context);
+    if (route is PageRoute) {
+      // Only subscribe if the route is a P ageRoute
+      routeObserver.subscribe(this, route);
+    }
+  }
+
+  @override
+  void dispose() {
+    // Unsubscribe when the widget is disposed
+    routeObserver.unsubscribe(this);
+    super.dispose();
   }
 
   Future<void> _deleteCart(CartList cart, StateSetter setModalState) async {
@@ -194,6 +223,7 @@ class _OrderOutRouteScreenState extends State<OrderOutRouteScreen> {
 
   Future<void> _getCart() async {
     try {
+      print("Get Cart is Loading");
       ApiService apiService = ApiService();
       await apiService.init();
       var response = await apiService.request(

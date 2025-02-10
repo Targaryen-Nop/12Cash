@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:_12sale_app/core/components/Appbar.dart';
 import 'package:_12sale_app/core/components/BoxShadowCustom.dart';
 import 'package:_12sale_app/core/components/Loading.dart';
@@ -10,6 +11,7 @@ import 'package:_12sale_app/core/components/search/ProductSearch.dart';
 import 'package:_12sale_app/core/components/search/StoreSearch.dart';
 import 'package:_12sale_app/core/page/order/CheckOutScreen.dart';
 import 'package:_12sale_app/core/page/order/CreateOrderScreen.dart';
+import 'package:_12sale_app/core/page/order/CreateOrderScreen2.dart';
 import 'package:_12sale_app/core/page/route/ShoppingCartScreen.dart';
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:_12sale_app/data/models/User.dart';
@@ -17,13 +19,15 @@ import 'package:_12sale_app/data/models/order/Cart.dart';
 import 'package:_12sale_app/data/models/order/Product.dart';
 import 'package:_12sale_app/data/models/route/DetailStoreVisit.dart';
 import 'package:_12sale_app/data/service/apiService.dart';
-import 'package:_12sale_app/data/service/throttler.dart';
+import 'package:_12sale_app/main.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_debouncer/flutter_debouncer.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:toastification/toastification.dart';
+import 'package:flutter_debouncer/flutter_debouncer.dart';
 
 class OrderINRouteScreen extends StatefulWidget {
   final DetailStoreVisit? storeDetail;
@@ -34,10 +38,15 @@ class OrderINRouteScreen extends StatefulWidget {
   });
 
   @override
-  State<OrderINRouteScreen> createState() => _OrderINRouteScreenState();
+  State<OrderINRouteScreen> createState() => _OrderOutRouteScreenState();
 }
 
-class _OrderINRouteScreenState extends State<OrderINRouteScreen> {
+class _OrderOutRouteScreenState extends State<OrderINRouteScreen>
+    with RouteAware {
+  final Debouncer _debouncer = Debouncer();
+
+  final Throttler _throttler = Throttler();
+
   List<Product> productList = [];
   List<CartList> cartList = [];
   bool _loadingProduct = true;
@@ -77,10 +86,153 @@ class _OrderINRouteScreenState extends State<OrderINRouteScreen> {
     _getCart();
   }
 
-  Future<void> _deleteCart(Product product) async {}
+  @override
+  void didPopNext() {
+    // setState(() {
+    //   _loadingRouteVisit = true;
+    // });
+    // Called when the screen is popped back to
+    _getCart();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Register this screen as a route-aware widget
+    final ModalRoute? route = ModalRoute.of(context);
+    if (route is PageRoute) {
+      // Only subscribe if the route is a P ageRoute
+      routeObserver.subscribe(this, route);
+    }
+  }
+
+  @override
+  void dispose() {
+    // Unsubscribe when the widget is disposed
+    routeObserver.unsubscribe(this);
+    super.dispose();
+  }
+
+  Future<void> _deleteCart(CartList cart, StateSetter setModalState) async {
+    try {
+      ApiService apiService = ApiService();
+      await apiService.init();
+      var response = await apiService.request(
+        endpoint: 'api/cash/cart/delete',
+        method: 'POST',
+        body: {
+          "type": "sale",
+          "area": "${User.area}",
+          "storeId": "${widget.storeDetail?.listStore[0].storeInfo.storeId}",
+          "id": "${cart.id}",
+          "unit": "${cart.unit}"
+        },
+      );
+      if (response.statusCode == 200) {
+        setState(() {
+          totalCart = response.data['data']['total'].toDouble();
+        });
+        toastification.show(
+          autoCloseDuration: const Duration(seconds: 5),
+          context: context,
+          primaryColor: Colors.green,
+          type: ToastificationType.success,
+          style: ToastificationStyle.flatColored,
+          title: Text(
+            "ลบข้อมูลสำเร็จ",
+            style: Styles.green18(context),
+          ),
+        );
+      }
+    } catch (e) {}
+  }
+
+  Future<void> _reduceCart(CartList cart, StateSetter setModalState) async {
+    const duration = Duration(seconds: 1);
+    try {
+      _debouncer.debounce(
+        duration: duration,
+        onDebounce: () async {
+          ApiService apiService = ApiService();
+          await apiService.init();
+          var response = await apiService.request(
+            endpoint: 'api/cash/cart/reduce',
+            method: 'PATCH',
+            body: {
+              "type": "sale",
+              "area": "${User.area}",
+              "storeId":
+                  "${widget.storeDetail?.listStore[0].storeInfo.storeId}",
+              "id": "${cart.id}",
+              "qty": cart.qty,
+              "unit": "${cart.unit}"
+            },
+          );
+          if (response.statusCode == 200) {
+            setState(() {
+              totalCart = response.data['data']['total'].toDouble();
+            });
+            toastification.show(
+              autoCloseDuration: const Duration(seconds: 5),
+              context: context,
+              primaryColor: Colors.green,
+              type: ToastificationType.success,
+              style: ToastificationStyle.flatColored,
+              title: Text(
+                "แก้ไขข้อมูลสำเร็จ",
+                style: Styles.green18(context),
+              ),
+            );
+            await _getTotalCart(setModalState);
+          }
+        },
+      );
+    } catch (e) {
+      toastification.show(
+        autoCloseDuration: const Duration(seconds: 5),
+        context: context,
+        primaryColor: Colors.red,
+        type: ToastificationType.error,
+        style: ToastificationStyle.flatColored,
+        title: Text(
+          "เกิดข้อผิดพลาด $e",
+          style: Styles.red18(context),
+        ),
+      );
+      print("Error $e");
+    }
+  }
+
+  Future<void> _getTotalCart(StateSetter setModalState) async {
+    try {
+      ApiService apiService = ApiService();
+      await apiService.init();
+      var response = await apiService.request(
+        endpoint:
+            'api/cash/cart/get?type=sale&area=${User.area}&storeId=${widget.storeDetail?.listStore[0].storeInfo.storeId}',
+        method: 'GET',
+      );
+      if (response.statusCode == 200) {
+        setState(() {
+          totalCart = response.data['data']['total'].toDouble();
+        });
+        setModalState(
+          () {
+            totalCart = response.data['data']['total'].toDouble();
+          },
+        );
+      }
+    } catch (e) {
+      setState(() {
+        totalCart = 00.00;
+      });
+      print("Error $e");
+    }
+  }
 
   Future<void> _getCart() async {
     try {
+      print("Get Cart is Loading");
       ApiService apiService = ApiService();
       await apiService.init();
       var response = await apiService.request(
@@ -96,6 +248,10 @@ class _OrderINRouteScreenState extends State<OrderINRouteScreen> {
         });
       }
     } catch (e) {
+      setState(() {
+        totalCart = 00.00;
+        cartList = [];
+      });
       print("Error $e");
     }
   }
@@ -135,8 +291,52 @@ class _OrderINRouteScreenState extends State<OrderINRouteScreen> {
           totalCart = response.data['data']['total'].toDouble();
           cartList = data.map((item) => CartList.fromJson(item)).toList();
         });
-        await _getCart();
       }
+    } catch (e) {}
+  }
+
+  Future<void> _addCartDu(CartList cart, StateSetter setModalState) async {
+    const duration = Duration(seconds: 1);
+    try {
+      _debouncer.debounce(
+        duration: duration,
+        onDebounce: () async {
+          ApiService apiService = ApiService();
+          await apiService.init();
+          var response = await apiService.request(
+            endpoint: 'api/cash/cart/add',
+            method: 'POST',
+            body: {
+              "type": "sale",
+              "area": "${User.area}",
+              "storeId":
+                  "${widget.storeDetail?.listStore[0].storeInfo.storeId}",
+              "id": "${cart.id}",
+              "qty": cart.qty,
+              "unit": "${cart.unit}"
+            },
+          );
+          print("Response add Cart: ${response.data['data']['listProduct']}");
+          if (response.statusCode == 200) {
+            toastification.show(
+              autoCloseDuration: const Duration(seconds: 5),
+              context: context,
+              primaryColor: Colors.green,
+              type: ToastificationType.success,
+              style: ToastificationStyle.flatColored,
+              title: Text(
+                "เพิ่มลงในตะกร้าสําเร็จ",
+                style: Styles.green18(context),
+              ),
+            );
+            await _getTotalCart(setModalState);
+
+            setState(() {
+              totalCart = response.data['data']['total'].toDouble();
+            });
+          }
+        },
+      );
     } catch (e) {
       print("Error $e");
     }
@@ -347,15 +547,6 @@ class _OrderINRouteScreenState extends State<OrderINRouteScreen> {
           icon: FontAwesomeIcons.clipboardList,
         ),
       ),
-      // floatingActionButton: Cartbutton(
-      //   count: "0",
-      //   // screen: ShoppingCartScreen(
-      //   //   customerNo: widget.customerNo,
-      //   //   customerName: widget.customerName,
-      //   //   status: widget.status,
-      //   // ),
-      //   screen: SizedBox(),
-      // ),
       body: LayoutBuilder(
         builder: (context, constraints) {
           return Container(
@@ -391,6 +582,37 @@ class _OrderINRouteScreenState extends State<OrderINRouteScreen> {
                                     style: Styles.black24(context),
                                   ),
                                 ),
+                                const SizedBox(width: 8),
+                                // Expanded(
+                                //   // Ensures text does not overflow the screen
+                                //   child: StoreSearch(
+                                //     // key: ValueKey(filterRoute),
+                                //     onStoreSelected: (data) async {
+                                //       if (data != null) {
+                                //         setState(() {
+                                //           selectedStore = data.name;
+                                //           selectedStoreId = data.storeId;
+                                //           selectedStoreAddress = data.address;
+                                //           selectedStoreTel = data.tel;
+                                //           selectedStoreShopType = data.typeName;
+                                //         });
+                                //         await _getCart();
+
+                                //         // storeState.updateValue([data]);
+                                //         // print(
+                                //         //     "storeState.storeList :${storeState.storeList}");
+                                //         // setState(
+                                //         //   () {
+                                //         //     selectedRoute =
+                                //         //         RouteStore(route: data.route);
+                                //         //     _storeFavoriteLocal =
+                                //         //         storeState.storesFavoriteList;
+                                //         //   },
+                                //         // );
+                                //       }
+                                //     },
+                                //   ),
+                                // ),
                               ],
                             ),
                             Row(
@@ -666,7 +888,8 @@ class _OrderINRouteScreenState extends State<OrderINRouteScreen> {
                                                           OrderMenuListVerticalCard(
                                                         item: productList[
                                                             firstIndex],
-                                                        onDetailsPressed: () {
+                                                        onDetailsPressed:
+                                                            () async {
                                                           setState(() {
                                                             selectedUnit = '';
                                                             selectedSize = '';
@@ -674,6 +897,7 @@ class _OrderINRouteScreenState extends State<OrderINRouteScreen> {
                                                             count = 1;
                                                             total = 0.00;
                                                           });
+
                                                           _showProductSheet(
                                                               context,
                                                               productList[
@@ -760,70 +984,60 @@ class _OrderINRouteScreenState extends State<OrderINRouteScreen> {
                                       ),
                                     ),
                               Container(
+                                margin: EdgeInsets.only(top: 8),
                                 child: Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
-                                    // Expanded(
-                                    //   // Ensures text does not overflow the screen
-                                    //   child: ButtonFullWidth(
-                                    //     text: 'ใส่ตะกร้า',
-                                    //     blackGroundColor: Styles.primaryColor,
-                                    //     textStyle: Styles.white18(context),
-                                    //   ),
-                                    // ),
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 8.0),
-                                      child: Stack(
-                                        alignment: Alignment(1.3, -1.5),
-                                        children: [
-                                          ElevatedButton(
-                                            onPressed: () {
-                                              _showCartSheet(context, cartList);
-                                            },
-                                            child: Icon(
-                                              Icons.shopping_bag_outlined,
-                                              color: Colors.white,
-                                              size: 40,
-                                            ),
-                                            style: ElevatedButton.styleFrom(
-                                              padding: EdgeInsets.all(8),
-                                              backgroundColor:
-                                                  Styles.primaryColor,
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(8),
-                                              ),
+                                    Stack(
+                                      alignment: Alignment(1.3, -1.5),
+                                      children: [
+                                        ElevatedButton(
+                                          onPressed: () async {
+                                            await _getCart();
+                                            _showCartSheet(context, cartList);
+                                          },
+                                          child: Icon(
+                                            Icons.shopping_bag_outlined,
+                                            color: Colors.white,
+                                            size: 35,
+                                          ),
+                                          style: ElevatedButton.styleFrom(
+                                            padding: EdgeInsets.all(4),
+                                            backgroundColor:
+                                                Styles.primaryColor,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
                                             ),
                                           ),
-                                          cartList.isNotEmpty
-                                              ? Container(
-                                                  width:
-                                                      25, // Set the width of the button
-                                                  height: 25,
-                                                  // constraints: BoxConstraints(minHeight: 32, minWidth: 32),
-                                                  decoration: BoxDecoration(
-                                                    // This controls the shadow
-                                                    boxShadow: [
-                                                      BoxShadow(
-                                                        spreadRadius: 1,
-                                                        blurRadius: 5,
-                                                        color: Colors.black
-                                                            .withAlpha(50),
-                                                      )
-                                                    ],
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            180),
-                                                    color: Colors
-                                                        .red, // This would be color of the Badge
-                                                  ),
-                                                  // This is your Badge
-                                                )
-                                              : Container(),
-                                        ],
-                                      ),
+                                        ),
+                                        cartList.isNotEmpty
+                                            ? Container(
+                                                width:
+                                                    25, // Set the width of the button
+                                                height: 25,
+                                                // constraints: BoxConstraints(minHeight: 32, minWidth: 32),
+                                                decoration: BoxDecoration(
+                                                  // This controls the shadow
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                      spreadRadius: 1,
+                                                      blurRadius: 5,
+                                                      color: Colors.black
+                                                          .withAlpha(50),
+                                                    )
+                                                  ],
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          180),
+                                                  color: Colors
+                                                      .red, // This would be color of the Badge
+                                                ),
+                                                // This is your Badge
+                                              )
+                                            : Container(),
+                                      ],
                                     ),
                                     const SizedBox(width: 20),
                                     Expanded(
@@ -837,17 +1051,35 @@ class _OrderINRouteScreenState extends State<OrderINRouteScreen> {
                                     Expanded(
                                       // Ensures text does not overflow the screen
                                       child: ButtonFullWidth(
-                                        text: 'สร้างออเดอร์',
+                                        text: 'สั่งซื้อ',
                                         blackGroundColor: Styles.primaryColor,
                                         textStyle: Styles.white18(context),
                                         onPressed: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  CheckOutScreen(),
-                                            ),
-                                          );
+                                          if (totalCart > 0) {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    CreateOrderScreen2(
+                                                  storeId: widget
+                                                      .storeDetail
+                                                      ?.listStore[0]
+                                                      .storeInfo
+                                                      .storeId,
+                                                  storeName: widget
+                                                      .storeDetail
+                                                      ?.listStore[0]
+                                                      .storeInfo
+                                                      .name,
+                                                  storeAddress: widget
+                                                      .storeDetail
+                                                      ?.listStore[0]
+                                                      .storeInfo
+                                                      .address,
+                                                ),
+                                              ),
+                                            );
+                                          }
                                         },
                                       ),
                                     ),
@@ -1163,21 +1395,22 @@ class _OrderINRouteScreenState extends State<OrderINRouteScreen> {
                                             ), // Example
                                           ),
                                           Container(
-                                              padding: EdgeInsets.all(8),
-                                              decoration: BoxDecoration(
-                                                border: Border.all(
-                                                  color: Colors.grey,
-                                                  width: 1,
-                                                ),
-                                                borderRadius:
-                                                    BorderRadius.circular(16),
+                                            padding: EdgeInsets.all(4),
+                                            decoration: BoxDecoration(
+                                              border: Border.all(
+                                                color: Colors.grey,
+                                                width: 1,
                                               ),
-                                              width: 70,
-                                              child: Text(
-                                                '${count.toStringAsFixed(0)}',
-                                                textAlign: TextAlign.center,
-                                                style: Styles.black18(context),
-                                              )),
+                                              borderRadius:
+                                                  BorderRadius.circular(16),
+                                            ),
+                                            width: 75,
+                                            child: Text(
+                                              '${count.toStringAsFixed(0)}',
+                                              textAlign: TextAlign.center,
+                                              style: Styles.black18(context),
+                                            ),
+                                          ),
                                           ElevatedButton(
                                             onPressed: () {
                                               setModalState(() {
@@ -1223,9 +1456,7 @@ class _OrderINRouteScreenState extends State<OrderINRouteScreen> {
                                               onPressed: () {
                                                 print(
                                                     "selectedSize $selectedSize");
-                                                if (selectedSize != "" &&
-                                                    widget.storeDetail?.id !=
-                                                        "") {
+                                                if (selectedSize != "") {
                                                   _addCart(product);
                                                 } else {
                                                   toastification.show(
@@ -1239,7 +1470,7 @@ class _OrderINRouteScreenState extends State<OrderINRouteScreen> {
                                                     style: ToastificationStyle
                                                         .flatColored,
                                                     title: Text(
-                                                      "กรุณาเลือกขนาดและร้านค้า",
+                                                      "กรุณาเลือกขนาด",
                                                       style:
                                                           Styles.red18(context),
                                                     ),
@@ -1253,9 +1484,6 @@ class _OrderINRouteScreenState extends State<OrderINRouteScreen> {
                                     ),
                                   ],
                                 ),
-                                // SizedBox(
-                                //   height: 100,
-                                // ),
                               ],
                             ),
                           ),
@@ -1323,7 +1551,10 @@ class _OrderINRouteScreenState extends State<OrderINRouteScreen> {
                           ),
                           IconButton(
                             icon: const Icon(Icons.close, color: Colors.white),
-                            onPressed: () => Navigator.of(context).pop(),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                              _getCart();
+                            },
                           ),
                         ],
                       ),
@@ -1392,29 +1623,213 @@ class _OrderINRouteScreenState extends State<OrderINRouteScreen> {
                                                     ],
                                                   ),
                                                   Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
                                                     children: [
-                                                      Text(
-                                                        'id : ${cartlist[index].id}',
-                                                        style: Styles.black16(
-                                                            context),
+                                                      Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          Row(
+                                                            children: [
+                                                              Text(
+                                                                'id : ${cartlist[index].id}',
+                                                                style: Styles
+                                                                    .black16(
+                                                                        context),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          Row(
+                                                            children: [
+                                                              Text(
+                                                                'จำนวน : ${cartlist[index].qty.toStringAsFixed(0)} ${cartlist[index].unit}',
+                                                                style: Styles
+                                                                    .black16(
+                                                                        context),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          Row(
+                                                            children: [
+                                                              Text(
+                                                                'ราคา : ${cartlist[index].price}',
+                                                                style: Styles
+                                                                    .black16(
+                                                                        context),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ],
                                                       ),
-                                                    ],
-                                                  ),
-                                                  Row(
-                                                    children: [
-                                                      Text(
-                                                        'จำนวน : ${cartlist[index].qty.toStringAsFixed(0)} ${cartlist[index].unit}',
-                                                        style: Styles.black16(
-                                                            context),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  Row(
-                                                    children: [
-                                                      Text(
-                                                        'ราคา : ${cartlist[index].price}',
-                                                        style: Styles.black16(
-                                                            context),
+                                                      Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .end,
+                                                        children: [
+                                                          ElevatedButton(
+                                                            onPressed:
+                                                                () async {
+                                                              setModalState(() {
+                                                                if (cartlist[
+                                                                            index]
+                                                                        .qty >
+                                                                    1) {
+                                                                  cartlist[
+                                                                          index]
+                                                                      .qty--;
+                                                                }
+                                                              });
+                                                              await _reduceCart(
+                                                                  cartlist[
+                                                                      index],
+                                                                  setModalState);
+                                                            },
+                                                            style:
+                                                                ElevatedButton
+                                                                    .styleFrom(
+                                                              shape:
+                                                                  const CircleBorder(
+                                                                side: BorderSide(
+                                                                    color: Colors
+                                                                        .grey,
+                                                                    width: 1),
+                                                              ), // ✅ Makes the button circular
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .all(8),
+                                                              backgroundColor:
+                                                                  Colors
+                                                                      .white, // Button color
+                                                            ),
+                                                            child: const Icon(
+                                                              Icons.remove,
+                                                              size: 24,
+                                                              color:
+                                                                  Colors.grey,
+                                                            ), // Example
+                                                          ),
+                                                          Container(
+                                                            padding:
+                                                                EdgeInsets.all(
+                                                                    4),
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              border:
+                                                                  Border.all(
+                                                                color:
+                                                                    Colors.grey,
+                                                                width: 1,
+                                                              ),
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          16),
+                                                            ),
+                                                            width: 75,
+                                                            child: Text(
+                                                              '${cartlist[index].qty.toStringAsFixed(0)}',
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center,
+                                                              style: Styles
+                                                                  .black18(
+                                                                context,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          ElevatedButton(
+                                                            onPressed:
+                                                                () async {
+                                                              await _addCartDu(
+                                                                  cartlist[
+                                                                      index],
+                                                                  setModalState);
+
+                                                              setModalState(() {
+                                                                cartlist[index]
+                                                                    .qty++;
+                                                              });
+                                                            },
+                                                            style:
+                                                                ElevatedButton
+                                                                    .styleFrom(
+                                                              shape:
+                                                                  const CircleBorder(
+                                                                side: BorderSide(
+                                                                    color: Colors
+                                                                        .grey,
+                                                                    width: 1),
+                                                              ), // ✅ Makes the button circular
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .all(8),
+                                                              backgroundColor:
+                                                                  Colors
+                                                                      .white, // Button color
+                                                            ),
+                                                            child: const Icon(
+                                                              Icons.add,
+                                                              size: 24,
+                                                              color:
+                                                                  Colors.grey,
+                                                            ), // Example
+                                                          ),
+                                                          ElevatedButton(
+                                                            onPressed:
+                                                                () async {
+                                                              await _deleteCart(
+                                                                  cartlist[
+                                                                      index],
+                                                                  setModalState);
+
+                                                              setModalState(
+                                                                () {
+                                                                  cartList.removeWhere((item) => (item
+                                                                              .id ==
+                                                                          cartlist[index]
+                                                                              .id &&
+                                                                      item.unit ==
+                                                                          cartlist[index]
+                                                                              .unit));
+                                                                },
+                                                              );
+                                                              await _getTotalCart(
+                                                                  setModalState);
+
+                                                              if (cartList
+                                                                      .length ==
+                                                                  0) {
+                                                                Navigator.pop(
+                                                                    context);
+                                                              }
+                                                            },
+                                                            style:
+                                                                ElevatedButton
+                                                                    .styleFrom(
+                                                              shape:
+                                                                  const CircleBorder(
+                                                                side: BorderSide(
+                                                                    color: Colors
+                                                                        .red,
+                                                                    width: 1),
+                                                              ),
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .all(8),
+                                                              backgroundColor:
+                                                                  Colors
+                                                                      .white, // Button color
+                                                            ),
+                                                            child: const Icon(
+                                                              Icons.delete,
+                                                              size: 24,
+                                                              color: Colors.red,
+                                                            ), // Example
+                                                          ),
+                                                        ],
                                                       ),
                                                     ],
                                                   ),
@@ -1422,13 +1837,18 @@ class _OrderINRouteScreenState extends State<OrderINRouteScreen> {
                                               ),
                                             ),
                                           ),
-                                          Expanded(
-                                            child: Container(
-                                              color: Colors.red,
-                                              width: 20,
-                                              height: 100,
-                                            ),
-                                          )
+                                          // Container(
+                                          //   color: Colors.red,
+                                          //   width: 50,
+                                          //   height: 100,
+                                          //   child: Center(
+                                          //     child: Icon(
+                                          //       Icons.delete,
+                                          //       color: Colors.white,
+                                          //       size: 25,
+                                          //     ),
+                                          //   ),
+                                          // ),
                                         ],
                                       ),
                                       Divider(
@@ -1656,6 +2076,15 @@ class _OrderINRouteScreenState extends State<OrderINRouteScreen> {
                                             sizeList = [];
                                             flavourList = [];
                                           });
+                                          setState(() {
+                                            selectedBrands = [];
+                                            selectedGroups = [];
+                                            selectedSizes = [];
+                                            selectedFlavours = [];
+                                            brandList = [];
+                                            sizeList = [];
+                                            flavourList = [];
+                                          });
                                         },
                                         text: 'ล้างข้อมูล',
                                         blackGroundColor: Styles.secondaryColor,
@@ -1669,6 +2098,7 @@ class _OrderINRouteScreenState extends State<OrderINRouteScreen> {
                                       child: ButtonFullWidth(
                                         onPressed: () async {
                                           await _getProduct();
+
                                           Navigator.pop(context);
                                         },
                                         text: 'ค้นหา',
@@ -1831,6 +2261,15 @@ class _OrderINRouteScreenState extends State<OrderINRouteScreen> {
                                       child: ButtonFullWidth(
                                         onPressed: () {
                                           setModalState(() {
+                                            selectedBrands = [];
+                                            selectedGroups = [];
+                                            selectedSizes = [];
+                                            selectedFlavours = [];
+                                            brandList = [];
+                                            sizeList = [];
+                                            flavourList = [];
+                                          });
+                                          setState(() {
                                             selectedBrands = [];
                                             selectedGroups = [];
                                             selectedSizes = [];
@@ -2019,6 +2458,15 @@ class _OrderINRouteScreenState extends State<OrderINRouteScreen> {
                                             sizeList = [];
                                             flavourList = [];
                                           });
+                                          setState(() {
+                                            selectedBrands = [];
+                                            selectedGroups = [];
+                                            selectedSizes = [];
+                                            selectedFlavours = [];
+                                            brandList = [];
+                                            sizeList = [];
+                                            flavourList = [];
+                                          });
                                         },
                                         text: 'ล้างข้อมูล',
                                         blackGroundColor: Styles.secondaryColor,
@@ -2190,6 +2638,15 @@ class _OrderINRouteScreenState extends State<OrderINRouteScreen> {
                                       child: ButtonFullWidth(
                                         onPressed: () {
                                           setModalState(() {
+                                            selectedBrands = [];
+                                            selectedGroups = [];
+                                            selectedSizes = [];
+                                            selectedFlavours = [];
+                                            brandList = [];
+                                            sizeList = [];
+                                            flavourList = [];
+                                          });
+                                          setState(() {
                                             selectedBrands = [];
                                             selectedGroups = [];
                                             selectedSizes = [];

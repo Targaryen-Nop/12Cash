@@ -2,6 +2,7 @@ import 'dart:typed_data';
 import 'package:_12sale_app/data/models/User.dart';
 import 'package:_12sale_app/data/models/order/Cart.dart';
 import 'package:_12sale_app/data/service/apiService.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:sprintf/sprintf.dart';
 import 'package:_12sale_app/core/page/printer/StingHelper.dart';
 import 'package:charset_converter/charset_converter.dart';
@@ -23,12 +24,47 @@ class _BluetoothPrinterScreen4State extends State<BluetoothPrinterScreen4> {
   final int paperWidthHeader = 76;
   List<CartList> cartList = [];
 
+  Future<void> requestPermissions() async {
+    await [
+      Permission.bluetooth,
+      Permission.bluetoothScan,
+      Permission.bluetoothConnect,
+      Permission.locationWhenInUse
+    ].request();
+  }
+
+  Future<void> connectToPrinter(String macAddress) async {
+    bool connected =
+        await PrintBluetoothThermal.connect(macPrinterAddress: macAddress);
+
+    if (connected) {
+      print("Connected to printer!");
+    } else {
+      print("Failed to connect.");
+    }
+  }
+
+  Future<void> scanBluetoothDevices() async {
+    bool isBluetoothEnabled = await PrintBluetoothThermal.bluetoothEnabled;
+
+    if (!isBluetoothEnabled) {
+      print("Bluetooth is disabled.");
+      return;
+    }
+
+    List<BluetoothInfo> devices = await PrintBluetoothThermal.pairedBluetooths;
+
+    for (var device in devices) {
+      print("Found: ${device.name} - ${device.macAdress}");
+    }
+  }
+
   Future<void> _getCart() async {
     try {
       ApiService apiService = ApiService();
       await apiService.init();
       var response = await apiService.request(
-        endpoint: 'api/cash/cart/get?type=sale&area=BE215&storeId=V10160027',
+        endpoint: 'api/cash/cart/get?type=sale&area=BE215&storeId=V10160005',
         method: 'GET',
       );
       if (response.statusCode == 200) {
@@ -43,6 +79,8 @@ class _BluetoothPrinterScreen4State extends State<BluetoothPrinterScreen4> {
                     "qty": cartItem.qty.toString(),
                     "unit": cartItem.unit,
                     "price": cartItem.price.toStringAsFixed(2),
+                    "disamount": "00.00",
+                    "itemamount": "00.00"
                   })
               .toList();
         });
@@ -96,6 +134,7 @@ class _BluetoothPrinterScreen4State extends State<BluetoothPrinterScreen4> {
   @override
   void initState() {
     super.initState();
+    requestPermissions();
     _getCart();
     _fetchPairedDevices();
   }
@@ -264,11 +303,6 @@ class _BluetoothPrinterScreen4State extends State<BluetoothPrinterScreen4> {
 
     // Print the encoded text
     await PrintBluetoothThermal.writeBytes(List<int>.from(encodedText));
-
-    // Add newline characters
-    // for (int i = 0; i < newLine; i++) {
-    //   await PrintBluetoothThermal.writeBytes([10]); // ASCII newline code
-    // }
   }
 
   String leftRightText(String left, String right, int width) {
@@ -312,10 +346,10 @@ class _BluetoothPrinterScreen4State extends State<BluetoothPrinterScreen4> {
     bool connectionStatus = await PrintBluetoothThermal.connectionStatus;
     if (connectionStatus) {
       // await printHeaderSeparator();
-      await printHeaderBill('บิลเงินสด/ใบกำกับภาษี');
-      await printBodyBill(receiptData);
-      await printHeaderSeparator();
-      await printHeaderBill('ใบลดหนี้');
+      // await printHeaderBill('บิลเงินสด/ใบกำกับภาษี');
+      // await printBodyBill(receiptData);
+      // await printHeaderSeparator();
+      // await printHeaderBill('ใบลดหนี้');
       await printBodyBill(receiptData);
     } else {
       print("Printer is disconnected ($connectionStatus)");

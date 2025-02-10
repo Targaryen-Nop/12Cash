@@ -11,6 +11,7 @@ import 'package:_12sale_app/core/page/announce/Announce.dart';
 import 'package:_12sale_app/core/page/order/CheckOutScreen.dart';
 import 'package:_12sale_app/core/page/order/CreateOrderScreen.dart';
 import 'package:_12sale_app/core/page/printer/BluetoothPrinterScreen.dart';
+import 'package:_12sale_app/core/page/printer/PrinterBixolon.dart';
 import 'package:_12sale_app/core/page/printer/PrinterScreen.dart';
 import 'package:_12sale_app/core/page/printer/TestPrint.dart';
 import 'package:_12sale_app/core/page/printer/TestPrinterScreen.dart';
@@ -57,6 +58,7 @@ import 'dart:io';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart';
 import 'package:month_year_picker/month_year_picker.dart';
+
 // import 'package:timezone/standalone.dart' as tz;
 // import 'package:timezone/data/latest.dart' as tz;
 
@@ -390,7 +392,7 @@ class _MyAppState extends State<MyApp> {
         return GlobalLoaderOverlay(
           child: MaterialApp(
             routes: {
-              '/': (context) => BluetoothPrinterScreen4(),
+              '/': (context) => AuthCheck(),
               // '/': (context) => CreateOrderScreen(
               //       storeId: "V10160027",
               //       storeName: "ร้านเพชรไทยคำ",

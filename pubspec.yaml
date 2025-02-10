@@ -97,6 +97,7 @@ dependencies:
   timezone: ^0.10.0
   flutter_debouncer: ^2.0.0
   flutter_svg: ^2.0.17
+  flutter_esc_pos_utils: ^1.0.1
 
 
 dev_dependencies:
