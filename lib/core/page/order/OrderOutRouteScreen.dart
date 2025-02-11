@@ -11,6 +11,7 @@ import 'package:_12sale_app/core/components/search/ProductSearch.dart';
 import 'package:_12sale_app/core/components/search/StoreSearch.dart';
 import 'package:_12sale_app/core/page/order/CheckOutScreen.dart';
 import 'package:_12sale_app/core/page/order/CreateOrderScreen.dart';
+import 'package:_12sale_app/core/page/order/CreateOrderScreen2.dart';
 import 'package:_12sale_app/core/page/route/ShoppingCartScreen.dart';
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:_12sale_app/data/models/User.dart';
@@ -1050,13 +1051,27 @@ class _OrderOutRouteScreenState extends State<OrderOutRouteScreen>
                                               context,
                                               MaterialPageRoute(
                                                 builder: (context) =>
-                                                    CreateOrderScreen(
+                                                    CreateOrderScreen2(
                                                         storeId:
                                                             selectedStoreId,
                                                         storeName:
                                                             selectedStore,
                                                         storeAddress:
                                                             selectedStoreAddress),
+                                              ),
+                                            );
+                                          } else {
+                                            toastification.show(
+                                              autoCloseDuration:
+                                                  const Duration(seconds: 5),
+                                              context: context,
+                                              primaryColor: Colors.red,
+                                              type: ToastificationType.error,
+                                              style: ToastificationStyle
+                                                  .flatColored,
+                                              title: Text(
+                                                "กรุณาเลือกรายการสินค้า",
+                                                style: Styles.red18(context),
                                               ),
                                             );
                                           }

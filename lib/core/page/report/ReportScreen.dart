@@ -7,11 +7,14 @@ import 'package:_12sale_app/core/components/search/CustomerDropdownSearch.dart';
 import 'package:_12sale_app/core/components/table/ReportSaleTable.dart';
 import 'package:_12sale_app/core/components/table/ShopTableAll.dart';
 import 'package:_12sale_app/core/components/table/ShopTableNew.dart';
+import 'package:_12sale_app/core/page/order/OrderDetail.dart';
 
 import 'package:_12sale_app/core/styles/style.dart';
-import 'package:_12sale_app/data/models/Store.dart';
 import 'package:_12sale_app/data/models/User.dart';
+import 'package:_12sale_app/data/models/order/OrderDetail.dart';
+import 'package:_12sale_app/data/models/order/Orders.dart';
 import 'package:_12sale_app/data/service/apiService.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class ReportScreen extends StatefulWidget {
@@ -23,8 +26,11 @@ class ReportScreen extends StatefulWidget {
 
 class _ReportScreenState extends State<ReportScreen> {
   bool _isSelected = false;
-  List<Store> storeAll = [];
+
+  List<Orders> orders = [];
   bool _loadingAllStore = true;
+  String period =
+      "${DateTime.now().year}${DateFormat('MM').format(DateTime.now())}";
 
   Future<void> _getStoreDataAll() async {
     try {
@@ -32,7 +38,7 @@ class _ReportScreenState extends State<ReportScreen> {
       await apiService.init();
       var response = await apiService.request(
         endpoint:
-            'api/cash/store/getStore?area=${User.area}&type=all', // You only need to pass the endpoint, the base URL is handled
+            'api/cash/order/all?type=sale&area=${User.area}&period=${period}', // You only need to pass the endpoint, the base URL is handled
         method: 'GET',
       );
 
@@ -40,7 +46,7 @@ class _ReportScreenState extends State<ReportScreen> {
         final List<dynamic> data = response.data['data'];
         print(response.data['data']);
         setState(() {
-          storeAll = data.map((item) => Store.fromJson(item)).toList();
+          orders = data.map((item) => Orders.fromJson(item)).toList();
         });
         Timer(const Duration(milliseconds: 500), () {
           if (mounted) {
@@ -74,33 +80,40 @@ class _ReportScreenState extends State<ReportScreen> {
           Colors.transparent, // set scaffold background color to transparent
       body: Container(
         margin: EdgeInsets.only(top: 20),
-        child: Container(
-          padding: const EdgeInsets.all(8),
-          margin: EdgeInsets.all(screenWidth / 45),
-          width: screenWidth,
-          // color: Colors.red,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                "ยังไม่เปิดให้บริการ ",
-                style: Styles.black32(context),
-              ),
-            ],
-          ),
-        ),
-        // child: LoadingSkeletonizer(
-        //   loading: _loadingAllStore,
-        //   child: ListView.builder(
-        //     itemCount: storeAll.length,
-        //     itemBuilder: (context, index) {
-        //       return InvoiceCard(
-        //         item: storeAll[index],
-        //         onDetailsPressed: () {},
-        //       );
-        //     },
+        // child: Container(
+        //   padding: const EdgeInsets.all(8),
+        //   margin: EdgeInsets.all(screenWidth / 45),
+        //   width: screenWidth,
+        //   // color: Colors.red,
+        //   child: Column(
+        //     mainAxisAlignment: MainAxisAlignment.center,
+        //     children: [
+        //       Text(
+        //         "ยังไม่เปิดให้บริการ ",
+        //         style: Styles.black32(context),
+        //       ),
+        //     ],
         //   ),
         // ),
+        child: LoadingSkeletonizer(
+          loading: _loadingAllStore,
+          child: ListView.builder(
+            itemCount: orders.length,
+            itemBuilder: (context, index) {
+              return InvoiceCard(
+                item: orders[index],
+                onDetailsPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          OrderDetailScreen(orderId: orders[index].orderId),
+                    ),
+                  );
+                },
+              );
+            },
+          ),
+        ),
       ),
     );
   }

@@ -1,13 +1,14 @@
 import 'package:_12sale_app/core/components/BoxShadowCustom.dart';
 import 'package:_12sale_app/core/styles/style.dart';
-import 'package:_12sale_app/data/models/Store.dart';
+import 'package:_12sale_app/data/models/order/OrderDetail.dart';
+import 'package:_12sale_app/data/models/order/Orders.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class InvoiceCard extends StatelessWidget {
-  final Store item;
+  final Orders item;
   final VoidCallback onDetailsPressed;
   const InvoiceCard({
     required this.item,
@@ -66,7 +67,7 @@ class InvoiceCard extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                "21 Dec 2025 | 17:00",
+                                "${DateTime.now().year}${DateFormat('dd-MM-yyyy | HH:mm:ss').format(item.createAt)}",
                                 style: Styles.black18(context),
                               ),
                               Skeleton.ignore(
@@ -76,20 +77,19 @@ class InvoiceCard extends StatelessWidget {
                                   margin: EdgeInsets.only(right: 8),
                                   // height: screenWidth / ,
                                   decoration: BoxDecoration(
-                                    color: item.policyConsent.status == 'Agree'
+                                    color: item.status == 'Agree'
                                         ? Styles.successTextColor
-                                        : item.policyConsent.status == 'Reject'
+                                        : item.status == 'Reject'
                                             ? Styles.failTextColor
                                             : Styles.warningTextColor,
                                     borderRadius: BorderRadius.circular(8.0),
                                   ),
                                   child: Text(
-                                    item.policyConsent.status == 'Agree'
+                                    item.status == 'Agree'
                                         ? 'store.store_card_new.agree'.tr()
-                                        : item.policyConsent.status == 'Reject'
+                                        : item.status == 'Reject'
                                             ? 'store.store_card_new.reject'.tr()
-                                            : 'store.store_card_new.pendding'
-                                                .tr(),
+                                            : '${item.status}'.tr(),
                                     style: Styles.white18(context),
                                     textAlign: TextAlign.center,
                                   ),
@@ -98,39 +98,36 @@ class InvoiceCard extends StatelessWidget {
                             ],
                           ),
                           Text(
-                            "2021452148",
+                            "${item.orderId}",
                             style: Styles.black18(context),
+                          ),
+                          Row(
+                            children: [
+                              Text(
+                                "${item.storeAddress}",
+                                style: Styles.black18(context),
+                              ),
+                            ],
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Row(
                                 children: [
-                                  FaIcon(
-                                    FontAwesomeIcons.locationDot,
-                                    color: Colors.grey,
-                                  ),
                                   Text(
-                                    (item.address.length +
-                                                item.subDistrict.length +
-                                                item.district.length +
-                                                item.province.length) >
-                                            25
-                                        ? ' ${item.address}...' // Limit to 22 characters + ellipsis
-                                        : " ${item.address} ${item.province != 'กรุงเทพมหานคร' ? 'ต.' : 'แขวง'}${item.subDistrict} ${item.province != 'กรุงเทพมหานคร' ? 'อ.' : 'เขต'}${item.district}  ${item.province != 'กรุงเทพมหานคร' ? 'จ.' : ''}${item.province} ${item.postCode}",
+                                    "ร้านค้า ${item.storeName}",
                                     style: Styles.black18(context),
                                   ),
                                 ],
                               ),
-                              // Container(
-                              //   margin: EdgeInsets.only(right: 25),
-                              //   child: FaIcon(
-                              //     // FontAwesomeIcons.circleXmark,
-                              //     FontAwesomeIcons.circleCheck,
-                              //     color: Colors.green,
-                              //     size: 25,
-                              //   ),
-                              // ),
+                              Row(
+                                children: [
+                                  Text(
+                                    "ราคารวม ${item.total}",
+                                    style: Styles.black18(context),
+                                  ),
+                                ],
+                              ),
                             ],
                           ),
                         ],
@@ -138,32 +135,6 @@ class InvoiceCard extends StatelessWidget {
                     )
                   ],
                 ),
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //   children: [
-                //     Text(
-                //       "21 Dec 2025 | 17:00",
-                //       style: Styles.black18(context),
-                //     ),
-                //     Text(
-                //       "21 Dec 2025 | 17:00",
-                //       style: Styles.black18(context),
-                //     ),
-                //   ],
-                // ),
-                // Text.rich(
-                //   TextSpan(
-                //     text:
-                //         '${'store.store_card_new.storeId'.tr()} : ', // This is the main text style
-                //     style: Styles.headerBlack18(context),
-                //     children: <TextSpan>[
-                //       TextSpan(
-                //         text: item.storeId, // Inline bold text
-                //         style: Styles.black18(context),
-                //       ),
-                //     ],
-                //   ),
-                // ),
               ],
             ),
           ),

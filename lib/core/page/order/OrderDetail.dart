@@ -1,27 +1,144 @@
+import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:_12sale_app/core/components/Appbar.dart';
+import 'package:_12sale_app/core/components/BoxShadowCustom.dart';
+import 'package:_12sale_app/core/components/Loading.dart';
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:_12sale_app/data/models/User.dart';
+
+import 'package:_12sale_app/data/models/order/OrderDetail.dart';
+import 'package:_12sale_app/data/service/apiService.dart';
 import 'package:charset_converter/charset_converter.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:print_bluetooth_thermal/print_bluetooth_thermal.dart';
 
 class OrderDetailScreen extends StatefulWidget {
-  const OrderDetailScreen({super.key});
+  final orderId;
+  const OrderDetailScreen({
+    super.key,
+    required this.orderId,
+  });
 
   @override
   State<OrderDetailScreen> createState() => _OrderDetailScreenState();
 }
 
 class _OrderDetailScreenState extends State<OrderDetailScreen> {
+  Sale? saleDetail;
+  Store? storeDetail;
+  List<Product> listProduct = [];
+  List<Promotion> listPromotions = [];
+
+  double subtotal = 0;
+  double discount = 0;
+  double discountProduct = 0;
+  double vat = 0;
+  double totalExVat = 0;
+  double total = 0;
+//  Map<String, dynamic> itemPr = [];
+
   @override
   void initState() {
     super.initState();
     // requestPermissions();
     // _getCart();
+    _getOrderDetail();
     _fetchPairedDevices();
+  }
+
+  final ScrollController _cartScrollController = ScrollController();
+
+  bool _loadOrderDetail = false;
+
+  Future<void> _getOrderDetail() async {
+    try {
+      print("Order ID : ${widget.orderId}");
+      ApiService apiService = ApiService();
+      await apiService.init();
+      var response = await apiService.request(
+        endpoint: 'api/cash/order/detail/${widget.orderId}',
+        method: 'GET',
+      );
+      if (response.statusCode == 200) {
+        final List<dynamic> data = response.data['data'][0]['listProduct'];
+        final List<dynamic> prData = response.data['data'][0]['listPromotions'];
+        setState(() {
+          saleDetail = Sale.fromJson(response.data['data'][0]['sale']);
+          storeDetail = Store.fromJson(response.data['data'][0]['store']);
+          listProduct = data.map((item) => Product.fromJson(item)).toList();
+          listPromotions =
+              prData.map((item) => Promotion.fromJson(item)).toList();
+          subtotal = response.data['data'][0]['subtotal'].toDouble();
+          discount = response.data['data'][0]['discount'].toDouble();
+          discountProduct =
+              response.data['data'][0]['discountProduct'].toDouble();
+          vat = response.data['data'][0]['vat'].toDouble();
+          totalExVat = response.data['data'][0]['totalExVat'].toDouble();
+          total = response.data['data'][0]['total'].toDouble();
+          // Map cartList to receiptData["items"]
+          receiptData['customer']['customercode'] = storeDetail?.storeId;
+          receiptData['customer']['customername'] = storeDetail?.name;
+          receiptData['customer']['address1'] = storeDetail?.address;
+          receiptData['customer']['salecode'] = storeDetail?.storeId;
+          receiptData['customer']['customercode'] = storeDetail?.storeId;
+          receiptData['CUOR'] = widget.orderId;
+          receiptData['OAORDT'] =
+              DateFormat('dd/MM/yyyy').format(DateTime.now());
+
+          receiptData['totaltext'] =
+              "${response.data['data'][0]['subtotal'].toStringAsFixed(2)}";
+          receiptData['ex_vat'] =
+              "${response.data['data'][0]['totalExVat'].toStringAsFixed(2)}";
+          receiptData['vat'] =
+              "${response.data['data'][0]['vat'].toStringAsFixed(2)}";
+          receiptData['discountProduct'] =
+              "${response.data['data'][0]['discountProduct'].toStringAsFixed(2)}";
+          receiptData['discount'] =
+              "${response.data['data'][0]['discount'].toStringAsFixed(2)}";
+          receiptData['total'] =
+              "${response.data['data'][0]['total'].toStringAsFixed(2)}";
+          receiptData['OBSMCD'] = "${saleDetail?.name}";
+          receiptData['taxno'] = "${storeDetail?.taxId}";
+
+          receiptData["items"] = listProduct
+              .map((cartItem) => {
+                    "name": cartItem.name,
+                    "qty": cartItem.qty.toString(),
+                    "unit": cartItem.unit,
+                    "price": cartItem.price.toStringAsFixed(2),
+                    "disamount": cartItem.discount.toStringAsFixed(2),
+                    "itemamount": cartItem.netTotal.toStringAsFixed(2)
+                  })
+              .toList();
+
+          for (var promotion in listPromotions) {
+            for (var item in promotion.listPromotion) {
+              receiptData["items"].add({
+                "name": item.name,
+                "qty": item.qty.toString(),
+                "unit": item.unit,
+                "price": "00.00",
+                "disamount": "00.00",
+                "itemamount": "00.00"
+              });
+            }
+          }
+        });
+        print(receiptData);
+        Timer(const Duration(milliseconds: 500), () {
+          if (mounted) {
+            setState(() {
+              _loadOrderDetail = false;
+            });
+          }
+        });
+      }
+    } catch (e) {
+      print("Error $e");
+    }
   }
 
   // Bluetooth Connect
@@ -51,24 +168,25 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
 
   final Map<String, dynamic> receiptData = {
     "customer": {
-      "customercode": "VB22600260",
-      "customername": "เจ๊โฉลก",
-      "address1": "172/1 ต.ศรีมหาโพธิ์",
-      "address2": "อ.ปากน้ำ",
-      "address3": "จ.สมุทรปราการ",
-      "postCode": "10270",
-      "taxno": "1234567890123",
-      "salecode": "20359-คุณจาง"
+      "customercode": "",
+      "customername": "",
+      "address1": "",
+      "address2": "",
+      "address3": "",
+      "postCode": "",
+      "taxno": "",
+      "salecode": ""
     },
-    "CUOR": "6707132130012",
-    "OAORDT": "06/07/2024",
+    "CUOR": "",
+    "OAORDT": "",
     "items": [],
-    "totaltext": "3672.45",
-    "ex_vat": "3431.78",
-    "vat": "240.22",
-    "totaldis": "0.00",
-    "total": "3672.45",
-    "OBSMCD": "${User.surName}"
+    "totaltext": "00.00",
+    "ex_vat": "00.00",
+    "vat": "00.00",
+    "discount": "0.00",
+    "discountProduct": "0.00",
+    "total": "00.00",
+    "OBSMCD": ""
   };
 
   Future<void> _fetchPairedDevices() async {
@@ -86,12 +204,12 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
   Future<void> printTest() async {
     bool connectionStatus = await PrintBluetoothThermal.connectionStatus;
     if (connectionStatus) {
-      await printHeaderSeparator();
+      // await printHeaderSeparator();
       await printHeaderBill('บิลเงินสด/ใบกำกับภาษี');
       await printBodyBill(receiptData);
-      await printHeaderSeparator();
-      await printHeaderBill('ใบลดหนี้');
-      await printBodyBill(receiptData);
+      // await printHeaderSeparator();
+      // await printHeaderBill('ใบลดหนี้');
+      // await printBodyBill(receiptData);
     } else {
       print("Printer is disconnected ($connectionStatus)");
       ScaffoldMessenger.of(context).showSnackBar(
@@ -289,6 +407,8 @@ ${centerText('เอกสารออกเป็นชุด', paperWidthHeade
         'วันที่ ${data['OAORDT']}');
     await printBill(
         'ที่อยู่ ${data['customer']['address1']} ${data['customer']['address2']} ${data['customer']['address3']}');
+
+    await printBill('เลชประจำตัวผู้เสียภาษี ${data['customer']['taxno']}');
     // String body = formatFixedWidthRow2(
     //     'รายการสินค้า', 'จํานวน', '', 'ราคา', 'ส่วนลด', 'รวม');
     String body = '''
@@ -324,12 +444,12 @@ ${centerText('เอกสารออกเป็นชุด', paperWidthHeade
     await printBetween('รวมมูลค่าสินค้า', data['ex_vat'].toString());
     await printBetween('ส่วนลด', '0.00');
     await printBetween('ภาษีมูลค่าเพิ่ม 7%', data['vat'].toString());
-    await printBetween('ส่วนลดท้ายบิล', '00.00');
-    await printBetween('ส่วนลดร้านค้า', data['totaldis'].toString());
+    await printBetween('ส่วนลดท้ายบิล', data['discountProduct'].toString());
+    await printBetween('ส่วนลดร้านค้า', data['discount'].toString());
     await printBetween('จำนวนเงินรวมสุทธิ', data['total'].toString());
     await printBetween("", "($totalText)");
     String footer = '''
-    ${leftRightText('ผู้รับเงิน 20406-${data['OBSMCD']}', '.........................', 70)}
+    ${leftRightText('ผู้รับเงิน ${data['OBSMCD']}', '.........................', 70)}
     ${leftRightText('', 'ลายเซ็นลูกค้า', 58)}
     ''';
     Uint8List encodedFooter = await CharsetConverter.encode('TIS-620', footer);
@@ -357,14 +477,24 @@ ${centerText('เอกสารออกเป็นชุด', paperWidthHeade
     });
 
     final snackBarText = result
-        ? "Connected to ${device.name}"
-        : "Failed to connect to ${device.name}";
+        ? "เชื่อมต่อแล้วกับอุปกรณ์ ${device.name}"
+        : "การเชื่อมต่อล้มเหลว ${device.name}";
     ScaffoldMessenger.of(context)
         .showSnackBar(SnackBar(content: Text(snackBarText)));
   }
 
   @override
+  void dispose() {
+    // TODO: implement dispose
+    _cartScrollController.dispose();
+
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(70),
@@ -383,102 +513,831 @@ ${centerText('เอกสารออกเป็นชุด', paperWidthHeade
             child: IntrinsicHeight(
               child: Column(
                 children: [
-                  SizedBox(
+                  Container(
                     height:
-                        MediaQuery.of(context).size.height * 0.8, // Set height
-                    child: Container(color: Colors.blue),
+                        MediaQuery.of(context).size.height * 0.9, // Set height
+                    child: Container(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          children: [
+                            BoxShadowCustom(
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          // "${widget.storeId}",
+                                          "${storeDetail?.name} ${storeDetail?.storeId}",
+                                          style: Styles.black24(context),
+                                        )
+                                      ],
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          // "${widget.storeId}",
+                                          "เลขที่ผู้เสียภาษี : ${storeDetail?.taxId}",
+                                          style: Styles.black18(context),
+                                        )
+                                      ],
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          // "${widget.storeId}",
+                                          "เบอร์โทรศัพท์ : ${storeDetail?.tel}",
+                                          style: Styles.black18(context),
+                                        )
+                                      ],
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          "ที่อยู่การจัดส่ง",
+                                          style: Styles.black18(context),
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                          child: Container(
+                                            width: double.infinity,
+                                            child: ElevatedButton(
+                                              style: ElevatedButton.styleFrom(
+                                                padding:
+                                                    const EdgeInsets.all(0),
+                                                elevation: 0, // Disable shadow
+                                                shadowColor: Colors
+                                                    .transparent, // Ensure no shadow color
+                                                backgroundColor: Colors.white,
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius: BorderRadius
+                                                      .zero, // No rounded corners
+                                                  side: BorderSide
+                                                      .none, // Remove border
+                                                ),
+                                              ),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                children: [
+                                                  Expanded(
+                                                    child: Row(
+                                                      children: [
+                                                        Icon(
+                                                          Icons
+                                                              .location_on_outlined,
+                                                          color: Colors.black,
+                                                          size: 30,
+                                                        ),
+                                                        Expanded(
+                                                          child: Text(
+                                                            // " ${widget.storeAddress}",
+                                                            "${storeDetail?.address}",
+                                                            style:
+                                                                Styles.grey18(
+                                                                    context),
+                                                          ),
+                                                        )
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              onPressed: () {},
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          // "${widget.storeId}",
+                                          "พนักงานขาย : ${saleDetail?.name} เขต ${saleDetail?.warehouse}",
+                                          style: Styles.black24(context),
+                                        )
+                                      ],
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          // "${widget.storeId}",
+                                          "เบอร์โทรศัพท์ : ${saleDetail?.tel}",
+                                          style: Styles.black18(context),
+                                        )
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Expanded(
+                              flex: 3,
+                              child: BoxShadowCustom(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Container(
+                                    height: screenHeight * 0.9,
+                                    // color: Colors.red,
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 16.0, horizontal: 16.0),
+                                      child: Column(
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                "รายการที่สั่ง",
+                                                style: Styles.black18(context),
+                                              ),
+                                              Text(
+                                                "จำนวน ${listProduct.length} รายการ",
+                                                style: Styles.black18(context),
+                                              ),
+                                            ],
+                                          ),
+                                          Expanded(
+                                              child: Scrollbar(
+                                            controller: _cartScrollController,
+                                            thumbVisibility: true,
+                                            trackVisibility: true,
+                                            child: ListView.builder(
+                                              shrinkWrap: true,
+                                              controller: _cartScrollController,
+                                              itemCount: listProduct.length,
+                                              itemBuilder: (context, index) {
+                                                return Column(
+                                                  children: [
+                                                    Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        ClipRRect(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(8),
+                                                          child: Image.network(
+                                                            'https://jobbkk.com/upload/employer/0D/53D/03153D/images/202045.webp',
+                                                            width:
+                                                                screenWidth / 8,
+                                                            height:
+                                                                screenWidth / 8,
+                                                            fit: BoxFit.cover,
+                                                            errorBuilder:
+                                                                (context, error,
+                                                                    stackTrace) {
+                                                              return const Center(
+                                                                child: Icon(
+                                                                  Icons.error,
+                                                                  color: Colors
+                                                                      .red,
+                                                                  size: 50,
+                                                                ),
+                                                              );
+                                                            },
+                                                          ),
+                                                        ),
+                                                        Expanded(
+                                                          flex: 3,
+                                                          child: Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .all(16.0),
+                                                            child: Column(
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                Row(
+                                                                  children: [
+                                                                    Expanded(
+                                                                      child:
+                                                                          Text(
+                                                                        listProduct[index]
+                                                                            .name,
+                                                                        style: Styles.black16(
+                                                                            context),
+                                                                        softWrap:
+                                                                            true,
+                                                                        maxLines:
+                                                                            2,
+                                                                        overflow:
+                                                                            TextOverflow.visible,
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                                Row(
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .spaceBetween,
+                                                                  children: [
+                                                                    Column(
+                                                                      crossAxisAlignment:
+                                                                          CrossAxisAlignment
+                                                                              .start,
+                                                                      children: [
+                                                                        Row(
+                                                                          children: [
+                                                                            Text(
+                                                                              'จำนวน : ${listProduct[index].qty.toStringAsFixed(0)} ${listProduct[index].unit}',
+                                                                              style: Styles.black16(context),
+                                                                            ),
+                                                                          ],
+                                                                        ),
+                                                                        Row(
+                                                                          children: [
+                                                                            Text(
+                                                                              'ราคา : ${listProduct[index].price}',
+                                                                              style: Styles.black16(context),
+                                                                            ),
+                                                                          ],
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    Divider(
+                                                      color: Colors.grey[200],
+                                                      thickness: 1,
+                                                      indent: 16,
+                                                      endIndent: 16,
+                                                    ),
+                                                  ],
+                                                );
+                                              },
+                                            ),
+                                          ))
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    height: viewportConstraints.maxHeight * 0.4,
+                    child: Column(
+                      children: [
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: BoxShadowCustom(
+                              child: Container(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            "รายการโปรโมชั่น",
+                                            style: Styles.black18(context),
+                                          ),
+                                          Text(
+                                            "จำนวน ${listPromotions.length} รายการ",
+                                            style: Styles.black18(context),
+                                          ),
+                                        ],
+                                      ),
+                                      Expanded(
+                                        child: ListView.builder(
+                                          // controller:
+                                          //     _promotionScrollController,
+                                          shrinkWrap: true,
+                                          itemCount: listPromotions.length,
+                                          itemBuilder: (context, index) {
+                                            return Container(
+                                              height:
+                                                  200, // Set a height to avoid rendering errors
+                                              child: ListView.builder(
+                                                  itemCount:
+                                                      listPromotions[index]
+                                                          .listPromotion
+                                                          .length,
+                                                  itemBuilder:
+                                                      (context, innerIndex) {
+                                                    return Column(
+                                                      children: [
+                                                        Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            ClipRRect(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          8),
+                                                              child:
+                                                                  Image.network(
+                                                                'https://jobbkk.com/upload/employer/0D/53D/03153D/images/202045.webp',
+                                                                width:
+                                                                    screenWidth /
+                                                                        8,
+                                                                height:
+                                                                    screenWidth /
+                                                                        8,
+                                                                fit: BoxFit
+                                                                    .cover,
+                                                                errorBuilder:
+                                                                    (context,
+                                                                        error,
+                                                                        stackTrace) {
+                                                                  return const Center(
+                                                                    child: Icon(
+                                                                      Icons
+                                                                          .error,
+                                                                      color: Colors
+                                                                          .red,
+                                                                      size: 50,
+                                                                    ),
+                                                                  );
+                                                                },
+                                                              ),
+                                                            ),
+                                                            Expanded(
+                                                              flex: 3,
+                                                              child: Padding(
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                        .all(
+                                                                        16.0),
+                                                                child: Column(
+                                                                  crossAxisAlignment:
+                                                                      CrossAxisAlignment
+                                                                          .start,
+                                                                  children: [
+                                                                    Row(
+                                                                      children: [
+                                                                        Expanded(
+                                                                          child:
+                                                                              Text(
+                                                                            listPromotions[index].listPromotion[innerIndex].name,
+                                                                            style:
+                                                                                Styles.black16(context),
+                                                                            softWrap:
+                                                                                true,
+                                                                            maxLines:
+                                                                                2,
+                                                                            overflow:
+                                                                                TextOverflow.visible,
+                                                                          ),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                    Row(
+                                                                      children: [
+                                                                        Expanded(
+                                                                          child:
+                                                                              Text(
+                                                                            listPromotions[index].proName,
+                                                                            style:
+                                                                                Styles.black16(context),
+                                                                            softWrap:
+                                                                                true,
+                                                                            maxLines:
+                                                                                2,
+                                                                            overflow:
+                                                                                TextOverflow.visible,
+                                                                          ),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                    Row(
+                                                                      mainAxisAlignment:
+                                                                          MainAxisAlignment
+                                                                              .spaceBetween,
+                                                                      children: [
+                                                                        Column(
+                                                                          crossAxisAlignment:
+                                                                              CrossAxisAlignment.start,
+                                                                          children: [
+                                                                            Row(
+                                                                              children: [
+                                                                                Text(
+                                                                                  '${listPromotions[index].listPromotion[innerIndex].id}',
+                                                                                  style: Styles.black16(context),
+                                                                                ),
+                                                                              ],
+                                                                            ),
+                                                                            Row(
+                                                                              children: [
+                                                                                Text(
+                                                                                  '${listPromotions[index].listPromotion[innerIndex].group} รส${listPromotions[index].listPromotion[innerIndex].flavour}',
+                                                                                  style: Styles.black16(context),
+                                                                                ),
+                                                                              ],
+                                                                            ),
+                                                                          ],
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        Divider(
+                                                          color:
+                                                              Colors.grey[200],
+                                                          thickness: 1,
+                                                          indent: 16,
+                                                          endIndent: 16,
+                                                        ),
+                                                      ],
+                                                    );
+                                                  }),
+                                            );
+                                          },
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: BoxShadowCustom(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      "รวมมูลค่าสินค้า",
+                                      style: Styles.grey18(context),
+                                    ),
+                                    Text(
+                                      "฿${NumberFormat.currency(locale: 'th_TH', symbol: '').format(subtotal)} บาท",
+                                      style: Styles.grey18(context),
+                                    )
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      "ภาษีมูลค่าเพิ่ม 7% (VAT)",
+                                      style: Styles.grey18(context),
+                                    ),
+                                    Text(
+                                      "฿${NumberFormat.currency(locale: 'th_TH', symbol: '').format(vat)} บาท",
+                                      style: Styles.grey18(context),
+                                    )
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      "รวมมูลค่าสินค้าก่อนหักภาษี",
+                                      style: Styles.grey18(context),
+                                    ),
+                                    Text(
+                                      "฿${NumberFormat.currency(locale: 'th_TH', symbol: '').format(totalExVat)} บาท",
+                                      style: Styles.grey18(context),
+                                    )
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      "ส่วนลดท้ายบิล",
+                                      style: Styles.red18(context),
+                                    ),
+                                    Text(
+                                      "฿${NumberFormat.currency(locale: 'th_TH', symbol: '').format(discount)} บาท",
+                                      style: Styles.red18(context),
+                                    )
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      "ส่วนลดสินค้า",
+                                      style: Styles.red18(context),
+                                    ),
+                                    Text(
+                                      "฿${NumberFormat.currency(locale: 'th_TH', symbol: '').format(discountProduct)} บาท",
+                                      style: Styles.red18(context),
+                                    )
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      "จำนวนเงินรวมสุทธิ",
+                                      style: Styles.green24(context),
+                                    ),
+                                    Text(
+                                      "฿${NumberFormat.currency(locale: 'th_TH', symbol: '').format(total)} บาท",
+                                      style: Styles.green24(context),
+                                    )
+                                  ],
+                                ),
+                                // Row(
+                                //   children: [
+                                //     Text(
+                                //       "ชำระเงินโดย",
+                                //       style: Styles.black18(context),
+                                //     ),
+                                //   ],
+                                // ),
+                                // Row(
+                                //   children: [
+                                //     Expanded(
+                                //       child: Container(
+                                //         width: double.infinity,
+                                //         child: ElevatedButton(
+                                //           style: ElevatedButton.styleFrom(
+                                //             padding:
+                                //                 const EdgeInsets.all(0),
+                                //             elevation:
+                                //                 0, // Disable shadow
+                                //             shadowColor: Colors
+                                //                 .transparent, // Ensure no shadow color
+                                //             backgroundColor: Colors.white,
+                                //             shape: RoundedRectangleBorder(
+                                //               borderRadius: BorderRadius
+                                //                   .zero, // No rounded corners
+                                //               side: BorderSide
+                                //                   .none, // Remove border
+                                //             ),
+                                //           ),
+                                //           child: Row(
+                                //             mainAxisAlignment:
+                                //                 MainAxisAlignment
+                                //                     .spaceBetween,
+                                //             children: [
+                                //               Row(
+                                //                 children: [
+                                //                   ClipRRect(
+                                //                     borderRadius:
+                                //                         BorderRadius
+                                //                             .circular(8),
+                                //                     child: Image.network(
+                                //                       'https://jobbkk.com/upload/employer/0D/53D/03153D/images/202045.webp',
+                                //                       width: screenWidth /
+                                //                           15,
+                                //                       height:
+                                //                           screenWidth /
+                                //                               15,
+                                //                       fit: BoxFit.cover,
+                                //                       errorBuilder:
+                                //                           (context, error,
+                                //                               stackTrace) {
+                                //                         return const Center(
+                                //                           child: Icon(
+                                //                             Icons.error,
+                                //                             color: Colors
+                                //                                 .red,
+                                //                             size: 50,
+                                //                           ),
+                                //                         );
+                                //                       },
+                                //                     ),
+                                //                   ),
+                                //                   Text(
+                                //                     " QR พร้อมเพย์",
+                                //                     style: Styles.grey18(
+                                //                         context),
+                                //                   )
+                                //                 ],
+                                //               ),
+                                //               Icon(
+                                //                 Icons
+                                //                     .arrow_forward_ios_rounded,
+                                //                 color: Colors.black,
+                                //                 size: 20,
+                                //               )
+                                //             ],
+                                //           ),
+                                //           onPressed: () {
+                                //             Navigator.push(
+                                //               context,
+                                //               MaterialPageRoute(
+                                //                 builder: (context) =>
+                                //                     CheckOutScreen(),
+                                //               ),
+                                //             );
+                                //           },
+                                //         ),
+                                //       ),
+                                //     ),
+                                //   ],
+                                // ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                   _devices.isNotEmpty
                       ? Expanded(
-                          child: Container(
-                            height: viewportConstraints.maxHeight * 0.2,
-                            color: Colors.red,
-                            child: ListView.builder(
-                              itemCount: _devices.length,
-                              itemBuilder: (context, index) {
-                                final device = _devices[index];
-                                return ListTile(
-                                  title: Text(
-                                    device.name ?? "Unknown Device",
-                                    style: Styles.black18(context),
-                                  ),
-                                  subtitle: Text(
-                                    device.macAdress,
-                                    style: Styles.black18(context),
-                                  ),
-                                  trailing: _connected &&
-                                          _selectedDevice == device
-                                      ? Icon(Icons.check, color: Colors.green)
-                                      : null,
-                                  onTap: () => _connectToPrinter(device),
-                                );
-                              },
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: BoxShadowCustom(
+                              child: Container(
+                                height: viewportConstraints.maxHeight * 0.2,
+                                // color: Colors.red,
+                                child: Column(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            "อุปกรณ์ที่พบ",
+                                            style: Styles.black18(context),
+                                          ),
+                                          Text(
+                                            "${_devices.length} รายการ",
+                                            style: Styles.black18(context),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: ListView.builder(
+                                        itemCount: _devices.length,
+                                        itemBuilder: (context, index) {
+                                          final device = _devices[index];
+                                          return ListTile(
+                                            title: Text(
+                                              device.name ?? "Unknown Device",
+                                              style: Styles.black18(context),
+                                            ),
+                                            subtitle: Text(
+                                              device.macAdress,
+                                              style: Styles.black18(context),
+                                            ),
+                                            trailing: _connected &&
+                                                    _selectedDevice == device
+                                                ? Icon(Icons.check,
+                                                    color: Colors.green)
+                                                : null,
+                                            onTap: () =>
+                                                _connectToPrinter(device),
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ),
                           ),
                         )
-                      : Center(child: Text("No paired devices found")),
-                  Container(
-                    height: viewportConstraints.maxHeight * 0.2,
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Container(
-                        color: Colors.amber,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            ElevatedButton(
-                              child: Text(
-                                "Print Test",
-                                style: Styles.black18(context),
-                              ),
-                              onPressed: _connected ? printTest : null,
-                            ),
-                            ElevatedButton(
-                              child: Text(
-                                "Disconnect",
-                                style: Styles.black18(context),
-                              ),
-                              onPressed: _connected ? _disconnectPrinter : null,
-                            ),
-                          ],
+                      : Center(
+                          child: Text("No paired devices found"),
                         ),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    height: viewportConstraints.maxHeight * 0.2,
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Container(
-                        color: Colors.amber,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            ElevatedButton(
-                              child: Text(
-                                "Print Test",
-                                style: Styles.black18(context),
-                              ),
-                              onPressed: _connected ? printTest : null,
-                            ),
-                            ElevatedButton(
-                              child: Text(
-                                "Disconnect",
-                                style: Styles.black18(context),
-                              ),
-                              onPressed: _connected ? _disconnectPrinter : null,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  )
                 ],
               ),
             ),
           ),
         );
       }),
+      persistentFooterButtons: [
+        Row(
+          children: [
+            Expanded(
+              child: Container(
+                width: double.infinity,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    backgroundColor: Styles.primaryColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  onPressed: () async {
+                    // await _getOrderDetail();
+                    await printTest();
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.print,
+                              color: Colors.white,
+                              size: 25,
+                            ),
+                            Text(
+                              " พิมพ์ใบสั่งซื้อ",
+                              style: Styles.headerWhite18(context),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            Expanded(
+              child: Container(
+                width: double.infinity,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    backgroundColor: Styles.grey,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  onPressed: () {
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(
+                    //       builder: (context) => OrderDetailScreen()),
+                    // );
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "ยกเลิกยังไม่เปิดใช้งาน",
+                          style: Styles.headerWhite18(context),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        )
+      ],
     );
   }
 }

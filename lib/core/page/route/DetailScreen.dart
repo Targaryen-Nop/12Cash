@@ -462,26 +462,26 @@ class _DetailScreenState extends State<DetailScreen> {
                   SizedBox(height: screenWidth / 37),
                   Text('ตัวอย่างรายการสั่งซื้อ',
                       style: Styles.black24(context)),
-                  Container(
-                    height: 300,
-                    child: LoadingSkeletonizer(
-                      loading: _loadingAllStore,
-                      child: BoxShadowCustom(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                          child: ListView.builder(
-                            itemCount: storeAll.length,
-                            itemBuilder: (context, index) {
-                              return InvoiceCard(
-                                item: storeAll[index],
-                                onDetailsPressed: () {},
-                              );
-                            },
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
+                  // Container(
+                  //   height: 300,
+                  //   child: LoadingSkeletonizer(
+                  //     loading: _loadingAllStore,
+                  //     child: BoxShadowCustom(
+                  //       child: Padding(
+                  //         padding: const EdgeInsets.symmetric(vertical: 16),
+                  //         child: ListView.builder(
+                  //           itemCount: storeAll.length,
+                  //           itemBuilder: (context, index) {
+                  //             return InvoiceCard(
+                  //               item: storeAll[index],
+                  //               onDetailsPressed: () {},
+                  //             );
+                  //           },
+                  //         ),
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
                   SizedBox(height: screenWidth / 37),
                 ],
               ),

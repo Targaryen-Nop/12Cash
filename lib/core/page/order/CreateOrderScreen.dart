@@ -2,7 +2,6 @@ import 'dart:io';
 import 'dart:ui';
 import 'package:_12sale_app/core/page/order/OrderDetail.dart';
 import 'package:_12sale_app/core/page/route/OrderDetailScreen.dart';
-import 'package:_12sale_app/data/models/order/Promotion.dart';
 import 'package:_12sale_app/main.dart';
 import 'package:charset_converter/charset_converter.dart';
 import 'package:image/image.dart' as img;
@@ -41,12 +40,6 @@ class CreateOrderScreen extends StatefulWidget {
 
 class _CreateOrderScreenState extends State<CreateOrderScreen> with RouteAware {
   final ScrollController _scrollController = ScrollController();
-  double subtotal = 0;
-  double discount = 0;
-  double discountProduct = 0;
-  double vat = 0;
-  double totalExVat = 0;
-  double total = 0;
 
   @override
   void initState() {
@@ -83,7 +76,6 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> with RouteAware {
   }
 
   List<CartList> cartList = [];
-  List<PromotionList> promotionList = [];
   final Debouncer _debouncer = Debouncer();
   final Throttler _throttler = Throttler();
 
@@ -98,17 +90,8 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> with RouteAware {
       );
       if (response.statusCode == 200) {
         final List<dynamic> data = response.data['data']['listProduct'];
-        final List<dynamic> data2 = response.data['data']['listPromotion'];
         setState(() {
           cartList = data.map((item) => CartList.fromJson(item)).toList();
-          promotionList =
-              data2.map((item) => PromotionList.fromJson(item)).toList();
-          subtotal = response.data['data']['subtotal'].toDouble();
-          discount = response.data['data']['discount'].toDouble();
-          discountProduct = response.data['data']['discountProduct'].toDouble();
-          vat = response.data['data']['vat'].toDouble();
-          totalExVat = response.data['data']['totalExVat'].toDouble();
-          total = response.data['data']['total'].toDouble();
         });
         // Map cartList to receiptData["items"]
       }
@@ -278,11 +261,11 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> with RouteAware {
                     ),
                   ),
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => OrderDetailScreen()),
-                    );
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(
+                    //       builder: (context) => OrderDetailScreen()),
+                    // );
                   },
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -298,7 +281,7 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> with RouteAware {
                                   borderRadius: BorderRadius.circular(16),
                                   color: Colors.white),
                               child: Text(
-                                "${cartList.length}",
+                                "1",
                                 style: Styles.headerPirmary18(context),
                               ),
                             ),
@@ -309,7 +292,7 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> with RouteAware {
                           ],
                         ),
                         Text(
-                          "฿${NumberFormat.currency(locale: 'th_TH', symbol: '').format(total)} บาท",
+                          "฿${NumberFormat.currency(locale: 'th_TH', symbol: '').format(100000)} บาท",
                           style: Styles.headerWhite18(context),
                         )
                       ],
@@ -428,16 +411,6 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> with RouteAware {
                                         ),
                                       ],
                                     ),
-                                    // Row(
-                                    //   children: [
-                                    //     Expanded(
-                                    //       child: Text(
-                                    //         "ที่อยู่",
-                                    //         style: Styles.black18(context),
-                                    //       ),
-                                    //     ),
-                                    //   ],
-                                    // ),
                                     Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
@@ -702,7 +675,6 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> with RouteAware {
                                         ),
                                       ),
                                     ),
-
                                     Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
@@ -732,145 +704,129 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> with RouteAware {
                                 child: Column(
                                   children: [
                                     Expanded(
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: BoxShadowCustom(
-                                          child: Container(
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(16.0),
-                                              child: Column(
-                                                children: [
-                                                  Expanded(
-                                                      child: ListView.builder(
-                                                    itemCount:
-                                                        promotionList.length,
-                                                    itemBuilder:
-                                                        (context, index) {
-                                                      return Column(
-                                                        children: [
-                                                          Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .start,
-                                                            children: [
-                                                              ClipRRect(
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            8),
-                                                                child: Image
-                                                                    .network(
-                                                                  'https://jobbkk.com/upload/employer/0D/53D/03153D/images/202045.webp',
-                                                                  width:
-                                                                      screenWidth /
-                                                                          8,
-                                                                  height:
-                                                                      screenWidth /
-                                                                          8,
-                                                                  fit: BoxFit
-                                                                      .cover,
-                                                                  errorBuilder:
-                                                                      (context,
-                                                                          error,
-                                                                          stackTrace) {
-                                                                    return const Center(
-                                                                      child:
-                                                                          Icon(
-                                                                        Icons
-                                                                            .error,
-                                                                        color: Colors
-                                                                            .red,
-                                                                        size:
-                                                                            50,
-                                                                      ),
-                                                                    );
-                                                                  },
-                                                                ),
-                                                              ),
-                                                              Expanded(
-                                                                flex: 3,
-                                                                child: Padding(
-                                                                  padding:
-                                                                      const EdgeInsets
-                                                                          .all(
-                                                                          16.0),
-                                                                  child: Column(
-                                                                    crossAxisAlignment:
-                                                                        CrossAxisAlignment
-                                                                            .start,
-                                                                    children: [
-                                                                      Row(
-                                                                        children: [
-                                                                          Expanded(
-                                                                            child:
-                                                                                Text(
-                                                                              promotionList[index].proName,
-                                                                              style: Styles.black16(context),
-                                                                              softWrap: true,
-                                                                              maxLines: 2,
-                                                                              overflow: TextOverflow.visible,
-                                                                            ),
-                                                                          ),
-                                                                        ],
-                                                                      ),
-                                                                      Row(
-                                                                        children: [
-                                                                          Text(
-                                                                            'id : ${promotionList[index].proId}',
-                                                                            style:
-                                                                                Styles.black16(context),
-                                                                          ),
-                                                                        ],
-                                                                      ),
-                                                                      Row(
-                                                                        children: [
-                                                                          Text(
-                                                                            'จำนวน : ${promotionList[index].qty.toStringAsFixed(0)} ${cartList[index].unit}',
-                                                                            style:
-                                                                                Styles.black16(context),
-                                                                          ),
-                                                                        ],
-                                                                      ),
-                                                                      // Row(
-                                                                      //   children: [
-                                                                      //     Text(
-                                                                      //       'ราคา : ${promotionList[index].price}',
-                                                                      //       style:
-                                                                      //           Styles.black16(context),
-                                                                      //     ),
-                                                                      //   ],
-                                                                      // ),
-                                                                    ],
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                              Expanded(
-                                                                child:
-                                                                    Container(
+                                      child: Container(
+                                        child: Column(
+                                          children: [
+                                            Expanded(
+                                                child: ListView.builder(
+                                              itemCount: cartList.length,
+                                              itemBuilder: (context, index) {
+                                                return Column(
+                                                  children: [
+                                                    Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        ClipRRect(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(8),
+                                                          child: Image.network(
+                                                            'https://jobbkk.com/upload/employer/0D/53D/03153D/images/202045.webp',
+                                                            width:
+                                                                screenWidth / 8,
+                                                            height:
+                                                                screenWidth / 8,
+                                                            fit: BoxFit.cover,
+                                                            errorBuilder:
+                                                                (context, error,
+                                                                    stackTrace) {
+                                                              return const Center(
+                                                                child: Icon(
+                                                                  Icons.error,
                                                                   color: Colors
                                                                       .red,
-                                                                  width: 20,
-                                                                  height: 100,
+                                                                  size: 50,
                                                                 ),
-                                                              )
-                                                            ],
+                                                              );
+                                                            },
                                                           ),
-                                                          Divider(
-                                                            color: Colors
-                                                                .grey[200],
-                                                            thickness: 1,
-                                                            indent: 16,
-                                                            endIndent: 16,
+                                                        ),
+                                                        Expanded(
+                                                          flex: 3,
+                                                          child: Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .all(16.0),
+                                                            child: Column(
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                Row(
+                                                                  children: [
+                                                                    Expanded(
+                                                                      child:
+                                                                          Text(
+                                                                        cartList[index]
+                                                                            .name,
+                                                                        style: Styles.black16(
+                                                                            context),
+                                                                        softWrap:
+                                                                            true,
+                                                                        maxLines:
+                                                                            2,
+                                                                        overflow:
+                                                                            TextOverflow.visible,
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                                Row(
+                                                                  children: [
+                                                                    Text(
+                                                                      'id : ${cartList[index].id}',
+                                                                      style: Styles
+                                                                          .black16(
+                                                                              context),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                                Row(
+                                                                  children: [
+                                                                    Text(
+                                                                      'จำนวน : ${cartList[index].qty.toStringAsFixed(0)} ${cartList[index].unit}',
+                                                                      style: Styles
+                                                                          .black16(
+                                                                              context),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                                Row(
+                                                                  children: [
+                                                                    Text(
+                                                                      'ราคา : ${cartList[index].price}',
+                                                                      style: Styles
+                                                                          .black16(
+                                                                              context),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ],
+                                                            ),
                                                           ),
-                                                        ],
-                                                      );
-                                                    },
-                                                  ))
-                                                ],
-                                              ),
-                                            ),
-                                          ),
+                                                        ),
+                                                        Expanded(
+                                                          child: Container(
+                                                            color: Colors.red,
+                                                            width: 20,
+                                                            height: 100,
+                                                          ),
+                                                        )
+                                                      ],
+                                                    ),
+                                                    Divider(
+                                                      color: Colors.grey[200],
+                                                      thickness: 1,
+                                                      indent: 16,
+                                                      endIndent: 16,
+                                                    ),
+                                                  ],
+                                                );
+                                              },
+                                            ))
+                                          ],
                                         ),
                                       ),
                                     ),
@@ -883,25 +839,25 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> with RouteAware {
                                           style: Styles.grey18(context),
                                         ),
                                         Text(
-                                          "฿${NumberFormat.currency(locale: 'th_TH', symbol: '').format(subtotal)} บาท",
+                                          "฿${NumberFormat.currency(locale: 'th_TH', symbol: '').format(10000)} บาท",
                                           style: Styles.grey18(context),
                                         )
                                       ],
                                     ),
-                                    // Row(
-                                    //   mainAxisAlignment:
-                                    //       MainAxisAlignment.spaceBetween,
-                                    //   children: [
-                                    //     Text(
-                                    //       "ส่วนลด",
-                                    //       style: Styles.red18(context),
-                                    //     ),
-                                    //     Text(
-                                    //       "฿${NumberFormat.currency(locale: 'th_TH', symbol: '').format(-10000)} บาท",
-                                    //       style: Styles.red18(context),
-                                    //     )
-                                    //   ],
-                                    // ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          "ส่วนลด",
+                                          style: Styles.red18(context),
+                                        ),
+                                        Text(
+                                          "฿${NumberFormat.currency(locale: 'th_TH', symbol: '').format(-10000)} บาท",
+                                          style: Styles.red18(context),
+                                        )
+                                      ],
+                                    ),
                                     Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
@@ -911,7 +867,7 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> with RouteAware {
                                           style: Styles.grey18(context),
                                         ),
                                         Text(
-                                          "฿${NumberFormat.currency(locale: 'th_TH', symbol: '').format(vat)} บาท",
+                                          "฿${NumberFormat.currency(locale: 'th_TH', symbol: '').format(10000)} บาท",
                                           style: Styles.grey18(context),
                                         )
                                       ],
@@ -921,16 +877,15 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> with RouteAware {
                                           MainAxisAlignment.spaceBetween,
                                       children: [
                                         Text(
-                                          "รวมมูลค่าสินค้าก่อนหักภาษี",
+                                          "ราคาสินค้ารวมก่อนหักภาษี",
                                           style: Styles.grey18(context),
                                         ),
                                         Text(
-                                          "฿${NumberFormat.currency(locale: 'th_TH', symbol: '').format(totalExVat)} บาท",
+                                          "฿${NumberFormat.currency(locale: 'th_TH', symbol: '').format(10000)} บาท",
                                           style: Styles.grey18(context),
                                         )
                                       ],
                                     ),
-
                                     Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
@@ -940,7 +895,7 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> with RouteAware {
                                           style: Styles.red18(context),
                                         ),
                                         Text(
-                                          "฿${NumberFormat.currency(locale: 'th_TH', symbol: '').format(discount)} บาท",
+                                          "฿${NumberFormat.currency(locale: 'th_TH', symbol: '').format(-100)} บาท",
                                           style: Styles.red18(context),
                                         )
                                       ],
@@ -950,11 +905,11 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> with RouteAware {
                                           MainAxisAlignment.spaceBetween,
                                       children: [
                                         Text(
-                                          "ส่วนลดสินค้า",
+                                          "ส่วนลดร้านค้า",
                                           style: Styles.red18(context),
                                         ),
                                         Text(
-                                          "฿${NumberFormat.currency(locale: 'th_TH', symbol: '').format(discountProduct)} บาท",
+                                          "฿${NumberFormat.currency(locale: 'th_TH', symbol: '').format(-100)} บาท",
                                           style: Styles.red18(context),
                                         )
                                       ],
@@ -968,34 +923,34 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> with RouteAware {
                                           style: Styles.green24(context),
                                         ),
                                         Text(
-                                          "฿${NumberFormat.currency(locale: 'th_TH', symbol: '').format(total)} บาท",
+                                          "฿${NumberFormat.currency(locale: 'th_TH', symbol: '').format(1000)} บาท",
                                           style: Styles.green24(context),
                                         )
                                       ],
                                     ),
-                                    // Row(
-                                    //   mainAxisAlignment:
-                                    //       MainAxisAlignment.spaceBetween,
-                                    //   children: [
-                                    //     Text(
-                                    //       "คูปอง",
-                                    //       style: Styles.black18(context),
-                                    //     ),
-                                    //     Row(
-                                    //       children: [
-                                    //         Text(
-                                    //           "ใช้คูปอง ",
-                                    //           style: Styles.grey18(context),
-                                    //         ),
-                                    //         Icon(
-                                    //           Icons.arrow_forward_ios_rounded,
-                                    //           color: Colors.black,
-                                    //           size: 20,
-                                    //         )
-                                    //       ],
-                                    //     )
-                                    //   ],
-                                    // ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          "คูปอง",
+                                          style: Styles.black18(context),
+                                        ),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              "ใช้คูปอง ",
+                                              style: Styles.grey18(context),
+                                            ),
+                                            Icon(
+                                              Icons.arrow_forward_ios_rounded,
+                                              color: Colors.black,
+                                              size: 20,
+                                            )
+                                          ],
+                                        )
+                                      ],
+                                    ),
                                     Row(
                                       children: [
                                         Text(

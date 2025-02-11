@@ -252,6 +252,7 @@ class _OrderOutRouteScreenState extends State<OrderINRouteScreen>
         totalCart = 00.00;
         cartList = [];
       });
+
       print("Error $e");
     }
   }
@@ -1077,6 +1078,20 @@ class _OrderOutRouteScreenState extends State<OrderINRouteScreen>
                                                       .storeInfo
                                                       .address,
                                                 ),
+                                              ),
+                                            );
+                                          } else {
+                                            toastification.show(
+                                              autoCloseDuration:
+                                                  const Duration(seconds: 5),
+                                              context: context,
+                                              primaryColor: Colors.red,
+                                              type: ToastificationType.error,
+                                              style: ToastificationStyle
+                                                  .flatColored,
+                                              title: Text(
+                                                "กรุณาเลือกรายการสินค้า",
+                                                style: Styles.red18(context),
                                               ),
                                             );
                                           }
