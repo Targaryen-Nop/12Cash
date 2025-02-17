@@ -31,6 +31,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
   Store? storeDetail;
   List<Product> listProduct = [];
   List<Promotion> listPromotions = [];
+  List<PromotionListItem> listPromotionItems = [];
 
   double subtotal = 0;
   double discount = 0;
@@ -50,6 +51,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
   }
 
   final ScrollController _cartScrollController = ScrollController();
+  final ScrollController _promotionScrollController = ScrollController();
 
   bool _loadOrderDetail = false;
 
@@ -69,8 +71,10 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
           saleDetail = Sale.fromJson(response.data['data'][0]['sale']);
           storeDetail = Store.fromJson(response.data['data'][0]['store']);
           listProduct = data.map((item) => Product.fromJson(item)).toList();
+
           listPromotions =
               prData.map((item) => Promotion.fromJson(item)).toList();
+
           subtotal = response.data['data'][0]['subtotal'].toDouble();
           discount = response.data['data'][0]['discount'].toDouble();
           discountProduct =
@@ -113,6 +117,11 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                     "itemamount": cartItem.netTotal.toStringAsFixed(2)
                   })
               .toList();
+          for (var promotion in listPromotions) {
+            for (var item in promotion.listPromotion) {
+              listPromotionItems.add(item);
+            }
+          }
 
           for (var promotion in listPromotions) {
             for (var item in promotion.listPromotion) {
@@ -487,7 +496,7 @@ ${centerText('เอกสารออกเป็นชุด', paperWidthHeade
   void dispose() {
     // TODO: implement dispose
     _cartScrollController.dispose();
-
+    _promotionScrollController.dispose();
     super.dispose();
   }
 
@@ -683,6 +692,8 @@ ${centerText('เอกสารออกเป็นชุด', paperWidthHeade
                                             controller: _cartScrollController,
                                             thumbVisibility: true,
                                             trackVisibility: true,
+                                            radius: Radius.circular(16),
+                                            thickness: 10,
                                             child: ListView.builder(
                                               shrinkWrap: true,
                                               controller: _cartScrollController,
@@ -837,158 +848,209 @@ ${centerText('เอกสารออกเป็นชุด', paperWidthHeade
                                         ],
                                       ),
                                       Expanded(
-                                        child: ListView.builder(
-                                          // controller:
-                                          //     _promotionScrollController,
-                                          shrinkWrap: true,
-                                          itemCount: listPromotions.length,
-                                          itemBuilder: (context, index) {
-                                            return Container(
-                                              height:
-                                                  200, // Set a height to avoid rendering errors
-                                              child: ListView.builder(
-                                                  itemCount:
-                                                      listPromotions[index]
-                                                          .listPromotion
-                                                          .length,
-                                                  itemBuilder:
-                                                      (context, innerIndex) {
-                                                    return Column(
+                                          child: Container(
+                                        height:
+                                            200, // Set a height to avoid rendering errors
+                                        child: Scrollbar(
+                                          controller:
+                                              _promotionScrollController,
+                                          thumbVisibility: true,
+                                          trackVisibility: true,
+                                          radius: Radius.circular(16),
+                                          thickness: 10,
+                                          child: ListView.builder(
+                                              controller:
+                                                  _promotionScrollController,
+                                              itemCount:
+                                                  listPromotionItems.length,
+                                              itemBuilder:
+                                                  (context, innerIndex) {
+                                                return Column(
+                                                  children: [
+                                                    Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .start,
                                                       children: [
-                                                        Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .start,
-                                                          children: [
-                                                            ClipRRect(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          8),
-                                                              child:
-                                                                  Image.network(
-                                                                'https://jobbkk.com/upload/employer/0D/53D/03153D/images/202045.webp',
-                                                                width:
-                                                                    screenWidth /
-                                                                        8,
-                                                                height:
-                                                                    screenWidth /
-                                                                        8,
-                                                                fit: BoxFit
-                                                                    .cover,
-                                                                errorBuilder:
-                                                                    (context,
-                                                                        error,
-                                                                        stackTrace) {
-                                                                  return const Center(
-                                                                    child: Icon(
-                                                                      Icons
-                                                                          .error,
-                                                                      color: Colors
-                                                                          .red,
-                                                                      size: 50,
-                                                                    ),
-                                                                  );
-                                                                },
-                                                              ),
-                                                            ),
-                                                            Expanded(
-                                                              flex: 3,
-                                                              child: Padding(
-                                                                padding:
-                                                                    const EdgeInsets
-                                                                        .all(
-                                                                        16.0),
-                                                                child: Column(
-                                                                  crossAxisAlignment:
-                                                                      CrossAxisAlignment
-                                                                          .start,
+                                                        ClipRRect(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(8),
+                                                          child: Image.network(
+                                                            'https://jobbkk.com/upload/employer/0D/53D/03153D/images/202045.webp',
+                                                            width:
+                                                                screenWidth / 8,
+                                                            height:
+                                                                screenWidth / 8,
+                                                            fit: BoxFit.cover,
+                                                            errorBuilder:
+                                                                (context, error,
+                                                                    stackTrace) {
+                                                              return const Center(
+                                                                child: Icon(
+                                                                  Icons.error,
+                                                                  color: Colors
+                                                                      .red,
+                                                                  size: 50,
+                                                                ),
+                                                              );
+                                                            },
+                                                          ),
+                                                        ),
+                                                        Expanded(
+                                                          flex: 3,
+                                                          child: Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .all(16.0),
+                                                            child: Column(
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                Row(
                                                                   children: [
-                                                                    Row(
-                                                                      children: [
-                                                                        Expanded(
-                                                                          child:
-                                                                              Text(
-                                                                            listPromotions[index].listPromotion[innerIndex].name,
-                                                                            style:
-                                                                                Styles.black16(context),
-                                                                            softWrap:
-                                                                                true,
-                                                                            maxLines:
-                                                                                2,
-                                                                            overflow:
-                                                                                TextOverflow.visible,
-                                                                          ),
-                                                                        ),
-                                                                      ],
+                                                                    Expanded(
+                                                                      child:
+                                                                          Text(
+                                                                        listPromotionItems[innerIndex]
+                                                                            .name,
+                                                                        style: Styles.black16(
+                                                                            context),
+                                                                        softWrap:
+                                                                            true,
+                                                                        maxLines:
+                                                                            2,
+                                                                        overflow:
+                                                                            TextOverflow.visible,
+                                                                      ),
                                                                     ),
-                                                                    Row(
+                                                                  ],
+                                                                ),
+                                                                // Row(
+                                                                //   children: [
+                                                                //     Expanded(
+                                                                //       child: Text(
+                                                                //         listPromotions[
+                                                                //                 innerIndex]
+                                                                //             .proName,
+                                                                //         style: Styles
+                                                                //             .black16(
+                                                                //                 context),
+                                                                //         softWrap: true,
+                                                                //         maxLines: 2,
+                                                                //         overflow:
+                                                                //             TextOverflow
+                                                                //                 .visible,
+                                                                //       ),
+                                                                //     ),
+                                                                //   ],
+                                                                // ),
+                                                                Row(
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .spaceBetween,
+                                                                  children: [
+                                                                    Column(
+                                                                      crossAxisAlignment:
+                                                                          CrossAxisAlignment
+                                                                              .start,
                                                                       children: [
-                                                                        Expanded(
-                                                                          child:
-                                                                              Text(
-                                                                            listPromotions[index].proName,
-                                                                            style:
-                                                                                Styles.black16(context),
-                                                                            softWrap:
-                                                                                true,
-                                                                            maxLines:
-                                                                                2,
-                                                                            overflow:
-                                                                                TextOverflow.visible,
-                                                                          ),
+                                                                        Row(
+                                                                          children: [
+                                                                            Text(
+                                                                              '${listPromotionItems[innerIndex].id}',
+                                                                              style: Styles.black16(context),
+                                                                            ),
+                                                                          ],
+                                                                        ),
+                                                                        Row(
+                                                                          children: [
+                                                                            Text(
+                                                                              '${listPromotionItems[innerIndex].group} รส${listPromotionItems[innerIndex].flavour}',
+                                                                              style: Styles.black16(context),
+                                                                            ),
+                                                                          ],
                                                                         ),
                                                                       ],
                                                                     ),
                                                                     Row(
                                                                       mainAxisAlignment:
                                                                           MainAxisAlignment
-                                                                              .spaceBetween,
+                                                                              .end,
                                                                       children: [
-                                                                        Column(
-                                                                          crossAxisAlignment:
-                                                                              CrossAxisAlignment.start,
-                                                                          children: [
-                                                                            Row(
-                                                                              children: [
-                                                                                Text(
-                                                                                  '${listPromotions[index].listPromotion[innerIndex].id}',
-                                                                                  style: Styles.black16(context),
-                                                                                ),
-                                                                              ],
+                                                                        Container(
+                                                                          padding:
+                                                                              EdgeInsets.all(4),
+                                                                          decoration:
+                                                                              BoxDecoration(
+                                                                            border:
+                                                                                Border.all(
+                                                                              color: Colors.grey,
+                                                                              width: 1,
                                                                             ),
-                                                                            Row(
-                                                                              children: [
-                                                                                Text(
-                                                                                  '${listPromotions[index].listPromotion[innerIndex].group} รส${listPromotions[index].listPromotion[innerIndex].flavour}',
-                                                                                  style: Styles.black16(context),
-                                                                                ),
-                                                                              ],
+                                                                            borderRadius:
+                                                                                BorderRadius.circular(16),
+                                                                          ),
+                                                                          width:
+                                                                              75,
+                                                                          child:
+                                                                              Text(
+                                                                            '${listPromotionItems[innerIndex].qty.toStringAsFixed(0)} ${listPromotionItems[innerIndex].unit}',
+                                                                            textAlign:
+                                                                                TextAlign.center,
+                                                                            style:
+                                                                                Styles.black18(
+                                                                              context,
                                                                             ),
-                                                                          ],
+                                                                          ),
+                                                                        ),
+                                                                        ElevatedButton(
+                                                                          onPressed:
+                                                                              () async {
+                                                                            // _showCartSheet(context, cartList);
+                                                                          },
+                                                                          style:
+                                                                              ElevatedButton.styleFrom(
+                                                                            shape:
+                                                                                CircleBorder(
+                                                                              side: BorderSide(color: Styles.warning!, width: 1),
+                                                                            ),
+                                                                            padding:
+                                                                                const EdgeInsets.all(8),
+                                                                            backgroundColor:
+                                                                                Colors.white, // Button color
+                                                                          ),
+                                                                          child:
+                                                                              Icon(
+                                                                            FontAwesomeIcons.penToSquare,
+                                                                            size:
+                                                                                24,
+                                                                            color:
+                                                                                Styles.warning!,
+                                                                          ), // Example
                                                                         ),
                                                                       ],
                                                                     ),
                                                                   ],
                                                                 ),
-                                                              ),
+                                                              ],
                                                             ),
-                                                          ],
-                                                        ),
-                                                        Divider(
-                                                          color:
-                                                              Colors.grey[200],
-                                                          thickness: 1,
-                                                          indent: 16,
-                                                          endIndent: 16,
+                                                          ),
                                                         ),
                                                       ],
-                                                    );
-                                                  }),
-                                            );
-                                          },
+                                                    ),
+                                                    Divider(
+                                                      color: Colors.grey[200],
+                                                      thickness: 1,
+                                                      indent: 16,
+                                                      endIndent: 16,
+                                                    ),
+                                                  ],
+                                                );
+                                              }),
                                         ),
-                                      )
+                                      ))
                                     ],
                                   ),
                                 ),
@@ -1308,7 +1370,7 @@ ${centerText('เอกสารออกเป็นชุด', paperWidthHeade
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 8),
-                    backgroundColor: Styles.grey,
+                    backgroundColor: Styles.fail,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
@@ -1326,7 +1388,7 @@ ${centerText('เอกสารออกเป็นชุด', paperWidthHeade
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          "ยกเลิกยังไม่เปิดใช้งาน",
+                          "ยกเลิกออร์เดอร์",
                           style: Styles.headerWhite18(context),
                         ),
                       ],

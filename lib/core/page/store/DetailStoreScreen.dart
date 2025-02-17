@@ -11,6 +11,7 @@ import 'package:_12sale_app/core/components/chart/ItemSummarize.dart';
 import 'package:_12sale_app/core/components/search/DropdownSearchCustom.dart';
 import 'package:_12sale_app/core/page/HomeScreen.dart';
 import 'package:_12sale_app/core/page/dashboard/DashboardScreen.dart';
+import 'package:_12sale_app/core/page/order/OrderINRouteScreen.dart';
 import 'package:_12sale_app/core/page/order/OrderScreen.dart';
 import 'package:_12sale_app/core/page/store/EditStoreDataScreen.dart';
 import 'package:_12sale_app/core/page/store/ProcessTimelineScreen.dart';
@@ -19,6 +20,7 @@ import 'package:_12sale_app/core/styles/style.dart';
 import 'package:_12sale_app/data/models/Route.dart';
 import 'package:_12sale_app/data/models/Store.dart';
 import 'package:_12sale_app/data/models/User.dart';
+import 'package:_12sale_app/data/models/route/DetailStoreVisit.dart';
 import 'package:_12sale_app/data/service/apiService.dart';
 import 'package:_12sale_app/data/service/locationService.dart';
 import 'package:dio/dio.dart';
@@ -477,19 +479,18 @@ class _DetailStoreScreenState extends State<DetailStoreScreen> {
                                               //   context,
                                               //   MaterialPageRoute(
                                               //     builder: (context) =>
-                                              //         Orderscreen(
-                                              //             customerNo: widget
-                                              //                 .customerNo,
-                                              //             customerName: widget
-                                              //                 .customerName,
-                                              //             status: widget
-                                              //                 .store.status),
+                                              //         OrderINRouteScreen(
+                                              //       storeDetail:
+                                              //           DetailStoreVisit(
+                                              //             area:
+                                              //           ),
+                                              //     ),
                                               //   ),
                                               // );
                                             },
                                           ),
                                           Text(
-                                            'ยังไม่เปิดให้บริการ',
+                                            'ยังไม่มีการเอาเข้าข้อมูลจริง',
                                             style: Styles.black12(context),
                                           ),
                                         ],

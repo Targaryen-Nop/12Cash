@@ -21,6 +21,7 @@ import 'package:_12sale_app/data/models/route/DetailStoreVisit.dart';
 import 'package:_12sale_app/data/service/apiService.dart';
 import 'package:_12sale_app/main.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_debouncer/flutter_debouncer.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -78,6 +79,10 @@ class _OrderOutRouteScreenState extends State<OrderINRouteScreen>
   String selectedStoreTel = "";
   String selectedStoreShopType = "";
 
+  final ScrollController _cartScrollController = ScrollController();
+  final ScrollController _productScrollController = ScrollController();
+  final ScrollController _productListScrollController = ScrollController();
+
   @override
   void initState() {
     super.initState();
@@ -110,6 +115,9 @@ class _OrderOutRouteScreenState extends State<OrderINRouteScreen>
   void dispose() {
     // Unsubscribe when the widget is disposed
     routeObserver.unsubscribe(this);
+    _cartScrollController.dispose();
+    _productScrollController.dispose();
+    _productListScrollController.dispose();
     super.dispose();
   }
 
@@ -343,6 +351,11 @@ class _OrderOutRouteScreenState extends State<OrderINRouteScreen>
     }
   }
 
+// Separate function to parse product data in a background thread
+  List<Product> _parseProductData(List<dynamic> data) {
+    return data.map((item) => Product.fromJson(item)).toList();
+  }
+
   Future<void> _getProduct() async {
     try {
       ApiService apiService = ApiService();
@@ -362,8 +375,6 @@ class _OrderOutRouteScreenState extends State<OrderINRouteScreen>
       print("Response: $response");
       if (response.statusCode == 200) {
         final List<dynamic> data = response.data['data'];
-        productList = data.map((item) => Product.fromJson(item)).toList();
-        print("productList $productList");
         if (mounted) {
           setState(() {
             productList = data.map((item) => Product.fromJson(item)).toList();
@@ -874,46 +885,32 @@ class _OrderOutRouteScreenState extends State<OrderINRouteScreen>
                                       child: Column(
                                         children: [
                                           Expanded(
-                                            child: ListView.builder(
-                                              itemCount:
-                                                  (productList.length / 2)
-                                                      .ceil(),
-                                              itemBuilder: (context, index) {
-                                                final firstIndex = index * 2;
-                                                final secondIndex =
-                                                    firstIndex + 1;
-                                                return Row(
-                                                  children: [
-                                                    Expanded(
-                                                      child:
-                                                          OrderMenuListVerticalCard(
-                                                        item: productList[
-                                                            firstIndex],
-                                                        onDetailsPressed:
-                                                            () async {
-                                                          setState(() {
-                                                            selectedUnit = '';
-                                                            selectedSize = '';
-                                                            price = 0.00;
-                                                            count = 1;
-                                                            total = 0.00;
-                                                          });
-
-                                                          _showProductSheet(
-                                                              context,
-                                                              productList[
-                                                                  firstIndex]);
-                                                        },
-                                                      ),
-                                                    ),
-                                                    if (secondIndex <
-                                                        productList.length)
+                                            child: Scrollbar(
+                                              controller:
+                                                  _productScrollController,
+                                              thickness: 10,
+                                              thumbVisibility: true,
+                                              trackVisibility: true,
+                                              radius: Radius.circular(16),
+                                              child: ListView.builder(
+                                                controller:
+                                                    _productScrollController,
+                                                itemCount:
+                                                    (productList.length / 2)
+                                                        .ceil(),
+                                                itemBuilder: (context, index) {
+                                                  final firstIndex = index * 2;
+                                                  final secondIndex =
+                                                      firstIndex + 1;
+                                                  return Row(
+                                                    children: [
                                                       Expanded(
                                                         child:
                                                             OrderMenuListVerticalCard(
                                                           item: productList[
-                                                              secondIndex],
-                                                          onDetailsPressed: () {
+                                                              firstIndex],
+                                                          onDetailsPressed:
+                                                              () async {
                                                             setState(() {
                                                               selectedUnit = '';
                                                               selectedSize = '';
@@ -921,21 +918,48 @@ class _OrderOutRouteScreenState extends State<OrderINRouteScreen>
                                                               count = 1;
                                                               total = 0.00;
                                                             });
+
                                                             _showProductSheet(
                                                                 context,
                                                                 productList[
-                                                                    secondIndex]);
+                                                                    firstIndex]);
                                                           },
                                                         ),
-                                                      )
-                                                    else
-                                                      Expanded(
-                                                        child:
-                                                            SizedBox(), // Placeholder for spacing if no second card
                                                       ),
-                                                  ],
-                                                );
-                                              },
+                                                      if (secondIndex <
+                                                          productList.length)
+                                                        Expanded(
+                                                          child:
+                                                              OrderMenuListVerticalCard(
+                                                            item: productList[
+                                                                secondIndex],
+                                                            onDetailsPressed:
+                                                                () {
+                                                              setState(() {
+                                                                selectedUnit =
+                                                                    '';
+                                                                selectedSize =
+                                                                    '';
+                                                                price = 0.00;
+                                                                count = 1;
+                                                                total = 0.00;
+                                                              });
+                                                              _showProductSheet(
+                                                                  context,
+                                                                  productList[
+                                                                      secondIndex]);
+                                                            },
+                                                          ),
+                                                        )
+                                                      else
+                                                        Expanded(
+                                                          child:
+                                                              SizedBox(), // Placeholder for spacing if no second card
+                                                        ),
+                                                    ],
+                                                  );
+                                                },
+                                              ),
                                             ),
                                           )
 
@@ -960,25 +984,35 @@ class _OrderOutRouteScreenState extends State<OrderINRouteScreen>
                                       child: Column(
                                         children: [
                                           Expanded(
-                                            child: ListView.builder(
-                                              itemCount: productList.length,
-                                              itemBuilder: (context, index) {
-                                                return OrderMenuListCard(
-                                                  product: productList[index],
-                                                  onTap: () {
-                                                    print(productList[index]);
-                                                    setState(() {
-                                                      selectedUnit = '';
-                                                      selectedSize = '';
-                                                      price = 0.00;
-                                                      count = 1;
-                                                      total = 0.00;
-                                                    });
-                                                    _showProductSheet(context,
-                                                        productList[index]);
-                                                  },
-                                                );
-                                              },
+                                            child: Scrollbar(
+                                              thickness: 10,
+                                              thumbVisibility: true,
+                                              trackVisibility: true,
+                                              radius: Radius.circular(16),
+                                              controller:
+                                                  _productListScrollController,
+                                              child: ListView.builder(
+                                                controller:
+                                                    _productListScrollController,
+                                                itemCount: productList.length,
+                                                itemBuilder: (context, index) {
+                                                  return OrderMenuListCard(
+                                                    product: productList[index],
+                                                    onTap: () {
+                                                      print(productList[index]);
+                                                      setState(() {
+                                                        selectedUnit = '';
+                                                        selectedSize = '';
+                                                        price = 0.00;
+                                                        count = 1;
+                                                        total = 0.00;
+                                                      });
+                                                      _showProductSheet(context,
+                                                          productList[index]);
+                                                    },
+                                                  );
+                                                },
+                                              ),
                                             ),
                                           ),
                                         ],
@@ -1584,297 +1618,310 @@ class _OrderOutRouteScreenState extends State<OrderINRouteScreen>
                           child: Column(
                             children: [
                               Expanded(
-                                  child: ListView.builder(
-                                itemCount: cartlist.length,
-                                itemBuilder: (context, index) {
-                                  return Column(
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: [
-                                          ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(8),
-                                            child: Image.network(
-                                              'https://jobbkk.com/upload/employer/0D/53D/03153D/images/202045.webp',
-                                              width: screenWidth / 8,
-                                              height: screenWidth / 8,
-                                              fit: BoxFit.cover,
-                                              errorBuilder:
-                                                  (context, error, stackTrace) {
-                                                return const Center(
-                                                  child: Icon(
-                                                    Icons.error,
-                                                    color: Colors.red,
-                                                    size: 50,
-                                                  ),
-                                                );
-                                              },
-                                            ),
-                                          ),
-                                          Expanded(
-                                            flex: 3,
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(16.0),
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Row(
-                                                    children: [
-                                                      Expanded(
-                                                        child: Text(
-                                                          cartlist[index].name,
-                                                          style: Styles.black16(
-                                                              context),
-                                                          softWrap: true,
-                                                          maxLines: 2,
-                                                          overflow: TextOverflow
-                                                              .visible,
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
-                                                    children: [
-                                                      Column(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          Row(
-                                                            children: [
-                                                              Text(
-                                                                'id : ${cartlist[index].id}',
-                                                                style: Styles
-                                                                    .black16(
-                                                                        context),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                          Row(
-                                                            children: [
-                                                              Text(
-                                                                'จำนวน : ${cartlist[index].qty.toStringAsFixed(0)} ${cartlist[index].unit}',
-                                                                style: Styles
-                                                                    .black16(
-                                                                        context),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                          Row(
-                                                            children: [
-                                                              Text(
-                                                                'ราคา : ${cartlist[index].price}',
-                                                                style: Styles
-                                                                    .black16(
-                                                                        context),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ],
-                                                      ),
-                                                      Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .end,
-                                                        children: [
-                                                          ElevatedButton(
-                                                            onPressed:
-                                                                () async {
-                                                              setModalState(() {
-                                                                if (cartlist[
-                                                                            index]
-                                                                        .qty >
-                                                                    1) {
-                                                                  cartlist[
-                                                                          index]
-                                                                      .qty--;
-                                                                }
-                                                              });
-                                                              await _reduceCart(
-                                                                  cartlist[
-                                                                      index],
-                                                                  setModalState);
-                                                            },
-                                                            style:
-                                                                ElevatedButton
-                                                                    .styleFrom(
-                                                              shape:
-                                                                  const CircleBorder(
-                                                                side: BorderSide(
-                                                                    color: Colors
-                                                                        .grey,
-                                                                    width: 1),
-                                                              ), // ✅ Makes the button circular
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                      .all(8),
-                                                              backgroundColor:
-                                                                  Colors
-                                                                      .white, // Button color
-                                                            ),
-                                                            child: const Icon(
-                                                              Icons.remove,
-                                                              size: 24,
-                                                              color:
-                                                                  Colors.grey,
-                                                            ), // Example
-                                                          ),
-                                                          Container(
-                                                            padding:
-                                                                EdgeInsets.all(
-                                                                    4),
-                                                            decoration:
-                                                                BoxDecoration(
-                                                              border:
-                                                                  Border.all(
-                                                                color:
-                                                                    Colors.grey,
-                                                                width: 1,
-                                                              ),
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          16),
-                                                            ),
-                                                            width: 75,
-                                                            child: Text(
-                                                              '${cartlist[index].qty.toStringAsFixed(0)}',
-                                                              textAlign:
-                                                                  TextAlign
-                                                                      .center,
-                                                              style: Styles
-                                                                  .black18(
-                                                                context,
-                                                              ),
-                                                            ),
-                                                          ),
-                                                          ElevatedButton(
-                                                            onPressed:
-                                                                () async {
-                                                              await _addCartDu(
-                                                                  cartlist[
-                                                                      index],
-                                                                  setModalState);
-
-                                                              setModalState(() {
-                                                                cartlist[index]
-                                                                    .qty++;
-                                                              });
-                                                            },
-                                                            style:
-                                                                ElevatedButton
-                                                                    .styleFrom(
-                                                              shape:
-                                                                  const CircleBorder(
-                                                                side: BorderSide(
-                                                                    color: Colors
-                                                                        .grey,
-                                                                    width: 1),
-                                                              ), // ✅ Makes the button circular
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                      .all(8),
-                                                              backgroundColor:
-                                                                  Colors
-                                                                      .white, // Button color
-                                                            ),
-                                                            child: const Icon(
-                                                              Icons.add,
-                                                              size: 24,
-                                                              color:
-                                                                  Colors.grey,
-                                                            ), // Example
-                                                          ),
-                                                          ElevatedButton(
-                                                            onPressed:
-                                                                () async {
-                                                              await _deleteCart(
-                                                                  cartlist[
-                                                                      index],
-                                                                  setModalState);
-
-                                                              setModalState(
-                                                                () {
-                                                                  cartList.removeWhere((item) => (item
-                                                                              .id ==
-                                                                          cartlist[index]
-                                                                              .id &&
-                                                                      item.unit ==
-                                                                          cartlist[index]
-                                                                              .unit));
-                                                                },
-                                                              );
-                                                              await _getTotalCart(
-                                                                  setModalState);
-
-                                                              if (cartList
-                                                                      .length ==
-                                                                  0) {
-                                                                Navigator.pop(
-                                                                    context);
-                                                              }
-                                                            },
-                                                            style:
-                                                                ElevatedButton
-                                                                    .styleFrom(
-                                                              shape:
-                                                                  const CircleBorder(
-                                                                side: BorderSide(
-                                                                    color: Colors
-                                                                        .red,
-                                                                    width: 1),
-                                                              ),
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                      .all(8),
-                                                              backgroundColor:
-                                                                  Colors
-                                                                      .white, // Button color
-                                                            ),
-                                                            child: const Icon(
-                                                              Icons.delete,
-                                                              size: 24,
-                                                              color: Colors.red,
-                                                            ), // Example
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ],
+                                  child: Scrollbar(
+                                controller: _cartScrollController,
+                                thickness: 10,
+                                thumbVisibility: true,
+                                trackVisibility: true,
+                                radius: Radius.circular(16),
+                                child: ListView.builder(
+                                  controller: _cartScrollController,
+                                  itemCount: cartlist.length,
+                                  itemBuilder: (context, index) {
+                                    return Column(
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                              child: Image.network(
+                                                'https://jobbkk.com/upload/employer/0D/53D/03153D/images/202045.webp',
+                                                width: screenWidth / 8,
+                                                height: screenWidth / 8,
+                                                fit: BoxFit.cover,
+                                                errorBuilder: (context, error,
+                                                    stackTrace) {
+                                                  return const Center(
+                                                    child: Icon(
+                                                      Icons.error,
+                                                      color: Colors.red,
+                                                      size: 50,
+                                                    ),
+                                                  );
+                                                },
                                               ),
                                             ),
-                                          ),
-                                          // Container(
-                                          //   color: Colors.red,
-                                          //   width: 50,
-                                          //   height: 100,
-                                          //   child: Center(
-                                          //     child: Icon(
-                                          //       Icons.delete,
-                                          //       color: Colors.white,
-                                          //       size: 25,
-                                          //     ),
-                                          //   ),
-                                          // ),
-                                        ],
-                                      ),
-                                      Divider(
-                                        color: Colors.grey[200],
-                                        thickness: 1,
-                                        indent: 16,
-                                        endIndent: 16,
-                                      ),
-                                    ],
-                                  );
-                                },
+                                            Expanded(
+                                              flex: 3,
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(16.0),
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Row(
+                                                      children: [
+                                                        Expanded(
+                                                          child: Text(
+                                                            cartlist[index]
+                                                                .name,
+                                                            style:
+                                                                Styles.black16(
+                                                                    context),
+                                                            softWrap: true,
+                                                            maxLines: 2,
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .visible,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: [
+                                                        Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Row(
+                                                              children: [
+                                                                Text(
+                                                                  'id : ${cartlist[index].id}',
+                                                                  style: Styles
+                                                                      .black16(
+                                                                          context),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                            Row(
+                                                              children: [
+                                                                Text(
+                                                                  'จำนวน : ${cartlist[index].qty.toStringAsFixed(0)} ${cartlist[index].unit}',
+                                                                  style: Styles
+                                                                      .black16(
+                                                                          context),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                            Row(
+                                                              children: [
+                                                                Text(
+                                                                  'ราคา : ${cartlist[index].price}',
+                                                                  style: Styles
+                                                                      .black16(
+                                                                          context),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .end,
+                                                          children: [
+                                                            ElevatedButton(
+                                                              onPressed:
+                                                                  () async {
+                                                                setModalState(
+                                                                    () {
+                                                                  if (cartlist[
+                                                                              index]
+                                                                          .qty >
+                                                                      1) {
+                                                                    cartlist[
+                                                                            index]
+                                                                        .qty--;
+                                                                  }
+                                                                });
+                                                                await _reduceCart(
+                                                                    cartlist[
+                                                                        index],
+                                                                    setModalState);
+                                                              },
+                                                              style:
+                                                                  ElevatedButton
+                                                                      .styleFrom(
+                                                                shape:
+                                                                    const CircleBorder(
+                                                                  side: BorderSide(
+                                                                      color: Colors
+                                                                          .grey,
+                                                                      width: 1),
+                                                                ), // ✅ Makes the button circular
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                        .all(8),
+                                                                backgroundColor:
+                                                                    Colors
+                                                                        .white, // Button color
+                                                              ),
+                                                              child: const Icon(
+                                                                Icons.remove,
+                                                                size: 24,
+                                                                color:
+                                                                    Colors.grey,
+                                                              ), // Example
+                                                            ),
+                                                            Container(
+                                                              padding:
+                                                                  EdgeInsets
+                                                                      .all(4),
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                border:
+                                                                    Border.all(
+                                                                  color: Colors
+                                                                      .grey,
+                                                                  width: 1,
+                                                                ),
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            16),
+                                                              ),
+                                                              width: 75,
+                                                              child: Text(
+                                                                '${cartlist[index].qty.toStringAsFixed(0)}',
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .center,
+                                                                style: Styles
+                                                                    .black18(
+                                                                  context,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            ElevatedButton(
+                                                              onPressed:
+                                                                  () async {
+                                                                await _addCartDu(
+                                                                    cartlist[
+                                                                        index],
+                                                                    setModalState);
+
+                                                                setModalState(
+                                                                    () {
+                                                                  cartlist[
+                                                                          index]
+                                                                      .qty++;
+                                                                });
+                                                              },
+                                                              style:
+                                                                  ElevatedButton
+                                                                      .styleFrom(
+                                                                shape:
+                                                                    const CircleBorder(
+                                                                  side: BorderSide(
+                                                                      color: Colors
+                                                                          .grey,
+                                                                      width: 1),
+                                                                ), // ✅ Makes the button circular
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                        .all(8),
+                                                                backgroundColor:
+                                                                    Colors
+                                                                        .white, // Button color
+                                                              ),
+                                                              child: const Icon(
+                                                                Icons.add,
+                                                                size: 24,
+                                                                color:
+                                                                    Colors.grey,
+                                                              ), // Example
+                                                            ),
+                                                            ElevatedButton(
+                                                              onPressed:
+                                                                  () async {
+                                                                await _deleteCart(
+                                                                    cartlist[
+                                                                        index],
+                                                                    setModalState);
+
+                                                                setModalState(
+                                                                  () {
+                                                                    cartList.removeWhere((item) => (item.id ==
+                                                                            cartlist[index]
+                                                                                .id &&
+                                                                        item.unit ==
+                                                                            cartlist[index].unit));
+                                                                  },
+                                                                );
+                                                                await _getTotalCart(
+                                                                    setModalState);
+
+                                                                if (cartList
+                                                                        .length ==
+                                                                    0) {
+                                                                  Navigator.pop(
+                                                                      context);
+                                                                }
+                                                              },
+                                                              style:
+                                                                  ElevatedButton
+                                                                      .styleFrom(
+                                                                shape:
+                                                                    const CircleBorder(
+                                                                  side: BorderSide(
+                                                                      color: Colors
+                                                                          .red,
+                                                                      width: 1),
+                                                                ),
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                        .all(8),
+                                                                backgroundColor:
+                                                                    Colors
+                                                                        .white, // Button color
+                                                              ),
+                                                              child: const Icon(
+                                                                Icons.delete,
+                                                                size: 24,
+                                                                color:
+                                                                    Colors.red,
+                                                              ), // Example
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                            // Container(
+                                            //   color: Colors.red,
+                                            //   width: 50,
+                                            //   height: 100,
+                                            //   child: Center(
+                                            //     child: Icon(
+                                            //       Icons.delete,
+                                            //       color: Colors.white,
+                                            //       size: 25,
+                                            //     ),
+                                            //   ),
+                                            // ),
+                                          ],
+                                        ),
+                                        Divider(
+                                          color: Colors.grey[200],
+                                          thickness: 1,
+                                          indent: 16,
+                                          endIndent: 16,
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                ),
                               ))
                             ],
                           ),

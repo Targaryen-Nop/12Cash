@@ -195,9 +195,17 @@ class StoreCard extends StatelessWidget {
                 '${store.storeInfo.name}',
                 style: Styles.black18(context),
               ),
-              Text(
-                '${store.storeInfo.address}',
-                style: Styles.black18(context),
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      '${store.storeInfo.address}',
+                      style: Styles.black18(context),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

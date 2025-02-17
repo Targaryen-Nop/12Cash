@@ -1,0 +1,2 @@
+C:/Users/nopparat.mun/Projects/Mobile Application/12Cash/android/app/.cxx/Debug/f13101d5/x86/CMakeFiles/edit_cache.dir
+C:/Users/nopparat.mun/Projects/Mobile Application/12Cash/android/app/.cxx/Debug/f13101d5/x86/CMakeFiles/rebuild_cache.dir

@@ -1,0 +1,2 @@
+C:/Users/nopparat.mun/Projects/Mobile Application/12Cash/android/app/.cxx/RelWithDebInfo/6t6m2t5i/armeabi-v7a/CMakeFiles/edit_cache.dir
+C:/Users/nopparat.mun/Projects/Mobile Application/12Cash/android/app/.cxx/RelWithDebInfo/6t6m2t5i/armeabi-v7a/CMakeFiles/rebuild_cache.dir

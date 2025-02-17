@@ -89,7 +89,7 @@ class InvoiceCard extends StatelessWidget {
                                         ? 'store.store_card_new.agree'.tr()
                                         : item.status == 'Reject'
                                             ? 'store.store_card_new.reject'.tr()
-                                            : '${item.status}'.tr(),
+                                            : '${item.status}',
                                     style: Styles.white18(context),
                                     textAlign: TextAlign.center,
                                   ),
@@ -103,9 +103,13 @@ class InvoiceCard extends StatelessWidget {
                           ),
                           Row(
                             children: [
-                              Text(
-                                "${item.storeAddress}",
-                                style: Styles.black18(context),
+                              Expanded(
+                                child: Text(
+                                  "${item.storeAddress}",
+                                  style: Styles.black18(context),
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                ),
                               ),
                             ],
                           ),

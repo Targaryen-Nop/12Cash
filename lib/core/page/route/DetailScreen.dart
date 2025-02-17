@@ -441,7 +441,7 @@ class _DetailScreenState extends State<DetailScreen> {
                                     },
                                   ),
                                   Text(
-                                    'ยังไม่เปิดให้ใช้งาน',
+                                    'ยังไม่มีการเอาเข้าข้อมูลจริง',
                                     style: Styles.black12(context),
                                   )
                                 ],

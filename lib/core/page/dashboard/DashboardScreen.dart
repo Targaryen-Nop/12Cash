@@ -16,6 +16,7 @@ import 'package:_12sale_app/core/page/NotificationScreen.dart';
 import 'package:_12sale_app/core/page/Ractangle3D.dart';
 import 'package:_12sale_app/core/page/printer/PrinterScreen.dart';
 import 'package:_12sale_app/core/page/setting/SettingScreen.dart';
+import 'package:_12sale_app/core/page/withdraw/WithDrawScreen.dart';
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:_12sale_app/data/models/Customer.dart';
 import 'package:_12sale_app/data/models/Shipping.dart';
@@ -154,9 +155,11 @@ class _DashboardscreenState extends State<Dashboardscreen> {
         title_1: "dashboard.menu.sale_report".tr(),
         icon_1: Icons.description,
         onTap1: () {
-          // Navigator.of(context).push(
-          //   MaterialPageRoute(builder: (context) => NotificationScreen()),
-          // );
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => WithDrawScreen(),
+            ),
+          );
         },
         title_2: "dashboard.menu.data_analysis".tr(),
         icon_2: Icons.equalizer,
