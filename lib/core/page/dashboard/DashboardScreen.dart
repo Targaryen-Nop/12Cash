@@ -152,8 +152,8 @@ class _DashboardscreenState extends State<Dashboardscreen> {
   Widget build(BuildContext context) {
     List<Widget> menuList = [
       MenuDashboard(
-        title_1: "dashboard.menu.sale_report".tr(),
-        icon_1: Icons.description,
+        title_1: "เบิกสินค้า",
+        icon_1: Icons.local_shipping,
         onTap1: () {
           Navigator.of(context).push(
             MaterialPageRoute(
@@ -243,6 +243,27 @@ class _DashboardscreenState extends State<Dashboardscreen> {
             //     ),
             //   ),
             // ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: menuList.asMap().entries.map((entry) {
+                return GestureDetector(
+                  onTap: () => _controller.animateToPage(entry.key),
+                  child: Container(
+                    width: 12.0,
+                    height: 12.0,
+                    margin: const EdgeInsets.symmetric(horizontal: 4.0),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: (Theme.of(context).brightness == Brightness.dark
+                              ? Colors.white
+                              : Colors.black)
+                          .withOpacity(_current == entry.key ? 0.9 : 0.4),
+                    ),
+                  ),
+                );
+              }).toList(),
+            ),
+            SizedBox(height: screenWidth / 37),
             CarouselSlider(
               items: menuList.map((item) => item).toList(),
               carouselController: _controller,
@@ -260,28 +281,8 @@ class _DashboardscreenState extends State<Dashboardscreen> {
                 viewportFraction: 1.0, // Show one row fully at a time
               ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: menuList.asMap().entries.map((entry) {
-                return GestureDetector(
-                  onTap: () => _controller.animateToPage(entry.key),
-                  child: Container(
-                    width: 12.0,
-                    height: 12.0,
-                    margin: const EdgeInsets.symmetric(horizontal: 4.0),
-                    decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: (Theme.of(context).brightness == Brightness.dark
-                                ? Colors.white
-                                : Colors.black)
-                            .withOpacity(_current == entry.key ? 0.9 : 0.4)),
-                  ),
-                );
-              }).toList(),
-            ),
-            // SizedBox(height: screenWidth / 20),
-            SizedBox(height: screenWidth / 37),
-            const WeightCudeCard(),
+
+            // const WeightCudeCard(),
             // SizedBox(height: screenWidth / 25),
             // SizedBox(height: 500, width: 400, child: LineChartSample()),
             // SizedBox(height: screenWidth / 25),

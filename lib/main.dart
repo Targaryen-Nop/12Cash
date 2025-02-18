@@ -10,6 +10,7 @@ import 'package:_12sale_app/core/page/Square3D.dart';
 import 'package:_12sale_app/core/page/announce/Announce.dart';
 import 'package:_12sale_app/core/page/order/CheckOutScreen.dart';
 import 'package:_12sale_app/core/page/order/CreateOrderScreen.dart';
+import 'package:_12sale_app/core/page/order/ExamplePrint.dart';
 import 'package:_12sale_app/core/page/order/TestScroll.dart';
 import 'package:_12sale_app/core/page/printer/BluetoothPrinterScreen.dart';
 import 'package:_12sale_app/core/page/printer/PrinterBixolon.dart';

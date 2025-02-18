@@ -885,32 +885,46 @@ class _OrderOutRouteScreenState extends State<OrderINRouteScreen>
                                       child: Column(
                                         children: [
                                           Expanded(
-                                            child: Scrollbar(
-                                              controller:
-                                                  _productScrollController,
-                                              thickness: 10,
-                                              thumbVisibility: true,
-                                              trackVisibility: true,
-                                              radius: Radius.circular(16),
-                                              child: ListView.builder(
-                                                controller:
-                                                    _productScrollController,
-                                                itemCount:
-                                                    (productList.length / 2)
-                                                        .ceil(),
-                                                itemBuilder: (context, index) {
-                                                  final firstIndex = index * 2;
-                                                  final secondIndex =
-                                                      firstIndex + 1;
-                                                  return Row(
-                                                    children: [
+                                            child: ListView.builder(
+                                              itemCount:
+                                                  (productList.length / 2)
+                                                      .ceil(),
+                                              itemBuilder: (context, index) {
+                                                final firstIndex = index * 2;
+                                                final secondIndex =
+                                                    firstIndex + 1;
+                                                return Row(
+                                                  children: [
+                                                    Expanded(
+                                                      child:
+                                                          OrderMenuListVerticalCard(
+                                                        item: productList[
+                                                            firstIndex],
+                                                        onDetailsPressed:
+                                                            () async {
+                                                          setState(() {
+                                                            selectedUnit = '';
+                                                            selectedSize = '';
+                                                            price = 0.00;
+                                                            count = 1;
+                                                            total = 0.00;
+                                                          });
+
+                                                          _showProductSheet(
+                                                              context,
+                                                              productList[
+                                                                  firstIndex]);
+                                                        },
+                                                      ),
+                                                    ),
+                                                    if (secondIndex <
+                                                        productList.length)
                                                       Expanded(
                                                         child:
                                                             OrderMenuListVerticalCard(
                                                           item: productList[
-                                                              firstIndex],
-                                                          onDetailsPressed:
-                                                              () async {
+                                                              secondIndex],
+                                                          onDetailsPressed: () {
                                                             setState(() {
                                                               selectedUnit = '';
                                                               selectedSize = '';
@@ -918,48 +932,21 @@ class _OrderOutRouteScreenState extends State<OrderINRouteScreen>
                                                               count = 1;
                                                               total = 0.00;
                                                             });
-
                                                             _showProductSheet(
                                                                 context,
                                                                 productList[
-                                                                    firstIndex]);
+                                                                    secondIndex]);
                                                           },
                                                         ),
+                                                      )
+                                                    else
+                                                      Expanded(
+                                                        child:
+                                                            SizedBox(), // Placeholder for spacing if no second card
                                                       ),
-                                                      if (secondIndex <
-                                                          productList.length)
-                                                        Expanded(
-                                                          child:
-                                                              OrderMenuListVerticalCard(
-                                                            item: productList[
-                                                                secondIndex],
-                                                            onDetailsPressed:
-                                                                () {
-                                                              setState(() {
-                                                                selectedUnit =
-                                                                    '';
-                                                                selectedSize =
-                                                                    '';
-                                                                price = 0.00;
-                                                                count = 1;
-                                                                total = 0.00;
-                                                              });
-                                                              _showProductSheet(
-                                                                  context,
-                                                                  productList[
-                                                                      secondIndex]);
-                                                            },
-                                                          ),
-                                                        )
-                                                      else
-                                                        Expanded(
-                                                          child:
-                                                              SizedBox(), // Placeholder for spacing if no second card
-                                                        ),
-                                                    ],
-                                                  );
-                                                },
-                                              ),
+                                                  ],
+                                                );
+                                              },
                                             ),
                                           )
 
@@ -984,35 +971,25 @@ class _OrderOutRouteScreenState extends State<OrderINRouteScreen>
                                       child: Column(
                                         children: [
                                           Expanded(
-                                            child: Scrollbar(
-                                              thickness: 10,
-                                              thumbVisibility: true,
-                                              trackVisibility: true,
-                                              radius: Radius.circular(16),
-                                              controller:
-                                                  _productListScrollController,
-                                              child: ListView.builder(
-                                                controller:
-                                                    _productListScrollController,
-                                                itemCount: productList.length,
-                                                itemBuilder: (context, index) {
-                                                  return OrderMenuListCard(
-                                                    product: productList[index],
-                                                    onTap: () {
-                                                      print(productList[index]);
-                                                      setState(() {
-                                                        selectedUnit = '';
-                                                        selectedSize = '';
-                                                        price = 0.00;
-                                                        count = 1;
-                                                        total = 0.00;
-                                                      });
-                                                      _showProductSheet(context,
-                                                          productList[index]);
-                                                    },
-                                                  );
-                                                },
-                                              ),
+                                            child: ListView.builder(
+                                              itemCount: productList.length,
+                                              itemBuilder: (context, index) {
+                                                return OrderMenuListCard(
+                                                  product: productList[index],
+                                                  onTap: () {
+                                                    print(productList[index]);
+                                                    setState(() {
+                                                      selectedUnit = '';
+                                                      selectedSize = '';
+                                                      price = 0.00;
+                                                      count = 1;
+                                                      total = 0.00;
+                                                    });
+                                                    _showProductSheet(context,
+                                                        productList[index]);
+                                                  },
+                                                );
+                                              },
                                             ),
                                           ),
                                         ],

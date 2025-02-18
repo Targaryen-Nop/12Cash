@@ -6,6 +6,51 @@ import 'package:flutter/material.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
 class AllAlert {
+  static void customAlert(
+      BuildContext context, String title, String desc, Function fuc) {
+    Alert(
+      context: context,
+      title: title,
+      style: AlertStyle(
+        animationType: AnimationType.grow,
+        isCloseButton: true,
+        isOverlayTapDismiss: false,
+        descStyle: Styles.black18(context),
+        descTextAlign: TextAlign.start,
+        animationDuration: const Duration(milliseconds: 400),
+        alertBorder: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(22.0),
+          side: const BorderSide(
+            color: Colors.grey,
+          ),
+        ),
+        titleStyle: Styles.headerBlack32(context),
+        alertAlignment: Alignment.center,
+      ),
+      desc: desc,
+      buttons: [
+        DialogButton(
+          onPressed: () => Navigator.pop(context),
+          color: Styles.failTextColor,
+          child: Text(
+            "store.processtimeline_screen.alert.cancel".tr(),
+            style: Styles.white18(context),
+          ),
+        ),
+        DialogButton(
+          onPressed: () async {
+            await fuc();
+          },
+          color: Styles.successButtonColor,
+          child: Text(
+            "store.processtimeline_screen.alert.submit".tr(),
+            style: Styles.white18(context),
+          ),
+        )
+      ],
+    ).show();
+  }
+
   static void editAlert(BuildContext context, Function fuc) {
     Alert(
       context: context,

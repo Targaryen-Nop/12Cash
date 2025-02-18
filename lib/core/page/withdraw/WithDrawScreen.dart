@@ -1,4 +1,5 @@
 import 'package:_12sale_app/core/components/Appbar.dart';
+import 'package:_12sale_app/core/components/BoxShadowCustom.dart';
 import 'package:_12sale_app/core/components/card/WeightCude.dart';
 import 'package:_12sale_app/core/components/switch/example_1.dart';
 import 'package:_12sale_app/core/components/switch/example_10.dart';
@@ -19,6 +20,7 @@ import 'package:_12sale_app/core/components/switch/second_screen.dart';
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:flutter/material.dart';
 import 'package:custom_sliding_segmented_control/custom_sliding_segmented_control.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class WithDrawScreen extends StatefulWidget {
   const WithDrawScreen({super.key});
@@ -28,6 +30,7 @@ class WithDrawScreen extends StatefulWidget {
 }
 
 class _WithDrawScreenState extends State<WithDrawScreen> {
+  int isSelect = 1;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,61 +41,109 @@ class _WithDrawScreenState extends State<WithDrawScreen> {
           icon: Icons.store_mall_directory_rounded,
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        shape: CircleBorder(),
+        backgroundColor: Styles.primaryColor,
+        child: const Icon(
+          Icons.add,
+          color: Styles.white,
+        ),
+        onPressed: () {},
+      ),
       body: LayoutBuilder(
         builder: (BuildContext context, BoxConstraints viewportConstraints) {
-          return Container(
-            padding: const EdgeInsets.all(8.0),
-            margin: const EdgeInsets.all(8.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Example15(),
-                const SizedBox(height: 16),
-                const Example14(),
-                const SizedBox(height: 16),
-                const Example12(),
-                const SizedBox(height: 16),
-                const Example3(),
-                const SizedBox(height: 16),
-                const Example1(),
-                const SizedBox(height: 16),
-                const Example2(),
-                const SizedBox(height: 16),
-                const Example4(),
-                const SizedBox(height: 16),
-                const Example5(),
-                const SizedBox(height: 16),
-                const Example6(),
-                const SizedBox(height: 16),
-                const Example7(),
-                const SizedBox(height: 16),
-                const Example8(),
-                const SizedBox(height: 16),
-                const Example9(),
-                const SizedBox(height: 16),
-                const Example10(),
-                const SizedBox(height: 16),
-                const Example11(),
-                const SizedBox(height: 16),
-                const Directionality(
-                  textDirection: TextDirection.rtl,
-                  child: Example13(),
-                ),
-                const SizedBox(height: 16),
-                const Example13(),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).push<void>(
-                      MaterialPageRoute(
-                        builder: (context) {
-                          return const SecondView();
-                        },
+          return SingleChildScrollView(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                minHeight: viewportConstraints.maxHeight,
+              ),
+              child: Container(
+                padding: const EdgeInsets.all(8.0),
+                margin: const EdgeInsets.all(8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const WeightCudeCard(),
+                    const SizedBox(height: 10),
+                    CustomSlidingSegmentedControl<int>(
+                      initialValue: 1,
+                      isStretch: true,
+                      children: {
+                        1: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              FontAwesomeIcons.clock,
+                              color: isSelect == 1
+                                  ? Styles.primaryColor
+                                  : Styles.white,
+                            ),
+                            SizedBox(width: 8),
+                            Text(
+                              'รอส่ง',
+                              style: isSelect == 1
+                                  ? Styles.headerPirmary18(context)
+                                  : Styles.headerWhite18(context),
+                            )
+                          ],
+                        ),
+                        2: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.description,
+                              color: isSelect == 2
+                                  ? Styles.primaryColor
+                                  : Styles.white,
+                            ),
+                            SizedBox(width: 8),
+                            Text(
+                              'ประวัติ',
+                              style: isSelect == 2
+                                  ? Styles.headerPirmary18(context)
+                                  : Styles.headerWhite18(context),
+                            ),
+                          ],
+                        )
+                      },
+                      onValueChanged: (v) {
+                        setState(() {
+                          isSelect = v;
+                        });
+                        print(v);
+                      },
+                      decoration: BoxDecoration(
+                        color: Styles.grey,
+                        borderRadius: BorderRadius.circular(8),
                       ),
-                    );
-                  },
-                  child: const Text('Go to second screen'),
+                      thumbDecoration: BoxDecoration(
+                        color: Styles.white,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      duration: const Duration(milliseconds: 300),
+                    ),
+                    const SizedBox(height: 10),
+                    BoxShadowCustom(
+                      child: Container(
+                        height: viewportConstraints.maxHeight * 0.4,
+                        child: Column(
+                          children: [
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Container(
+                                    child: Text("dw"),
+                                  ),
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
           );
         },
