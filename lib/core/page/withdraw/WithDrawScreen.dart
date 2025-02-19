@@ -17,6 +17,7 @@ import 'package:_12sale_app/core/components/switch/example_7.dart';
 import 'package:_12sale_app/core/components/switch/example_8.dart';
 import 'package:_12sale_app/core/components/switch/example_9.dart';
 import 'package:_12sale_app/core/components/switch/second_screen.dart';
+import 'package:_12sale_app/core/page/withdraw/ProductWithdrowScreen.dart';
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:flutter/material.dart';
 import 'package:custom_sliding_segmented_control/custom_sliding_segmented_control.dart';
@@ -48,7 +49,14 @@ class _WithDrawScreenState extends State<WithDrawScreen> {
           Icons.add,
           color: Styles.white,
         ),
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ProductWithdrowScreen(),
+            ),
+          );
+        },
       ),
       body: LayoutBuilder(
         builder: (BuildContext context, BoxConstraints viewportConstraints) {

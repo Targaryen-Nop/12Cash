@@ -37,30 +37,6 @@ class Product {
     required this.updatedDate,
   });
 
-  // ✅ Convert JSON to Dart Object
-  // factory Product.fromJson(Map<String, dynamic> json) {
-  //   return Product(
-  //     id: json['id'],
-  //     name: json['name'],
-  //     group: json['group'],
-  //     brand: json['brand'],
-  //     size: json['size'],
-  //     flavour: json['flavour'],
-  //     type: json['type'],
-  //     weightGross: json['weightGross'],
-  //     weightNet: json['weightNet'],
-  //     statusSale: json['statusSale'],
-  //     statusWithdraw: json['statusWithdraw'],
-  //     statusRefund: json['statusRefund'],
-  //     image: json['image'],
-  //     listUnit: (json['listUnit'] as List<dynamic>)
-  //         .map((unit) => Unit.fromJson(unit))
-  //         .toList(),
-  //     createdDate: DateTime.parse(json['createdDate']),
-  //     updatedDate: DateTime.parse(json['updatedDate']),
-  //   );
-  // }
-
   factory Product.fromJson(Map<String, dynamic> json) {
     return Product(
       id: json['id'] ?? '', // ✅ Default to empty string if null
@@ -144,10 +120,10 @@ class Unit {
   // ✅ Convert JSON to Dart Object
   factory Unit.fromJson(Map<String, dynamic> json) {
     return Unit(
-      unit: json['unit'],
-      name: json['name'],
-      factor: json['factor'],
-      price: json['price'],
+      unit: json['unit'] ?? '',
+      name: json['name'] ?? '',
+      factor: json['factor'] ?? '',
+      price: json['price'] ?? '',
     );
   }
 

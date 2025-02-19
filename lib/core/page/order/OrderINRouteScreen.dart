@@ -257,7 +257,7 @@ class _OrderOutRouteScreenState extends State<OrderINRouteScreen>
       }
     } catch (e) {
       setState(() {
-        totalCart = 00.00;
+        // totalCart = 00.00;
         cartList = [];
       });
 
@@ -1780,7 +1780,7 @@ class _OrderOutRouteScreenState extends State<OrderINRouteScreen>
                                                             ElevatedButton(
                                                               onPressed:
                                                                   () async {
-                                                                await _addCartDu(
+                                                                await _reduceCart(
                                                                     cartlist[
                                                                         index],
                                                                     setModalState);

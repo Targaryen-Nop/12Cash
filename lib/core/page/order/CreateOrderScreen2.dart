@@ -590,7 +590,9 @@ class _CreateOrderScreen2State extends State<CreateOrderScreen2>
                             // color: Colors.red,
                             child: Padding(
                               padding: const EdgeInsets.symmetric(
-                                  vertical: 16.0, horizontal: 16.0),
+                                vertical: 16.0,
+                                horizontal: 16.0,
+                              ),
                               child: Column(
                                 children: [
                                   Row(
