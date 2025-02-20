@@ -45,12 +45,12 @@ class _WeightCudeCardState extends State<WeightCudeCard> {
               tag: 'rectangle',
               child: GestureDetector(
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => UtilzedDetail(),
-                    ),
-                  );
+                  // Navigator.push(
+                  //   context,
+                  //   MaterialPageRoute(
+                  //     builder: (context) => UtilzedDetail(),
+                  //   ),
+                  // );
                 },
                 child: WaterFilledRectangle(
                   isWithdraw: true,

@@ -11,7 +11,7 @@ import 'package:_12sale_app/core/components/search/ProductSearch.dart';
 import 'package:_12sale_app/core/components/search/StoreSearch.dart';
 import 'package:_12sale_app/core/page/order/CheckOutScreen.dart';
 import 'package:_12sale_app/core/page/order/CreateOrderScreen.dart';
-import 'package:_12sale_app/core/page/order/CreateOrderScreen2.dart';
+import 'package:_12sale_app/core/page/order/CreateOrderScreen.dart';
 import 'package:_12sale_app/core/page/route/ShoppingCartScreen.dart';
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:_12sale_app/data/models/User.dart';
@@ -19,6 +19,7 @@ import 'package:_12sale_app/data/models/order/Cart.dart';
 import 'package:_12sale_app/data/models/order/Product.dart';
 import 'package:_12sale_app/data/service/apiService.dart';
 import 'package:_12sale_app/main.dart';
+import 'package:custom_sliding_segmented_control/custom_sliding_segmented_control.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_debouncer/flutter_debouncer.dart';
@@ -58,6 +59,7 @@ class _OrderOutRouteScreenState extends State<OrderOutRouteScreen>
   List<String> selectedFlavours = [];
 
   bool _isGridView = false;
+  int _isSelectedGridView = 1;
 
   double count = 1;
   double price = 0;
@@ -168,9 +170,7 @@ class _OrderOutRouteScreenState extends State<OrderOutRouteScreen>
             },
           );
           if (response.statusCode == 200) {
-            setState(() {
-              totalCart = response.data['data']['total'].toDouble();
-            });
+            await _getTotalCart(setModalState);
             toastification.show(
               autoCloseDuration: const Duration(seconds: 5),
               context: context,
@@ -182,7 +182,6 @@ class _OrderOutRouteScreenState extends State<OrderOutRouteScreen>
                 style: Styles.green18(context),
               ),
             );
-            await _getTotalCart(setModalState);
           }
         },
       );
@@ -213,11 +212,11 @@ class _OrderOutRouteScreenState extends State<OrderOutRouteScreen>
       );
       if (response.statusCode == 200) {
         setState(() {
-          totalCart = response.data['data']['total'].toDouble();
+          totalCart = response.data['data'][0]['total'].toDouble();
         });
         setModalState(
           () {
-            totalCart = response.data['data']['total'].toDouble();
+            totalCart = response.data['data'][0]['total'].toDouble();
           },
         );
       }
@@ -240,9 +239,9 @@ class _OrderOutRouteScreenState extends State<OrderOutRouteScreen>
         method: 'GET',
       );
       if (response.statusCode == 200) {
-        final List<dynamic> data = response.data['data']['listProduct'];
+        final List<dynamic> data = response.data['data'][0]['listProduct'];
         setState(() {
-          totalCart = response.data['data']['total'].toDouble();
+          totalCart = response.data['data'][0]['total'].toDouble();
           cartList = data.map((item) => CartList.fromJson(item)).toList();
         });
       }
@@ -271,7 +270,7 @@ class _OrderOutRouteScreenState extends State<OrderOutRouteScreen>
           "unit": "${selectedUnit}"
         },
       );
-      print("Response add Cart: ${response.data['data']['listProduct']}");
+      // print("Response add Cart: ${response.data['data']['listProduct']}");
       if (response.statusCode == 200) {
         toastification.show(
           autoCloseDuration: const Duration(seconds: 5),
@@ -285,9 +284,9 @@ class _OrderOutRouteScreenState extends State<OrderOutRouteScreen>
           ),
         );
 
-        final List<dynamic> data = response.data['data']['listProduct'];
+        final List<dynamic> data = response.data['data'][0]['listProduct'];
         setState(() {
-          totalCart = response.data['data']['total'].toDouble();
+          totalCart = response.data['data'][0]['total'].toDouble();
           cartList = data.map((item) => CartList.fromJson(item)).toList();
         });
       }
@@ -378,74 +377,56 @@ class _OrderOutRouteScreenState extends State<OrderOutRouteScreen>
   }
 
   Future<void> _getFliter() async {
-    ApiService apiService = ApiService();
-    await apiService.init();
+    try {
+      ApiService apiService = ApiService();
+      await apiService.init();
 
-    var response = await apiService.request(
-      endpoint: 'api/cash/product/filter',
-      method: 'POST',
-    );
+      var response = await apiService.request(
+        endpoint: 'api/cash/product/filter',
+        method: 'POST',
+      );
 
-    if (response.statusCode == 200) {
-      final List<dynamic> dataGroup = response.data['data']['group'];
-      // final List<dynamic> dataBrand = response.data['data'][0]['brand'];
-      // final List<dynamic> dataSize = response.data['data'][0]['size'];
-      // final List<dynamic> dataFlavour = response.data['data'][0]['flavour'];
-      print("_getFliter: ${response.data['data']}");
-      if (mounted) {
-        setState(() {
-          groupList = List<String>.from(dataGroup);
-          // brandList = List<String>.from(dataBrand);
-          // sizeList = List<String>.from(dataSize);
-          // flavourList = List<String>.from(dataFlavour);
-        });
+      if (response.statusCode == 200) {
+        final List<dynamic> dataGroup = response.data['data']['group'];
+        // final List<dynamic> dataBrand = response.data['data'][0]['brand'];
+        // final List<dynamic> dataSize = response.data['data'][0]['size'];
+        // final List<dynamic> dataFlavour = response.data['data'][0]['flavour'];
+        print("_getFliter: ${response.data['data']}");
+        if (mounted) {
+          setState(() {
+            groupList = List<String>.from(dataGroup);
+            // brandList = List<String>.from(dataBrand);
+            // sizeList = List<String>.from(dataSize);
+            // flavourList = List<String>.from(dataFlavour);
+          });
+        }
+        // Timer(const Duration(milliseconds: 500), () {
+        //   if (mounted) {
+        //     setState(() {
+        //       _loadingAllStore = false;
+        //     });
+        //   }
+        // });
+        print("groupList: $groupList");
+        // print("listStore: ${data.length}");
       }
-      // Timer(const Duration(milliseconds: 500), () {
-      //   if (mounted) {
-      //     setState(() {
-      //       _loadingAllStore = false;
-      //     });
-      //   }
-      // });
-      print("groupList: $groupList");
-      // print("listStore: ${data.length}");
-    }
+    } catch (e) {}
   }
 
   Future<void> _getFliterGroup() async {
-    ApiService apiService = ApiService();
-    await apiService.init();
-    var response = await apiService.request(
-      endpoint: 'api/cash/product/filter',
-      method: 'POST',
-      body: {
-        "group": selectedGroups,
-        "brand": selectedBrands,
-        "size": selectedSize,
-        "flavour": selectedFlavours,
-      },
-    );
-    setState(() {
-      selectedBrands = [];
-      selectedSizes = [];
-      selectedFlavours = [];
-      brandList = [];
-      sizeList = [];
-      flavourList = [];
-    });
-    if (response.statusCode == 200) {
-      final List<dynamic> dataBrand = response.data['data']['brand'];
-      final List<dynamic> dataSize = response.data['data']['size'];
-      final List<dynamic> dataFlavour = response.data['data']['flavour'];
-      if (mounted) {
-        setState(() {
-          brandList = List<String>.from(dataBrand);
-          sizeList = List<String>.from(dataSize);
-          flavourList = List<String>.from(dataFlavour);
-        });
-      }
-    }
-    if (selectedGroups.length == 0) {
+    try {
+      ApiService apiService = ApiService();
+      await apiService.init();
+      var response = await apiService.request(
+        endpoint: 'api/cash/product/filter',
+        method: 'POST',
+        body: {
+          "group": selectedGroups,
+          "brand": selectedBrands,
+          "size": selectedSize,
+          "flavour": selectedFlavours,
+        },
+      );
       setState(() {
         selectedBrands = [];
         selectedSizes = [];
@@ -454,69 +435,95 @@ class _OrderOutRouteScreenState extends State<OrderOutRouteScreen>
         sizeList = [];
         flavourList = [];
       });
-    }
+      if (response.statusCode == 200) {
+        final List<dynamic> dataBrand = response.data['data']['brand'];
+        final List<dynamic> dataSize = response.data['data']['size'];
+        final List<dynamic> dataFlavour = response.data['data']['flavour'];
+        if (mounted) {
+          setState(() {
+            brandList = List<String>.from(dataBrand);
+            sizeList = List<String>.from(dataSize);
+            flavourList = List<String>.from(dataFlavour);
+          });
+        }
+      }
+      if (selectedGroups.length == 0) {
+        setState(() {
+          selectedBrands = [];
+          selectedSizes = [];
+          selectedFlavours = [];
+          brandList = [];
+          sizeList = [];
+          flavourList = [];
+        });
+      }
+    } catch (e) {}
   }
 
   Future<void> _getFliterBrand() async {
-    ApiService apiService = ApiService();
-    await apiService.init();
-    var response = await apiService.request(
-      endpoint: 'api/cash/product/filter',
-      method: 'POST',
-      body: {
-        "group": selectedGroups,
-        "brand": selectedBrands,
-        "size": selectedSize,
-        "flavour": selectedFlavours,
-      },
-    );
-    setState(() {
-      selectedSizes = [];
-      selectedFlavours = [];
-      sizeList = [];
-      flavourList = [];
-    });
+    try {
+      ApiService apiService = ApiService();
+      await apiService.init();
+      var response = await apiService.request(
+        endpoint: 'api/cash/product/filter',
+        method: 'POST',
+        body: {
+          "group": selectedGroups,
+          "brand": selectedBrands,
+          "size": selectedSize,
+          "flavour": selectedFlavours,
+        },
+      );
+      setState(() {
+        selectedSizes = [];
+        selectedFlavours = [];
+        sizeList = [];
+        flavourList = [];
+      });
 
-    if (response.statusCode == 200) {
-      final List<dynamic> dataSize = response.data['data']['size'];
-      final List<dynamic> dataFlavour = response.data['data']['flavour'];
-      if (mounted) {
-        setState(() {
-          sizeList = List<String>.from(dataSize);
-          flavourList = List<String>.from(dataFlavour);
-        });
+      if (response.statusCode == 200) {
+        final List<dynamic> dataSize = response.data['data']['size'];
+        final List<dynamic> dataFlavour = response.data['data']['flavour'];
+        if (mounted) {
+          setState(() {
+            sizeList = List<String>.from(dataSize);
+            flavourList = List<String>.from(dataFlavour);
+          });
+        }
       }
-    }
-    // _getProduct();
+      // _getProduct();
+    } catch (e) {}
   }
 
   Future<void> _getFliterSize() async {
-    ApiService apiService = ApiService();
-    await apiService.init();
-    var response = await apiService.request(
-      endpoint: 'api/cash/product/filter',
-      method: 'POST',
-      body: {
-        "group": selectedGroups,
-        "brand": selectedBrands,
-        "size": selectedSize,
-        "flavour": selectedFlavours,
-      },
-    );
-    setState(() {
-      selectedFlavours = [];
-      flavourList = [];
-    });
+    try {
+      ApiService apiService = ApiService();
+      await apiService.init();
+      var response = await apiService.request(
+        endpoint: 'api/cash/product/filter',
+        method: 'POST',
+        body: {
+          "group": selectedGroups,
+          "brand": selectedBrands,
+          "size": selectedSize,
+          "flavour": selectedFlavours,
+        },
+      );
+      setState(() {
+        selectedFlavours = [];
+        flavourList = [];
+      });
 
-    if (response.statusCode == 200) {
-      final List<dynamic> dataFlavour = response.data['data']['flavour'];
-      if (mounted) {
-        setState(() {
-          flavourList = List<String>.from(dataFlavour);
-        });
+      if (response.statusCode == 200) {
+        final List<dynamic> dataFlavour = response.data['data']['flavour'];
+        if (mounted) {
+          setState(() {
+            flavourList = List<String>.from(dataFlavour);
+          });
+        }
       }
-    }
-    // _getProduct();
+      // _getProduct();
+    } catch (e) {}
   }
 
   Future<void> _clearFilter() async {
@@ -809,51 +816,56 @@ class _OrderOutRouteScreenState extends State<OrderOutRouteScreen>
                                   Expanded(
                                     child: Row(
                                       mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Column(
-                                          children: [
-                                            // Text("มุมมอง",
-                                            //     style: Styles.black18(context)),
-                                            GestureDetector(
-                                              onTap: () {
-                                                if (!_isGridView) {
-                                                  setState(() {
-                                                    _isGridView = true;
-                                                  });
-                                                } else {
-                                                  setState(() {
-                                                    _isGridView = false;
-                                                  });
-                                                }
-                                              },
-                                              child: Container(
-                                                margin:
-                                                    const EdgeInsets.all(8.0),
-                                                height: 50,
-                                                width: 70,
-                                                decoration: BoxDecoration(
-                                                  color: Colors.white,
-                                                  border: Border.all(
-                                                    color: Colors.grey,
-                                                    width: 1,
-                                                  ),
-                                                  borderRadius:
-                                                      BorderRadius.circular(16),
-                                                ),
-                                                padding:
-                                                    const EdgeInsets.all(8.0),
-                                                child: Icon(
-                                                  _isGridView
-                                                      ? FontAwesomeIcons
-                                                          .tableList
-                                                      : FontAwesomeIcons
-                                                          .tableCellsLarge,
-                                                  color: Colors.grey,
-                                                ),
-                                              ),
+                                        SizedBox(
+                                          width: 10,
+                                        ),
+                                        CustomSlidingSegmentedControl<int>(
+                                          initialValue: 1,
+                                          fixedWidth: 50,
+                                          children: {
+                                            1: Icon(
+                                              FontAwesomeIcons.tableList,
+                                              color: _isSelectedGridView == 1
+                                                  ? Styles.primaryColor
+                                                  : Styles.white,
                                             ),
-                                          ],
+                                            2: Icon(
+                                              FontAwesomeIcons.tableCellsLarge,
+                                              color: _isSelectedGridView == 2
+                                                  ? Styles.primaryColor
+                                                  : Styles.white,
+                                            ),
+                                          },
+                                          onValueChanged: (v) {
+                                            if (_isSelectedGridView != v) {
+                                              if (!_isGridView) {
+                                                setState(() {
+                                                  _isGridView = true;
+                                                });
+                                              } else {
+                                                setState(() {
+                                                  _isGridView = false;
+                                                });
+                                              }
+                                            }
+                                            setState(() {
+                                              _isSelectedGridView = v;
+                                            });
+                                          },
+                                          decoration: BoxDecoration(
+                                            color: Styles.primaryColor,
+                                            borderRadius:
+                                                BorderRadius.circular(8),
+                                          ),
+                                          thumbDecoration: BoxDecoration(
+                                            color: Styles.white,
+                                            borderRadius:
+                                                BorderRadius.circular(8),
+                                          ),
+                                          duration:
+                                              const Duration(milliseconds: 500),
                                         ),
                                       ],
                                     ),
@@ -1054,12 +1066,12 @@ class _OrderOutRouteScreenState extends State<OrderOutRouteScreen>
                                         blackGroundColor: Styles.primaryColor,
                                         textStyle: Styles.white18(context),
                                         onPressed: () {
-                                          if (selectedStoreId != "") {
+                                          if (cartList.isNotEmpty) {
                                             Navigator.push(
                                               context,
                                               MaterialPageRoute(
                                                 builder: (context) =>
-                                                    CreateOrderScreen2(
+                                                    CreateOrderScreen(
                                                         storeId:
                                                             selectedStoreId,
                                                         storeName:
@@ -1456,12 +1468,13 @@ class _OrderOutRouteScreenState extends State<OrderOutRouteScreen>
                                                   Styles.primaryColor,
                                               textStyle:
                                                   Styles.white18(context),
-                                              onPressed: () {
+                                              onPressed: () async {
                                                 print(
                                                     "selectedSize $selectedSize");
                                                 if (selectedSize != "" &&
                                                     selectedStoreId != "") {
-                                                  _addCart(product);
+                                                  await _addCart(product);
+                                                  await _getCart();
                                                 } else {
                                                   toastification.show(
                                                     autoCloseDuration:

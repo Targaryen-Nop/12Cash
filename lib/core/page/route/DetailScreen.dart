@@ -441,7 +441,7 @@ class _DetailScreenState extends State<DetailScreen> {
                                     },
                                   ),
                                   Text(
-                                    'ยังไม่มีการเอาเข้าข้อมูลจริง',
+                                    'ทดสอบระบบ',
                                     style: Styles.black12(context),
                                   )
                                 ],

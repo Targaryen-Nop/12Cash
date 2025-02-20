@@ -4,7 +4,9 @@ import 'package:_12sale_app/core/components/Appbar.dart';
 import 'package:_12sale_app/core/components/BoxShadowCustom.dart';
 import 'package:_12sale_app/core/components/Loading.dart';
 import 'package:_12sale_app/core/components/alert/AllAlert.dart';
+import 'package:_12sale_app/core/page/withdraw/WithDrawScreen.dart';
 import 'package:_12sale_app/core/styles/style.dart';
+import 'package:_12sale_app/core/utils/tost_util.dart';
 import 'package:_12sale_app/data/models/User.dart';
 import 'package:_12sale_app/data/models/withdraw/OptionType.dart';
 import 'package:_12sale_app/data/models/withdraw/Shipping.dart';
@@ -16,6 +18,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_debouncer/flutter_debouncer.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:loader_overlay/loader_overlay.dart';
 import 'package:toastification/toastification.dart';
 
 import '../../../data/models/order/Cart.dart';
@@ -222,6 +225,89 @@ class _CheckoutWithdrawScreenState extends State<CheckoutWithdrawScreen> {
     }
   }
 
+  Future<void> _checkout() async {
+    try {
+      List<String> missingFields = [];
+      if (isType != "T04") {
+        if (addressShipping.isEmpty) {
+          missingFields.add("ที่อยู่");
+        }
+      }
+      if (isShippingId.isEmpty) {
+        missingFields.add("");
+      }
+      if (isWithdrawType.isEmpty) {
+        missingFields.add("ประเภทการเบิก");
+      }
+      if (_selectedDate == null) {
+        missingFields.add("วันที่");
+      }
+      if (noteController.text.isEmpty) {
+        missingFields.add("หมายเหตุ");
+      }
+      if (missingFields.isNotEmpty) {
+        showToast(
+          context: context,
+          message: 'กรุณาใส่ ${missingFields.join(', ')}',
+          type: ToastificationType.error,
+          primaryColor: Colors.red,
+        );
+      } else {
+        context.loaderOverlay.show();
+        await fetchLocation();
+        ApiService apiService = ApiService();
+        await apiService.init();
+        var response = await apiService.request(
+            endpoint: 'api/cash/distribution/checkout',
+            method: 'POST',
+            body: {
+              "type": "withdraw",
+              "area": "${User.area}",
+              "shippingId": "${isShippingId}",
+              "withdrawType": "${isWithdrawType}",
+              "sendDate": "${DateFormat("yyyy-MM-dd").format(_selectedDate!)}",
+              "note": "${noteController.text}",
+              "latitude": "${latitude}",
+              "longitude": "${longitude}"
+            });
+        if (response.statusCode == 200) {
+          toastification.show(
+            autoCloseDuration: const Duration(seconds: 5),
+            context: context,
+            primaryColor: Colors.green,
+            type: ToastificationType.success,
+            style: ToastificationStyle.flatColored,
+            title: Text(
+              "ส่งเบิกสินค้าสำเร็จ",
+              style: Styles.green18(context),
+            ),
+          );
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const WithDrawScreen(),
+            ),
+            (route) => route.isFirst, // Keeps only the first route
+          );
+        }
+      }
+    } catch (e) {
+      toastification.show(
+        autoCloseDuration: const Duration(seconds: 5),
+        context: context,
+        primaryColor: Colors.red,
+        type: ToastificationType.error,
+        style: ToastificationStyle.flatColored,
+        title: Text(
+          "เกิดข้อผิดพลาด $e",
+          style: Styles.red18(context),
+        ),
+      );
+
+      print("Error $e");
+    }
+  }
+
   Future<void> _getType() async {
     try {
       ApiService apiService = ApiService();
@@ -332,17 +418,18 @@ class _CheckoutWithdrawScreenState extends State<CheckoutWithdrawScreen> {
                         context,
                         "store.processtimeline_screen.alert.title".tr(),
                         "คุณต้องการจะเบิกสินค้าใช่หรือไม่ ?", () async {
-                      await fetchLocation();
-                      print({
-                        "type": "withdraw",
-                        "area": "${User.area}",
-                        "shippingId": "${isShippingId}",
-                        "note": noteController.text != ''
-                            ? noteController.text
-                            : '',
-                        "latitude": "${latitude}",
-                        "longitude": "${longitude}"
-                      });
+                      await _checkout();
+                      // print({
+                      //   "type": "withdraw",
+                      //   "area": "${User.area}",
+                      //   "shippingId": "${isShippingId}",
+                      //   "withdrawType": "${isWithdrawType}",
+                      //   "sendDate":
+                      //       "${DateFormat("yyyy-MM-dd").format(_selectedDate!)}",
+                      //   "note": "${noteController.text}",
+                      //   "latitude": "${latitude}",
+                      //   "longitude": "${longitude}"
+                      // });
                     });
                   },
                   child: Padding(
@@ -1066,8 +1153,8 @@ class _CheckoutWithdrawScreenState extends State<CheckoutWithdrawScreen> {
       locale: Locale('th', 'TH'),
       context: context,
       initialDate: DateTime.now(),
-      firstDate: DateTime(2025),
-      lastDate: DateTime(2026),
+      firstDate: DateTime(DateTime.now().year),
+      lastDate: DateTime(DateTime.now().year + 3),
       initialEntryMode: DatePickerEntryMode.calendarOnly,
       builder: (BuildContext context, Widget? child) {
         return Theme(

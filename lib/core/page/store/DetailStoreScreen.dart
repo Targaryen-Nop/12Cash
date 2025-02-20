@@ -453,7 +453,7 @@ class _DetailStoreScreenState extends State<DetailStoreScreen> {
                                           MenuButton(
                                             icon: Icons.store_rounded,
                                             label: "เช็คอิน",
-                                            color: Styles.successButtonColor,
+                                            color: Styles.primaryColor,
                                             onPressed: () async {
                                               await fetchLocation();
                                               AllAlert.checkinAlert(
@@ -472,25 +472,66 @@ class _DetailStoreScreenState extends State<DetailStoreScreen> {
                                             icon:
                                                 Icons.add_shopping_cart_rounded,
                                             label: "ขาย",
-                                            // color: Colors.teal,
-                                            color: Styles.grey,
+                                            color: Styles.success!,
+                                            // color: Styles.grey,
                                             onPressed: () {
-                                              // Navigator.push(
-                                              //   context,
-                                              //   MaterialPageRoute(
-                                              //     builder: (context) =>
-                                              //         OrderINRouteScreen(
-                                              //       storeDetail:
-                                              //           DetailStoreVisit(
-                                              //             area:
-                                              //           ),
-                                              //     ),
-                                              //   ),
-                                              // );
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      OrderINRouteScreen(
+                                                    storeDetail:
+                                                        DetailStoreVisit(
+                                                            id: '',
+                                                            period: '',
+                                                            area: '',
+                                                            day: '',
+                                                            listStore: [
+                                                              ListStore(
+                                                                  storeInfo: StoreInfo(
+                                                                      id: '',
+                                                                      storeId:
+                                                                          widget
+                                                                              .customerNo,
+                                                                      name: widget
+                                                                          .customerName,
+                                                                      taxId: widget
+                                                                          .store
+                                                                          .taxId,
+                                                                      tel: widget
+                                                                          .store
+                                                                          .tel,
+                                                                      typeName: widget
+                                                                          .store
+                                                                          .typeName,
+                                                                      address: widget
+                                                                          .store
+                                                                          .address),
+                                                                  note: widget
+                                                                      .store
+                                                                      .note,
+                                                                  status: widget
+                                                                      .store
+                                                                      .status,
+                                                                  statusText:
+                                                                      '',
+                                                                  listOrder: [])
+                                                            ],
+                                                            storeAll: 0,
+                                                            storePending: 0,
+                                                            storeSell: 0,
+                                                            storeNotSell: 0,
+                                                            storeTotal: 0,
+                                                            percentComplete: 0,
+                                                            percentEffective: 0,
+                                                            percentVisit: 0),
+                                                  ),
+                                                ),
+                                              );
                                             },
                                           ),
                                           Text(
-                                            'ยังไม่มีการเอาเข้าข้อมูลจริง',
+                                            'ทดสอบระบบ',
                                             style: Styles.black12(context),
                                           ),
                                         ],

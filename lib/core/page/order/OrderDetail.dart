@@ -13,6 +13,7 @@ import 'package:charset_converter/charset_converter.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:loader_overlay/loader_overlay.dart';
 import 'package:print_bluetooth_thermal/print_bluetooth_thermal.dart';
 
 class OrderDetailScreen extends StatefulWidget {
@@ -140,7 +141,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
               .map((cartItem) => {
                     "name": cartItem.name,
                     "qty": cartItem.qty.toString(),
-                    "unit": cartItem.unit,
+                    "unit": cartItem.unitName,
                     "price": cartItem.price.toStringAsFixed(2),
                     "discount": cartItem.discount.toStringAsFixed(2),
                     "discountProduct": cartItem.netTotal.toStringAsFixed(2)
@@ -157,7 +158,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
               receiptData["items"].add({
                 "name": item.name,
                 "qty": item.qty.toString(),
-                "unit": item.unit,
+                "unit": item.unitName,
                 "price": "00.00",
                 "discount": "00.00",
                 "discountProduct": "00.00"
@@ -167,6 +168,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
         });
         print(receiptData);
         Timer(const Duration(milliseconds: 500), () {
+          context.loaderOverlay.hide();
           if (mounted) {
             setState(() {
               _loadOrderDetail = false;
@@ -187,22 +189,6 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
   final int paperWidthHeader = 76;
 
   static const String encoding = 'TIS-620';
-  final List<String> vowelAndToneMark = [
-    '่',
-    '้',
-    '๊',
-    '๋',
-    'ั',
-    '็',
-    'ิ',
-    'ี',
-    'ุ',
-    'ู',
-    'ึ',
-    'ื',
-    '์',
-    '.'
-  ];
 
   final Map<String, dynamic> receiptData = {
     "customer": {
@@ -268,24 +254,6 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
 
   // --------------------------- Printer Test--------------------------
 
-  final List<String> vowelAndToneMark2 = [
-    '่',
-    '้',
-    '๊',
-    '๋',
-    'ั',
-    '็',
-    'ิ',
-    'ี',
-    'ุ',
-    'ู',
-    'ึ',
-    'ื',
-    '์',
-    'ำ',
-    '้ำ',
-    'ี๋',
-  ];
   final List<String> combinedCharacters = ['ี๋'];
 
   // int _getNoOfUpperLowerChars(String text) {
@@ -309,14 +277,6 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
   //   return counter;
   // }
 
-  int _getNoOfUpperLowerChars(String text) {
-    int counter = 0;
-    for (var char in vowelAndToneMark2) {
-      counter += char.allMatches(text).length;
-    }
-    return counter;
-  }
-
   Future<void> printBetween(String frontText, String backText,
       {int fontSize = 1, bool isBold = false}) async {
     int frontSpaces = paperWidth ~/ 2 + _getNoOfUpperLowerChars(frontText);
@@ -327,14 +287,16 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     await _printText(formattedText, fontSize: fontSize, isBold: isBold);
   }
 
-  String formatFixedWidthRow2(String itemName, String qty, String unit,
-      String price, String discount, String total) {
-    const int nameWidth = 31;
+  String formatFixedWidthRow2(String num, String itemName, String qty,
+      String unit, String price, String discount, String total) {
+    const int numWidth = 3;
+    const int nameWidth = 25;
     const int qtyWidth = 3;
     const int unitWidth = 5;
     const int priceWidth = 8;
     const int discountWidth = 8;
-    const int totalWidth = 8;
+    const int totalWidth = 9;
+
     List<String> wrapText(String text, int width) {
       List<String> lines = [];
       for (int i = 0; i < text.length; i += width) {
@@ -345,35 +307,120 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     }
 
     List<String> itemNameLines = wrapText(itemName, nameWidth);
-    for (var i = 0; i < itemNameLines.length; i++) {
-      for (var j = itemNameLines[i].length; j < nameWidth; j++) {
-        itemNameLines[i] += ' ';
-      }
-    }
 
+    // Ensure all wrapped lines are properly padded
+    itemNameLines = itemNameLines.map((line) {
+      return line.padRight(nameWidth + _getNoOfUpperLowerChars(line));
+    }).toList();
+    String formattedNum = num.padRight(numWidth);
     String formattedQty = qty.padLeft(qtyWidth);
     String formattedUnit =
         unit.padRight(unitWidth + _getNoOfUpperLowerChars(unit));
     String formattedPrice = price.padLeft(priceWidth);
     String formattedDiscount = discount.padLeft(discountWidth);
     String formattedTotal = total.padLeft(totalWidth);
-    // Format each line with wrapped itemName
+
     StringBuffer rowBuffer = StringBuffer();
     for (int i = 0; i < itemNameLines.length; i++) {
-      // First line includes all columns, subsequent lines only contain `itemName`
-      rowBuffer.write(
-          itemNameLines[i].padRight(18 + _getNoOfUpperLowerChars(itemName)));
       if (i == 0) {
-        // First line includes other columns
+        rowBuffer.write(formattedNum);
+      }
+      if (i > 0) {
+        rowBuffer.write(''.padRight(numWidth));
+      }
+
+      rowBuffer.write(itemNameLines[i]);
+
+      if (i == 0) {
+        // First line includes all columns
         rowBuffer.write(
-            '${'   $formattedQty'}${' $formattedUnit'}${'  $formattedPrice'}${' $formattedDiscount'}${' $formattedTotal'}\n');
+            '   $formattedQty $formattedUnit  $formattedPrice $formattedDiscount $formattedTotal\n');
       } else {
-        // Subsequent lines only contain the item name to create a wrapped effect
-        rowBuffer.write('\n');
+        // Subsequent lines only contain the wrapped item name
+
+        // rowBuffer.write('\n');
       }
     }
+
     return rowBuffer.toString();
   }
+
+  int _getNoOfUpperLowerChars(String text) {
+    int counter =
+        text.split('').where((char) => vowelAndToneMark.contains(char)).length;
+    return counter;
+  }
+
+  final List<String> vowelAndToneMark = [
+    '่',
+    '้',
+    '๊',
+    '๋',
+    'ั',
+    '็',
+    'ิ',
+    'ี',
+    'ุ',
+    'ู',
+    'ึ',
+    'ื',
+    '์',
+    '.'
+  ];
+
+  // int _getNoOfUpperLowerChars(String text) {
+  //   int counter = 0;
+  //   for (var char in vowelAndToneMark) {
+  //     counter += char.allMatches(text).length;
+  //   }
+  //   return counter;
+  // }
+
+  // String formatFixedWidthRow2(String itemName, String qty, String unit,
+  //     String price, String discount, String total) {
+  //   const int nameWidth = 31;
+  //   const int qtyWidth = 3;
+  //   const int unitWidth = 5;
+  //   const int priceWidth = 8;
+  //   const int discountWidth = 8;
+  //   const int totalWidth = 8;
+
+  //   List<String> wrapText(String text, int width) {
+  //     List<String> lines = [];
+  //     for (int i = 0; i < text.length; i += width) {
+  //       lines.add(text.substring(
+  //           i, i + width > text.length ? text.length : i + width));
+  //     }
+  //     return lines;
+  //   }
+
+  //   List<String> itemNameLines = wrapText(itemName, nameWidth);
+  //   for (var i = 0; i < itemNameLines.length; i++) {
+  //     while (itemNameLines[i].length < nameWidth) {
+  //       itemNameLines[i] += ' ';
+  //     }
+  //   }
+
+  //   String formattedQty = qty.padLeft(qtyWidth);
+  //   String formattedUnit =
+  //       unit.padRight(unitWidth + _getNoOfUpperLowerChars(unit));
+  //   String formattedPrice = price.padLeft(priceWidth);
+  //   String formattedDiscount = discount.padLeft(discountWidth);
+  //   String formattedTotal = total.padLeft(totalWidth);
+
+  //   StringBuffer rowBuffer = StringBuffer();
+  //   for (int i = 0; i < itemNameLines.length; i++) {
+  //     rowBuffer.write(itemNameLines[i].padRight(nameWidth));
+
+  //     if (i == 0) {
+  //       rowBuffer.write(
+  //           ' $formattedQty  $formattedUnit  $formattedPrice  $formattedDiscount  $formattedTotal\n');
+  //     } else {
+  //       rowBuffer.write('\n');
+  //     }
+  //   }
+  //   return rowBuffer.toString();
+  // }
 
   Future<void> _printText(String text,
       {int fontSize = 1, bool isBold = false, int newLine = 1}) async {
@@ -429,14 +476,17 @@ ${centerText('เอกสารออกเป็นชุด', paperWidthHeade
   }
 
   Future<void> printBodyBill(Map<String, dynamic> data) async {
-//     await printBetween('รหัสลูกค้า ${data['customer']['customercode']}',
-//         'เลขที่ ${data['CUOR']}');
-//     await printBetween('ชื่อลูกค้า ${data['customer']['customername']}',
-//         'วันที่ ${data['OAORDT']}');
-//     await printBill(
-//         'ที่อยู่ ${data['customer']['address1']} ${data['customer']['address2']} ${data['customer']['address3']}');
+    await printBetween('รหัสลูกค้า ${data['customer']['customercode']}',
+        'เลขที่ ${data['CUOR']}');
+    await printBetween('ชื่อลูกค้า ${data['customer']['customername']}',
+        'วันที่ ${data['OAORDT']}');
+    await printBill(
+        'ที่อยู่ ${data['customer']['address1']} ${data['customer']['address2']} ${data['customer']['address3']}');
+    await printBill('เลขประจำตัวผู้เสียภาษี ${data['customer']['ก']}');
+    await printBill(
+        "\nรายการสินค้า${' ' * (21)}จำนวน${' ' * (10)}ราคา${' ' * (4)}ส่วนลด${' ' * (7)}รวม");
 //     String body = '''
-// รายการสินค้า${' ' * (21)}จำนวน${' ' * (10)}ราคา${' ' * (4)}ส่วนลด${' ' * (6)}รวม
+// \nรายการสินค้า${' ' * (21)}จำนวน${' ' * (10)}ราคา${' ' * (4)}ส่วนลด${' ' * (7)}รวม
 // ''';
 //     Uint8List encodedBody = await CharsetConverter.encode('TIS-620', body);
 //     await PrintBluetoothThermal.writeBytes(List<int>.from(encodedBody));
@@ -447,7 +497,8 @@ ${centerText('เอกสารออกเป็นชุด', paperWidthHeade
       // Safely get a substring only if the length is greater than 36
       String itemName = item['name'];
       return formatFixedWidthRow2(
-        '${(index + 1).toString()} $itemName',
+        "${(index + 1).toString()}",
+        '$itemName',
         item['qty'],
         item['unit'],
         item['price'],
@@ -458,21 +509,29 @@ ${centerText('เอกสารออกเป็นชุด', paperWidthHeade
     Uint8List encodedItems = await CharsetConverter.encode('TIS-620', items);
     await PrintBluetoothThermal.writeBytes(List<int>.from(encodedItems));
 
-    // double? totalValue = double.tryParse(data['totaltext'] ?? "00.00");
-    // String totalText = thaiNumberToWords(totalValue!);
-    // await printBetween('รวมมูลค่าสินค้า', data['ex_vat'].toString());
+    double? totalValue = double.tryParse(data['totaltext'] ?? "00.00");
+    String totalText = thaiNumberToWords(totalValue!);
+    String? totalCurrency =
+        " ${NumberFormat.currency(locale: 'th_TH', symbol: '').format(double.tryParse(data['totaltext'] ?? "00.00"))}";
+    String? discountCurrency =
+        " ${NumberFormat.currency(locale: 'th_TH', symbol: '').format(double.tryParse(data['discount'] ?? "00.00"))}";
+
+    String? discountProduct =
+        " ${NumberFormat.currency(locale: 'th_TH', symbol: '').format(double.tryParse(data['discountProduct'] ?? "00.00"))}";
+
+    await printBetween('รวมมูลค่าสินค้า', data['ex_vat'].toString());
     // await printBetween('ส่วนลด', '0.00');
-    // await printBetween('ภาษีมูลค่าเพิ่ม 7%', data['vat'].toString());
-    // await printBetween('ส่วนลดท้ายบิล', data['discountProduct'].toString());
-    // await printBetween('ส่วนลดร้านค้า', data['discount'].toString());
-    // await printBetween('จำนวนเงินรวมสุทธิ', data['total'].toString());
-    // await printBetween("", "($totalText)");
-    // String footer = '''
-    // ${leftRightText('ผู้รับเงิน ${data['OBSMCD']}', '.........................', 70)}
-    // ${leftRightText('', 'ลายเซ็นลูกค้า', 58)}
-    // ''';
-    // Uint8List encodedFooter = await CharsetConverter.encode('TIS-620', footer);
-    // await PrintBluetoothThermal.writeBytes(List<int>.from(encodedFooter));
+    await printBetween('ภาษีมูลค่าเพิ่ม 7%', data['vat'].toString());
+    await printBetween('ส่วนลดท้ายบิล', discountProduct);
+    await printBetween('ส่วนลดสินค้า', discountCurrency);
+    await printBetween('จำนวนเงินรวมสุทธิ', totalCurrency);
+    await printBetween("", "($totalText)");
+    String footer = '''
+    ${leftRightText('ผู้รับเงิน ${data['OBSMCD']}', '.........................', 70)}
+    ${leftRightText('', 'ลายเซ็นลูกค้า', 58)}
+    ''';
+    Uint8List encodedFooter = await CharsetConverter.encode('TIS-620', footer);
+    await PrintBluetoothThermal.writeBytes(List<int>.from(encodedFooter));
   }
 
   Future<void> printBill(String text,
@@ -555,7 +614,7 @@ ${centerText('เอกสารออกเป็นชุด', paperWidthHeade
     bool connectionStatus = await PrintBluetoothThermal.connectionStatus;
     if (connectionStatus) {
       // await printHeaderSeparator();
-      // await printHeaderBill('บิลเงินสด/ใบกำกับภาษี');
+      await printHeaderBill('บิลเงินสด/ใบกำกับภาษี');
       await printBodyBill(receiptData);
       // await printHeaderSeparator();
       // await printHeaderBill('ใบลดหนี้');
@@ -1142,246 +1201,148 @@ ${centerText('เอกสารออกเป็นชุด', paperWidthHeade
                 ],
               ),
             ),
-            Column(
-              children: [
-                Padding(
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: BoxShadowCustom(
+                child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: BoxShadowCustom(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                "รวมมูลค่าสินค้า",
-                                style: Styles.grey18(context),
-                              ),
-                              Text(
-                                "฿${NumberFormat.currency(locale: 'th_TH', symbol: '').format(subtotal)} บาท",
-                                style: Styles.grey18(context),
-                              )
-                            ],
+                          Text(
+                            "รวมมูลค่าสินค้า",
+                            style: Styles.grey18(context),
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                "ภาษีมูลค่าเพิ่ม 7% (VAT)",
-                                style: Styles.grey18(context),
-                              ),
-                              Text(
-                                "฿${NumberFormat.currency(locale: 'th_TH', symbol: '').format(vat)} บาท",
-                                style: Styles.grey18(context),
-                              )
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                "รวมมูลค่าสินค้าก่อนหักภาษี",
-                                style: Styles.grey18(context),
-                              ),
-                              Text(
-                                "฿${NumberFormat.currency(locale: 'th_TH', symbol: '').format(totalExVat)} บาท",
-                                style: Styles.grey18(context),
-                              )
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                "ส่วนลดท้ายบิล",
-                                style: Styles.red18(context),
-                              ),
-                              Text(
-                                "฿${NumberFormat.currency(locale: 'th_TH', symbol: '').format(discount)} บาท",
-                                style: Styles.red18(context),
-                              )
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                "ส่วนลดสินค้า",
-                                style: Styles.red18(context),
-                              ),
-                              Text(
-                                "฿${NumberFormat.currency(locale: 'th_TH', symbol: '').format(discountProduct)} บาท",
-                                style: Styles.red18(context),
-                              )
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                "จำนวนเงินรวมสุทธิ",
-                                style: Styles.green24(context),
-                              ),
-                              Text(
-                                "฿${NumberFormat.currency(locale: 'th_TH', symbol: '').format(total)} บาท",
-                                style: Styles.green24(context),
-                              )
-                            ],
-                          ),
-                          // Row(
-                          //   children: [
-                          //     Text(
-                          //       "ชำระเงินโดย",
-                          //       style: Styles.black18(context),
-                          //     ),
-                          //   ],
-                          // ),
-                          // Row(
-                          //   children: [
-                          //     Expanded(
-                          //       child: Container(
-                          //         width: double.infinity,
-                          //         child: ElevatedButton(
-                          //           style: ElevatedButton.styleFrom(
-                          //             padding:
-                          //                 const EdgeInsets.all(0),
-                          //             elevation:
-                          //                 0, // Disable shadow
-                          //             shadowColor: Colors
-                          //                 .transparent, // Ensure no shadow color
-                          //             backgroundColor: Colors.white,
-                          //             shape: RoundedRectangleBorder(
-                          //               borderRadius: BorderRadius
-                          //                   .zero, // No rounded corners
-                          //               side: BorderSide
-                          //                   .none, // Remove border
-                          //             ),
-                          //           ),
-                          //           child: Row(
-                          //             mainAxisAlignment:
-                          //                 MainAxisAlignment
-                          //                     .spaceBetween,
-                          //             children: [
-                          //               Row(
-                          //                 children: [
-                          //                   ClipRRect(
-                          //                     borderRadius:
-                          //                         BorderRadius
-                          //                             .circular(8),
-                          //                     child: Image.network(
-                          //                       'https://jobbkk.com/upload/employer/0D/53D/03153D/images/202045.webp',
-                          //                       width: screenWidth /
-                          //                           15,
-                          //                       height:
-                          //                           screenWidth /
-                          //                               15,
-                          //                       fit: BoxFit.cover,
-                          //                       errorBuilder:
-                          //                           (context, error,
-                          //                               stackTrace) {
-                          //                         return const Center(
-                          //                           child: Icon(
-                          //                             Icons.error,
-                          //                             color: Colors
-                          //                                 .red,
-                          //                             size: 50,
-                          //                           ),
-                          //                         );
-                          //                       },
-                          //                     ),
-                          //                   ),
-                          //                   Text(
-                          //                     " QR พร้อมเพย์",
-                          //                     style: Styles.grey18(
-                          //                         context),
-                          //                   )
-                          //                 ],
-                          //               ),
-                          //               Icon(
-                          //                 Icons
-                          //                     .arrow_forward_ios_rounded,
-                          //                 color: Colors.black,
-                          //                 size: 20,
-                          //               )
-                          //             ],
-                          //           ),
-                          //           onPressed: () {
-                          //             Navigator.push(
-                          //               context,
-                          //               MaterialPageRoute(
-                          //                 builder: (context) =>
-                          //                     CheckOutScreen(),
-                          //               ),
-                          //             );
-                          //           },
-                          //         ),
-                          //       ),
-                          //     ),
-                          //   ],
-                          // ),
+                          Text(
+                            "฿${NumberFormat.currency(locale: 'th_TH', symbol: '').format(subtotal)} บาท",
+                            style: Styles.grey18(context),
+                          )
                         ],
                       ),
-                    ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "ภาษีมูลค่าเพิ่ม 7% (VAT)",
+                            style: Styles.grey18(context),
+                          ),
+                          Text(
+                            "฿${NumberFormat.currency(locale: 'th_TH', symbol: '').format(vat)} บาท",
+                            style: Styles.grey18(context),
+                          )
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "รวมมูลค่าสินค้าก่อนหักภาษี",
+                            style: Styles.grey18(context),
+                          ),
+                          Text(
+                            "฿${NumberFormat.currency(locale: 'th_TH', symbol: '').format(totalExVat)} บาท",
+                            style: Styles.grey18(context),
+                          )
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "ส่วนลดท้ายบิล",
+                            style: Styles.red18(context),
+                          ),
+                          Text(
+                            "฿${NumberFormat.currency(locale: 'th_TH', symbol: '').format(discount)} บาท",
+                            style: Styles.red18(context),
+                          )
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "ส่วนลดสินค้า",
+                            style: Styles.red18(context),
+                          ),
+                          Text(
+                            "฿${NumberFormat.currency(locale: 'th_TH', symbol: '').format(discountProduct)} บาท",
+                            style: Styles.red18(context),
+                          )
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "จำนวนเงินรวมสุทธิ",
+                            style: Styles.green24(context),
+                          ),
+                          Text(
+                            "฿${NumberFormat.currency(locale: 'th_TH', symbol: '').format(total)} บาท",
+                            style: Styles.green24(context),
+                          )
+                        ],
+                      ),
+                    ],
                   ),
                 ),
-              ],
+              ),
             ),
             _devices.isNotEmpty
-                ? Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: BoxShadowCustom(
-                        child: Container(
-                          height: screenHeight * 0.2,
-                          // color: Colors.red,
-                          child: Column(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      "อุปกรณ์ที่พบ",
+                ? Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: BoxShadowCustom(
+                      child: Container(
+                        height: screenHeight * 0.2,
+                        // color: Colors.red,
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    "อุปกรณ์ที่พบ",
+                                    style: Styles.black18(context),
+                                  ),
+                                  Text(
+                                    "${_devices.length} รายการ",
+                                    style: Styles.black18(context),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Expanded(
+                              child: ListView.builder(
+                                shrinkWrap: true,
+                                physics: ClampingScrollPhysics(),
+                                itemCount: _devices.length,
+                                itemBuilder: (context, index) {
+                                  final device = _devices[index];
+                                  return ListTile(
+                                    title: Text(
+                                      device.name ?? "Unknown Device",
                                       style: Styles.black18(context),
                                     ),
-                                    Text(
-                                      "${_devices.length} รายการ",
+                                    subtitle: Text(
+                                      device.macAdress,
                                       style: Styles.black18(context),
                                     ),
-                                  ],
-                                ),
+                                    trailing: _connected &&
+                                            _selectedDevice == device
+                                        ? Icon(Icons.check, color: Colors.green)
+                                        : null,
+                                    onTap: () => _connectToPrinter(device),
+                                  );
+                                },
                               ),
-                              Expanded(
-                                child: ListView.builder(
-                                  shrinkWrap: true,
-                                  physics: ClampingScrollPhysics(),
-                                  itemCount: _devices.length,
-                                  itemBuilder: (context, index) {
-                                    final device = _devices[index];
-                                    return ListTile(
-                                      title: Text(
-                                        device.name ?? "Unknown Device",
-                                        style: Styles.black18(context),
-                                      ),
-                                      subtitle: Text(
-                                        device.macAdress,
-                                        style: Styles.black18(context),
-                                      ),
-                                      trailing: _connected &&
-                                              _selectedDevice == device
-                                          ? Icon(Icons.check,
-                                              color: Colors.green)
-                                          : null,
-                                      onTap: () => _connectToPrinter(device),
-                                    );
-                                  },
-                                ),
-                              ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
@@ -1407,10 +1368,6 @@ ${centerText('เอกสารออกเป็นชุด', paperWidthHeade
                     ),
                   ),
                   onPressed: () async {
-                    // await _getOrderDetail();
-                    String text = "น้ำก๋วยเตี๋ยว";
-                    int count = _getNoOfUpperLowerChars(text);
-                    print(count); // Output should be 3
                     await printTest();
                   },
                   child: Padding(

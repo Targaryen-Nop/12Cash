@@ -6,6 +6,7 @@ import 'package:_12sale_app/core/components/Loading.dart';
 import 'package:_12sale_app/core/components/button/Button.dart';
 import 'package:_12sale_app/core/components/card/OrderMenuListCard.dart';
 import 'package:_12sale_app/core/components/card/OrderMenuListVerticalCard.dart';
+import 'package:_12sale_app/core/components/switch/example_5.dart';
 import 'package:_12sale_app/core/page/withdraw/CheckoutWithdrawScreen.dart';
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:_12sale_app/data/models/User.dart';
@@ -14,8 +15,10 @@ import 'package:_12sale_app/data/models/order/Product.dart';
 import 'package:_12sale_app/data/service/apiService.dart';
 import 'package:_12sale_app/data/service/locationService.dart';
 import 'package:_12sale_app/main.dart';
+import 'package:custom_sliding_segmented_control/custom_sliding_segmented_control.dart';
 
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_debouncer/flutter_debouncer.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -35,6 +38,7 @@ class _ProductWithdrowScreenState extends State<ProductWithdrowScreen>
   List<CartList> cartList = [];
   bool isLoading = true;
   bool _isGridView = false;
+  int _isSelectedGridView = 1;
   bool _loadingProduct = false;
   final Debouncer _debouncer = Debouncer();
 
@@ -1071,52 +1075,57 @@ class _ProductWithdrowScreenState extends State<ProductWithdrowScreen>
                                     Expanded(
                                       child: Row(
                                         mainAxisAlignment:
-                                            MainAxisAlignment.center,
+                                            MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Column(
-                                            children: [
-                                              // Text("มุมมอง",
-                                              //     style: Styles.black18(context)),
-                                              GestureDetector(
-                                                onTap: () {
-                                                  if (!_isGridView) {
-                                                    setState(() {
-                                                      _isGridView = true;
-                                                    });
-                                                  } else {
-                                                    setState(() {
-                                                      _isGridView = false;
-                                                    });
-                                                  }
-                                                },
-                                                child: Container(
-                                                  margin:
-                                                      const EdgeInsets.all(8.0),
-                                                  height: 50,
-                                                  width: 70,
-                                                  decoration: BoxDecoration(
-                                                    color: Colors.white,
-                                                    border: Border.all(
-                                                      color: Colors.grey,
-                                                      width: 1,
-                                                    ),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            16),
-                                                  ),
-                                                  padding:
-                                                      const EdgeInsets.all(8.0),
-                                                  child: Icon(
-                                                    _isGridView
-                                                        ? FontAwesomeIcons
-                                                            .tableList
-                                                        : FontAwesomeIcons
-                                                            .tableCellsLarge,
-                                                    color: Colors.grey,
-                                                  ),
-                                                ),
+                                          SizedBox(
+                                            width: 10,
+                                          ),
+                                          CustomSlidingSegmentedControl<int>(
+                                            initialValue: 1,
+                                            fixedWidth: 50,
+                                            children: {
+                                              1: Icon(
+                                                FontAwesomeIcons.tableList,
+                                                color: _isSelectedGridView == 1
+                                                    ? Styles.primaryColor
+                                                    : Styles.white,
                                               ),
-                                            ],
+                                              2: Icon(
+                                                FontAwesomeIcons
+                                                    .tableCellsLarge,
+                                                color: _isSelectedGridView == 2
+                                                    ? Styles.primaryColor
+                                                    : Styles.white,
+                                              ),
+                                            },
+                                            onValueChanged: (v) {
+                                              if (_isSelectedGridView != v) {
+                                                if (!_isGridView) {
+                                                  setState(() {
+                                                    _isGridView = true;
+                                                  });
+                                                } else {
+                                                  setState(() {
+                                                    _isGridView = false;
+                                                  });
+                                                }
+                                              }
+                                              setState(() {
+                                                _isSelectedGridView = v;
+                                              });
+                                            },
+                                            decoration: BoxDecoration(
+                                              color: Styles.primaryColor,
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                            ),
+                                            thumbDecoration: BoxDecoration(
+                                              color: Styles.white,
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                            ),
+                                            duration: const Duration(
+                                                milliseconds: 500),
                                           ),
                                         ],
                                       ),
