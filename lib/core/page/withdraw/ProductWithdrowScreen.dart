@@ -575,7 +575,7 @@ class _ProductWithdrowScreenState extends State<ProductWithdrowScreen>
                                                             Row(
                                                               children: [
                                                                 Text(
-                                                                  'id : ${cartlist[index].id}',
+                                                                  'รหัส: ${cartlist[index].id}',
                                                                   style: Styles
                                                                       .black16(
                                                                           context),
@@ -585,7 +585,7 @@ class _ProductWithdrowScreenState extends State<ProductWithdrowScreen>
                                                             Row(
                                                               children: [
                                                                 Text(
-                                                                  'จำนวน : ${cartlist[index].qty.toStringAsFixed(0)} ${cartlist[index].unit}',
+                                                                  'จำนวน: ${cartlist[index].qty.toStringAsFixed(0)} ${cartlist[index].unitName}',
                                                                   style: Styles
                                                                       .black16(
                                                                           context),

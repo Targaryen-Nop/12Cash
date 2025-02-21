@@ -26,7 +26,7 @@ class ReportScreen extends StatefulWidget {
 
 class _ReportScreenState extends State<ReportScreen> {
   bool _isSelected = false;
-
+  final ScrollController _scrollController = ScrollController();
   List<Orders> orders = [];
   bool _loadingAllStore = true;
   String period =
@@ -66,10 +66,18 @@ class _ReportScreenState extends State<ReportScreen> {
     super.initState();
     // _loadStoreData();
     _getStoreDataAll();
+
     // _pagingController.addPageRequestListener((pageKey) {
     //   _fetchPage(pageKey);
     // });
     // requestLocation();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    // TODO: implement dispose
+    super.dispose();
   }
 
   @override
@@ -78,40 +86,51 @@ class _ReportScreenState extends State<ReportScreen> {
     return Scaffold(
       backgroundColor:
           Colors.transparent, // set scaffold background color to transparent
-      body: Container(
-        margin: EdgeInsets.only(top: 20),
-        // child: Container(
-        //   padding: const EdgeInsets.all(8),
-        //   margin: EdgeInsets.all(screenWidth / 45),
-        //   width: screenWidth,
-        //   // color: Colors.red,
-        //   child: Column(
-        //     mainAxisAlignment: MainAxisAlignment.center,
-        //     children: [
-        //       Text(
-        //         "ยังไม่เปิดให้บริการ ",
-        //         style: Styles.black32(context),
-        //       ),
-        //     ],
-        //   ),
-        // ),
-        child: LoadingSkeletonizer(
-          loading: _loadingAllStore,
-          child: ListView.builder(
-            itemCount: orders.length,
-            itemBuilder: (context, index) {
-              return InvoiceCard(
-                item: orders[index],
-                onDetailsPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          OrderDetailScreen(orderId: orders[index].orderId),
-                    ),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Container(
+          margin: EdgeInsets.only(top: 20),
+          // child: Container(
+          //   padding: const EdgeInsets.all(8),
+          //   margin: EdgeInsets.all(screenWidth / 45),
+          //   width: screenWidth,
+          //   // color: Colors.red,
+          //   child: Column(
+          //     mainAxisAlignment: MainAxisAlignment.center,
+          //     children: [
+          //       Text(
+          //         "ยังไม่เปิดให้บริการ ",
+          //         style: Styles.black32(context),
+          //       ),
+          //     ],
+          //   ),
+          // ),
+          child: Scrollbar(
+            controller: _scrollController,
+            thumbVisibility: true,
+            trackVisibility: true,
+            thickness: 10,
+            radius: Radius.circular(16),
+            child: LoadingSkeletonizer(
+              loading: _loadingAllStore,
+              child: ListView.builder(
+                controller: _scrollController,
+                itemCount: orders.length,
+                itemBuilder: (context, index) {
+                  return InvoiceCard(
+                    item: orders[index],
+                    onDetailsPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              OrderDetailScreen(orderId: orders[index].orderId),
+                        ),
+                      );
+                    },
                   );
                 },
-              );
-            },
+              ),
+            ),
           ),
         ),
       ),

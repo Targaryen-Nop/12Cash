@@ -22,6 +22,7 @@ import 'package:_12sale_app/core/components/switch/example_8.dart';
 import 'package:_12sale_app/core/components/switch/example_9.dart';
 import 'package:_12sale_app/core/components/switch/second_screen.dart';
 import 'package:_12sale_app/core/page/withdraw/ProductWithdrowScreen.dart';
+import 'package:_12sale_app/core/page/withdraw/WithdrawDetailScreen.dart';
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:_12sale_app/data/models/User.dart';
 import 'package:_12sale_app/data/models/withdraw/Withdraw.dart';
@@ -197,12 +198,14 @@ class _WithDrawScreenState extends State<WithDrawScreen> {
                                     return WithDrawCard(
                                       item: withdrawList[index],
                                       onDetailsPressed: () {
-                                        // Navigator.of(context).push(
-                                        //   MaterialPageRoute(
-                                        //     builder: (context) => OrderDetailScreen(
-                                        //         orderId: orders[index].orderId),
-                                        //   ),
-                                        // );
+                                        Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                WithdrawDetailScreen(
+                                                    orderId: withdrawList[index]
+                                                        .orderId),
+                                          ),
+                                        );
                                       },
                                     );
                                   },

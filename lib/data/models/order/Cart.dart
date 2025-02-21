@@ -68,6 +68,7 @@ class CartList {
   final String flavour;
   double qty;
   final String unit;
+  final String unitName;
   final double price;
   final double total;
   final int qtyPcs;
@@ -81,6 +82,7 @@ class CartList {
     required this.flavour,
     required this.qty,
     required this.unit,
+    required this.unitName,
     required this.price,
     required this.total,
     required this.qtyPcs,
@@ -97,6 +99,7 @@ class CartList {
       flavour: json['flavour'],
       qty: json['qty'].toDouble(),
       unit: json['unit'],
+      unitName: json['unitName'] ?? '',
       price: json['price'].toDouble(),
       total: json['total'].toDouble(),
       qtyPcs: json['qtyPcs'] as int,
@@ -114,6 +117,7 @@ class CartList {
       'flavour': flavour,
       'qty': qty,
       'unit': unit,
+      'unitName': unitName,
       'price': price,
       'total': total,
       'qtyPcs': qtyPcs,

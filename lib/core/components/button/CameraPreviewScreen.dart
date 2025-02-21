@@ -68,14 +68,11 @@ class _CameraPreviewScreenState extends State<CameraPreviewScreen> {
                   child: Center(
                     child: AspectRatio(
                       aspectRatio: widget.cameraController.value.aspectRatio,
-                      child: FittedBox(
-                        fit: BoxFit.cover,
-                        child: SizedBox(
-                          width: screenSize.width,
-                          height: screenSize.width *
-                              widget.cameraController.value.aspectRatio,
-                          child: CameraPreview(widget.cameraController),
-                        ),
+                      child: SizedBox(
+                        width: screenSize.width,
+                        height: screenSize.width *
+                            widget.cameraController.value.aspectRatio,
+                        child: CameraPreview(widget.cameraController),
                       ),
                     ),
                   ),

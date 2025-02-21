@@ -14,6 +14,7 @@ import 'package:_12sale_app/core/components/chart/TrendingMusicChart.dart';
 import 'package:_12sale_app/core/page/HomeScreen.dart';
 import 'package:_12sale_app/core/page/NotificationScreen.dart';
 import 'package:_12sale_app/core/page/Ractangle3D.dart';
+import 'package:_12sale_app/core/page/printer/ManagePrinterScreen.dart';
 import 'package:_12sale_app/core/page/printer/PrinterScreen.dart';
 import 'package:_12sale_app/core/page/setting/SettingScreen.dart';
 import 'package:_12sale_app/core/page/withdraw/WithDrawScreen.dart';
@@ -161,12 +162,15 @@ class _DashboardscreenState extends State<Dashboardscreen> {
             ),
           );
         },
-        title_2: "dashboard.menu.data_analysis".tr(),
-        icon_2: Icons.equalizer,
+        title_2: "ตั้งค่าเครื่องปริ้น",
+        icon_2: Icons.print_rounded,
         onTap2: () {
-          // Navigator.of(context).push(
-          //   MaterialPageRoute(builder: (context) => const Testgridtable()),
-          // );
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ManagePrinterScreen(),
+            ),
+          );
         },
         title_3: "dashboard.menu.setting".tr(),
         icon_3: Icons.settings,

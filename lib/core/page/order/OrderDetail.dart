@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:_12sale_app/core/components/Appbar.dart';
 import 'package:_12sale_app/core/components/BoxShadowCustom.dart';
 import 'package:_12sale_app/core/components/Loading.dart';
+import 'package:_12sale_app/core/page/printer/ManagePrinterScreen.dart';
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:_12sale_app/data/models/User.dart';
 
@@ -15,6 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:print_bluetooth_thermal/print_bluetooth_thermal.dart';
+import 'package:toastification/toastification.dart';
 
 class OrderDetailScreen extends StatefulWidget {
   final orderId;
@@ -118,6 +120,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
           receiptData['customer']['address1'] = storeDetail?.address;
           receiptData['customer']['salecode'] = storeDetail?.storeId;
           receiptData['customer']['customercode'] = storeDetail?.storeId;
+          receiptData['customer']['taxno'] = storeDetail?.taxId;
           receiptData['CUOR'] = widget.orderId;
           receiptData['OAORDT'] =
               DateFormat('dd/MM/yyyy').format(DateTime.now());
@@ -215,11 +218,19 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
 
   Future<void> _fetchPairedDevices() async {
     try {
+      // _disconnectPrinter();
       final List<BluetoothInfo> pairedDevices =
           await PrintBluetoothThermal.pairedBluetooths;
+      print(User.devicePrinter.macAdress);
+      print(User.devicePrinter.name);
+      print(User.connectPrinter);
       setState(() {
         _devices = pairedDevices;
+        User.devicePrinter = _devices[0];
       });
+      if (!User.connectPrinter) {
+        await _connectToPrinter(User.devicePrinter);
+      }
     } catch (e) {
       print("Error fetching paired devices: $e");
     }
@@ -230,26 +241,60 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     print("Printer disconnected ($result)");
     setState(() {
       _connected = !result;
+      User.connectPrinter = !result;
       _selectedDevice = null;
     });
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text("Printer disconnected")),
+    toastification.show(
+      autoCloseDuration: const Duration(seconds: 5),
+      context: context,
+      primaryColor: Colors.red,
+      type: ToastificationType.error,
+      style: ToastificationStyle.flatColored,
+      title: Text(
+        "ยกเลิกการเชื่อมต่อ",
+        style: Styles.red18(context),
+      ),
     );
   }
 
   Future<void> _connectToPrinter(BluetoothInfo device) async {
-    bool result = await PrintBluetoothThermal.connect(
-        macPrinterAddress: device.macAdress);
-    setState(() {
-      _connected = result;
-      _selectedDevice = result ? device : null;
-    });
+    try {
+      bool result = await PrintBluetoothThermal.connect(
+          macPrinterAddress: device.macAdress);
+      setState(() {
+        User.connectPrinter = result;
+        _connected = result;
+        _selectedDevice = result ? device : null;
+      });
 
-    final snackBarText = result
-        ? "เชื่อมต่อแล้วกับอุปกรณ์ ${device.name}"
-        : "การเชื่อมต่อล้มเหลว ${device.name}";
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text(snackBarText)));
+      if (result) {
+        toastification.show(
+          autoCloseDuration: const Duration(seconds: 5),
+          context: context,
+          primaryColor: Colors.green,
+          type: ToastificationType.success,
+          style: ToastificationStyle.flatColored,
+          title: Text(
+            "เชื่อมต่อแล้วกับ ${device.name}",
+            style: Styles.green18(context),
+          ),
+        );
+      } else {
+        toastification.show(
+          autoCloseDuration: const Duration(seconds: 5),
+          context: context,
+          primaryColor: Colors.red,
+          type: ToastificationType.error,
+          style: ToastificationStyle.flatColored,
+          title: Text(
+            "เชื่อมต่อไม่ได้กับ ${device.name}",
+            style: Styles.red18(context),
+          ),
+        );
+      }
+    } catch (e) {
+      print("Error $e");
+    }
   }
 
   // --------------------------- Printer Test--------------------------
@@ -482,7 +527,7 @@ ${centerText('เอกสารออกเป็นชุด', paperWidthHeade
         'วันที่ ${data['OAORDT']}');
     await printBill(
         'ที่อยู่ ${data['customer']['address1']} ${data['customer']['address2']} ${data['customer']['address3']}');
-    await printBill('เลขประจำตัวผู้เสียภาษี ${data['customer']['ก']}');
+    await printBill('เลขประจำตัวผู้เสียภาษี ${data['customer']['taxno']}');
     await printBill(
         "\nรายการสินค้า${' ' * (21)}จำนวน${' ' * (10)}ราคา${' ' * (4)}ส่วนลด${' ' * (7)}รวม");
 //     String body = '''
@@ -528,7 +573,7 @@ ${centerText('เอกสารออกเป็นชุด', paperWidthHeade
     await printBetween("", "($totalText)");
     String footer = '''
     ${leftRightText('ผู้รับเงิน ${data['OBSMCD']}', '.........................', 70)}
-    ${leftRightText('', 'ลายเซ็นลูกค้า', 58)}
+    ${leftRightText('', 'ลายเซ็นลูกค้า\n\n\n', 58)}
     ''';
     Uint8List encodedFooter = await CharsetConverter.encode('TIS-620', footer);
     await PrintBluetoothThermal.writeBytes(List<int>.from(encodedFooter));
@@ -620,10 +665,21 @@ ${centerText('เอกสารออกเป็นชุด', paperWidthHeade
       // await printHeaderBill('ใบลดหนี้');
       // await printBodyBill(receiptData);
     } else {
-      print("Printer is disconnected ($connectionStatus)");
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Printer is not connected")),
+      toastification.show(
+        autoCloseDuration: const Duration(seconds: 5),
+        context: context,
+        primaryColor: Colors.red,
+        type: ToastificationType.error,
+        style: ToastificationStyle.flatColored,
+        title: Text(
+          "ยังไม่ได้เชื่อมต่อเครื่องปริ้น",
+          style: Styles.red18(context),
+        ),
       );
+      // print("Printer is disconnected ($connectionStatus)");
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   SnackBar(content: Text("Printer is not connected")),
+      // );
     }
   }
 
@@ -643,10 +699,28 @@ ${centerText('เอกสารออกเป็นชุด', paperWidthHeade
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
+      // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      // floatingActionButton: FloatingActionButton(
+      //   heroTag: 'printerScreen',
+      //   shape: CircleBorder(),
+      //   backgroundColor: Styles.primaryColor,
+      //   child: Icon(
+      //     Icons.print_rounded,
+      //     color: Styles.white,
+      //   ),
+      //   onPressed: () {
+      //     Navigator.push(
+      //       context,
+      //       MaterialPageRoute(
+      //         builder: (context) => ManagePrinterScreen(),
+      //       ),
+      //     );
+      //   },
+      // ),
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(70),
         child: AppbarCustom(
-          title: " รายละเอียดออเดอร์",
+          title: " รายละเอียดรายการสินค้า",
           icon: FontAwesomeIcons.clipboardList,
         ),
       ),
@@ -670,288 +744,286 @@ ${centerText('เอกสารออกเป็นชุด', paperWidthHeade
           children: [
             Container(
               height: MediaQuery.of(context).size.height * 0.9, // Set height
-              child: Container(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    children: [
-                      BoxShadowCustom(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    // "${widget.storeId}",
-                                    "${storeDetail?.name} ${storeDetail?.storeId}",
-                                    style: Styles.black24(context),
-                                  )
-                                ],
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    // "${widget.storeId}",
-                                    "เลขที่ผู้เสียภาษี : ${storeDetail?.taxId}",
-                                    style: Styles.black18(context),
-                                  )
-                                ],
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    // "${widget.storeId}",
-                                    "เบอร์โทรศัพท์ : ${storeDetail?.tel}",
-                                    style: Styles.black18(context),
-                                  )
-                                ],
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "ที่อยู่การจัดส่ง",
-                                    style: Styles.black18(context),
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: Container(
-                                      width: double.infinity,
-                                      child: ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                          padding: const EdgeInsets.all(0),
-                                          elevation: 0, // Disable shadow
-                                          shadowColor: Colors
-                                              .transparent, // Ensure no shadow color
-                                          backgroundColor: Colors.white,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius
-                                                .zero, // No rounded corners
-                                            side: BorderSide
-                                                .none, // Remove border
-                                          ),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  children: [
+                    BoxShadowCustom(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text(
+                                  // "${widget.storeId}",
+                                  "${storeDetail?.name} ${storeDetail?.storeId}",
+                                  style: Styles.black24(context),
+                                )
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text(
+                                  // "${widget.storeId}",
+                                  "เลขที่ผู้เสียภาษี : ${storeDetail?.taxId}",
+                                  style: Styles.black18(context),
+                                )
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text(
+                                  // "${widget.storeId}",
+                                  "เบอร์โทรศัพท์ : ${storeDetail?.tel}",
+                                  style: Styles.black18(context),
+                                )
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "ที่อยู่การจัดส่ง",
+                                  style: Styles.black18(context),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Container(
+                                    width: double.infinity,
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        padding: const EdgeInsets.all(0),
+                                        elevation: 0, // Disable shadow
+                                        shadowColor: Colors
+                                            .transparent, // Ensure no shadow color
+                                        backgroundColor: Colors.white,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius
+                                              .zero, // No rounded corners
+                                          side:
+                                              BorderSide.none, // Remove border
                                         ),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          children: [
-                                            Expanded(
-                                              child: Row(
-                                                children: [
-                                                  Icon(
-                                                    Icons.location_on_outlined,
-                                                    color: Colors.black,
-                                                    size: 30,
-                                                  ),
-                                                  Expanded(
-                                                    child: Text(
-                                                      // " ${widget.storeAddress}",
-                                                      "${storeDetail?.address}",
-                                                      style: Styles.grey18(
-                                                          context),
-                                                    ),
-                                                  )
-                                                ],
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        onPressed: () {},
                                       ),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Expanded(
+                                            child: Row(
+                                              children: [
+                                                Icon(
+                                                  Icons.location_on_outlined,
+                                                  color: Colors.black,
+                                                  size: 30,
+                                                ),
+                                                Expanded(
+                                                  child: Text(
+                                                    // " ${widget.storeAddress}",
+                                                    "${storeDetail?.address}",
+                                                    style:
+                                                        Styles.grey18(context),
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      onPressed: () {},
                                     ),
                                   ),
-                                ],
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    // "${widget.storeId}",
-                                    "พนักงานขาย : ${saleDetail?.name} เขต ${saleDetail?.warehouse}",
-                                    style: Styles.black24(context),
-                                  )
-                                ],
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    // "${widget.storeId}",
-                                    "เบอร์โทรศัพท์ : ${saleDetail?.tel}",
-                                    style: Styles.black18(context),
-                                  )
-                                ],
-                              ),
-                            ],
-                          ),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text(
+                                  // "${widget.storeId}",
+                                  "พนักงานขาย : ${saleDetail?.name} เขต ${saleDetail?.warehouse}",
+                                  style: Styles.black24(context),
+                                )
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text(
+                                  // "${widget.storeId}",
+                                  "เบอร์โทรศัพท์ : ${saleDetail?.tel}",
+                                  style: Styles.black18(context),
+                                )
+                              ],
+                            ),
+                          ],
                         ),
                       ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Expanded(
-                        flex: 3,
-                        child: BoxShadowCustom(
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Container(
-                              height: screenHeight * 0.9,
-                              // color: Colors.red,
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 16.0, horizontal: 16.0),
-                                child: Column(
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                          "รายการที่สั่ง",
-                                          style: Styles.black18(context),
-                                        ),
-                                        Text(
-                                          "จำนวน ${listProduct.length} รายการ",
-                                          style: Styles.black18(context),
-                                        ),
-                                      ],
-                                    ),
-                                    Expanded(
-                                        child: Scrollbar(
-                                      controller: _cartScrollController,
-                                      thumbVisibility: true,
-                                      trackVisibility: true,
-                                      radius: Radius.circular(16),
-                                      thickness: 10,
-                                      child: ListView.builder(
-                                        physics: ClampingScrollPhysics(),
-                                        shrinkWrap: true,
-                                        controller: _cartScrollController,
-                                        itemCount: listProduct.length,
-                                        itemBuilder: (context, index) {
-                                          return Column(
-                                            children: [
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.start,
-                                                children: [
-                                                  ClipRRect(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            8),
-                                                    child: Image.network(
-                                                      'https://jobbkk.com/upload/employer/0D/53D/03153D/images/202045.webp',
-                                                      width: screenWidth / 8,
-                                                      height: screenWidth / 8,
-                                                      fit: BoxFit.cover,
-                                                      errorBuilder: (context,
-                                                          error, stackTrace) {
-                                                        return const Center(
-                                                          child: Icon(
-                                                            Icons.error,
-                                                            color: Colors.red,
-                                                            size: 50,
-                                                          ),
-                                                        );
-                                                      },
-                                                    ),
-                                                  ),
-                                                  Expanded(
-                                                    flex: 3,
-                                                    child: Padding(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              16.0),
-                                                      child: Column(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          Row(
-                                                            children: [
-                                                              Expanded(
-                                                                child: Text(
-                                                                  listProduct[
-                                                                          index]
-                                                                      .name,
-                                                                  style: Styles
-                                                                      .black16(
-                                                                          context),
-                                                                  softWrap:
-                                                                      true,
-                                                                  maxLines: 2,
-                                                                  overflow:
-                                                                      TextOverflow
-                                                                          .visible,
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                          Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .spaceBetween,
-                                                            children: [
-                                                              Column(
-                                                                crossAxisAlignment:
-                                                                    CrossAxisAlignment
-                                                                        .start,
-                                                                children: [
-                                                                  Row(
-                                                                    children: [
-                                                                      Text(
-                                                                        'จำนวน : ${listProduct[index].qty.toStringAsFixed(0)} ${listProduct[index].unit}',
-                                                                        style: Styles.black16(
-                                                                            context),
-                                                                      ),
-                                                                    ],
-                                                                  ),
-                                                                  Row(
-                                                                    children: [
-                                                                      Text(
-                                                                        'ราคา : ${listProduct[index].price}',
-                                                                        style: Styles.black16(
-                                                                            context),
-                                                                      ),
-                                                                    ],
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                              Divider(
-                                                color: Colors.grey[200],
-                                                thickness: 1,
-                                                indent: 16,
-                                                endIndent: 16,
-                                              ),
-                                            ],
-                                          );
-                                        },
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Expanded(
+                      flex: 3,
+                      child: BoxShadowCustom(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Container(
+                            height: screenHeight * 0.9,
+                            // color: Colors.red,
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 16.0, horizontal: 16.0),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        "รายการที่สั่ง",
+                                        style: Styles.black18(context),
                                       ),
-                                    ))
-                                  ],
-                                ),
+                                      Text(
+                                        "จำนวน ${listProduct.length} รายการ",
+                                        style: Styles.black18(context),
+                                      ),
+                                    ],
+                                  ),
+                                  Expanded(
+                                      child: Scrollbar(
+                                    controller: _cartScrollController,
+                                    thumbVisibility: true,
+                                    trackVisibility: true,
+                                    radius: Radius.circular(16),
+                                    thickness: 10,
+                                    child: ListView.builder(
+                                      physics: ClampingScrollPhysics(),
+                                      shrinkWrap: true,
+                                      controller: _cartScrollController,
+                                      itemCount: listProduct.length,
+                                      itemBuilder: (context, index) {
+                                        return Column(
+                                          children: [
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: [
+                                                ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(8),
+                                                  child: Image.network(
+                                                    'https://jobbkk.com/upload/employer/0D/53D/03153D/images/202045.webp',
+                                                    width: screenWidth / 8,
+                                                    height: screenWidth / 8,
+                                                    fit: BoxFit.cover,
+                                                    errorBuilder: (context,
+                                                        error, stackTrace) {
+                                                      return const Center(
+                                                        child: Icon(
+                                                          Icons.error,
+                                                          color: Colors.red,
+                                                          size: 50,
+                                                        ),
+                                                      );
+                                                    },
+                                                  ),
+                                                ),
+                                                Expanded(
+                                                  flex: 3,
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            16.0),
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Row(
+                                                          children: [
+                                                            Expanded(
+                                                              child: Text(
+                                                                listProduct[
+                                                                        index]
+                                                                    .name,
+                                                                style: Styles
+                                                                    .black16(
+                                                                        context),
+                                                                softWrap: true,
+                                                                maxLines: 2,
+                                                                overflow:
+                                                                    TextOverflow
+                                                                        .visible,
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
+                                                          children: [
+                                                            Column(
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                Row(
+                                                                  children: [
+                                                                    Text(
+                                                                      'จำนวน : ${listProduct[index].qty.toStringAsFixed(0)} ${listProduct[index].unit}',
+                                                                      style: Styles
+                                                                          .black16(
+                                                                              context),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                                Row(
+                                                                  children: [
+                                                                    Text(
+                                                                      'ราคา : ${listProduct[index].price}',
+                                                                      style: Styles
+                                                                          .black16(
+                                                                              context),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            Divider(
+                                              color: Colors.grey[200],
+                                              thickness: 1,
+                                              indent: 16,
+                                              endIndent: 16,
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    ),
+                                  ))
+                                ],
                               ),
                             ),
                           ),
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -1291,71 +1363,58 @@ ${centerText('เอกสารออกเป็นชุด', paperWidthHeade
                 ),
               ),
             ),
-            _devices.isNotEmpty
-                ? Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: BoxShadowCustom(
-                      child: Container(
-                        height: screenHeight * 0.2,
-                        // color: Colors.red,
-                        child: Column(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    "อุปกรณ์ที่พบ",
-                                    style: Styles.black18(context),
-                                  ),
-                                  Text(
-                                    "${_devices.length} รายการ",
-                                    style: Styles.black18(context),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Expanded(
-                              child: ListView.builder(
-                                shrinkWrap: true,
-                                physics: ClampingScrollPhysics(),
-                                itemCount: _devices.length,
-                                itemBuilder: (context, index) {
-                                  final device = _devices[index];
-                                  return ListTile(
-                                    title: Text(
-                                      device.name ?? "Unknown Device",
-                                      style: Styles.black18(context),
-                                    ),
-                                    subtitle: Text(
-                                      device.macAdress,
-                                      style: Styles.black18(context),
-                                    ),
-                                    trailing: _connected &&
-                                            _selectedDevice == device
-                                        ? Icon(Icons.check, color: Colors.green)
-                                        : null,
-                                    onTap: () => _connectToPrinter(device),
-                                  );
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  )
-                : Center(
-                    child: Text("No paired devices found"),
-                  ),
           ],
         ),
       ),
       persistentFooterButtons: [
         Row(
           children: [
+            Expanded(
+              child: Container(
+                width: double.infinity,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    backgroundColor:
+                        User.connectPrinter ? Styles.success : Styles.grey,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  onPressed: () {
+                    if (!User.connectPrinter) {
+                      _connectToPrinter(User.devicePrinter);
+                    } else {
+                      _disconnectPrinter();
+                    }
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.print_rounded,
+                              color: Colors.white,
+                              size: 25,
+                            ),
+                            Text(
+                              " ${User.connectPrinter ? "เชื่อมต่อแล้ว" : "ยังไม่ได้เชื่อมต่อ"}",
+                              style: Styles.headerWhite18(context),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(
+              width: 10,
+            ),
             Expanded(
               child: Container(
                 width: double.infinity,
@@ -1378,7 +1437,7 @@ ${centerText('เอกสารออกเป็นชุด', paperWidthHeade
                         Row(
                           children: [
                             Icon(
-                              Icons.print,
+                              Icons.print_rounded,
                               color: Colors.white,
                               size: 25,
                             ),
@@ -1421,7 +1480,7 @@ ${centerText('เอกสารออกเป็นชุด', paperWidthHeade
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          "ยกเลิกออร์เดอร์",
+                          "ยกเลิกรายการ",
                           style: Styles.headerWhite18(context),
                         ),
                       ],

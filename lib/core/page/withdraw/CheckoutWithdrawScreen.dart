@@ -916,7 +916,7 @@ class _CheckoutWithdrawScreenState extends State<CheckoutWithdrawScreen> {
                                                                   Row(
                                                                     children: [
                                                                       Text(
-                                                                        'id : ${cartList[index].id}',
+                                                                        'รหัส: ${cartList[index].id}',
                                                                         style: Styles.black16(
                                                                             context),
                                                                       ),
@@ -925,21 +925,21 @@ class _CheckoutWithdrawScreenState extends State<CheckoutWithdrawScreen> {
                                                                   Row(
                                                                     children: [
                                                                       Text(
-                                                                        'จำนวน : ${cartList[index].qty.toStringAsFixed(0)} ${cartList[index].unit}',
+                                                                        'จำนวน : ${cartList[index].qty.toStringAsFixed(0)} ${cartList[index].unitName}',
                                                                         style: Styles.black16(
                                                                             context),
                                                                       ),
                                                                     ],
                                                                   ),
-                                                                  Row(
-                                                                    children: [
-                                                                      Text(
-                                                                        'ราคา : ${cartList[index].price}',
-                                                                        style: Styles.black16(
-                                                                            context),
-                                                                      ),
-                                                                    ],
-                                                                  ),
+                                                                  // Row(
+                                                                  //   children: [
+                                                                  //     Text(
+                                                                  //       'ราคา : ${cartList[index].price}',
+                                                                  //       style: Styles.black16(
+                                                                  //           context),
+                                                                  //     ),
+                                                                  //   ],
+                                                                  // ),
                                                                 ],
                                                               ),
                                                               Row(
