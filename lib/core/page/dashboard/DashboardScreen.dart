@@ -181,6 +181,11 @@ class _DashboardscreenState extends State<Dashboardscreen> {
         },
         title_4: "dashboard.menu.campaign".tr(),
         icon_4: Icons.campaign_rounded,
+        onTap4: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => NotificationScreen()),
+          );
+        },
         title_5: "dashboard.menu.history".tr(),
         icon_5: Icons.history,
         title_6: "dashboard.menu.schedule".tr(),

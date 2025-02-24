@@ -13,13 +13,10 @@ import 'package:_12sale_app/core/components/chart/CircularChart.dart';
 import 'package:_12sale_app/core/components/chart/ItemSummarize.dart';
 import 'package:_12sale_app/core/components/chart/TrendingMusicChart.dart';
 import 'package:_12sale_app/core/components/dropdown/DropDownStandarad.dart';
-import 'package:_12sale_app/core/components/table/DetailTable.dart';
 // import 'package:_12sale_app/core/components/table/ShopRouteTable.dart';
-import 'package:_12sale_app/core/components/table/ShopRouteTableMapAPI.dart';
 import 'package:_12sale_app/core/page/HomeScreen.dart';
 import 'package:_12sale_app/core/page/order/OrderINRouteScreen.dart';
 import 'package:_12sale_app/core/page/order/OrderOutRouteScreen.dart';
-import 'package:_12sale_app/core/page/order/OrderScreen.dart';
 import 'package:_12sale_app/core/page/route/ShopRouteScreen.dart';
 
 import 'package:_12sale_app/core/styles/style.dart';
