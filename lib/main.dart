@@ -81,8 +81,9 @@ void main() async {
     // if (!hasPermissions) {
     //   print("Background permissions not granted");
     // }
+
     // Initialize port for communication between TaskHandler and UI.
-    FlutterForegroundTask.initCommunicationPort();
+    // FlutterForegroundTask.initCommunicationPort();
     await LocationService().initialize();
   } on CameraException catch (e) {
     _logError(e.code, e.description);
@@ -327,21 +328,21 @@ class _MyAppState extends State<MyApp> {
     // Initialize the camera
     // _initializeCamera();
     // Add a callback to receive data sent from the TaskHandler.
-    FlutterForegroundTask.addTaskDataCallback(_onReceiveTaskData);
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      // Request permissions and initialize the service.
+    // FlutterForegroundTask.addTaskDataCallback(_onReceiveTaskData);
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   // Request permissions and initialize the service.
 
-      _initService();
-      _startService();
-    });
+    //   _initService();
+    //   _startService();
+    // });
   }
 
   @override
   void dispose() {
     // Remove a callback to receive data sent from the TaskHandler.
-    FlutterForegroundTask.removeTaskDataCallback(_onReceiveTaskData);
+    // FlutterForegroundTask.removeTaskDataCallback(_onReceiveTaskData);
     // videoPlayerController.dispose(); // Dispose of VideoPlayerController
-    _taskDataListenable.dispose();
+    // _taskDataListenable.dispose();
     // _cameraController
     //     .dispose(); // Dispose of the camera controller to free resources
     super.dispose();
