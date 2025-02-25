@@ -61,22 +61,7 @@ class _CameraPreviewScreenState extends State<CameraPreviewScreen> {
           if (snapshot.connectionState == ConnectionState.done) {
             return Stack(
               children: [
-                Transform.rotate(
-                  angle: widget.deviceData!['brand'] == 'samsung'
-                      ? 90 * (3.141592653589793 / 180)
-                      : rotationAngle, // Rotate based on sensor orientation
-                  child: Center(
-                    child: AspectRatio(
-                      aspectRatio: widget.cameraController.value.aspectRatio,
-                      child: SizedBox(
-                        width: screenSize.width,
-                        height: screenSize.width *
-                            widget.cameraController.value.aspectRatio,
-                        child: CameraPreview(widget.cameraController),
-                      ),
-                    ),
-                  ),
-                ),
+                CameraPreview(widget.cameraController),
                 Align(
                   alignment: Alignment.bottomCenter,
                   child: Padding(

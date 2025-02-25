@@ -4,7 +4,7 @@ import 'package:_12sale_app/core/components/Appbar.dart';
 import 'package:_12sale_app/core/components/BoxShadowCustom.dart';
 import 'package:_12sale_app/core/components/Loading.dart';
 import 'package:_12sale_app/core/components/button/Button.dart';
-import 'package:_12sale_app/core/components/button/CartButton.dart';
+import 'package:_12sale_app/core/components/camera/CartButton.dart';
 import 'package:_12sale_app/core/components/card/OrderMenuListCard.dart';
 import 'package:_12sale_app/core/components/card/OrderMenuListVerticalCard.dart';
 import 'package:_12sale_app/core/components/search/ProductSearch.dart';

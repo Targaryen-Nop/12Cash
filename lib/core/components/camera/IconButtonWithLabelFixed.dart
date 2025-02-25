@@ -1,6 +1,6 @@
 import 'dart:io';
-import 'package:_12sale_app/core/components/button/CameraButton%20copy.dart';
-import 'package:_12sale_app/core/components/button/CameraPreviewScreen.dart';
+import 'package:_12sale_app/core/components/camera/CameraButton%20copy.dart';
+import 'package:_12sale_app/core/components/camera/CameraPreviewScreen.dart';
 import 'package:_12sale_app/core/page/HomeScreen.dart';
 import 'package:_12sale_app/core/styles/style.dart';
 import 'package:camera/camera.dart';
@@ -218,9 +218,9 @@ class _IconButtonWithLabelFixedState extends State<IconButtonWithLabelFixed>
       CameraDescription cameraDescription) async {
     final CameraController cameraController = CameraController(
       cameraDescription,
-      ResolutionPreset.medium,
+      ResolutionPreset.max,
       // enableAudio: false,
-      imageFormatGroup: ImageFormatGroup.yuv420,
+      // imageFormatGroup: ImageFormatGroup.yuv420,
       fps: 30,
     );
     controller = cameraController;

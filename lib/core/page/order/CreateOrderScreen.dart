@@ -3,7 +3,7 @@ import 'dart:io';
 import 'dart:ui';
 import 'package:_12sale_app/core/components/Loading.dart';
 import 'package:_12sale_app/core/components/alert/AllAlert.dart';
-import 'package:_12sale_app/core/components/button/IconButtonWithLabelFixed.dart';
+import 'package:_12sale_app/core/components/camera/IconButtonWithLabelFixed.dart';
 import 'package:_12sale_app/core/page/order/OrderDetail.dart';
 import 'package:_12sale_app/core/page/route/OrderDetailScreen.dart';
 import 'package:_12sale_app/data/models/order/Promotion.dart';

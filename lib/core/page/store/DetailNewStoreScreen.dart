@@ -2,9 +2,9 @@ import 'dart:convert';
 
 import 'package:_12sale_app/core/components/Appbar.dart';
 import 'package:_12sale_app/core/components/BoxShadowCustom.dart';
-import 'package:_12sale_app/core/components/button/IconButtonWithLabel.dart';
+import 'package:_12sale_app/core/components/camera/IconButtonWithLabel.dart';
 import 'package:_12sale_app/core/components/button/MenuButton.dart';
-import 'package:_12sale_app/core/components/button/ShowPhotoButton.dart';
+import 'package:_12sale_app/core/components/camera/ShowPhotoButton.dart';
 import 'package:_12sale_app/core/components/chart/CircularChart.dart';
 import 'package:_12sale_app/core/components/chart/ItemSummarize.dart';
 import 'package:_12sale_app/core/components/search/DropdownSearchCustom.dart';
